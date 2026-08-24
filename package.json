@@ -1,6 +1,6 @@
 {
   "name": "central-servicos-amargosa",
-  "version": "0.3.4",
+  "version": "0.3.5",
   "private": true,
   "main": "desktop/main.cjs",
   "engines": {
@@ -46,7 +46,7 @@
     "productName": "Editor Central de Serviços Amargosa",
     "directories": {
       "app": "desktop",
-      "output": "release-desktop-v3-4"
+      "output": "release-desktop-v3-5"
     },
     "files": [
       "**/*"

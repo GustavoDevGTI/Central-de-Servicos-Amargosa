@@ -33,7 +33,7 @@ function renderPages() {
 function renderSegments() {
   const current = page();
   $("#segment-nav").innerHTML = current.segments.map((entry, index) => `<button type="button" data-segment-id="${escapeHtml(entry.id)}" class="${entry.id === selectedSegmentId ? "active" : ""}"><b>${String(index + 1).padStart(2, "0")}</b><span>${escapeHtml(entry.name)}</span><em>${entry.enabled ? entry.items.length : "oculto"}</em></button>`).join("");
-  $$('[data-segment-id]').forEach((button) => button.addEventListener("click", () => { selectedSegmentId = button.dataset.segmentId; selectedItemId = null; renderEditor(); }));
+  $$('[data-segment-id]').forEach((button) => button.addEventListener("click", () => { selectedSegmentId = button.dataset.segmentId; selectedItemId = null; renderEditor(); renderPreview(); }));
 }
 
 function renderEditor() {
@@ -63,7 +63,7 @@ function renderEditor() {
 function renderItems() {
   const current = segment(); if (!current) return;
   $("#item-list").innerHTML = current.items.map((entry, index) => `<button type="button" data-item-id="${escapeHtml(entry.id)}" class="${entry.id === selectedItemId ? "active" : ""}"><i>${String(index + 1).padStart(2, "0")}</i><span><strong>${escapeHtml(entry.label || entry.title || entry.text || entry.value || typeLabels[entry.type])}</strong><small>${escapeHtml(typeLabels[entry.type] || entry.type)} · ${escapeHtml(entry.role || "sem função")}</small></span><em>›</em></button>`).join("");
-  $$('[data-item-id]').forEach((button) => button.addEventListener("click", () => { selectedItemId = button.dataset.itemId; renderItems(); }));
+  $$('[data-item-id]').forEach((button) => button.addEventListener("click", () => { selectedItemId = button.dataset.itemId; renderItems(); renderPreview(); }));
   renderItemEditor();
 }
 
@@ -117,7 +117,8 @@ function previewHtml() {
   const selectedPage = page();
   const previewContent = { ...content, pages: [selectedPage, ...content.pages.filter((entry) => entry.id !== selectedPage.id)] };
   const serialized = JSON.stringify(previewContent).replaceAll("<", "\\u003c");
-  return `<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="stylesheet" href="../templates/styles.css"><link rel="stylesheet" href="../templates/dynamic.css"><script>window.CENTRAL_CONTENT=${serialized};</script><script defer src="../templates/app.js"></script></head><body><a class="skip" href="#conteudo">Ir para o conteúdo</a><main id="conteudo"></main></body></html>`;
+  const selection = JSON.stringify({ segmentId: selectedSegmentId || null, itemId: selectedItemId || null }).replaceAll("<", "\\u003c");
+  return `<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="stylesheet" href="../templates/styles.css"><link rel="stylesheet" href="../templates/dynamic.css"><style>.editor-selected-segment{position:relative!important;z-index:40!important;border-radius:0!important;outline:3px solid #08775d!important;outline-offset:-3px!important;scroll-margin:64px}.editor-selected-segment::before{content:"SEGMENTO SELECIONADO";position:absolute;z-index:90;top:0;left:0;padding:5px 8px;background:#08775d;color:#fff;font:800 8px/1 Arial,sans-serif;letter-spacing:.08em;pointer-events:none}.editor-selected-item{position:relative!important;z-index:50!important;border-radius:0!important;outline:3px solid #d33f5a!important;outline-offset:2px!important;scroll-margin:90px}.editor-selected-item::after{content:"ITEM SELECIONADO";position:absolute;z-index:100;right:0;bottom:0;padding:5px 8px;background:#d33f5a;color:#fff;font:800 8px/1 Arial,sans-serif;letter-spacing:.08em;pointer-events:none}</style><script>window.CENTRAL_CONTENT=${serialized};window.CENTRAL_EDITOR_SELECTION=${selection};</script><script defer src="../templates/app.js"></script></head><body><a class="skip" href="#conteudo">Ir para o conteúdo</a><main id="conteudo"></main></body></html>`;
   /* O código abaixo é mantido temporariamente apenas como fallback para instalações antigas. */
   const current = page();
   const services = current.segments.find((entry) => entry.type === "catalog")?.items.filter((entry) => entry.type === "service") || [];
