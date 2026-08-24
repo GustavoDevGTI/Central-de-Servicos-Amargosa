@@ -214,6 +214,7 @@ ipcMain.handle("site:export", async (_event, content) => {
     fs.copyFileSync(path.join(templateDirectory, file), path.join(exportDirectory, file));
   }
   fs.cpSync(path.join(templateDirectory, "fonts"), path.join(exportDirectory, "fonts"), { recursive: true });
+  fs.cpSync(path.join(templateDirectory, "menu"), path.join(exportDirectory, "menu"), { recursive: true });
   fs.writeFileSync(path.join(exportDirectory, "content.js"), `window.CENTRAL_CONTENT = ${JSON.stringify(content, null, 2)};\n`, "utf8");
   shell.showItemInFolder(path.join(exportDirectory, "index.html"));
   return { ok: true, exportDirectory };

@@ -24,6 +24,8 @@ Na aba **Design**, cada tipo de segmento oferece quatro modelos próprios. A tro
 
 O portal principal e o portal estático gerado incluem atalhos de salto, foco de alta visibilidade, operação integral por teclado, regiões e controles nomeados para leitores de tela, filtros com estado anunciado, resultados em região viva e contenção de foco na conversa com Amanda. A estrutura foi preparada para uso com NVDA, TalkBack e VoiceOver.
 
+A rota **`/menu`** apresenta o Menu Acessibilidade: uma interface vertical, sem blocos recolhidos, gerada automaticamente na hierarquia público → categoria → serviço. Os serviços finais levam diretamente ao canal oficial configurado no catálogo. O mesmo subsite é incluído na pasta estática criada pelo botão **Gerar portal**.
+
 ## Gerar o instalador do Windows
 
 ```bash
