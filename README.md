@@ -22,6 +22,8 @@ No editor, use **Salvar alterações** para atualizar `content/site.json`, **Val
 
 Na aba **Design**, cada tipo de segmento oferece quatro modelos próprios. A troca do modelo reorganiza somente a apresentação daquele segmento; os itens, textos, links, imagens e ajustes de cor permanecem editáveis. A biblioteca inicial reúne composições de busca editorial ou panorâmica, diretório aberto, acesso rápido e painel modular.
 
+O portal principal e o portal estático gerado incluem atalhos de salto, foco de alta visibilidade, operação integral por teclado, regiões e controles nomeados para leitores de tela, filtros com estado anunciado, resultados em região viva e contenção de foco na conversa com Amanda. A estrutura foi preparada para uso com NVDA, TalkBack e VoiceOver.
+
 ## Gerar o instalador do Windows
 
 ```bash

@@ -8,11 +8,12 @@
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="dynamic.css">
   <link rel="stylesheet" href="fonts.css">
+  <link rel="stylesheet" href="accessibility.css">
   <script defer src="content.js"></script>
   <script defer src="app.js"></script>
 </head>
 <body>
-  <a class="skip" href="#conteudo">Ir para o conteúdo</a>
-  <main id="conteudo"></main>
+  <div class="skip-links" aria-label="Atalhos de navegação"><a class="skip" href="#conteudo">Ir para o conteúdo</a><a class="skip" href="#service-search">Ir para a busca</a><a class="skip" href="#publicos">Ir para os públicos</a><a class="skip" href="#todos-os-servicos">Ir para os serviços</a></div>
+  <main id="conteudo" tabindex="-1"></main>
 </body>
 </html>

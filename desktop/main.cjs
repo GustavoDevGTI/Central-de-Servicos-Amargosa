@@ -210,7 +210,7 @@ ipcMain.handle("site:export", async (_event, content) => {
   const exportDirectory = path.join(selected.filePaths[0], `central-servicos-amargosa-${suffix}`);
   fs.mkdirSync(exportDirectory, { recursive: false });
   const templateDirectory = path.join(__dirname, "templates");
-  for (const file of ["index.html", "styles.css", "dynamic.css", "fonts.css", "app.js"]) {
+  for (const file of ["index.html", "styles.css", "dynamic.css", "fonts.css", "accessibility.css", "app.js"]) {
     fs.copyFileSync(path.join(templateDirectory, file), path.join(exportDirectory, file));
   }
   fs.cpSync(path.join(templateDirectory, "fonts"), path.join(exportDirectory, "fonts"), { recursive: true });
