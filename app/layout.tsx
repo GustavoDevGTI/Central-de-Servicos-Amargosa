@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import './globals.css';
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://central-servicos-amargosa.gustavoborges132.chatgpt.site'),
   title: 'Central de Serviços | Prefeitura de Amargosa',
   description: 'Encontre serviços públicos de Amargosa e acesse diretamente o canal oficial responsável.',
   openGraph: {
