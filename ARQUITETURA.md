@@ -7,17 +7,19 @@ O projeto usa uma central pública estática e um editor Electron local. Essa co
 ## Fluxo de atualização
 
 1. O editor abre o conteúdo local em `content/site.json`.
-2. A equipe altera identidade, textos e serviços por formulários.
-3. A validação verifica campos obrigatórios e URLs.
-4. Os serviços são vinculados a públicos como Cidadão, Empresas, Servidor, Órgãos públicos e Turista.
-5. A ordem do arquivo define manualmente a sequência dos serviços mais usados.
-6. Cada salvamento cria uma cópia de segurança local.
-7. **Gerar portal** cria uma nova pasta estática com data e hora, sem sobrescrever exportações anteriores.
-8. A pasta gerada é publicada no servidor da Prefeitura.
+2. Cada página é formada por uma sequência ordenada de segmentos.
+3. Cada segmento possui aparência, visibilidade e uma lista ordenada de itens tipados.
+4. A equipe altera textos, links, logos, imagens, públicos, categorias e serviços por formulários.
+5. A validação verifica a hierarquia, os vínculos entre itens e as URLs.
+6. Os serviços são vinculados a públicos como Cidadão, Empresas, Servidor, Órgãos públicos e Turista.
+7. Itens de referência definem manualmente a sequência dos serviços mais usados.
+8. Cada salvamento cria uma cópia de segurança local.
+9. **Gerar portal** cria uma nova pasta estática com data e hora, sem sobrescrever exportações anteriores.
+10. A pasta gerada é publicada no servidor da Prefeitura.
 
 ## Limites desta primeira versão
 
 - os links iniciais apontam para o portal geral de Amargosa e precisam ser substituídos pelos canais específicos;
-- o editor cobre identidade, apresentação, ajuda e cadastro de serviços;
+- novas páginas podem ser estruturadas no editor; a publicação web atual usa a página inicial como rota principal;
 - publicação automática via servidor pode ser adicionada depois, caso a Prefeitura defina o ambiente e as credenciais;
-- imagens e modelos visuais adicionais podem ser incluídos sem mudar a arquitetura.
+- imagens são incorporadas ao JSON como dados locais e por isso devem permanecer leves.

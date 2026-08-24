@@ -1,129 +1,165 @@
 let content;
-let selectedServiceId = null;
+let selectedPageId;
+let selectedSegmentId;
+let selectedItemId;
 let dirty = false;
 const $ = (selector) => document.querySelector(selector);
 const $$ = (selector) => [...document.querySelectorAll(selector)];
+const segmentTypes = ["utility", "header", "hero", "audiences", "featured", "categories", "catalog", "help", "footer", "generic"];
+const itemTypes = ["text", "link", "image", "search", "audience", "category", "service", "serviceRef"];
+const typeLabels = { utility: "Barra utilitária", header: "Cabeçalho", hero: "Busca principal", audiences: "Públicos", featured: "Mais usados", categories: "Categorias", catalog: "Catálogo", help: "Ajuda", footer: "Rodapé", generic: "Livre", text: "Texto", link: "Link / botão", image: "Imagem / logo", search: "Campo de busca", audience: "Público", category: "Categoria", service: "Serviço", serviceRef: "Serviço em destaque" };
 
-function escapeHtml(value = "") {
-  return String(value).replace(/[&<>'"]/g, (character) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#39;", '"': "&quot;" }[character]));
+function escapeHtml(value = "") { return String(value).replace(/[&<>'"]/g, (character) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#39;", '"': "&quot;" }[character])); }
+function uid(prefix) { return `${prefix}-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`; }
+function page() { return content.pages.find((item) => item.id === selectedPageId) || content.pages[0]; }
+function segment() { return page()?.segments.find((item) => item.id === selectedSegmentId); }
+function item() { return segment()?.items.find((entry) => entry.id === selectedItemId); }
+function catalogServices() { return content.pages.flatMap((entry) => entry.segments).filter((entry) => entry.type === "catalog").flatMap((entry) => entry.items).filter((entry) => entry.type === "service"); }
+function audiences() { return content.pages.flatMap((entry) => entry.segments).filter((entry) => entry.type === "audiences").flatMap((entry) => entry.items).filter((entry) => entry.type === "audience"); }
+function textByRole(entry, role, fallback = "") { return entry.items.find((item) => item.role === role)?.value || fallback; }
+
+function showToast(message) { const toast = $("#toast"); toast.textContent = message; toast.classList.add("show"); setTimeout(() => toast.classList.remove("show"), 2400); }
+function markDirty() { dirty = true; $(".save-state").className = "save-state dirty"; $("#save-state").textContent = "Alterações ainda não salvas"; renderPreview(); }
+function move(array, index, direction) { const target = index + direction; if (index < 0 || target < 0 || target >= array.length) return false; [array[index], array[target]] = [array[target], array[index]]; return true; }
+
+function renderPages() {
+  $("#page-select").innerHTML = content.pages.map((entry) => `<option value="${escapeHtml(entry.id)}">${escapeHtml(entry.name)}</option>`).join("");
+  $("#page-select").value = page().id;
+  $("#page-name").value = page().name;
+  $("#page-slug").value = page().slug;
 }
 
-function getPath(object, path) { return path.split(".").reduce((value, key) => value?.[key], object); }
-function setPath(object, path, value) {
-  const keys = path.split(".");
-  const last = keys.pop();
-  const target = keys.reduce((value, key) => value[key], object);
-  target[last] = value;
+function renderSegments() {
+  const current = page();
+  $("#segment-nav").innerHTML = current.segments.map((entry, index) => `<button type="button" data-segment-id="${escapeHtml(entry.id)}" class="${entry.id === selectedSegmentId ? "active" : ""}"><b>${String(index + 1).padStart(2, "0")}</b><span>${escapeHtml(entry.name)}</span><em>${entry.enabled ? entry.items.length : "oculto"}</em></button>`).join("");
+  $$('[data-segment-id]').forEach((button) => button.addEventListener("click", () => { selectedSegmentId = button.dataset.segmentId; selectedItemId = null; renderEditor(); }));
+}
+
+function renderEditor() {
+  renderPages(); renderSegments();
+  const current = segment();
+  $("#segment-empty").classList.toggle("hidden", Boolean(current));
+  $("#segment-editor").classList.toggle("hidden", !current);
+  if (!current) return;
+  $("#segment-heading").textContent = current.name;
+  $("#segment-name").value = current.name;
+  $("#segment-type").innerHTML = segmentTypes.map((value) => `<option value="${value}">${typeLabels[value]}</option>`).join("");
+  $("#segment-type").value = current.type;
+  $("#segment-enabled").checked = current.enabled;
+  const style = current.style ||= {};
+  $("#style-background").value = style.background || "#ffffff";
+  $("#style-color").value = style.color || "#193a31";
+  $("#style-accent").value = style.accent || content.site.primaryColor || "#0b6b50";
+  $("#style-width").value = style.width || "contained";
+  $("#style-spacing").value = style.spacing || "comfortable";
+  $("#style-radius").value = style.radius || "soft";
+  $("#background-status").textContent = style.backgroundImage ? "Imagem incorporada ao projeto" : "Nenhuma imagem";
+  $("#new-item-type").innerHTML = itemTypes.map((value) => `<option value="${value}">${typeLabels[value]}</option>`).join("");
+  renderItems();
+}
+
+function renderItems() {
+  const current = segment(); if (!current) return;
+  $("#item-list").innerHTML = current.items.map((entry, index) => `<button type="button" data-item-id="${escapeHtml(entry.id)}" class="${entry.id === selectedItemId ? "active" : ""}"><i>${String(index + 1).padStart(2, "0")}</i><span><strong>${escapeHtml(entry.label || entry.title || entry.text || entry.value || typeLabels[entry.type])}</strong><small>${escapeHtml(typeLabels[entry.type] || entry.type)} · ${escapeHtml(entry.role || "sem função")}</small></span><em>›</em></button>`).join("");
+  $$('[data-item-id]').forEach((button) => button.addEventListener("click", () => { selectedItemId = button.dataset.itemId; renderItems(); }));
+  renderItemEditor();
+}
+
+function inputField(label, field, value, multiline = false) { return `<label>${label}${multiline ? `<textarea rows="3" data-item-field="${field}">${escapeHtml(value || "")}</textarea>` : `<input data-item-field="${field}" value="${escapeHtml(value || "")}">`}</label>`; }
+function selectField(label, field, value, options) { return `<label>${label}<select data-item-field="${field}">${options.map((option) => `<option value="${escapeHtml(option.value)}" ${option.value === value ? "selected" : ""}>${escapeHtml(option.label)}</option>`).join("")}</select></label>`; }
+
+function renderItemEditor() {
+  const current = item();
+  $("#item-editor").classList.toggle("hidden", !current);
+  if (!current) { $("#item-editor").innerHTML = ""; return; }
+  let fields = inputField("Nome interno", "label", current.label);
+  fields += inputField("Função no segmento", "role", current.role);
+  if (current.type === "text") fields += inputField("Texto", "value", current.value, true);
+  if (current.type === "link") fields += inputField("Texto visível", "text", current.text) + inputField("Endereço ou âncora", "url", current.url);
+  if (current.type === "image") fields += inputField("Texto alternativo", "alt", current.alt) + `<div class="image-field"><label>Escolher imagem<input id="item-image-upload" type="file" accept="image/*"></label><button id="remove-item-image" type="button">Remover imagem</button><small>${current.src ? "Imagem incorporada" : "Nenhuma imagem"}</small></div>`;
+  if (current.type === "search") fields += inputField("Texto de exemplo", "placeholder", current.placeholder) + inputField("Texto do botão", "buttonText", current.buttonText);
+  if (["audience", "category"].includes(current.type)) fields += inputField("Nome visível", "label", current.label) + inputField("Descrição", "description", current.description, true) + inputField("Sigla", "initials", current.initials);
+  if (current.type === "service") fields += inputField("Nome do serviço", "title", current.title) + inputField("Órgão responsável", "department", current.department) + inputField("Categoria", "category", current.category) + selectField("Público", "audienceId", current.audienceId, audiences().map((entry) => ({ value: entry.id, label: entry.label }))) + inputField("Canal responsável", "destination", current.destination) + inputField("Endereço oficial", "url", current.url) + inputField("Sigla", "initials", current.initials);
+  if (current.type === "serviceRef") fields += selectField("Serviço do catálogo", "serviceId", current.serviceId, catalogServices().map((entry) => ({ value: entry.id, label: entry.title })));
+  $("#item-editor").innerHTML = `<header><div><small>ITEM SELECIONADO</small><strong>${escapeHtml(typeLabels[current.type] || current.type)}</strong></div><div class="mini-actions"><button id="item-up">↑</button><button id="item-down">↓</button><button id="delete-item" class="danger">Excluir</button></div></header>${fields}`;
+  $$('[data-item-field]').forEach((field) => field.addEventListener("input", () => { const currentItem = item(); if (!currentItem) return; currentItem[field.dataset.itemField] = field.value; renderSegments(); renderPreview(); dirty = true; $(".save-state").className = "save-state dirty"; $("#save-state").textContent = "Alterações ainda não salvas"; }));
+  $("#item-up").addEventListener("click", () => { const items = segment().items; if (move(items, items.findIndex((entry) => entry.id === selectedItemId), -1)) { renderItems(); markDirty(); } });
+  $("#item-down").addEventListener("click", () => { const items = segment().items; if (move(items, items.findIndex((entry) => entry.id === selectedItemId), 1)) { renderItems(); markDirty(); } });
+  $("#delete-item").addEventListener("click", () => { if (!confirm("Excluir este item?")) return; segment().items = segment().items.filter((entry) => entry.id !== selectedItemId); selectedItemId = null; renderEditor(); markDirty(); });
+  if (current.type === "image") {
+    $("#item-image-upload").addEventListener("change", (event) => readImage(event.target.files[0], (source) => { item().src = source; renderItems(); markDirty(); }));
+    $("#remove-item-image").addEventListener("click", () => { item().src = ""; renderItems(); markDirty(); });
+  }
+}
+
+function defaultItem(type) {
+  const base = { id: uid(type), type, role: "entry", label: typeLabels[type] };
+  if (type === "text") return { ...base, role: "description", value: "Novo texto" };
+  if (type === "link") return { ...base, role: "action", text: "Novo link", url: "#" };
+  if (type === "image") return { ...base, role: "image", src: "", alt: "Descrição da imagem" };
+  if (type === "search") return { ...base, role: "search", placeholder: "O que você procura?", buttonText: "Buscar" };
+  if (type === "audience") return { ...base, label: "Novo público", description: "Descrição do público", initials: "NP" };
+  if (type === "category") return { ...base, label: "Nova categoria", description: "Descrição da categoria", initials: "NC" };
+  if (type === "service") return { ...base, title: "Novo serviço", department: "Órgão responsável", category: "Geral", audienceId: audiences()[0]?.id || "", destination: "Canal oficial", url: "https://amargosa.ba.gov.br/", initials: "NS" };
+  return { ...base, label: "Serviço em destaque", serviceId: catalogServices()[0]?.id || "" };
+}
+
+function readImage(file, done) {
+  if (!file) return;
+  if (!file.type.startsWith("image/")) return showToast("Escolha um arquivo de imagem");
+  if (file.size > 2 * 1024 * 1024) return showToast("A imagem deve ter no máximo 2 MB");
+  const reader = new FileReader(); reader.onload = () => done(reader.result); reader.readAsDataURL(file);
 }
 
 function previewHtml() {
-  const identity = content.identity;
-  const audienceCards = content.audiences.map((item) => `<article class="audience"><i>${escapeHtml(item.initials)}</i><strong>${escapeHtml(item.label)}</strong><small>${escapeHtml(item.description)}</small><b>Ver serviços →</b></article>`).join("");
-  const featured = content.services.filter((service) => service.featured).map((service, index) => `<article class="card"><span class="rank">${String(index + 1).padStart(2, "0")}</span><i>${escapeHtml(service.initials)}</i><span><small>${escapeHtml(service.category)}</small><strong>${escapeHtml(service.title)}</strong><em>${escapeHtml(service.department)}</em></span><b>↗</b></article>`).join("");
-  return `<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><style>
-  *{box-sizing:border-box}body{margin:0;background:#f7f7f3;color:#193a31;font-family:Arial,sans-serif}header{height:70px;display:flex;align-items:center;padding:0 5%;border-top:3px solid ${identity.accentColor};border-bottom:1px solid #dae5e0;background:#fff}.brand{display:flex;align-items:center;gap:9px}.mark{width:36px;height:36px;display:grid;place-items:center;border-radius:4px 12px 4px 12px;background:${identity.primaryColor};color:#fff;font-size:10px;font-weight:900}.brand span{display:flex;flex-direction:column}.brand small{color:#68756f;font-size:6px;text-transform:uppercase}.brand strong{font-family:Georgia,serif;font-size:14px}.brand em{color:${identity.primaryColor};font-size:6px;font-style:normal}.menu{display:flex;gap:18px;margin-left:auto;color:#43554e;font-size:7px;font-weight:800}.hero{display:flex;align-items:center;flex-direction:column;padding:49px 6% 54px;background:linear-gradient(115deg,#064b39,${identity.primaryColor});color:#fff;text-align:center}.eyebrow{color:#bfe5d8;font-size:6px;font-weight:900;letter-spacing:.14em;text-transform:uppercase}.hero h1{max-width:720px;margin:12px 0 12px;font-family:Georgia,serif;font-size:42px;line-height:1;letter-spacing:-.04em}.hero p{max-width:620px;margin:0;color:rgba(255,255,255,.74);font-size:9px;line-height:1.6}.search{width:min(720px,100%);display:flex;margin-top:23px;padding:6px 6px 6px 15px;border-radius:11px;background:#fff;box-shadow:0 12px 30px rgba(2,40,30,.25);color:#193a31;text-align:left}.search span{flex:1;padding:10px;color:#80908a;font-size:8px}.search b{padding:10px 18px;border-radius:7px;background:${identity.accentColor};color:#fff;font-size:7px}.publics{margin:-15px 4% 0;padding:22px;border:1px solid #dbe5e1;border-radius:13px;background:#fff;box-shadow:0 12px 28px rgba(5,75,55,.08)}.title small{color:${identity.accentColor};font-size:6px;font-weight:900;text-transform:uppercase}.title h2{margin:5px 0 0;font-family:Georgia,serif;font-size:22px}.audiences{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-top:17px}.audience{min-height:120px;display:flex;align-items:flex-start;flex-direction:column;padding:12px;border:1px solid #dbe5e1;border-radius:9px}.audience i{width:30px;height:30px;display:grid;place-items:center;border-radius:8px;background:#e6f3ee;color:${identity.primaryColor};font-size:6px;font-style:normal;font-weight:900}.audience strong{margin-top:10px;font-family:Georgia,serif;font-size:11px}.audience small{margin-top:5px;color:#74837d;font-size:6px;line-height:1.4}.audience b{margin-top:auto;padding-top:7px;color:${identity.primaryColor};font-size:6px}.services{padding:40px 5% 55px}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:17px}.card{position:relative;min-height:82px;display:grid;grid-template-columns:34px 1fr auto;align-items:center;gap:9px;padding:12px;border:1px solid #dbe5e1;border-radius:9px;background:#fff}.card .rank{position:absolute;right:7px;top:4px;color:#e7eeeb;font-family:Georgia,serif;font-size:18px}.card i{width:34px;height:34px;display:grid;place-items:center;border-radius:8px;background:#e3f1eb;color:${identity.primaryColor};font-size:6px;font-style:normal;font-weight:900}.card>span:nth-child(3){display:flex;flex-direction:column}.card small{color:${identity.accentColor};font-size:5px;font-weight:900;text-transform:uppercase}.card strong{margin-top:4px;font-family:Georgia,serif;font-size:9px}.card em{margin-top:4px;color:#7b8983;font-size:6px;font-style:normal}.card>b{position:relative;color:${identity.primaryColor}}footer{padding:25px 6%;background:#04392d;color:#fff;font-size:7px}@media(max-width:560px){.menu{display:none}.hero h1{font-size:31px}.audiences{display:flex;overflow:hidden}.audience{min-width:150px}.grid{grid-template-columns:1fr}}
-  </style></head><body><header><div class="brand"><div class="mark">AM</div><span><small>${escapeHtml(identity.brandLine)}</small><strong>${escapeHtml(identity.municipality)}</strong><em>Central de Serviços</em></span></div><nav class="menu">Serviços por público　Mais usados　Categorias　Ajuda</nav></header><section class="hero"><span class="eyebrow">${escapeHtml(content.hero.eyebrow)}</span><h1>${escapeHtml(content.hero.title)}</h1><p>${escapeHtml(content.hero.description)}</p><div class="search"><span>⌕　${escapeHtml(content.hero.searchPlaceholder)}</span><b>Buscar</b></div></section><section class="publics"><div class="title"><small>ESCOLHA O SEU PERFIL</small><h2>Serviços para cada público</h2></div><div class="audiences">${audienceCards}</div></section><section class="services"><div class="title"><small>ACESSO RÁPIDO</small><h2>Serviços mais usados</h2></div><div class="grid">${featured}</div></section><footer><strong>${escapeHtml(content.help.title)}</strong>　${escapeHtml(content.help.description)}</footer></body></html>`;
+  const current = page();
+  const services = current.segments.find((entry) => entry.type === "catalog")?.items.filter((entry) => entry.type === "service") || [];
+  const render = (entry) => {
+    if (!entry.enabled) return "";
+    const style = entry.style || {}; const css = `--bg:${style.background || "#fff"};--color:${style.color || "#193a31"};--accent:${style.accent || "#0b6b50"};${style.backgroundImage ? `background-image:linear-gradient(#063d32bb,#063d32bb),url('${style.backgroundImage}')` : ""}`;
+    const links = entry.items.filter((item) => item.type === "link").map((item) => `<a>${escapeHtml(item.text)}</a>`).join("");
+    const logo = entry.items.find((item) => item.type === "image" && item.role === "logo");
+    if (entry.type === "utility") return `<section class="utility" style="${css}"><span>${escapeHtml(textByRole(entry, "label"))}</span><nav>${links}</nav></section>`;
+    if (entry.type === "header") return `<section class="header" style="${css}"><div class="brand">${logo?.src ? `<img src="${logo.src}">` : "<b>AM</b>"}<span><small>${escapeHtml(textByRole(entry, "brandLine"))}</small><strong>${escapeHtml(textByRole(entry, "municipality"))}</strong><em>${escapeHtml(textByRole(entry, "subtitle"))}</em></span></div><nav>${links}</nav></section>`;
+    if (entry.type === "hero") { const search = entry.items.find((item) => item.type === "search"); return `<section class="hero" style="${css}"><small>${escapeHtml(textByRole(entry, "eyebrow"))}</small><h1>${escapeHtml(textByRole(entry, "title"))}</h1><p>${escapeHtml(textByRole(entry, "description"))}</p><div class="search">⌕ <span>${escapeHtml(search?.placeholder)}</span><b>${escapeHtml(search?.buttonText)}</b></div></section>`; }
+    if (entry.type === "audiences") return `<section class="block float" style="${css}">${previewHeading(entry)}<div class="cards audiences">${entry.items.filter((item) => item.type === "audience").map((item) => `<article><i>${escapeHtml(item.initials)}</i><strong>${escapeHtml(item.label)}</strong><small>${escapeHtml(item.description)}</small></article>`).join("")}</div></section>`;
+    if (entry.type === "featured") return `<section class="block" style="${css}">${previewHeading(entry)}<div class="cards services">${entry.items.filter((item) => item.type === "serviceRef").map((ref) => services.find((service) => service.id === ref.serviceId)).filter(Boolean).map((service) => `<article><i>${escapeHtml(service.initials)}</i><strong>${escapeHtml(service.title)}</strong><small>${escapeHtml(service.department)}</small></article>`).join("")}</div></section>`;
+    if (entry.type === "categories") return `<section class="block" style="${css}">${previewHeading(entry)}<div class="cards categories">${entry.items.filter((item) => item.type === "category").map((item) => `<article><i>${escapeHtml(item.initials)}</i><strong>${escapeHtml(item.label)}</strong><small>${escapeHtml(item.description)}</small></article>`).join("")}</div></section>`;
+    if (entry.type === "catalog") return `<section class="block" style="${css}">${previewHeading(entry)}<div class="list">${services.map((service) => `<article><i>${escapeHtml(service.initials)}</i><span><strong>${escapeHtml(service.title)}</strong><small>${escapeHtml(service.department)}</small></span><b>↗</b></article>`).join("")}</div></section>`;
+    if (entry.type === "help") return `<section class="help" style="${css}">${previewHeading(entry)}${links}</section>`;
+    if (entry.type === "footer") return `<section class="footer" style="${css}"><strong>${escapeHtml(textByRole(entry, "title"))}</strong><p>${escapeHtml(textByRole(entry, "description"))}</p>${links}</section>`;
+    return `<section class="block" style="${css}">${previewHeading(entry)}${entry.items.map((item) => item.type === "image" && item.src ? `<img src="${item.src}">` : item.type === "link" ? `<a>${escapeHtml(item.text)}</a>` : `<p>${escapeHtml(item.value || item.label)}</p>`).join("")}</section>`;
+  };
+  return `<!doctype html><html><head><meta charset="utf-8"><style>*{box-sizing:border-box}body{margin:0;background:#f7f7f3;color:#193a31;font-family:Arial,sans-serif}section{background:var(--bg);color:var(--color)}nav{display:flex;gap:18px;margin-left:auto}a{font-size:10px;font-weight:800}.utility,.header{display:flex;align-items:center;padding:10px 5%;border-bottom:1px solid #d8e3df}.utility{font-size:8px}.header{padding-block:18px}.brand{display:flex;align-items:center;gap:10px}.brand>b,.cards i,.list i{display:grid;place-items:center;background:var(--accent);color:white;border-radius:9px;font-style:normal;font-weight:900}.brand>b{width:38px;height:38px}.brand img{max-width:150px;max-height:48px}.brand span{display:flex;flex-direction:column}.brand small,.brand em{font-size:7px}.brand strong{font-family:Georgia;font-size:18px}.hero{padding:60px 8%;background-position:center;background-size:cover;text-align:center}.hero h1{max-width:760px;margin:12px auto;font-family:Georgia;font-size:50px}.hero p{max-width:650px;margin:auto;opacity:.75}.search{max-width:800px;display:flex;align-items:center;gap:12px;margin:28px auto 0;padding:8px 8px 8px 18px;border-radius:12px;background:white;color:#193a31}.search span{flex:1;text-align:left}.search b{padding:16px 22px;border-radius:8px;background:var(--accent);color:white}.block{padding:48px 6%}.float{margin:0 4%;border-radius:15px}.heading small{color:var(--accent);font-weight:900}.heading h2{margin:7px 0;font-family:Georgia;font-size:28px}.heading p{opacity:.7}.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:22px}.audiences{grid-template-columns:repeat(5,1fr)}.cards article,.list article{display:flex;gap:10px;padding:16px;border:1px solid #d8e3df;border-radius:10px;background:white;color:#193a31}.cards article{min-height:110px;align-items:flex-start;flex-direction:column}.cards i,.list i{width:36px;height:36px}.cards small,.list small{color:#718079}.list{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:22px}.list article{align-items:center}.list span{display:flex;flex:1;flex-direction:column}.help,.footer{padding:42px 6%}.footer{background:var(--bg)}@media(max-width:650px){.header nav{display:none}.hero h1{font-size:36px}.audiences,.cards,.list{grid-template-columns:1fr 1fr}}</style></head><body>${current.segments.map(render).join("")}</body></html>`;
 }
-
+function previewHeading(entry) { return `<div class="heading"><small>${escapeHtml(textByRole(entry, "eyebrow"))}</small><h2>${escapeHtml(textByRole(entry, "title", entry.name))}</h2><p>${escapeHtml(textByRole(entry, "description"))}</p></div>`; }
 function renderPreview() { $("#preview").srcdoc = previewHtml(); }
-function markDirty() { dirty = true; $(".save-state").className = "save-state dirty"; $("#save-state").textContent = "Alterações ainda não salvas"; renderPreview(); }
-function showToast(message) { const toast = $("#toast"); toast.textContent = message; toast.classList.add("show"); setTimeout(() => toast.classList.remove("show"), 2400); }
 
-function fillGeneralFields() {
-  $$('[name]').forEach((field) => { field.value = getPath(content, field.name) ?? ""; });
-}
+function showValidation(errors) { const success = errors.length === 0; $(".dialog-icon").textContent = success ? "✓" : "!"; $("#dialog-title").textContent = success ? "Pronto para gerar" : "Revise estes pontos"; $("#dialog-content").innerHTML = success ? "A estrutura de páginas, segmentos e itens foi validada." : `<ul>${errors.map((error) => `<li>${escapeHtml(error)}</li>`).join("")}</ul>`; $("#validation-dialog").showModal(); }
+async function save() { const result = await window.centralAPI.save(content); if (!result.ok) { showValidation(result.errors); return false; } dirty = false; $(".save-state").className = "save-state"; $("#save-state").textContent = "Todas as alterações foram salvas"; showToast("Projeto salvo com cópia de segurança"); return true; }
 
-function renderAudienceEditor() {
-  $("#audience-count").textContent = content.audiences.length;
-  $("#audience-editor-list").innerHTML = content.audiences.map((item) => `<article class="audience-editor-card" data-audience-card="${escapeHtml(item.id)}"><header><i>${escapeHtml(item.initials)}</i><strong>${escapeHtml(item.label)}</strong></header><label>Nome do público<input data-audience-id="${escapeHtml(item.id)}" data-audience-field="label" value="${escapeHtml(item.label)}"></label><label>Descrição<textarea rows="2" data-audience-id="${escapeHtml(item.id)}" data-audience-field="description">${escapeHtml(item.description)}</textarea></label><label>Sigla<input maxlength="3" data-audience-id="${escapeHtml(item.id)}" data-audience-field="initials" value="${escapeHtml(item.initials)}"></label></article>`).join("");
-  $$('[data-audience-field]').forEach((field) => field.addEventListener("input", () => {
-    const item = content.audiences.find((audience) => audience.id === field.dataset.audienceId);
-    if (!item) return;
-    item[field.dataset.audienceField] = field.value;
-    renderAudienceOptions();
-    markDirty();
-  }));
-}
-
-function renderAudienceOptions() {
-  const select = $("#service-audience");
-  const currentValue = select.value;
-  select.innerHTML = content.audiences.map((item) => `<option value="${escapeHtml(item.id)}">${escapeHtml(item.label)}</option>`).join("");
-  select.value = currentValue || content.audiences[0]?.id || "";
-}
-
-function renderServiceList() {
-  $("#service-count").textContent = content.services.length;
-  $("#service-list").innerHTML = content.services.map((service, index) => {
-    const audienceLabel = content.audiences.find((item) => item.id === service.audience)?.label || "Sem público";
-    return `<button type="button" data-id="${escapeHtml(service.id)}" class="${service.id === selectedServiceId ? "active" : ""}"><i>${escapeHtml(service.initials)}</i><span><strong>${service.featured ? `★ ${escapeHtml(service.title)}` : escapeHtml(service.title)}</strong><small>${String(index + 1).padStart(2, "0")} · ${escapeHtml(audienceLabel)} · ${escapeHtml(service.category)}</small></span><em>›</em></button>`;
-  }).join("");
-  $$("#service-list button").forEach((button) => button.addEventListener("click", () => selectService(button.dataset.id)));
-}
-
-function selectService(id) {
-  selectedServiceId = id;
-  const service = content.services.find((item) => item.id === id);
-  renderServiceList();
-  if (!service) { $("#service-editor").classList.add("hidden"); return; }
-  renderAudienceOptions();
-  $("#service-editor").classList.remove("hidden");
-  $("#selected-service-title").textContent = service.title;
-  $$('[data-service]').forEach((field) => { field[field.type === "checkbox" ? "checked" : "value"] = service[field.dataset.service] ?? false; });
-}
-
-function moveSelectedService(direction) {
-  const index = content.services.findIndex((service) => service.id === selectedServiceId);
-  const target = index + direction;
-  if (index < 0 || target < 0 || target >= content.services.length) return;
-  [content.services[index], content.services[target]] = [content.services[target], content.services[index]];
-  renderServiceList();
-  markDirty();
-}
-
-function changeSection(section) {
-  $$(".section-nav button").forEach((button) => button.classList.toggle("active", button.dataset.section === section));
-  $$(".form-section").forEach((form) => form.classList.toggle("active", form.dataset.form === section));
-}
-
-function showValidation(errors) {
-  const success = errors.length === 0;
-  $(".dialog-icon").textContent = success ? "✓" : "!";
-  $("#dialog-title").textContent = success ? "Pronto para gerar" : "Revise estes pontos";
-  $("#dialog-content").innerHTML = success ? "Todos os campos obrigatórios e endereços foram verificados." : `<ul>${errors.map((error) => `<li>${escapeHtml(error)}</li>`).join("")}</ul>`;
-  $("#validation-dialog").showModal();
-}
-
-async function save() {
-  const result = await window.centralAPI.save(content);
-  if (!result.ok) { showValidation(result.errors); return false; }
-  dirty = false;
-  $(".save-state").className = "save-state";
-  $("#save-state").textContent = "Todas as alterações foram salvas";
-  showToast("Projeto salvo com uma cópia de segurança");
-  return true;
-}
-
-async function init() {
-  content = await window.centralAPI.load();
-  fillGeneralFields();
-  renderAudienceEditor();
-  renderAudienceOptions();
-  renderServiceList();
-  renderPreview();
-  $$('[name]').forEach((field) => field.addEventListener("input", () => { setPath(content, field.name, field.value); markDirty(); }));
-  $$(".section-nav button").forEach((button) => button.addEventListener("click", () => changeSection(button.dataset.section)));
-  $$(".devices button").forEach((button) => button.addEventListener("click", () => { $$(".devices button").forEach((item) => item.classList.toggle("active", item === button)); $("#preview").className = button.dataset.device === "desktop" ? "" : button.dataset.device; $("#viewport-label").textContent = button.dataset.device === "desktop" ? "1440 × 900 · 100%" : button.dataset.device === "tablet" ? "768 × 1024" : "390 × 844"; }));
-  $$('[data-service]').forEach((field) => field.addEventListener("input", () => { const service = content.services.find((item) => item.id === selectedServiceId); if (!service) return; service[field.dataset.service] = field.type === "checkbox" ? field.checked : field.value; $("#selected-service-title").textContent = service.title; renderServiceList(); markDirty(); }));
-  $("#add-service").addEventListener("click", () => { const id = `servico-${Date.now()}`; content.services.push({ id, title: "Novo serviço", department: "Órgão responsável", category: "Geral", audience: content.audiences[0]?.id || "cidadao", destination: "Canal oficial", url: content.identity.portalUrl, initials: "NS", featured: false }); renderServiceList(); selectService(id); markDirty(); });
-  $("#move-service-up").addEventListener("click", () => moveSelectedService(-1));
-  $("#move-service-down").addEventListener("click", () => moveSelectedService(1));
-  $("#delete-service").addEventListener("click", () => { if (!selectedServiceId || !confirm("Excluir este serviço do projeto?")) return; content.services = content.services.filter((service) => service.id !== selectedServiceId); selectedServiceId = null; renderServiceList(); selectService(null); markDirty(); });
-  $("#save").addEventListener("click", save);
-  $("#validate").addEventListener("click", async () => showValidation(await window.centralAPI.validate(content)));
-  $("#export").addEventListener("click", async () => { if (dirty && !(await save())) return; const result = await window.centralAPI.exportSite(content); if (result.canceled) return; if (!result.ok) return showValidation(result.errors); showToast("Portal estático gerado e pronto para publicar"); });
+function bindStaticEvents() {
+  $("#page-select").addEventListener("change", (event) => { selectedPageId = event.target.value; selectedSegmentId = page().segments[0]?.id; selectedItemId = null; renderEditor(); renderPreview(); });
+  $("#page-name").addEventListener("input", (event) => { page().name = event.target.value; $("#page-select").selectedOptions[0].textContent = event.target.value || "Página sem nome"; markDirty(); });
+  $("#page-slug").addEventListener("input", (event) => { page().slug = event.target.value; markDirty(); });
+  $("#add-page").addEventListener("click", () => { const id = uid("pagina"); content.pages.push({ id, name: "Nova página", slug: `/${id}`, segments: [] }); selectedPageId = id; selectedSegmentId = null; selectedItemId = null; renderEditor(); markDirty(); });
+  $("#add-segment").addEventListener("click", () => { const entry = { id: uid("segmento"), name: "Novo segmento", type: "generic", enabled: true, style: { background: "#ffffff", color: "#193a31", accent: content.site.primaryColor, width: "contained", spacing: "comfortable", radius: "soft", backgroundImage: "" }, items: [] }; page().segments.push(entry); selectedSegmentId = entry.id; selectedItemId = null; renderEditor(); markDirty(); });
+  $("#segment-name").addEventListener("input", (event) => { segment().name = event.target.value; $("#segment-heading").textContent = event.target.value; renderSegments(); markDirty(); });
+  $("#segment-type").addEventListener("change", (event) => { segment().type = event.target.value; renderSegments(); markDirty(); });
+  $("#segment-enabled").addEventListener("change", (event) => { segment().enabled = event.target.checked; renderSegments(); markDirty(); });
+  [["style-background", "background"], ["style-color", "color"], ["style-accent", "accent"], ["style-width", "width"], ["style-spacing", "spacing"], ["style-radius", "radius"]].forEach(([id, field]) => $("#" + id).addEventListener("input", (event) => { segment().style[field] = event.target.value; markDirty(); }));
+  $("#background-upload").addEventListener("change", (event) => readImage(event.target.files[0], (source) => { segment().style.backgroundImage = source; renderEditor(); markDirty(); }));
+  $("#remove-background").addEventListener("click", () => { segment().style.backgroundImage = ""; renderEditor(); markDirty(); });
+  $("#segment-up").addEventListener("click", () => { const segments = page().segments; if (move(segments, segments.findIndex((entry) => entry.id === selectedSegmentId), -1)) { renderEditor(); markDirty(); } });
+  $("#segment-down").addEventListener("click", () => { const segments = page().segments; if (move(segments, segments.findIndex((entry) => entry.id === selectedSegmentId), 1)) { renderEditor(); markDirty(); } });
+  $("#delete-segment").addEventListener("click", () => { if (!confirm("Excluir este segmento e todos os seus itens?")) return; page().segments = page().segments.filter((entry) => entry.id !== selectedSegmentId); selectedSegmentId = page().segments[0]?.id; selectedItemId = null; renderEditor(); markDirty(); });
+  $("#add-item").addEventListener("click", () => { const entry = defaultItem($("#new-item-type").value); segment().items.push(entry); selectedItemId = entry.id; renderEditor(); markDirty(); });
+  $$(".devices button").forEach((button) => button.addEventListener("click", () => { $$(".devices button").forEach((entry) => entry.classList.toggle("active", entry === button)); $("#preview").className = button.dataset.device === "desktop" ? "" : button.dataset.device; $("#viewport-label").textContent = button.dataset.device === "desktop" ? "1440 × 900 · 100%" : button.dataset.device === "tablet" ? "768 × 1024" : "390 × 844"; }));
+  $("#save").addEventListener("click", save); $("#validate").addEventListener("click", async () => showValidation(await window.centralAPI.validate(content)));
+  $("#export").addEventListener("click", async () => { if (dirty && !(await save())) return; const result = await window.centralAPI.exportSite(content); if (result.canceled) return; if (!result.ok) return showValidation(result.errors); showToast("Portal estático gerado"); });
   $("#close-dialog").addEventListener("click", () => $("#validation-dialog").close());
   window.addEventListener("beforeunload", (event) => { if (dirty) { event.preventDefault(); event.returnValue = ""; } });
 }
 
+async function init() { content = await window.centralAPI.load(); selectedPageId = content.pages[0]?.id; selectedSegmentId = content.pages[0]?.segments[0]?.id; bindStaticEvents(); renderEditor(); renderPreview(); }
 init();

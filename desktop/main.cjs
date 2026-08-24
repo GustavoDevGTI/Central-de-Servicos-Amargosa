@@ -28,24 +28,50 @@ function templateContentPath() {
 
 function normalizeContent(content) {
   const template = JSON.parse(fs.readFileSync(templateContentPath(), "utf8"));
-  if (!Array.isArray(content.audiences) || content.audiences.length === 0) content.audiences = template.audiences;
-  if (!Array.isArray(content.services)) content.services = [];
-  if ((content.schemaVersion || 1) < 2) {
-    for (const templateService of template.services) {
-      const existing = content.services.find((service) => service.id === templateService.id);
-      if (existing) {
-        existing.audience ||= templateService.audience;
-      } else {
-        content.services.push(templateService);
-      }
+  if ((content?.schemaVersion || 1) >= 3 && Array.isArray(content.pages)) return content;
+  const migrated = JSON.parse(JSON.stringify(template));
+  const segments = migrated.pages[0].segments;
+  const findSegment = (type) => segments.find((segment) => segment.type === type);
+  const setText = (segmentType, role, value) => {
+    const item = findSegment(segmentType)?.items.find((entry) => entry.role === role);
+    if (item && typeof value === "string") item.value = value;
+  };
+  const identity = content?.identity || {};
+  migrated.site.primaryColor = identity.primaryColor || migrated.site.primaryColor;
+  migrated.site.accentColor = identity.accentColor || migrated.site.accentColor;
+  for (const segment of segments) {
+    if (segment.style.accent === template.site.primaryColor) segment.style.accent = migrated.site.primaryColor;
+  }
+  setText("header", "brandLine", identity.brandLine);
+  setText("header", "municipality", identity.municipality);
+  setText("header", "subtitle", "Central de Serviços");
+  setText("hero", "eyebrow", content?.hero?.eyebrow);
+  setText("hero", "title", content?.hero?.title);
+  setText("hero", "description", content?.hero?.description);
+  const search = findSegment("hero")?.items.find((entry) => entry.type === "search");
+  if (search && content?.hero?.searchPlaceholder) search.placeholder = content.hero.searchPlaceholder;
+  for (const type of ["utility", "header", "help"]) {
+    for (const link of findSegment(type)?.items.filter((entry) => entry.type === "link") || []) {
+      if (link.role === "external" || link.role === "action") link.url = identity.portalUrl || link.url;
     }
   }
-  const validAudienceIds = new Set(content.audiences.map((audience) => audience.id));
-  for (const service of content.services) {
-    if (!validAudienceIds.has(service.audience)) service.audience = "cidadao";
+  if (Array.isArray(content?.audiences) && content.audiences.length) {
+    const segment = findSegment("audiences");
+    segment.items = [...segment.items.filter((entry) => entry.type !== "audience"), ...content.audiences.map((entry) => ({ id: entry.id, type: "audience", role: "entry", label: entry.label, description: entry.description || "", initials: entry.initials || entry.label?.slice(0, 2).toUpperCase() || "PU" }))];
   }
-  content.schemaVersion = 2;
-  return content;
+  if (Array.isArray(content?.services) && content.services.length) {
+    const catalog = findSegment("catalog");
+    catalog.items = [...catalog.items.filter((entry) => entry.type !== "service"), ...content.services.map((entry) => ({ id: entry.id, type: "service", role: "entry", title: entry.title, department: entry.department, category: entry.category, audienceId: entry.audience || "cidadao", destination: entry.destination, url: entry.url, initials: entry.initials || "SV" }))];
+    const featured = findSegment("featured");
+    featured.items = [...featured.items.filter((entry) => entry.type !== "serviceRef"), ...content.services.filter((entry) => entry.featured).map((entry) => ({ id: `featured-${entry.id}`, type: "serviceRef", role: "entry", label: entry.title, serviceId: entry.id }))];
+  }
+  setText("help", "title", content?.help?.title);
+  setText("help", "description", content?.help?.description);
+  const helpLink = findSegment("help")?.items.find((entry) => entry.role === "action");
+  if (helpLink && content?.help?.label) helpLink.text = `${content.help.label} ↗`;
+  setText("footer", "description", identity.tagline);
+  migrated.schemaVersion = 3;
+  return migrated;
 }
 
 function backupContent(filePath) {
@@ -81,28 +107,43 @@ function createWindow() {
 
 function validateContent(content) {
   const errors = [];
-  if (!content?.identity?.municipality?.trim()) errors.push("Informe o nome do município.");
-  if (!content?.hero?.title?.trim()) errors.push("Informe o título principal.");
-  if (!Array.isArray(content?.audiences) || content.audiences.length === 0) errors.push("Cadastre ao menos um público.");
-  for (const [index, audience] of (content.audiences || []).entries()) {
-    if (!audience.label?.trim()) errors.push(`Público ${index + 1}: informe o nome.`);
-  }
-  try {
-    const portalUrl = new URL(content?.identity?.portalUrl);
-    if (!["https:", "http:"].includes(portalUrl.protocol)) throw new Error("invalid protocol");
-  } catch {
-    errors.push("Informe a URL completa do portal oficial.");
-  }
-  if (!Array.isArray(content?.services) || content.services.length === 0) errors.push("Cadastre ao menos um serviço.");
-  for (const [index, service] of (content.services || []).entries()) {
-    if (!service.title?.trim()) errors.push(`Serviço ${index + 1}: informe o nome.`);
-    if (!service.department?.trim()) errors.push(`Serviço ${index + 1}: informe o órgão responsável.`);
-    if (!content.audiences?.some((audience) => audience.id === service.audience)) errors.push(`Serviço ${index + 1}: selecione um público válido.`);
-    try {
-      const url = new URL(service.url);
-      if (!["https:", "http:"].includes(url.protocol)) throw new Error("invalid protocol");
-    } catch {
-      errors.push(`Serviço ${index + 1}: informe uma URL completa iniciada por https://.`);
+  if (content?.schemaVersion !== 3) errors.push("O projeto precisa usar a estrutura atual (versão 3).");
+  if (!Array.isArray(content?.pages) || content.pages.length === 0) return [...errors, "Cadastre ao menos uma página."];
+  const slugs = new Set();
+  const allSegments = content.pages.flatMap((page) => page.segments || []);
+  const audiences = new Set(allSegments.flatMap((segment) => segment.items || []).filter((item) => item.type === "audience").map((item) => item.id));
+  const services = new Set(allSegments.flatMap((segment) => segment.items || []).filter((item) => item.type === "service").map((item) => item.id));
+  const validUrl = (value, allowAnchor = false) => {
+    if (allowAnchor && typeof value === "string" && value.startsWith("#")) return true;
+    try { return ["https:", "http:"].includes(new URL(value).protocol); } catch { return false; }
+  };
+  for (const [pageIndex, page] of content.pages.entries()) {
+    const pageLabel = page.name || `Página ${pageIndex + 1}`;
+    if (!page.name?.trim()) errors.push(`Página ${pageIndex + 1}: informe o nome.`);
+    if (!page.slug?.startsWith("/")) errors.push(`${pageLabel}: o endereço deve começar com /.`);
+    if (slugs.has(page.slug)) errors.push(`${pageLabel}: o endereço está repetido.`); else slugs.add(page.slug);
+    if (!Array.isArray(page.segments) || page.segments.length === 0) errors.push(`${pageLabel}: adicione ao menos um segmento.`);
+    const segmentIds = new Set();
+    for (const [segmentIndex, segment] of (page.segments || []).entries()) {
+      const segmentLabel = segment.name || `Segmento ${segmentIndex + 1}`;
+      if (!segment.name?.trim()) errors.push(`${pageLabel}, segmento ${segmentIndex + 1}: informe o nome.`);
+      if (!segment.type?.trim()) errors.push(`${segmentLabel}: informe o tipo.`);
+      if (segmentIds.has(segment.id)) errors.push(`${segmentLabel}: identificador de segmento repetido.`); else segmentIds.add(segment.id);
+      if (!Array.isArray(segment.items)) errors.push(`${segmentLabel}: a lista de itens é inválida.`);
+      const itemIds = new Set();
+      for (const [itemIndex, item] of (segment.items || []).entries()) {
+        const itemLabel = item.label || item.title || `Item ${itemIndex + 1}`;
+        if (!item.id || itemIds.has(item.id)) errors.push(`${segmentLabel}: o identificador de “${itemLabel}” é inválido ou repetido.`); else itemIds.add(item.id);
+        if (item.type === "link" && !validUrl(item.url, true)) errors.push(`${segmentLabel}, ${itemLabel}: informe uma URL completa ou uma âncora iniciada por #.`);
+        if (item.type === "image" && item.src && !/^data:image\//.test(item.src) && !validUrl(item.src)) errors.push(`${segmentLabel}, ${itemLabel}: a imagem é inválida.`);
+        if (item.type === "image" && item.src?.length > 2_900_000) errors.push(`${segmentLabel}, ${itemLabel}: a imagem ultrapassa o limite de 2 MB.`);
+        if (item.type === "service") {
+          if (!item.title?.trim() || !item.department?.trim()) errors.push(`${segmentLabel}, serviço ${itemIndex + 1}: informe nome e órgão responsável.`);
+          if (!audiences.has(item.audienceId)) errors.push(`${segmentLabel}, ${item.title || itemLabel}: selecione um público válido.`);
+          if (!validUrl(item.url)) errors.push(`${segmentLabel}, ${item.title || itemLabel}: informe uma URL completa.`);
+        }
+        if (item.type === "serviceRef" && !services.has(item.serviceId)) errors.push(`${segmentLabel}, ${itemLabel}: selecione um serviço existente no catálogo.`);
+      }
     }
   }
   return errors;
@@ -139,7 +180,7 @@ ipcMain.handle("site:export", async (_event, content) => {
   const exportDirectory = path.join(selected.filePaths[0], `central-servicos-amargosa-${suffix}`);
   fs.mkdirSync(exportDirectory, { recursive: false });
   const templateDirectory = path.join(__dirname, "templates");
-  for (const file of ["index.html", "styles.css", "app.js"]) {
+  for (const file of ["index.html", "styles.css", "dynamic.css", "app.js"]) {
     fs.copyFileSync(path.join(templateDirectory, file), path.join(exportDirectory, file));
   }
   fs.writeFileSync(path.join(exportDirectory, "content.js"), `window.CENTRAL_CONTENT = ${JSON.stringify(content, null, 2)};\n`, "utf8");

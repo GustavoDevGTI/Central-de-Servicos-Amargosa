@@ -3,81 +3,53 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self'; img-src 'self' data:; frame-src 'self' data:;">
   <title>Editor — Central de Serviços de Amargosa</title>
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="extensions.css">
 </head>
 <body>
   <header class="topbar">
-    <div class="editor-brand"><span>A</span><div><strong>Central de Serviços</strong><small>Editor local de Amargosa</small></div></div>
+    <div class="editor-brand"><span>A</span><div><strong>Construtor da Central</strong><small>Páginas → segmentos → itens</small></div></div>
     <div class="save-state"><i></i><span id="save-state">Conteúdo carregado</span></div>
     <div class="top-actions">
-      <div class="devices" aria-label="Tamanho da prévia"><button class="active" data-device="desktop">Desktop</button><button data-device="tablet">Tablet</button><button data-device="mobile">Celular</button></div>
-      <button id="validate" class="secondary">Validar</button>
-      <button id="export" class="primary">Gerar portal</button>
+      <div class="devices"><button class="active" data-device="desktop">Desktop</button><button data-device="tablet">Tablet</button><button data-device="mobile">Celular</button></div>
+      <button id="validate" class="secondary">Validar</button><button id="export" class="primary">Gerar portal</button>
     </div>
   </header>
   <div class="workspace">
-    <aside class="left-panel">
-      <div class="tabs"><button class="active">Estrutura</button><button>Conteúdo</button></div>
-      <p class="panel-label">EDITE A CENTRAL</p>
-      <nav class="section-nav">
-        <button class="active" data-section="identity"><b>01</b><span>Identidade</span></button>
-        <button data-section="hero"><b>02</b><span>Apresentação</span></button>
-        <button data-section="audiences"><b>03</b><span>Públicos</span><em id="audience-count">0</em></button>
-        <button data-section="services"><b>04</b><span>Serviços</span><em id="service-count">0</em></button>
-        <button data-section="help"><b>05</b><span>Ajuda e rodapé</span></button>
-      </nav>
-      <div class="local-note"><strong>Sem banco de dados</strong><p>As alterações ficam somente neste computador. O portal gerado é totalmente estático.</p></div>
+    <aside class="left-panel schema-panel">
+      <p class="panel-label">PÁGINA</p>
+      <div class="page-tools"><select id="page-select" aria-label="Página"></select><button id="add-page" title="Adicionar página">+</button></div>
+      <div class="page-meta"><input id="page-name" placeholder="Nome da página"><input id="page-slug" placeholder="/endereco"></div>
+      <div class="schema-title"><p class="panel-label">SEGMENTOS</p><button id="add-segment">+ Adicionar</button></div>
+      <nav id="segment-nav" class="section-nav"></nav>
+      <div class="local-note"><strong>Sem banco de dados</strong><p>Textos, links, serviços e imagens ficam no projeto. Imagens de até 2 MB são incorporadas ao arquivo.</p></div>
     </aside>
     <section class="canvas">
-      <header><span>PRÉVIA DA CENTRAL DE SERVIÇOS</span><strong id="viewport-label">1440 × 900 · 100%</strong></header>
+      <header><span>PRÉVIA DA PÁGINA</span><strong id="viewport-label">1440 × 900 · 100%</strong></header>
       <div class="preview-stage"><iframe id="preview" title="Prévia do portal"></iframe></div>
     </section>
-    <aside class="right-panel">
-      <header class="right-tabs"><button class="active">Conteúdo</button><button>Design</button></header>
-      <form id="editor-form" autocomplete="off">
-        <section class="form-section active" data-form="identity">
-          <div class="form-heading"><small>IDENTIDADE</small><h2>Prefeitura e aparência</h2><p>Dados institucionais visíveis em toda a central.</p></div>
-          <label>Nome do município<input name="identity.municipality" required></label>
-          <label>Linha da marca<input name="identity.brandLine"></label>
-          <label>Slogan curto<input name="identity.tagline"></label>
-          <label>Portal oficial<input name="identity.portalUrl" type="url"></label>
-          <div class="two-fields"><label>Cor principal<input name="identity.primaryColor" type="color"></label><label>Cor de destaque<input name="identity.accentColor" type="color"></label></div>
+    <aside class="right-panel component-panel">
+      <header class="right-tabs"><button class="active">Segmento e itens</button><button type="button">Design</button></header>
+      <div id="segment-empty" class="empty-editor">Selecione um segmento para editar.</div>
+      <div id="segment-editor" class="dynamic-editor hidden">
+        <section class="segment-settings">
+          <div class="form-heading inline"><div><small>SEGMENTO</small><h2 id="segment-heading">Segmento</h2></div><div class="mini-actions"><button id="segment-up">↑</button><button id="segment-down">↓</button><button id="delete-segment" class="danger">Excluir</button></div></div>
+          <label>Nome do segmento<input id="segment-name"></label>
+          <div class="two-fields"><label>Tipo<select id="segment-type"></select></label><label class="check compact-check"><input id="segment-enabled" type="checkbox"><span>Visível</span></label></div>
+          <details open><summary>Aparência do segmento</summary><div class="style-grid">
+            <label>Fundo<input id="style-background" type="color"></label><label>Texto<input id="style-color" type="color"></label><label>Destaque<input id="style-accent" type="color"></label>
+            <label>Largura<select id="style-width"><option value="narrow">Estreita</option><option value="contained">Contida</option><option value="wide">Ampla</option></select></label>
+            <label>Espaçamento<select id="style-spacing"><option value="compact">Compacto</option><option value="comfortable">Confortável</option><option value="airy">Arejado</option></select></label>
+            <label>Cantos<select id="style-radius"><option value="square">Retos</option><option value="soft">Suaves</option><option value="round">Arredondados</option></select></label>
+          </div><div class="image-field"><label>Imagem de fundo<input id="background-upload" type="file" accept="image/*"></label><button id="remove-background" type="button">Remover</button><small id="background-status"></small></div></details>
         </section>
-        <section class="form-section" data-form="hero">
-          <div class="form-heading"><small>APRESENTAÇÃO</small><h2>Busca e mensagem inicial</h2><p>O primeiro texto visto pelo cidadão.</p></div>
-          <label>Identificador<input name="hero.eyebrow"></label>
-          <label>Título principal<textarea name="hero.title" rows="3"></textarea></label>
-          <label>Descrição<textarea name="hero.description" rows="4"></textarea></label>
-          <label>Exemplo da busca<input name="hero.searchPlaceholder"></label>
+        <section class="items-section">
+          <div class="form-heading inline"><div><small>ITENS DO SEGMENTO</small><h2>Conteúdo</h2></div><div class="add-item"><select id="new-item-type"></select><button id="add-item">+ Item</button></div></div>
+          <div id="item-list" class="item-list"></div>
+          <div id="item-editor" class="item-editor hidden"></div>
         </section>
-        <section class="form-section" data-form="audiences">
-          <div class="form-heading"><small>PÚBLICOS</small><h2>Divisão dos serviços</h2><p>Edite os perfis usados para organizar o catálogo.</p></div>
-          <div id="audience-editor-list" class="audience-editor-list"></div>
-        </section>
-        <section class="form-section" data-form="services">
-          <div class="form-heading inline"><div><small>SERVIÇOS</small><h2>Direcionamentos</h2></div><button id="add-service" type="button">+ Adicionar</button></div>
-          <div id="service-list" class="service-list"></div>
-          <div id="service-editor" class="service-editor hidden">
-            <header><div><small>SERVIÇO SELECIONADO</small><strong id="selected-service-title"></strong></div><div class="service-actions"><button id="move-service-up" type="button" title="Subir na ordem manual">↑ Subir</button><button id="move-service-down" type="button" title="Descer na ordem manual">↓ Descer</button><button id="delete-service" type="button" title="Excluir serviço">Excluir</button></div></header>
-            <label>Nome do serviço<input data-service="title"></label>
-            <label>Órgão responsável<input data-service="department"></label>
-            <div class="two-fields"><label>Categoria<input data-service="category"></label><label>Sigla<input data-service="initials" maxlength="3"></label></div>
-            <label>Público principal<select data-service="audience" id="service-audience"></select></label>
-            <label>Nome do canal de destino<input data-service="destination"></label>
-            <label>Endereço oficial (URL)<input data-service="url" type="url"></label>
-            <label class="check"><input data-service="featured" type="checkbox"><span>Exibir em “Serviços mais usados” — a ordem segue a lista acima</span></label>
-          </div>
-        </section>
-        <section class="form-section" data-form="help">
-          <div class="form-heading"><small>AJUDA E RODAPÉ</small><h2>Canal institucional</h2><p>Mensagem exibida no final da página.</p></div>
-          <label>Título<input name="help.title"></label>
-          <label>Descrição<textarea name="help.description" rows="4"></textarea></label>
-          <label>Texto do botão<input name="help.label"></label>
-        </section>
-      </form>
+      </div>
       <div class="right-footer"><button id="save" class="primary">Salvar alterações</button></div>
     </aside>
   </div>

@@ -3,7 +3,7 @@
 Projeto composto por duas partes que usam o mesmo conteúdo:
 
 - portal público responsivo, sem login, banco de dados ou coleta de dados pessoais;
-- aplicativo desktop para editar textos, identidade e direcionamentos sem alterar código.
+- aplicativo desktop para editar páginas, segmentos e todos os itens sem alterar código.
 
 ## Usar o portal durante o desenvolvimento
 
@@ -18,7 +18,7 @@ npm run dev
 npm run editor
 ```
 
-No editor, use **Salvar alterações** para atualizar `content/site.json`, **Validar** para conferir os campos obrigatórios e **Gerar portal** para exportar uma pasta estática pronta para hospedagem convencional. A tela **Públicos** edita Cidadão, Empresas, Servidor e demais perfis. Na lista de serviços, os botões **Subir** e **Descer** definem manualmente a ordem dos itens marcados como mais usados.
+No editor, use **Salvar alterações** para atualizar `content/site.json`, **Validar** para conferir a estrutura e **Gerar portal** para exportar uma pasta estática pronta para hospedagem convencional. Cada página contém segmentos ordenáveis; cada segmento contém itens também ordenáveis. Textos, links, logos, imagens, públicos, categorias, serviços e referências de “mais usados” são editáveis. Imagens de até 2 MB são incorporadas ao projeto, sem servidor ou banco de dados.
 
 ## Gerar o instalador do Windows
 
@@ -26,7 +26,7 @@ No editor, use **Salvar alterações** para atualizar `content/site.json`, **Val
 npm run editor:package
 ```
 
-O instalador atual será criado em `release-desktop-v2/`.
+O instalador atual será criado em `release-desktop-v3/`.
 
 ## Publicação
 
