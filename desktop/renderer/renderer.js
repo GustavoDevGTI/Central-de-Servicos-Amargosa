@@ -4,6 +4,8 @@ let selectedSegmentId;
 let selectedItemId;
 let dirty = false;
 let editorMode = "content";
+let project;
+let previewAssets;
 const $ = (selector) => document.querySelector(selector);
 const $$ = (selector) => [...document.querySelectorAll(selector)];
 const segmentTypes = ["utility", "header", "hero", "audiences", "featured", "categories", "catalog", "help", "footer", "amanda", "generic"];
@@ -41,6 +43,31 @@ function textByRole(entry, role, fallback = "") { return entry.items.find((item)
 function showToast(message) { const toast = $("#toast"); toast.textContent = message; toast.classList.add("show"); setTimeout(() => toast.classList.remove("show"), 2400); }
 function markDirty() { dirty = true; $(".save-state").className = "save-state dirty"; $("#save-state").textContent = "Alterações ainda não salvas"; renderPreview(); }
 function move(array, index, direction) { const target = index + direction; if (index < 0 || target < 0 || target >= array.length) return false; [array[index], array[target]] = [array[target], array[index]]; return true; }
+
+function renderProjectInfo() {
+  const openedPortal = project?.kind === "portal";
+  const label = openedPortal ? `${project.name} · ${project.version}` : "Projeto interno";
+  $("#project-source").textContent = label;
+  $("#project-source").title = project?.directory || label;
+  $("#reload-portal").hidden = !openedPortal;
+  $("#save").textContent = openedPortal ? "Atualizar portal aberto" : "Salvar alterações";
+  $("#export").textContent = openedPortal ? "Gerar nova versão" : "Gerar portal";
+}
+
+function applyProjectPayload(payload, message) {
+  content = payload.content;
+  project = payload.project;
+  previewAssets = payload.previewAssets;
+  selectedPageId = content.pages[0]?.id;
+  selectedSegmentId = content.pages[0]?.segments[0]?.id;
+  selectedItemId = null;
+  dirty = false;
+  $(".save-state").className = "save-state";
+  $("#save-state").textContent = message;
+  renderProjectInfo();
+  renderEditor();
+  renderPreview();
+}
 
 function renderPages() {
   $("#page-select").innerHTML = content.pages.map((entry) => `<option value="${escapeHtml(entry.id)}">${escapeHtml(entry.name)}</option>`).join("");
@@ -156,7 +183,10 @@ function previewHtml() {
   const previewContent = { ...content, pages: [selectedPage, ...content.pages.filter((entry) => entry.id !== selectedPage.id)] };
   const serialized = JSON.stringify(previewContent).replaceAll("<", "\\u003c");
   const selection = JSON.stringify({ segmentId: selectedSegmentId || null, itemId: selectedItemId || null }).replaceAll("<", "\\u003c");
-  return `<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="stylesheet" href="../templates/styles.css"><link rel="stylesheet" href="../templates/dynamic.css"><link rel="stylesheet" href="../templates/fonts.css"><link rel="stylesheet" href="../templates/accessibility.css"><style>.editor-selected-segment{position:relative!important;z-index:40!important;border-radius:0!important;outline:3px solid #f2c94c!important;outline-offset:-3px!important;scroll-margin:64px}.editor-selected-segment::before{content:"SEGMENTO SELECIONADO";position:absolute;z-index:90;top:0;left:0;padding:5px 8px;background:#f2c94c;color:#302400;font:800 8px/1 "Source Sans 3 Variable","Segoe UI",sans-serif;letter-spacing:.08em;pointer-events:none}.editor-selected-item{position:relative!important;z-index:50!important;border-radius:0!important;outline:3px solid #f28c28!important;outline-offset:2px!important;scroll-margin:90px}</style><script>window.CENTRAL_CONTENT=${serialized};window.CENTRAL_EDITOR_SELECTION=${selection};</script><script defer src="../templates/app.js"></script></head><body><div class="skip-links" aria-label="Atalhos de navegação"><a class="skip" href="#conteudo">Ir para o conteúdo</a><a class="skip" href="#service-search">Ir para a busca</a><a class="skip" href="#publicos">Ir para os públicos</a><a class="skip" href="#todos-os-servicos">Ir para os serviços</a></div><main id="conteudo" tabindex="-1"></main></body></html>`;
+  const importedCss = (previewAssets?.css || []).join("\n").replace(/<\/style/gi, "<\\/style");
+  const trustedAppScript = (previewAssets?.appScript || "").replace(/<\/script/gi, "<\\/script");
+  const baseUrl = escapeHtml(previewAssets?.baseUrl || "");
+  return `<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><base href="${baseUrl}"><style>${importedCss}</style><style>.editor-selected-segment{position:relative!important;z-index:40!important;border-radius:0!important;outline:3px solid #f2c94c!important;outline-offset:-3px!important;scroll-margin:64px}.editor-selected-segment::before{content:"SEGMENTO SELECIONADO";position:absolute;z-index:90;top:0;left:0;padding:5px 8px;background:#f2c94c;color:#302400;font:800 8px/1 "Source Sans 3 Variable","Segoe UI",sans-serif;letter-spacing:.08em;pointer-events:none}.editor-selected-item{position:relative!important;z-index:50!important;border-radius:0!important;outline:3px solid #f28c28!important;outline-offset:2px!important;scroll-margin:90px}</style><script>window.CENTRAL_CONTENT=${serialized};window.CENTRAL_EDITOR_SELECTION=${selection};</script></head><body><div class="skip-links" aria-label="Atalhos de navegação"><a class="skip" href="#conteudo">Ir para o conteúdo</a><a class="skip" href="#service-search">Ir para a busca</a><a class="skip" href="#publicos">Ir para os públicos</a><a class="skip" href="#todos-os-servicos">Ir para os serviços</a></div><main id="conteudo" tabindex="-1"></main><script>${trustedAppScript}</script></body></html>`;
   /* O código abaixo é mantido temporariamente apenas como fallback para instalações antigas. */
   const current = page();
   const services = current.segments.find((entry) => entry.type === "catalog")?.items.filter((entry) => entry.type === "service") || [];
@@ -182,10 +212,41 @@ function previewHtml() {
 function previewHeading(entry) { return `<div class="heading"><small>${escapeHtml(textByRole(entry, "eyebrow"))}</small><h2>${escapeHtml(textByRole(entry, "title", entry.name))}</h2><p>${escapeHtml(textByRole(entry, "description"))}</p></div>`; }
 function renderPreview() { $("#preview").srcdoc = previewHtml(); }
 
-function showValidation(errors) { const success = errors.length === 0; $(".dialog-icon").textContent = success ? "✓" : "!"; $("#dialog-title").textContent = success ? "Pronto para gerar" : "Revise estes pontos"; $("#dialog-content").innerHTML = success ? "A estrutura de páginas, segmentos e itens foi validada." : `<ul>${errors.map((error) => `<li>${escapeHtml(error)}</li>`).join("")}</ul>`; $("#validation-dialog").showModal(); }
-async function save() { const result = await window.centralAPI.save(content); if (!result.ok) { showValidation(result.errors); return false; } dirty = false; $(".save-state").className = "save-state"; $("#save-state").textContent = "Todas as alterações foram salvas"; showToast("Projeto salvo com cópia de segurança"); return true; }
+function showMessage(title, messages, success = false) { $(".dialog-icon").textContent = success ? "✓" : "!"; $("#dialog-title").textContent = title; $("#dialog-content").innerHTML = Array.isArray(messages) ? `<ul>${messages.map((message) => `<li>${escapeHtml(message)}</li>`).join("")}</ul>` : escapeHtml(messages); $("#validation-dialog").showModal(); }
+function showValidation(errors) { const success = errors.length === 0; showMessage(success ? "Pronto para gerar" : "Revise estes pontos", success ? "A estrutura de páginas, segmentos e itens foi validada." : errors, success); }
+async function save() {
+  const result = await window.centralAPI.save(content);
+  if (!result.ok) {
+    showMessage(result.conflict ? "O portal mudou fora do construtor" : "Não foi possível salvar", result.errors || ["Revise o conteúdo e tente novamente."]);
+    return false;
+  }
+  project = result.project || project;
+  dirty = false;
+  $(".save-state").className = "save-state";
+  $("#save-state").textContent = project?.kind === "portal" ? "Portal aberto atualizado" : "Todas as alterações foram salvas";
+  renderProjectInfo();
+  showToast(project?.kind === "portal" ? "Conteúdo atualizado na pasta do portal" : "Projeto salvo com cópia de segurança");
+  return true;
+}
 
 function bindStaticEvents() {
+  $("#open-portal").addEventListener("click", async () => {
+    if (dirty && !confirm("Há alterações não salvas. Deseja abrir outro portal e descartá-las?")) return;
+    const result = await window.centralAPI.openPortal();
+    if (result.canceled) return;
+    if (!result.ok) return showMessage("Não foi possível abrir o portal", result.errors || ["Escolha outra pasta."]);
+    applyProjectPayload(result, "Portal estático aberto");
+    showToast("Portal aberto para edição");
+    if (result.errors?.length) showMessage("Portal aberto com pontos para revisar", result.errors);
+  });
+  $("#reload-portal").addEventListener("click", async () => {
+    if (dirty && !confirm("Recarregar descarta as alterações ainda não salvas e lê novamente os arquivos externos. Continuar?")) return;
+    const result = await window.centralAPI.reloadPortal();
+    if (!result.ok) return showMessage("Não foi possível recarregar o portal", result.errors || ["Tente abrir a pasta novamente."]);
+    applyProjectPayload(result, "Mudanças externas recarregadas");
+    showToast("Mudanças externas carregadas");
+    if (result.errors?.length) showMessage("Portal recarregado com pontos para revisar", result.errors);
+  });
   $$('[data-editor-mode]').forEach((button) => button.addEventListener("click", () => {
     editorMode = button.dataset.editorMode;
     $$('[data-editor-mode]').forEach((entry) => entry.classList.toggle("active", entry === button));
@@ -209,10 +270,10 @@ function bindStaticEvents() {
   $("#add-item").addEventListener("click", () => { const entry = defaultItem($("#new-item-type").value); segment().items.push(entry); selectedItemId = entry.id; renderEditor(); markDirty(); });
   $$(".devices button").forEach((button) => button.addEventListener("click", () => { $$(".devices button").forEach((entry) => entry.classList.toggle("active", entry === button)); $("#preview").className = button.dataset.device === "desktop" ? "" : button.dataset.device; $("#viewport-label").textContent = button.dataset.device === "desktop" ? "1440 × 900 · 100%" : button.dataset.device === "tablet" ? "768 × 1024" : "390 × 844"; }));
   $("#save").addEventListener("click", save); $("#validate").addEventListener("click", async () => showValidation(await window.centralAPI.validate(content)));
-  $("#export").addEventListener("click", async () => { if (dirty && !(await save())) return; const result = await window.centralAPI.exportSite(content); if (result.canceled) return; if (!result.ok) return showValidation(result.errors); showToast("Portal estático gerado"); });
+  $("#export").addEventListener("click", async () => { if (dirty && !(await save())) return; const result = await window.centralAPI.exportSite(content); if (result.canceled) return; if (!result.ok) return showMessage("Não foi possível gerar a versão", result.errors || ["Escolha outra pasta."]); showToast(result.basedOnOpenPortal ? "Nova versão criada com as mudanças externas" : "Portal estático gerado"); });
   $("#close-dialog").addEventListener("click", () => $("#validation-dialog").close());
   window.addEventListener("beforeunload", (event) => { if (dirty) { event.preventDefault(); event.returnValue = ""; } });
 }
 
-async function init() { content = await window.centralAPI.load(); selectedPageId = content.pages[0]?.id; selectedSegmentId = content.pages[0]?.segments[0]?.id; bindStaticEvents(); renderEditor(); renderPreview(); }
+async function init() { const initial = await window.centralAPI.load(); content = initial.content; project = initial.project; previewAssets = initial.previewAssets; selectedPageId = content.pages[0]?.id; selectedSegmentId = content.pages[0]?.segments[0]?.id; bindStaticEvents(); renderProjectInfo(); renderEditor(); renderPreview(); }
 init();

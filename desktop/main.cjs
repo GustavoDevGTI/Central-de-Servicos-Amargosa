@@ -1,8 +1,16 @@
 const { app, BrowserWindow, dialog, ipcMain, shell } = require("electron");
 const fs = require("node:fs");
 const path = require("node:path");
+const { pathToFileURL } = require("node:url");
+const {
+  contentSignature,
+  isPathInside,
+  readPortalProject,
+  writePortalContent,
+} = require("./portal-project.cjs");
 
 let mainWindow;
+let activePortal = null;
 
 function sourceContentPath() {
   return path.join(process.cwd(), "content", "site.json");
@@ -24,6 +32,37 @@ function seedPackagedContent() {
 
 function templateContentPath() {
   return app.isPackaged ? path.join(process.resourcesPath, "content", "site.json") : sourceContentPath();
+}
+
+function templateDirectory() {
+  return path.join(__dirname, "templates");
+}
+
+function readPreviewAssets(portalDirectory = null) {
+  const sourceDirectory = portalDirectory || templateDirectory();
+  const fallbackDirectory = templateDirectory();
+  const readAsset = (file) => {
+    const candidate = path.join(sourceDirectory, file);
+    const filePath = fs.existsSync(candidate) ? candidate : path.join(fallbackDirectory, file);
+    return fs.readFileSync(filePath, "utf8");
+  };
+  const baseDirectory = fs.existsSync(sourceDirectory) ? sourceDirectory : fallbackDirectory;
+  return {
+    baseUrl: pathToFileURL(`${baseDirectory}${path.sep}`).href,
+    css: ["styles.css", "dynamic.css", "fonts.css", "accessibility.css"].map(readAsset),
+    appScript: fs.readFileSync(path.join(fallbackDirectory, "app.js"), "utf8"),
+  };
+}
+
+function projectInfo(portal = activePortal) {
+  if (!portal) return { kind: "internal", name: "Projeto interno", directory: null, version: app.getVersion(), contentSource: "site.json" };
+  return {
+    kind: "portal",
+    name: path.basename(portal.directory),
+    directory: portal.directory,
+    version: portal.manifest?.builderVersion || "versão anterior",
+    contentSource: portal.contentSource,
+  };
 }
 
 function withoutDeprecatedContent(content) {
@@ -116,6 +155,23 @@ function backupContent(filePath) {
   for (const oldBackup of backups.slice(20)) fs.rmSync(path.join(backupDirectory, oldBackup.file));
 }
 
+function backupPortalContent(directory) {
+  const safeName = path.basename(directory).replace(/[^a-z0-9_-]+/gi, "-").slice(0, 80) || "portal";
+  const backupRoot = path.join(app.getPath("userData"), "portal-backups", safeName);
+  const stamp = new Date().toISOString().replaceAll(":", "-").replaceAll(".", "-");
+  const destination = path.join(backupRoot, stamp);
+  const files = ["content.js", "content.json", "portal-project.json"];
+  fs.mkdirSync(destination, { recursive: true });
+  for (const file of files) {
+    const source = path.join(directory, file);
+    if (fs.existsSync(source)) fs.copyFileSync(source, path.join(destination, file));
+  }
+  const backups = fs.existsSync(backupRoot)
+    ? fs.readdirSync(backupRoot, { withFileTypes: true }).filter((entry) => entry.isDirectory()).sort().reverse()
+    : [];
+  for (const oldBackup of backups.slice(20)) fs.rmSync(path.join(backupRoot, oldBackup.name), { recursive: true });
+}
+
 function createWindow() {
   mainWindow = new BrowserWindow({
     width: 1600,
@@ -181,20 +237,78 @@ function validateContent(content) {
 
 ipcMain.handle("content:load", () => {
   seedPackagedContent();
-  return normalizeContent(JSON.parse(fs.readFileSync(editableContentPath(), "utf8")));
+  const content = normalizeContent(JSON.parse(fs.readFileSync(editableContentPath(), "utf8")));
+  return { content, project: projectInfo(null), previewAssets: readPreviewAssets() };
 });
 
 ipcMain.handle("content:save", (_event, content) => {
   const errors = validateContent(content);
   if (errors.length) return { ok: false, errors };
+  if (activePortal) {
+    const currentSignature = contentSignature(activePortal.directory);
+    if (currentSignature !== activePortal.signature) {
+      return {
+        ok: false,
+        conflict: true,
+        errors: ["O conteúdo desta pasta foi alterado fora do construtor depois que ela foi aberta. Recarregue o portal para trazer essas mudanças antes de salvar."],
+      };
+    }
+    backupPortalContent(activePortal.directory);
+    const written = writePortalContent(activePortal.directory, content, app.getVersion());
+    activePortal.signature = written.signature;
+    activePortal.manifest = written.manifest;
+    activePortal.contentSource = "content.js";
+    return { ok: true, filePath: path.join(activePortal.directory, "content.js"), project: projectInfo() };
+  }
   const filePath = editableContentPath();
   if (fs.existsSync(filePath)) backupContent(filePath);
   fs.mkdirSync(path.dirname(filePath), { recursive: true });
   fs.writeFileSync(filePath, `${JSON.stringify(content, null, 2)}\n`, "utf8");
-  return { ok: true, filePath };
+  return { ok: true, filePath, project: projectInfo(null) };
 });
 
 ipcMain.handle("content:validate", (_event, content) => validateContent(content));
+
+ipcMain.handle("site:open", async () => {
+  const selected = await dialog.showOpenDialog(mainWindow, {
+    title: "Abrir uma versão do portal estático",
+    buttonLabel: "Abrir portal",
+    properties: ["openDirectory"],
+  });
+  if (selected.canceled || !selected.filePaths[0]) return { ok: false, canceled: true };
+  try {
+    const portal = readPortalProject(selected.filePaths[0]);
+    portal.content = normalizeContent(portal.content);
+    activePortal = portal;
+    return {
+      ok: true,
+      content: portal.content,
+      errors: validateContent(portal.content),
+      project: projectInfo(),
+      previewAssets: readPreviewAssets(portal.directory),
+    };
+  } catch (error) {
+    return { ok: false, errors: [error.message || "Não foi possível abrir esta pasta."] };
+  }
+});
+
+ipcMain.handle("site:reload", () => {
+  if (!activePortal) return { ok: false, errors: ["Nenhum portal está aberto."] };
+  try {
+    const portal = readPortalProject(activePortal.directory);
+    portal.content = normalizeContent(portal.content);
+    activePortal = portal;
+    return {
+      ok: true,
+      content: portal.content,
+      errors: validateContent(portal.content),
+      project: projectInfo(),
+      previewAssets: readPreviewAssets(portal.directory),
+    };
+  } catch (error) {
+    return { ok: false, errors: [error.message || "Não foi possível recarregar esta pasta."] };
+  }
+});
 
 ipcMain.handle("site:export", async (_event, content) => {
   const errors = validateContent(content);
@@ -208,16 +322,23 @@ ipcMain.handle("site:export", async (_event, content) => {
   const now = new Date();
   const suffix = [now.getFullYear(), String(now.getMonth() + 1).padStart(2, "0"), String(now.getDate()).padStart(2, "0"), String(now.getHours()).padStart(2, "0"), String(now.getMinutes()).padStart(2, "0"), String(now.getSeconds()).padStart(2, "0")].join("");
   const exportDirectory = path.join(selected.filePaths[0], `central-servicos-amargosa-${suffix}`);
-  fs.mkdirSync(exportDirectory, { recursive: false });
-  const templateDirectory = path.join(__dirname, "templates");
-  for (const file of ["index.html", "styles.css", "dynamic.css", "fonts.css", "accessibility.css", "app.js"]) {
-    fs.copyFileSync(path.join(templateDirectory, file), path.join(exportDirectory, file));
+  if (activePortal && isPathInside(activePortal.directory, exportDirectory)) {
+    return { ok: false, errors: ["Crie a nova versão fora da pasta do portal que está aberto."] };
   }
-  fs.cpSync(path.join(templateDirectory, "fonts"), path.join(exportDirectory, "fonts"), { recursive: true });
-  fs.cpSync(path.join(templateDirectory, "menu"), path.join(exportDirectory, "menu"), { recursive: true });
-  fs.writeFileSync(path.join(exportDirectory, "content.js"), `window.CENTRAL_CONTENT = ${JSON.stringify(content, null, 2)};\n`, "utf8");
+  fs.mkdirSync(exportDirectory, { recursive: false });
+  if (activePortal) {
+    fs.cpSync(activePortal.directory, exportDirectory, { recursive: true });
+  } else {
+    const templates = templateDirectory();
+    for (const file of ["index.html", "styles.css", "dynamic.css", "fonts.css", "accessibility.css", "app.js"]) {
+      fs.copyFileSync(path.join(templates, file), path.join(exportDirectory, file));
+    }
+    fs.cpSync(path.join(templates, "fonts"), path.join(exportDirectory, "fonts"), { recursive: true });
+    fs.cpSync(path.join(templates, "menu"), path.join(exportDirectory, "menu"), { recursive: true });
+  }
+  writePortalContent(exportDirectory, content, app.getVersion(), { exportedAt: new Date().toISOString() });
   shell.showItemInFolder(path.join(exportDirectory, "index.html"));
-  return { ok: true, exportDirectory };
+  return { ok: true, exportDirectory, basedOnOpenPortal: Boolean(activePortal) };
 });
 
 ipcMain.handle("external:open", (_event, url) => shell.openExternal(url));

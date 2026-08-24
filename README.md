@@ -18,7 +18,11 @@ npm run dev
 npm run editor
 ```
 
-No editor, use **Salvar alterações** para atualizar `content/site.json`, **Validar** para conferir a estrutura e **Gerar portal** para exportar uma pasta estática pronta para hospedagem convencional. Cada página contém segmentos ordenáveis; cada segmento contém itens também ordenáveis. Textos, links, logos, imagens, públicos, categorias, serviços e referências de “mais usados” são editáveis. Imagens de até 2 MB são incorporadas ao projeto, sem servidor ou banco de dados.
+No editor, use **Salvar alterações** para atualizar o projeto interno, **Validar** para conferir a estrutura e **Gerar portal** para exportar uma pasta estática pronta para hospedagem convencional. Cada página contém segmentos ordenáveis; cada segmento contém itens também ordenáveis. Textos, links, logos, imagens, públicos, categorias, serviços e referências de “mais usados” são editáveis. Imagens de até 2 MB são incorporadas ao projeto, sem servidor ou banco de dados.
+
+O botão **Abrir portal** permite escolher qualquer versão estática anteriormente exportada. O construtor lê `content.js` — com compatibilidade para `content.json` e versões antigas com `site.json` — e usa os estilos dessa pasta na prévia. **Recarregar** traz alterações de conteúdo ou CSS feitas fora do aplicativo. Ao salvar um portal aberto, somente `content.js`, `content.json` e o manifesto portátil são atualizados; mudanças manuais em HTML, CSS, JavaScript, fontes e demais arquivos são preservadas. Se o conteúdo for alterado externamente enquanto o construtor estiver aberto, a gravação é bloqueada até que a pasta seja recarregada, evitando perda de trabalho.
+
+Ao usar **Gerar nova versão** com um portal aberto, a pasta inteira dessa versão é copiada antes da atualização do conteúdo. Assim, personalizações feitas fora do construtor também acompanham a próxima versão. Cada exportação inclui `portal-project.json` para identificar a versão do construtor e `content.json` como representação portátil do catálogo.
 
 Na aba **Design**, cada tipo de segmento oferece quatro modelos próprios. A troca do modelo reorganiza somente a apresentação daquele segmento; os itens, textos, links, imagens e ajustes de cor permanecem editáveis. A biblioteca inicial reúne composições de busca editorial ou panorâmica, diretório aberto, acesso rápido e painel modular.
 
