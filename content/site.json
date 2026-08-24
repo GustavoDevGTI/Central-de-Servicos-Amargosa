@@ -159,6 +159,25 @@
             { "id": "footer-featured", "type": "link", "role": "navigation", "label": "Link: mais usados", "text": "Mais usados", "url": "#mais-usados" },
             { "id": "footer-categories", "type": "link", "role": "navigation", "label": "Link: categorias", "text": "Categorias", "url": "#categorias" }
           ]
+        },
+        {
+          "id": "amanda",
+          "name": "Amanda — assistente virtual",
+          "type": "amanda",
+          "enabled": true,
+          "style": { "background": "#ffffff", "color": "#193a31", "accent": "#0b6b50", "width": "contained", "spacing": "comfortable", "radius": "soft", "backgroundImage": "" },
+          "items": [
+            { "id": "amanda-avatar", "type": "image", "role": "avatar", "label": "Imagem da Amanda", "src": "", "alt": "Amanda, assistente virtual de Amargosa" },
+            { "id": "amanda-eyebrow", "type": "text", "role": "eyebrow", "label": "Identificador", "value": "Assistente virtual" },
+            { "id": "amanda-title", "type": "text", "role": "title", "label": "Nome e saudação", "value": "Oi, eu sou Amanda" },
+            { "id": "amanda-description", "type": "text", "role": "description", "label": "Apresentação", "value": "Posso ajudar você a encontrar o serviço certo e chegar ao canal oficial responsável." },
+            { "id": "amanda-status", "type": "text", "role": "status", "label": "Estado atual", "value": "Demonstração — a inteligência da Amanda será conectada em breve." },
+            { "id": "amanda-prompt-1", "type": "text", "role": "prompt", "label": "Sugestão 1", "value": "Quero consultar meu IPTU" },
+            { "id": "amanda-prompt-2", "type": "text", "role": "prompt", "label": "Sugestão 2", "value": "Preciso emitir uma nota fiscal" },
+            { "id": "amanda-prompt-3", "type": "text", "role": "prompt", "label": "Sugestão 3", "value": "Como solicito iluminação pública?" },
+            { "id": "amanda-input", "type": "search", "role": "conversation", "label": "Campo da conversa", "placeholder": "Escreva o que você precisa…", "buttonText": "Enviar" },
+            { "id": "amanda-privacy", "type": "text", "role": "notice", "label": "Aviso", "value": "Não envie dados pessoais. Esta demonstração não armazena mensagens." }
+          ]
         }
       ]
     }

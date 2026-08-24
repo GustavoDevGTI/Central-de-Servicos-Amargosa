@@ -28,7 +28,17 @@ function templateContentPath() {
 
 function normalizeContent(content) {
   const template = JSON.parse(fs.readFileSync(templateContentPath(), "utf8"));
-  if ((content?.schemaVersion || 1) >= 3 && Array.isArray(content.pages)) return content;
+  if ((content?.schemaVersion || 1) >= 3 && Array.isArray(content.pages)) {
+    for (const templatePage of template.pages) {
+      const currentPage = content.pages.find((page) => page.id === templatePage.id);
+      if (!currentPage) { content.pages.push(JSON.parse(JSON.stringify(templatePage))); continue; }
+      for (const templateSegment of templatePage.segments) {
+        const currentSegment = currentPage.segments.find((segment) => segment.id === templateSegment.id);
+        if (!currentSegment) currentPage.segments.push(JSON.parse(JSON.stringify(templateSegment)));
+      }
+    }
+    return content;
+  }
   const migrated = JSON.parse(JSON.stringify(template));
   const segments = migrated.pages[0].segments;
   const findSegment = (type) => segments.find((segment) => segment.type === type);
