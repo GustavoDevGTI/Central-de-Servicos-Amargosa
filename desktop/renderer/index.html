@@ -9,7 +9,7 @@
 </head>
 <body>
   <header class="topbar">
-    <div class="editor-brand"><span>A</span><div><strong>Construtor da Central</strong><small>Páginas → segmentos → itens</small></div></div>
+    <div class="editor-brand"><span>A</span><div><strong>Construtor da Central</strong></div></div>
     <div class="save-state"><i></i><span id="save-state">Conteúdo carregado</span></div>
     <div class="top-actions">
       <div class="devices"><button class="active" data-device="desktop">Desktop</button><button data-device="tablet">Tablet</button><button data-device="mobile">Celular</button></div>
@@ -23,7 +23,6 @@
       <div class="page-meta"><input id="page-name" placeholder="Nome da página"><input id="page-slug" placeholder="/endereco"></div>
       <div class="schema-title"><p class="panel-label">SEGMENTOS</p><button id="add-segment">+ Adicionar</button></div>
       <nav id="segment-nav" class="section-nav"></nav>
-      <div class="local-note"><strong>Sem banco de dados</strong><p>Textos, links, serviços e imagens ficam no projeto. Imagens de até 2 MB são incorporadas ao arquivo.</p></div>
     </aside>
     <section class="canvas">
       <header><span>PRÉVIA DA PÁGINA</span><strong id="viewport-label">1440 × 900 · 100%</strong></header>
@@ -46,12 +45,12 @@
         </section>
         </div>
         <div data-editor-pane="design" class="hidden design-pane">
-          <div class="form-heading"><small>DESIGN DO SEGMENTO</small><h2>Escolha uma linguagem visual</h2><p>O modelo é aplicado apenas ao segmento selecionado. Depois, você ainda pode ajustar cada detalhe.</p></div>
+          <div class="form-heading"><small>DESIGN DO SEGMENTO</small><h2>Escolha uma linguagem visual</h2></div>
           <div id="variant-picker" class="variant-picker">
-            <button type="button" data-variant="institutional"><i class="variant-institutional"><span></span><span></span></i><strong>Institucional</strong><small>Linhas finas, cantos discretos e leitura direta.</small></button>
-            <button type="button" data-variant="editorial"><i class="variant-editorial"><span></span><span></span></i><strong>Editorial</strong><small>Mais respiro e destaque para a tipografia.</small></button>
-            <button type="button" data-variant="compact"><i class="variant-compact"><span></span><span></span></i><strong>Compacto</strong><small>Mais informação ocupando menos espaço.</small></button>
-            <button type="button" data-variant="soft"><i class="variant-soft"><span></span><span></span></i><strong>Suave</strong><small>Cantos maiores e aparência mais acolhedora.</small></button>
+            <button type="button" data-variant="institutional"><i class="variant-institutional"><span></span><span></span></i><strong>Institucional</strong></button>
+            <button type="button" data-variant="editorial"><i class="variant-editorial"><span></span><span></span></i><strong>Editorial</strong></button>
+            <button type="button" data-variant="compact"><i class="variant-compact"><span></span><span></span></i><strong>Compacto</strong></button>
+            <button type="button" data-variant="soft"><i class="variant-soft"><span></span><span></span></i><strong>Suave</strong></button>
           </div>
           <section class="design-controls"><div class="form-heading"><small>AJUSTES FINOS</small><h2>Aparência</h2></div><div class="style-grid">
             <label>Fundo<input id="style-background" type="color"></label><label>Texto<input id="style-color" type="color"></label><label>Destaque<input id="style-accent" type="color"></label>

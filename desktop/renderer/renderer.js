@@ -32,7 +32,7 @@ function renderPages() {
 
 function renderSegments() {
   const current = page();
-  $("#segment-nav").innerHTML = current.segments.map((entry, index) => `<button type="button" data-segment-id="${escapeHtml(entry.id)}" class="${entry.id === selectedSegmentId ? "active" : ""}"><b>${String(index + 1).padStart(2, "0")}</b><span>${escapeHtml(entry.name)}</span><em>${entry.enabled ? entry.items.length : "oculto"}</em></button>`).join("");
+  $("#segment-nav").innerHTML = current.segments.map((entry, index) => `<button type="button" data-segment-id="${escapeHtml(entry.id)}" class="${entry.id === selectedSegmentId ? "active" : ""} ${entry.enabled ? "" : "is-hidden"}"><b>${String(index + 1).padStart(2, "0")}</b><span>${escapeHtml(entry.name)}</span></button>`).join("");
   $$('[data-segment-id]').forEach((button) => button.addEventListener("click", () => { selectedSegmentId = button.dataset.segmentId; selectedItemId = null; renderEditor(); renderPreview(); }));
 }
 
@@ -62,7 +62,7 @@ function renderEditor() {
 
 function renderItems() {
   const current = segment(); if (!current) return;
-  $("#item-list").innerHTML = current.items.map((entry, index) => `<button type="button" data-item-id="${escapeHtml(entry.id)}" class="${entry.id === selectedItemId ? "active" : ""}"><i>${String(index + 1).padStart(2, "0")}</i><span><strong>${escapeHtml(entry.label || entry.title || entry.text || entry.value || typeLabels[entry.type])}</strong><small>${escapeHtml(typeLabels[entry.type] || entry.type)} · ${escapeHtml(entry.role || "sem função")}</small></span><em>›</em></button>`).join("");
+  $("#item-list").innerHTML = current.items.map((entry, index) => `<button type="button" data-item-id="${escapeHtml(entry.id)}" class="${entry.id === selectedItemId ? "active" : ""}"><i>${String(index + 1).padStart(2, "0")}</i><span><strong>${escapeHtml(entry.label || entry.title || entry.text || entry.value || typeLabels[entry.type])}</strong></span><em>›</em></button>`).join("");
   $$('[data-item-id]').forEach((button) => button.addEventListener("click", () => { selectedItemId = button.dataset.itemId; renderItems(); renderPreview(); }));
   renderItemEditor();
 }
@@ -75,7 +75,6 @@ function renderItemEditor() {
   $("#item-editor").classList.toggle("hidden", !current);
   if (!current) { $("#item-editor").innerHTML = ""; return; }
   let fields = inputField("Nome interno", "label", current.label);
-  fields += inputField("Função no segmento", "role", current.role);
   if (current.type === "text") fields += inputField("Texto", "value", current.value, true);
   if (current.type === "link") fields += inputField("Texto visível", "text", current.text) + inputField("Endereço ou âncora", "url", current.url);
   if (current.type === "image") fields += inputField("Texto alternativo", "alt", current.alt) + `<div class="image-field"><label>Escolher imagem<input id="item-image-upload" type="file" accept="image/*"></label><button id="remove-item-image" type="button">Remover imagem</button><small>${current.src ? "Imagem incorporada" : "Nenhuma imagem"}</small></div>`;
