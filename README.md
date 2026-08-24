@@ -20,6 +20,8 @@ npm run editor
 
 No editor, use **Salvar alterações** para atualizar `content/site.json`, **Validar** para conferir a estrutura e **Gerar portal** para exportar uma pasta estática pronta para hospedagem convencional. Cada página contém segmentos ordenáveis; cada segmento contém itens também ordenáveis. Textos, links, logos, imagens, públicos, categorias, serviços e referências de “mais usados” são editáveis. Imagens de até 2 MB são incorporadas ao projeto, sem servidor ou banco de dados.
 
+Na aba **Design**, cada tipo de segmento oferece quatro modelos próprios. A troca do modelo reorganiza somente a apresentação daquele segmento; os itens, textos, links, imagens e ajustes de cor permanecem editáveis. A biblioteca inicial reúne composições de busca editorial ou panorâmica, diretório aberto, acesso rápido e painel modular.
+
 ## Gerar o instalador do Windows
 
 ```bash

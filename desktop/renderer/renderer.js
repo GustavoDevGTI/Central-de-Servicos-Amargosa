@@ -9,6 +9,25 @@ const $$ = (selector) => [...document.querySelectorAll(selector)];
 const segmentTypes = ["utility", "header", "hero", "audiences", "featured", "categories", "catalog", "help", "footer", "amanda", "generic"];
 const itemTypes = ["text", "link", "image", "search", "audience", "category", "service", "serviceRef"];
 const typeLabels = { utility: "Barra utilitária", header: "Cabeçalho", hero: "Busca principal", audiences: "Públicos", featured: "Mais usados", categories: "Categorias", catalog: "Catálogo", help: "Ajuda", footer: "Rodapé", amanda: "Amanda — assistente virtual", generic: "Livre", text: "Texto", link: "Link / botão", image: "Imagem / logo", search: "Campo de busca", audience: "Público", category: "Categoria", service: "Serviço", serviceRef: "Serviço em destaque" };
+const baseModels = [
+  { value: "institutional", label: "Editorial cívico", title: "Composição municipal equilibrada" },
+  { value: "editorial", label: "Diretório aberto", title: "Listas abertas com pouca moldura" },
+  { value: "compact", label: "Acesso direto", title: "Mais atalhos em menos espaço" },
+  { value: "soft", label: "Painel modular", title: "Conteúdo reunido em um painel" }
+];
+const segmentModels = {
+  hero: ["Busca editorial", "Busca panorâmica", "Busca essencial", "Busca cívica"],
+  audiences: ["Cartões sobrepostos", "Diretório por público", "Perfis de acesso rápido", "Painel de públicos"],
+  featured: ["Grade ranqueada", "Lista editorial", "Acesso rápido", "Mosaico de destaques"],
+  categories: ["Diretório em colunas", "Lista editorial", "Grade de atalhos", "Painel de categorias"],
+  catalog: ["Catálogo institucional", "Lista editorial", "Lista compacta", "Cartões modulares"],
+  header: ["Cabeçalho municipal", "Cabeçalho editorial", "Barra compacta", "Cabeçalho em camadas"],
+  utility: ["Faixa institucional", "Linha editorial", "Faixa compacta", "Faixa modular"],
+  help: ["Ajuda institucional", "Ajuda editorial", "Ajuda compacta", "Painel de ajuda"],
+  footer: ["Rodapé municipal", "Rodapé editorial", "Rodapé compacto", "Rodapé modular"],
+  amanda: ["Amanda discreta", "Amanda editorial", "Amanda compacta", "Amanda em painel"],
+  generic: ["Bloco institucional", "Bloco editorial", "Bloco compacto", "Bloco modular"]
+};
 
 function escapeHtml(value = "") { return String(value).replace(/[&<>'"]/g, (character) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#39;", '"': "&quot;" }[character])); }
 function uid(prefix) { return `${prefix}-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`; }
@@ -54,10 +73,30 @@ function renderEditor() {
   $("#style-width").value = style.width || "contained";
   $("#style-spacing").value = style.spacing || "comfortable";
   $("#style-radius").value = style.radius || "soft";
-  $$('[data-variant]').forEach((button) => button.classList.toggle("active", button.dataset.variant === (style.variant || "institutional")));
+  renderVariantPicker(current);
   $("#background-status").textContent = style.backgroundImage ? "Imagem incorporada ao projeto" : "Nenhuma imagem";
   $("#new-item-type").innerHTML = itemTypes.map((value) => `<option value="${value}">${typeLabels[value]}</option>`).join("");
   renderItems();
+}
+
+function renderVariantPicker(current) {
+  const names = segmentModels[current.type] || segmentModels.generic;
+  const active = current.style?.variant || "institutional";
+  $("#variant-heading").textContent = `Modelos de ${typeLabels[current.type].toLocaleLowerCase("pt-BR")}`;
+  $("#variant-picker").dataset.segmentKind = current.type;
+  $("#variant-picker").innerHTML = baseModels.map((model, index) => `<button type="button" data-variant="${model.value}" class="${model.value === active ? "active" : ""}" title="${escapeHtml(model.title)}"><i class="variant-${model.value}"><span></span><span></span><span></span></i><strong>${escapeHtml(names[index])}</strong></button>`).join("");
+  $$('[data-variant]').forEach((button) => button.addEventListener("click", () => applyVariant(button.dataset.variant)));
+}
+
+function applyVariant(value) {
+  const style = segment().style;
+  style.variant = value;
+  if (value === "institutional") { style.radius = "soft"; style.spacing = "comfortable"; }
+  if (value === "editorial") { style.radius = "square"; style.spacing = "airy"; }
+  if (value === "compact") { style.radius = "square"; style.spacing = "compact"; }
+  if (value === "soft") { style.radius = "soft"; style.spacing = "comfortable"; }
+  renderEditor();
+  markDirty();
 }
 
 function renderItems() {
@@ -159,18 +198,9 @@ function bindStaticEvents() {
   $("#add-page").addEventListener("click", () => { const id = uid("pagina"); content.pages.push({ id, name: "Nova página", slug: `/${id}`, segments: [] }); selectedPageId = id; selectedSegmentId = null; selectedItemId = null; renderEditor(); markDirty(); });
   $("#add-segment").addEventListener("click", () => { const entry = { id: uid("segmento"), name: "Novo segmento", type: "generic", enabled: true, style: { background: "#ffffff", color: "#193a31", accent: content.site.primaryColor, width: "contained", spacing: "comfortable", radius: "soft", variant: "institutional", backgroundImage: "" }, items: [] }; page().segments.push(entry); selectedSegmentId = entry.id; selectedItemId = null; renderEditor(); markDirty(); });
   $("#segment-name").addEventListener("input", (event) => { segment().name = event.target.value; $("#segment-heading").textContent = event.target.value; renderSegments(); markDirty(); });
-  $("#segment-type").addEventListener("change", (event) => { segment().type = event.target.value; renderSegments(); markDirty(); });
+  $("#segment-type").addEventListener("change", (event) => { segment().type = event.target.value; renderEditor(); markDirty(); });
   $("#segment-enabled").addEventListener("change", (event) => { segment().enabled = event.target.checked; renderSegments(); markDirty(); });
   [["style-background", "background"], ["style-color", "color"], ["style-accent", "accent"], ["style-width", "width"], ["style-spacing", "spacing"], ["style-radius", "radius"]].forEach(([id, field]) => $("#" + id).addEventListener("input", (event) => { segment().style[field] = event.target.value; markDirty(); }));
-  $$('[data-variant]').forEach((button) => button.addEventListener("click", () => {
-    const style = segment().style;
-    style.variant = button.dataset.variant;
-    if (style.variant === "institutional") { style.radius = "soft"; style.spacing = "comfortable"; }
-    if (style.variant === "editorial") { style.radius = "square"; style.spacing = "airy"; }
-    if (style.variant === "compact") { style.radius = "square"; style.spacing = "compact"; }
-    if (style.variant === "soft") { style.radius = "round"; style.spacing = "comfortable"; }
-    renderEditor(); markDirty();
-  }));
   $("#background-upload").addEventListener("change", (event) => readImage(event.target.files[0], (source) => { segment().style.backgroundImage = source; renderEditor(); markDirty(); }));
   $("#remove-background").addEventListener("click", () => { segment().style.backgroundImage = ""; renderEditor(); markDirty(); });
   $("#segment-up").addEventListener("click", () => { const segments = page().segments; if (move(segments, segments.findIndex((entry) => entry.id === selectedSegmentId), -1)) { renderEditor(); markDirty(); } });
