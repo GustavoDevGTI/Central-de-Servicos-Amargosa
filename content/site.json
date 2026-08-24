@@ -1,0 +1,29 @@
+{
+  "identity": {
+    "municipality": "Amargosa",
+    "brandLine": "Prefeitura de",
+    "tagline": "Cidade Jardim",
+    "portalUrl": "https://amargosa.ba.gov.br/",
+    "primaryColor": "#0c664f",
+    "accentColor": "#ce3c52"
+  },
+  "hero": {
+    "eyebrow": "Central de Serviços",
+    "title": "Encontre o serviço certo, sem perder tempo.",
+    "description": "Pesquise o que você precisa e siga direto para o canal oficial responsável pelo atendimento.",
+    "searchPlaceholder": "Ex.: nota fiscal, matrícula, iluminação..."
+  },
+  "help": {
+    "title": "Precisa de ajuda?",
+    "description": "Entre em contato com a Prefeitura pelo canal oficial de atendimento.",
+    "label": "Acessar portal oficial"
+  },
+  "services": [
+    { "id": "nota-fiscal", "title": "Emitir nota fiscal", "department": "Secretaria da Fazenda", "category": "Tributos", "destination": "Portal Tributário", "url": "https://amargosa.ba.gov.br/", "initials": "NF", "featured": true },
+    { "id": "atendimento-saude", "title": "Marcar atendimento de saúde", "department": "Secretaria de Saúde", "category": "Saúde", "destination": "Saúde Digital", "url": "https://amargosa.ba.gov.br/", "initials": "SA", "featured": true },
+    { "id": "matricula-escolar", "title": "Consultar matrícula escolar", "department": "Secretaria de Educação", "category": "Educação", "destination": "Portal da Educação", "url": "https://amargosa.ba.gov.br/", "initials": "ED", "featured": true },
+    { "id": "iluminacao-publica", "title": "Solicitar iluminação pública", "department": "Secretaria de Infraestrutura", "category": "Cidade", "destination": "Fala Cidadão", "url": "https://amargosa.ba.gov.br/", "initials": "IP", "featured": false },
+    { "id": "diario-oficial", "title": "Acessar o Diário Oficial", "department": "Prefeitura de Amargosa", "category": "Documentos", "destination": "Diário Oficial", "url": "https://amargosa.ba.gov.br/", "initials": "DO", "featured": false },
+    { "id": "licitacoes", "title": "Consultar processos e licitações", "department": "Setor de Licitações", "category": "Empresa", "destination": "Portal de Compras", "url": "https://amargosa.ba.gov.br/", "initials": "LC", "featured": false }
+  ]
+}
