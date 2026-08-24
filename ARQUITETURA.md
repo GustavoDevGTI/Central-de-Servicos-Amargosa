@@ -9,9 +9,11 @@ O projeto usa uma central pública estática e um editor Electron local. Essa co
 1. O editor abre o conteúdo local em `content/site.json`.
 2. A equipe altera identidade, textos e serviços por formulários.
 3. A validação verifica campos obrigatórios e URLs.
-4. Cada salvamento cria uma cópia de segurança local.
-5. **Gerar portal** cria uma nova pasta estática com data e hora, sem sobrescrever exportações anteriores.
-6. A pasta gerada é publicada no servidor da Prefeitura.
+4. Os serviços são vinculados a públicos como Cidadão, Empresas, Servidor, Órgãos públicos e Turista.
+5. A ordem do arquivo define manualmente a sequência dos serviços mais usados.
+6. Cada salvamento cria uma cópia de segurança local.
+7. **Gerar portal** cria uma nova pasta estática com data e hora, sem sobrescrever exportações anteriores.
+8. A pasta gerada é publicada no servidor da Prefeitura.
 
 ## Limites desta primeira versão
 

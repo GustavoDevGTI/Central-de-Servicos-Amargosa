@@ -18,7 +18,7 @@ npm run dev
 npm run editor
 ```
 
-No editor, use **Salvar alterações** para atualizar `content/site.json`, **Validar** para conferir os campos obrigatórios e **Gerar portal** para exportar uma pasta estática pronta para hospedagem convencional.
+No editor, use **Salvar alterações** para atualizar `content/site.json`, **Validar** para conferir os campos obrigatórios e **Gerar portal** para exportar uma pasta estática pronta para hospedagem convencional. A tela **Públicos** edita Cidadão, Empresas, Servidor e demais perfis. Na lista de serviços, os botões **Subir** e **Descer** definem manualmente a ordem dos itens marcados como mais usados.
 
 ## Gerar o instalador do Windows
 
@@ -26,7 +26,7 @@ No editor, use **Salvar alterações** para atualizar `content/site.json`, **Val
 npm run editor:package
 ```
 
-O instalador será criado em `release-desktop/`.
+O instalador atual será criado em `release-desktop-v2/`.
 
 ## Publicação
 

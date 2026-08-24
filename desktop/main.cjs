@@ -22,6 +22,32 @@ function seedPackagedContent() {
   fs.copyFileSync(bundled, destination);
 }
 
+function templateContentPath() {
+  return app.isPackaged ? path.join(process.resourcesPath, "content", "site.json") : sourceContentPath();
+}
+
+function normalizeContent(content) {
+  const template = JSON.parse(fs.readFileSync(templateContentPath(), "utf8"));
+  if (!Array.isArray(content.audiences) || content.audiences.length === 0) content.audiences = template.audiences;
+  if (!Array.isArray(content.services)) content.services = [];
+  if ((content.schemaVersion || 1) < 2) {
+    for (const templateService of template.services) {
+      const existing = content.services.find((service) => service.id === templateService.id);
+      if (existing) {
+        existing.audience ||= templateService.audience;
+      } else {
+        content.services.push(templateService);
+      }
+    }
+  }
+  const validAudienceIds = new Set(content.audiences.map((audience) => audience.id));
+  for (const service of content.services) {
+    if (!validAudienceIds.has(service.audience)) service.audience = "cidadao";
+  }
+  content.schemaVersion = 2;
+  return content;
+}
+
 function backupContent(filePath) {
   const backupDirectory = path.join(app.getPath("userData"), "backups");
   fs.mkdirSync(backupDirectory, { recursive: true });
@@ -57,6 +83,10 @@ function validateContent(content) {
   const errors = [];
   if (!content?.identity?.municipality?.trim()) errors.push("Informe o nome do município.");
   if (!content?.hero?.title?.trim()) errors.push("Informe o título principal.");
+  if (!Array.isArray(content?.audiences) || content.audiences.length === 0) errors.push("Cadastre ao menos um público.");
+  for (const [index, audience] of (content.audiences || []).entries()) {
+    if (!audience.label?.trim()) errors.push(`Público ${index + 1}: informe o nome.`);
+  }
   try {
     const portalUrl = new URL(content?.identity?.portalUrl);
     if (!["https:", "http:"].includes(portalUrl.protocol)) throw new Error("invalid protocol");
@@ -67,6 +97,7 @@ function validateContent(content) {
   for (const [index, service] of (content.services || []).entries()) {
     if (!service.title?.trim()) errors.push(`Serviço ${index + 1}: informe o nome.`);
     if (!service.department?.trim()) errors.push(`Serviço ${index + 1}: informe o órgão responsável.`);
+    if (!content.audiences?.some((audience) => audience.id === service.audience)) errors.push(`Serviço ${index + 1}: selecione um público válido.`);
     try {
       const url = new URL(service.url);
       if (!["https:", "http:"].includes(url.protocol)) throw new Error("invalid protocol");
@@ -79,7 +110,7 @@ function validateContent(content) {
 
 ipcMain.handle("content:load", () => {
   seedPackagedContent();
-  return JSON.parse(fs.readFileSync(editableContentPath(), "utf8"));
+  return normalizeContent(JSON.parse(fs.readFileSync(editableContentPath(), "utf8")));
 });
 
 ipcMain.handle("content:save", (_event, content) => {

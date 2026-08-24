@@ -1,0 +1,12 @@
+select{width:100%;padding:10px;border:1px solid #d5dfdb;border-radius:7px;background:#fff;color:var(--ink);font-size:11px;outline:0}
+select:focus{border-color:#6fac94;box-shadow:0 0 0 2px rgba(111,172,148,.13)}
+.audience-editor-list{display:flex;flex-direction:column;gap:8px}
+.audience-editor-card{padding:11px;border:1px solid var(--line);border-radius:9px;background:#f8fbf9}
+.audience-editor-card header{display:flex;align-items:center;gap:8px;margin-bottom:9px}
+.audience-editor-card header i{width:30px;height:30px;display:grid;place-items:center;border-radius:8px;background:#e5f2ed;color:var(--green);font-size:8px;font-style:normal;font-weight:900}
+.audience-editor-card header strong{font-size:10px}
+.service-editor header>div:first-child{display:flex;flex-direction:column}
+.service-actions{display:flex!important;align-items:center;flex-direction:row!important;gap:3px}
+.service-actions button{padding:4px!important;color:#62736c!important;font-size:8px!important}
+.service-actions #delete-service{color:#ae3449!important}
+.check{align-items:flex-start}.check span{line-height:1.35}

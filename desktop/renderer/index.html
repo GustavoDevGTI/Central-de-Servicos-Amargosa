@@ -6,6 +6,7 @@
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self'; img-src 'self' data:; frame-src 'self' data:;">
   <title>Editor — Central de Serviços de Amargosa</title>
   <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="extensions.css">
 </head>
 <body>
   <header class="topbar">
@@ -24,8 +25,9 @@
       <nav class="section-nav">
         <button class="active" data-section="identity"><b>01</b><span>Identidade</span></button>
         <button data-section="hero"><b>02</b><span>Apresentação</span></button>
-        <button data-section="services"><b>03</b><span>Serviços</span><em id="service-count">0</em></button>
-        <button data-section="help"><b>04</b><span>Ajuda e rodapé</span></button>
+        <button data-section="audiences"><b>03</b><span>Públicos</span><em id="audience-count">0</em></button>
+        <button data-section="services"><b>04</b><span>Serviços</span><em id="service-count">0</em></button>
+        <button data-section="help"><b>05</b><span>Ajuda e rodapé</span></button>
       </nav>
       <div class="local-note"><strong>Sem banco de dados</strong><p>As alterações ficam somente neste computador. O portal gerado é totalmente estático.</p></div>
     </aside>
@@ -51,17 +53,22 @@
           <label>Descrição<textarea name="hero.description" rows="4"></textarea></label>
           <label>Exemplo da busca<input name="hero.searchPlaceholder"></label>
         </section>
+        <section class="form-section" data-form="audiences">
+          <div class="form-heading"><small>PÚBLICOS</small><h2>Divisão dos serviços</h2><p>Edite os perfis usados para organizar o catálogo.</p></div>
+          <div id="audience-editor-list" class="audience-editor-list"></div>
+        </section>
         <section class="form-section" data-form="services">
           <div class="form-heading inline"><div><small>SERVIÇOS</small><h2>Direcionamentos</h2></div><button id="add-service" type="button">+ Adicionar</button></div>
           <div id="service-list" class="service-list"></div>
           <div id="service-editor" class="service-editor hidden">
-            <header><div><small>SERVIÇO SELECIONADO</small><strong id="selected-service-title"></strong></div><button id="delete-service" type="button" title="Excluir serviço">Excluir</button></header>
+            <header><div><small>SERVIÇO SELECIONADO</small><strong id="selected-service-title"></strong></div><div class="service-actions"><button id="move-service-up" type="button" title="Subir na ordem manual">↑ Subir</button><button id="move-service-down" type="button" title="Descer na ordem manual">↓ Descer</button><button id="delete-service" type="button" title="Excluir serviço">Excluir</button></div></header>
             <label>Nome do serviço<input data-service="title"></label>
             <label>Órgão responsável<input data-service="department"></label>
             <div class="two-fields"><label>Categoria<input data-service="category"></label><label>Sigla<input data-service="initials" maxlength="3"></label></div>
+            <label>Público principal<select data-service="audience" id="service-audience"></select></label>
             <label>Nome do canal de destino<input data-service="destination"></label>
             <label>Endereço oficial (URL)<input data-service="url" type="url"></label>
-            <label class="check"><input data-service="featured" type="checkbox"><span>Destacar entre os mais procurados</span></label>
+            <label class="check"><input data-service="featured" type="checkbox"><span>Exibir em “Serviços mais usados” — a ordem segue a lista acima</span></label>
           </div>
         </section>
         <section class="form-section" data-form="help">
