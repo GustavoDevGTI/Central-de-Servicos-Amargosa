@@ -1,0 +1,763 @@
+window.CENTRAL_CONTENT = {
+  "schemaVersion": 3,
+  "site": {
+    "title": "Central de Serviços de Amargosa",
+    "description": "Encontre serviços públicos e acesse o canal oficial responsável.",
+    "primaryColor": "#0c664f",
+    "accentColor": "#ce3c52"
+  },
+  "pages": [
+    {
+      "id": "home",
+      "name": "Página inicial",
+      "slug": "/",
+      "segments": [
+        {
+          "id": "utility",
+          "name": "Barra de acessibilidade",
+          "type": "utility",
+          "enabled": false,
+          "style": {
+            "background": "#ffffff",
+            "color": "#65756f",
+            "accent": "#c9344c",
+            "width": "wide",
+            "spacing": "compact",
+            "radius": "square",
+            "backgroundImage": ""
+          },
+          "items": [
+            {
+              "id": "utility-label",
+              "type": "text",
+              "role": "label",
+              "label": "Texto institucional",
+              "value": "Portal oficial do Município de Amargosa"
+            },
+            {
+              "id": "utility-services",
+              "type": "link",
+              "role": "navigation",
+              "label": "Atalho para serviços",
+              "text": "Lista de serviços",
+              "url": "#todos-os-servicos"
+            },
+            {
+              "id": "utility-portal",
+              "type": "link",
+              "role": "external",
+              "label": "Portal da Prefeitura",
+              "text": "Portal da Prefeitura ↗",
+              "url": "https://amargosa.ba.gov.br/"
+            }
+          ]
+        },
+        {
+          "id": "header",
+          "name": "Cabeçalho institucional",
+          "type": "header",
+          "enabled": false,
+          "style": {
+            "background": "#ffffff",
+            "color": "#193a31",
+            "accent": "#0b6b50",
+            "width": "wide",
+            "spacing": "comfortable",
+            "radius": "soft",
+            "backgroundImage": ""
+          },
+          "items": [
+            {
+              "id": "header-logo",
+              "type": "image",
+              "role": "logo",
+              "label": "Logo da Prefeitura",
+              "src": "",
+              "alt": "Prefeitura de Amargosa"
+            },
+            {
+              "id": "header-brand-line",
+              "type": "text",
+              "role": "brandLine",
+              "label": "Linha da marca",
+              "value": "Prefeitura de"
+            },
+            {
+              "id": "header-municipality",
+              "type": "text",
+              "role": "municipality",
+              "label": "Nome do município",
+              "value": "Amargosa"
+            },
+            {
+              "id": "header-subtitle",
+              "type": "text",
+              "role": "subtitle",
+              "label": "Nome do portal",
+              "value": "Central de Serviços"
+            },
+            {
+              "id": "nav-publicos",
+              "type": "link",
+              "role": "navigation",
+              "label": "Menu: públicos",
+              "text": "Serviços por público",
+              "url": "#publicos"
+            },
+            {
+              "id": "nav-featured",
+              "type": "link",
+              "role": "navigation",
+              "label": "Menu: mais usados",
+              "text": "Mais usados",
+              "url": "#mais-usados"
+            },
+            {
+              "id": "nav-categories",
+              "type": "link",
+              "role": "navigation",
+              "label": "Menu: categorias",
+              "text": "Categorias",
+              "url": "#categorias"
+            },
+            {
+              "id": "nav-help",
+              "type": "link",
+              "role": "navigation",
+              "label": "Menu: ajuda",
+              "text": "Ajuda",
+              "url": "#ajuda"
+            }
+          ]
+        },
+        {
+          "id": "hero",
+          "name": "Busca principal",
+          "type": "hero",
+          "enabled": true,
+          "style": {
+            "background": "#0b6b50",
+            "color": "#ffffff",
+            "accent": "#c9344c",
+            "width": "wide",
+            "spacing": "airy",
+            "radius": "soft",
+            "backgroundImage": ""
+          },
+          "items": [
+            {
+              "id": "hero-eyebrow",
+              "type": "text",
+              "role": "eyebrow",
+              "label": "Identificador",
+              "value": "Central de Serviços"
+            },
+            {
+              "id": "hero-title",
+              "type": "text",
+              "role": "title",
+              "label": "Título principal",
+              "value": "Encontre o serviço certo, sem perder tempo."
+            },
+            {
+              "id": "hero-search",
+              "type": "search",
+              "role": "search",
+              "label": "Campo de busca",
+              "placeholder": "Ex.: nota fiscal, matrícula, iluminação...",
+              "buttonText": "Buscar"
+            }
+          ]
+        },
+        {
+          "id": "audiences",
+          "name": "Serviços por público",
+          "type": "audiences",
+          "enabled": true,
+          "style": {
+            "background": "#ffffff",
+            "color": "#193a31",
+            "accent": "#0b6b50",
+            "width": "contained",
+            "spacing": "comfortable",
+            "radius": "soft",
+            "backgroundImage": ""
+          },
+          "items": [
+            {
+              "id": "audiences-title",
+              "type": "text",
+              "role": "title",
+              "label": "Título",
+              "value": "Serviços para cada público"
+            },
+            {
+              "id": "cidadao",
+              "type": "audience",
+              "role": "entry",
+              "label": "Cidadão",
+              "description": "Saúde, educação, tributos, documentos e serviços urbanos",
+              "initials": "CI"
+            },
+            {
+              "id": "empresa",
+              "type": "audience",
+              "role": "entry",
+              "label": "Empresas",
+              "description": "Nota fiscal, alvarás, licitações e atendimento ao empreendedor",
+              "initials": "EM"
+            },
+            {
+              "id": "servidor",
+              "type": "audience",
+              "role": "entry",
+              "label": "Servidor",
+              "description": "Contracheque, solicitações internas e vida funcional",
+              "initials": "SE"
+            },
+            {
+              "id": "orgaos",
+              "type": "audience",
+              "role": "entry",
+              "label": "Órgãos públicos e ONGs",
+              "description": "Parcerias, convênios, protocolos e comunicação institucional",
+              "initials": "OP"
+            },
+            {
+              "id": "turista",
+              "type": "audience",
+              "role": "entry",
+              "label": "Turista",
+              "description": "Cultura, eventos, roteiros e informações sobre a cidade",
+              "initials": "TU"
+            }
+          ]
+        },
+        {
+          "id": "featured",
+          "name": "Serviços mais usados",
+          "type": "featured",
+          "enabled": true,
+          "style": {
+            "background": "#f7f7f3",
+            "color": "#193a31",
+            "accent": "#c9344c",
+            "width": "contained",
+            "spacing": "airy",
+            "radius": "soft",
+            "backgroundImage": ""
+          },
+          "items": [
+            {
+              "id": "featured-eyebrow",
+              "type": "text",
+              "role": "eyebrow",
+              "label": "Identificador",
+              "value": "Acesso rápido"
+            },
+            {
+              "id": "featured-title",
+              "type": "text",
+              "role": "title",
+              "label": "Título",
+              "value": "Serviços mais usados"
+            },
+            {
+              "id": "featured-nota",
+              "type": "serviceRef",
+              "role": "entry",
+              "label": "Emitir nota fiscal",
+              "serviceId": "nota-fiscal"
+            },
+            {
+              "id": "featured-saude",
+              "type": "serviceRef",
+              "role": "entry",
+              "label": "Marcar atendimento de saúde",
+              "serviceId": "atendimento-saude"
+            },
+            {
+              "id": "featured-matricula",
+              "type": "serviceRef",
+              "role": "entry",
+              "label": "Matrícula escolar",
+              "serviceId": "matricula-escolar"
+            },
+            {
+              "id": "featured-iptu",
+              "type": "serviceRef",
+              "role": "entry",
+              "label": "Consultar IPTU",
+              "serviceId": "iptu"
+            },
+            {
+              "id": "featured-contracheque",
+              "type": "serviceRef",
+              "role": "entry",
+              "label": "Contracheque",
+              "serviceId": "contracheque"
+            },
+            {
+              "id": "featured-iluminacao",
+              "type": "serviceRef",
+              "role": "entry",
+              "label": "Iluminação pública",
+              "serviceId": "iluminacao-publica"
+            }
+          ]
+        },
+        {
+          "id": "categories",
+          "name": "Categorias",
+          "type": "categories",
+          "enabled": true,
+          "style": {
+            "background": "#edf3f0",
+            "color": "#193a31",
+            "accent": "#0b6b50",
+            "width": "contained",
+            "spacing": "airy",
+            "radius": "soft",
+            "backgroundImage": ""
+          },
+          "items": [
+            {
+              "id": "categories-eyebrow",
+              "type": "text",
+              "role": "eyebrow",
+              "label": "Identificador",
+              "value": "Navegue por assunto"
+            },
+            {
+              "id": "categories-title",
+              "type": "text",
+              "role": "title",
+              "label": "Título",
+              "value": "Todas as categorias"
+            },
+            {
+              "id": "categories-description",
+              "type": "text",
+              "role": "description",
+              "label": "Descrição",
+              "value": "Uma organização ampla inspirada em centrais municipais de referência."
+            },
+            {
+              "id": "cat-cultura",
+              "type": "category",
+              "role": "entry",
+              "label": "Cultura, turismo e lazer",
+              "description": "Agenda, eventos, cultura, roteiros e informações para visitantes",
+              "initials": "CT"
+            },
+            {
+              "id": "cat-cidade",
+              "type": "category",
+              "role": "entry",
+              "label": "Cidade",
+              "description": "Iluminação, vias públicas, limpeza, manutenção e serviços urbanos",
+              "initials": "CI"
+            },
+            {
+              "id": "cat-documentos",
+              "type": "category",
+              "role": "entry",
+              "label": "Documentos",
+              "description": "Diário oficial, certidões, publicações e documentos municipais",
+              "initials": "DO"
+            },
+            {
+              "id": "cat-educacao",
+              "type": "category",
+              "role": "entry",
+              "label": "Educação",
+              "description": "Matrícula, calendário escolar, unidades de ensino e serviços educacionais",
+              "initials": "ED"
+            },
+            {
+              "id": "cat-empresa",
+              "type": "category",
+              "role": "entry",
+              "label": "Empresa e negócio",
+              "description": "Nota fiscal, alvarás, licitações e atendimento ao empreendedor",
+              "initials": "EN"
+            },
+            {
+              "id": "cat-saude",
+              "type": "category",
+              "role": "entry",
+              "label": "Saúde",
+              "description": "Atendimento, unidades, vigilância, campanhas e serviços de saúde",
+              "initials": "SA"
+            },
+            {
+              "id": "cat-tributos",
+              "type": "category",
+              "role": "entry",
+              "label": "Tributos",
+              "description": "IPTU, taxas, certidões, dívida ativa e documentos fiscais",
+              "initials": "TR"
+            },
+            {
+              "id": "cat-servidor",
+              "type": "category",
+              "role": "entry",
+              "label": "Vida funcional",
+              "description": "Contracheque, solicitações internas e informações do servidor",
+              "initials": "VF"
+            }
+          ]
+        },
+        {
+          "id": "catalog",
+          "name": "Catálogo de serviços",
+          "type": "catalog",
+          "enabled": true,
+          "style": {
+            "background": "#ffffff",
+            "color": "#193a31",
+            "accent": "#0b6b50",
+            "width": "contained",
+            "spacing": "airy",
+            "radius": "soft",
+            "backgroundImage": ""
+          },
+          "items": [
+            {
+              "id": "catalog-eyebrow",
+              "type": "text",
+              "role": "eyebrow",
+              "label": "Identificador",
+              "value": "Catálogo de direcionamentos"
+            },
+            {
+              "id": "catalog-title",
+              "type": "text",
+              "role": "title",
+              "label": "Título",
+              "value": "Todos os serviços"
+            },
+            {
+              "id": "iptu",
+              "type": "service",
+              "role": "entry",
+              "title": "Consultar IPTU",
+              "department": "Secretaria da Fazenda",
+              "category": "Tributos",
+              "audienceId": "cidadao",
+              "destination": "Portal Tributário",
+              "url": "https://amargosa.ba.gov.br/",
+              "initials": "IP"
+            },
+            {
+              "id": "nota-fiscal",
+              "type": "service",
+              "role": "entry",
+              "title": "Emitir nota fiscal",
+              "department": "Secretaria da Fazenda",
+              "category": "Empresa e negócio",
+              "audienceId": "empresa",
+              "destination": "Portal Tributário",
+              "url": "https://amargosa.ba.gov.br/",
+              "initials": "NF"
+            },
+            {
+              "id": "atendimento-saude",
+              "type": "service",
+              "role": "entry",
+              "title": "Marcar atendimento de saúde",
+              "department": "Secretaria de Saúde",
+              "category": "Saúde",
+              "audienceId": "cidadao",
+              "destination": "Saúde Digital",
+              "url": "https://amargosa.ba.gov.br/",
+              "initials": "SA"
+            },
+            {
+              "id": "matricula-escolar",
+              "type": "service",
+              "role": "entry",
+              "title": "Consultar matrícula escolar",
+              "department": "Secretaria de Educação",
+              "category": "Educação",
+              "audienceId": "cidadao",
+              "destination": "Portal da Educação",
+              "url": "https://amargosa.ba.gov.br/",
+              "initials": "ED"
+            },
+            {
+              "id": "iluminacao-publica",
+              "type": "service",
+              "role": "entry",
+              "title": "Solicitar iluminação pública",
+              "department": "Secretaria de Infraestrutura",
+              "category": "Cidade",
+              "audienceId": "cidadao",
+              "destination": "Atendimento ao Cidadão",
+              "url": "https://amargosa.ba.gov.br/",
+              "initials": "IL"
+            },
+            {
+              "id": "contracheque",
+              "type": "service",
+              "role": "entry",
+              "title": "Consultar contracheque",
+              "department": "Secretaria de Administração",
+              "category": "Vida funcional",
+              "audienceId": "servidor",
+              "destination": "Portal do Servidor",
+              "url": "https://amargosa.ba.gov.br/",
+              "initials": "CT"
+            },
+            {
+              "id": "diario-oficial",
+              "type": "service",
+              "role": "entry",
+              "title": "Acessar o Diário Oficial",
+              "department": "Prefeitura de Amargosa",
+              "category": "Documentos",
+              "audienceId": "cidadao",
+              "destination": "Diário Oficial",
+              "url": "https://amargosa.ba.gov.br/",
+              "initials": "DO"
+            },
+            {
+              "id": "licitacoes",
+              "type": "service",
+              "role": "entry",
+              "title": "Consultar processos e licitações",
+              "department": "Setor de Licitações",
+              "category": "Empresa e negócio",
+              "audienceId": "empresa",
+              "destination": "Portal de Compras",
+              "url": "https://amargosa.ba.gov.br/",
+              "initials": "LC"
+            },
+            {
+              "id": "alvara",
+              "type": "service",
+              "role": "entry",
+              "title": "Solicitar alvará",
+              "department": "Secretaria da Fazenda",
+              "category": "Empresa e negócio",
+              "audienceId": "empresa",
+              "destination": "Atendimento Empresarial",
+              "url": "https://amargosa.ba.gov.br/",
+              "initials": "AL"
+            },
+            {
+              "id": "eventos",
+              "type": "service",
+              "role": "entry",
+              "title": "Consultar calendário de eventos",
+              "department": "Secretaria de Cultura e Turismo",
+              "category": "Cultura, turismo e lazer",
+              "audienceId": "turista",
+              "destination": "Agenda de Amargosa",
+              "url": "https://amargosa.ba.gov.br/",
+              "initials": "EV"
+            }
+          ]
+        },
+        {
+          "id": "help",
+          "name": "Ajuda e atendimento",
+          "type": "help",
+          "enabled": true,
+          "style": {
+            "background": "#0b6b50",
+            "color": "#ffffff",
+            "accent": "#ffffff",
+            "width": "wide",
+            "spacing": "comfortable",
+            "radius": "square",
+            "backgroundImage": ""
+          },
+          "items": [
+            {
+              "id": "help-eyebrow",
+              "type": "text",
+              "role": "eyebrow",
+              "label": "Identificador",
+              "value": "Atendimento oficial"
+            },
+            {
+              "id": "help-title",
+              "type": "text",
+              "role": "title",
+              "label": "Título",
+              "value": "Não encontrou o que precisava?"
+            },
+            {
+              "id": "help-description",
+              "type": "text",
+              "role": "description",
+              "label": "Descrição",
+              "value": "Acesse o portal da Prefeitura ou entre em contato com o atendimento oficial de Amargosa."
+            },
+            {
+              "id": "help-link",
+              "type": "link",
+              "role": "action",
+              "label": "Botão",
+              "text": "Ir para o portal da Prefeitura ↗",
+              "url": "https://amargosa.ba.gov.br/"
+            }
+          ]
+        },
+        {
+          "id": "footer",
+          "name": "Rodapé",
+          "type": "footer",
+          "enabled": true,
+          "style": {
+            "background": "#04392d",
+            "color": "#ffffff",
+            "accent": "#0b6b50",
+            "width": "wide",
+            "spacing": "comfortable",
+            "radius": "square",
+            "backgroundImage": ""
+          },
+          "items": [
+            {
+              "id": "footer-logo",
+              "type": "image",
+              "role": "logo",
+              "label": "Logo do rodapé",
+              "src": "",
+              "alt": "Prefeitura de Amargosa"
+            },
+            {
+              "id": "footer-brand",
+              "type": "text",
+              "role": "title",
+              "label": "Título",
+              "value": "Central de Serviços"
+            },
+            {
+              "id": "footer-description",
+              "type": "text",
+              "role": "description",
+              "label": "Descrição",
+              "value": "Um ponto de partida para os canais oficiais do Município de Amargosa."
+            },
+            {
+              "id": "footer-publicos",
+              "type": "link",
+              "role": "navigation",
+              "label": "Link: públicos",
+              "text": "Públicos",
+              "url": "#publicos"
+            },
+            {
+              "id": "footer-featured",
+              "type": "link",
+              "role": "navigation",
+              "label": "Link: mais usados",
+              "text": "Mais usados",
+              "url": "#mais-usados"
+            },
+            {
+              "id": "footer-categories",
+              "type": "link",
+              "role": "navigation",
+              "label": "Link: categorias",
+              "text": "Categorias",
+              "url": "#categorias"
+            }
+          ]
+        },
+        {
+          "id": "amanda",
+          "name": "Amanda — assistente virtual",
+          "type": "amanda",
+          "enabled": true,
+          "style": {
+            "background": "#ffffff",
+            "color": "#193a31",
+            "accent": "#0b6b50",
+            "width": "contained",
+            "spacing": "comfortable",
+            "radius": "soft",
+            "backgroundImage": ""
+          },
+          "items": [
+            {
+              "id": "amanda-avatar",
+              "type": "image",
+              "role": "avatar",
+              "label": "Imagem da Amanda",
+              "src": "",
+              "alt": "Amanda, assistente virtual de Amargosa"
+            },
+            {
+              "id": "amanda-eyebrow",
+              "type": "text",
+              "role": "eyebrow",
+              "label": "Identificador",
+              "value": "Assistente virtual"
+            },
+            {
+              "id": "amanda-title",
+              "type": "text",
+              "role": "title",
+              "label": "Nome e saudação",
+              "value": "Oi, eu sou Amanda"
+            },
+            {
+              "id": "amanda-description",
+              "type": "text",
+              "role": "description",
+              "label": "Apresentação",
+              "value": "Posso ajudar você a encontrar o serviço certo e chegar ao canal oficial responsável."
+            },
+            {
+              "id": "amanda-status",
+              "type": "text",
+              "role": "status",
+              "label": "Estado atual",
+              "value": "Demonstração — a inteligência da Amanda será conectada em breve."
+            },
+            {
+              "id": "amanda-prompt-1",
+              "type": "text",
+              "role": "prompt",
+              "label": "Sugestão 1",
+              "value": "Quero consultar meu IPTU"
+            },
+            {
+              "id": "amanda-prompt-2",
+              "type": "text",
+              "role": "prompt",
+              "label": "Sugestão 2",
+              "value": "Preciso emitir uma nota fiscal"
+            },
+            {
+              "id": "amanda-prompt-3",
+              "type": "text",
+              "role": "prompt",
+              "label": "Sugestão 3",
+              "value": "Como solicito iluminação pública?"
+            },
+            {
+              "id": "amanda-input",
+              "type": "search",
+              "role": "conversation",
+              "label": "Campo da conversa",
+              "placeholder": "Escreva o que você precisa…",
+              "buttonText": "Enviar"
+            },
+            {
+              "id": "amanda-privacy",
+              "type": "text",
+              "role": "notice",
+              "label": "Aviso",
+              "value": "Não envie dados pessoais. Esta demonstração não armazena mensagens."
+            }
+          ]
+        }
+      ]
+    }
+  ]
+};

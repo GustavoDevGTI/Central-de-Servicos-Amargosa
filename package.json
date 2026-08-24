@@ -11,6 +11,7 @@
     "build": "vinext build",
     "start": "vinext start",
     "lint": "eslint . --ignore-pattern dist --ignore-pattern .next --ignore-pattern desktop",
+    "portal:export": "node scripts/export-static.mjs",
     "editor": "electron .",
     "editor:package": "electron-builder --win nsis"
   },
