@@ -114,6 +114,11 @@ function readImage(file, done) {
 }
 
 function previewHtml() {
+  const selectedPage = page();
+  const previewContent = { ...content, pages: [selectedPage, ...content.pages.filter((entry) => entry.id !== selectedPage.id)] };
+  const serialized = JSON.stringify(previewContent).replaceAll("<", "\\u003c");
+  return `<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="stylesheet" href="../templates/styles.css"><link rel="stylesheet" href="../templates/dynamic.css"><script>window.CENTRAL_CONTENT=${serialized};</script><script defer src="../templates/app.js"></script></head><body><a class="skip" href="#conteudo">Ir para o conteúdo</a><main id="conteudo"></main></body></html>`;
+  /* O código abaixo é mantido temporariamente apenas como fallback para instalações antigas. */
   const current = page();
   const services = current.segments.find((entry) => entry.type === "catalog")?.items.filter((entry) => entry.type === "service") || [];
   const render = (entry) => {

@@ -3,8 +3,8 @@
   "site": {
     "title": "Central de Serviços de Amargosa",
     "description": "Encontre serviços públicos e acesse o canal oficial responsável.",
-    "primaryColor": "#0b6b50",
-    "accentColor": "#c9344c"
+    "primaryColor": "#0c664f",
+    "accentColor": "#ce3c52"
   },
   "pages": [
     {
@@ -16,7 +16,7 @@
           "id": "utility",
           "name": "Barra de acessibilidade",
           "type": "utility",
-          "enabled": false,
+          "enabled": true,
           "style": { "background": "#ffffff", "color": "#65756f", "accent": "#c9344c", "width": "wide", "spacing": "compact", "radius": "square", "backgroundImage": "" },
           "items": [
             { "id": "utility-label", "type": "text", "role": "label", "label": "Texto institucional", "value": "Portal oficial do Município de Amargosa" },
@@ -82,12 +82,12 @@
             { "id": "featured-eyebrow", "type": "text", "role": "eyebrow", "label": "Identificador", "value": "Acesso rápido" },
             { "id": "featured-title", "type": "text", "role": "title", "label": "Título", "value": "Serviços mais usados" },
             { "id": "featured-description", "type": "text", "role": "description", "label": "Descrição", "value": "Ordem definida manualmente pela Prefeitura de Amargosa." },
-            { "id": "featured-iptu", "type": "serviceRef", "role": "entry", "label": "Consultar IPTU", "serviceId": "iptu" },
             { "id": "featured-nota", "type": "serviceRef", "role": "entry", "label": "Emitir nota fiscal", "serviceId": "nota-fiscal" },
             { "id": "featured-saude", "type": "serviceRef", "role": "entry", "label": "Serviços de saúde", "serviceId": "atendimento-saude" },
             { "id": "featured-matricula", "type": "serviceRef", "role": "entry", "label": "Matrícula escolar", "serviceId": "matricula-escolar" },
-            { "id": "featured-iluminacao", "type": "serviceRef", "role": "entry", "label": "Iluminação pública", "serviceId": "iluminacao-publica" },
-            { "id": "featured-contracheque", "type": "serviceRef", "role": "entry", "label": "Contracheque", "serviceId": "contracheque" }
+            { "id": "featured-iptu", "type": "serviceRef", "role": "entry", "label": "Consultar IPTU", "serviceId": "iptu" },
+            { "id": "featured-contracheque", "type": "serviceRef", "role": "entry", "label": "Contracheque", "serviceId": "contracheque" },
+            { "id": "featured-iluminacao", "type": "serviceRef", "role": "entry", "label": "Iluminação pública", "serviceId": "iluminacao-publica" }
           ]
         },
         {
