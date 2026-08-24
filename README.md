@@ -26,7 +26,7 @@ No editor, use **Salvar alterações** para atualizar `content/site.json`, **Val
 npm run editor:package
 ```
 
-O instalador atual será criado em `release-desktop-v3-13/`.
+O instalador atual será criado em `release-desktop/`. A pasta é reutilizada a cada compilação para manter somente a distribuição mais recente.
 
 ## Publicação
 
