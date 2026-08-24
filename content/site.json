@@ -50,9 +50,7 @@
           "items": [
             { "id": "hero-eyebrow", "type": "text", "role": "eyebrow", "label": "Identificador", "value": "Central de Serviços" },
             { "id": "hero-title", "type": "text", "role": "title", "label": "Título principal", "value": "Encontre o serviço certo, sem perder tempo." },
-            { "id": "hero-description", "type": "text", "role": "description", "label": "Descrição", "value": "Pesquise o que você precisa e siga direto para o canal oficial responsável pelo atendimento." },
-            { "id": "hero-search", "type": "search", "role": "search", "label": "Campo de busca", "placeholder": "Ex.: nota fiscal, matrícula, iluminação...", "buttonText": "Buscar" },
-            { "id": "hero-privacy", "type": "text", "role": "notice", "label": "Aviso de privacidade", "value": "Sem cadastro. Esta central apenas direciona você e não armazena dados pessoais." }
+            { "id": "hero-search", "type": "search", "role": "search", "label": "Campo de busca", "placeholder": "Ex.: nota fiscal, matrícula, iluminação...", "buttonText": "Buscar" }
           ]
         },
         {
@@ -62,9 +60,7 @@
           "enabled": true,
           "style": { "background": "#ffffff", "color": "#193a31", "accent": "#0b6b50", "width": "contained", "spacing": "comfortable", "radius": "soft", "backgroundImage": "" },
           "items": [
-            { "id": "audiences-eyebrow", "type": "text", "role": "eyebrow", "label": "Identificador", "value": "Escolha o seu perfil" },
             { "id": "audiences-title", "type": "text", "role": "title", "label": "Título", "value": "Serviços para cada público" },
-            { "id": "audiences-description", "type": "text", "role": "description", "label": "Descrição", "value": "Encontre atalhos organizados de acordo com quem você é." },
             { "id": "cidadao", "type": "audience", "role": "entry", "label": "Cidadão", "description": "Saúde, educação, tributos, documentos e serviços urbanos", "initials": "CI" },
             { "id": "empresa", "type": "audience", "role": "entry", "label": "Empresas", "description": "Nota fiscal, alvarás, licitações e atendimento ao empreendedor", "initials": "EM" },
             { "id": "servidor", "type": "audience", "role": "entry", "label": "Servidor", "description": "Contracheque, solicitações internas e vida funcional", "initials": "SE" },
@@ -81,7 +77,6 @@
           "items": [
             { "id": "featured-eyebrow", "type": "text", "role": "eyebrow", "label": "Identificador", "value": "Acesso rápido" },
             { "id": "featured-title", "type": "text", "role": "title", "label": "Título", "value": "Serviços mais usados" },
-            { "id": "featured-description", "type": "text", "role": "description", "label": "Descrição", "value": "Ordem definida manualmente pela Prefeitura de Amargosa." },
             { "id": "featured-nota", "type": "serviceRef", "role": "entry", "label": "Emitir nota fiscal", "serviceId": "nota-fiscal" },
             { "id": "featured-saude", "type": "serviceRef", "role": "entry", "label": "Marcar atendimento de saúde", "serviceId": "atendimento-saude" },
             { "id": "featured-matricula", "type": "serviceRef", "role": "entry", "label": "Matrícula escolar", "serviceId": "matricula-escolar" },

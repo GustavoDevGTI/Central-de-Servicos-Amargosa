@@ -26,6 +26,26 @@ function templateContentPath() {
   return app.isPackaged ? path.join(process.resourcesPath, "content", "site.json") : sourceContentPath();
 }
 
+function withoutDeprecatedContent(content) {
+  const normalize = (value = "") => String(value).normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim().toLowerCase();
+  const isAdministration = (value) => normalize(value) === "administracao e governo";
+  const removedItemIds = new Set(["hero-description", "hero-privacy", "audiences-eyebrow", "audiences-description", "featured-description"]);
+  for (const page of content?.pages || []) {
+    page.segments = (page.segments || []).filter((segment) => !isAdministration(segment.name));
+    const removedServices = new Set();
+    for (const segment of page.segments) {
+      segment.items = (segment.items || []).filter((item) => {
+        if (removedItemIds.has(item.id)) return false;
+        if (item.type === "category" && isAdministration(item.label)) return false;
+        if (item.type === "service" && isAdministration(item.category)) { removedServices.add(item.id); return false; }
+        return true;
+      });
+    }
+    for (const segment of page.segments) segment.items = (segment.items || []).filter((item) => item.type !== "serviceRef" || !removedServices.has(item.serviceId));
+  }
+  return content;
+}
+
 function normalizeContent(content) {
   const template = JSON.parse(fs.readFileSync(templateContentPath(), "utf8"));
   if ((content?.schemaVersion || 1) >= 3 && Array.isArray(content.pages)) {
@@ -37,7 +57,7 @@ function normalizeContent(content) {
         if (!currentSegment) currentPage.segments.push(JSON.parse(JSON.stringify(templateSegment)));
       }
     }
-    return content;
+    return withoutDeprecatedContent(content);
   }
   const migrated = JSON.parse(JSON.stringify(template));
   const segments = migrated.pages[0].segments;
@@ -81,7 +101,7 @@ function normalizeContent(content) {
   if (helpLink && content?.help?.label) helpLink.text = `${content.help.label} ↗`;
   setText("footer", "description", identity.tagline);
   migrated.schemaVersion = 3;
-  return migrated;
+  return withoutDeprecatedContent(migrated);
 }
 
 function backupContent(filePath) {
