@@ -30,25 +30,36 @@
       <div class="preview-stage"><iframe id="preview" title="Prévia do portal"></iframe></div>
     </section>
     <aside class="right-panel component-panel">
-      <header class="right-tabs"><button class="active">Segmento e itens</button><button type="button">Design</button></header>
+      <header class="right-tabs"><button class="active" data-editor-mode="content">Conteúdo</button><button type="button" data-editor-mode="design">Design</button></header>
       <div id="segment-empty" class="empty-editor">Selecione um segmento para editar.</div>
       <div id="segment-editor" class="dynamic-editor hidden">
+        <div data-editor-pane="content">
         <section class="segment-settings">
           <div class="form-heading inline"><div><small>SEGMENTO</small><h2 id="segment-heading">Segmento</h2></div><div class="mini-actions"><button id="segment-up">↑</button><button id="segment-down">↓</button><button id="delete-segment" class="danger">Excluir</button></div></div>
           <label>Nome do segmento<input id="segment-name"></label>
           <div class="two-fields"><label>Tipo<select id="segment-type"></select></label><label class="check compact-check"><input id="segment-enabled" type="checkbox"><span>Visível</span></label></div>
-          <details open><summary>Aparência do segmento</summary><div class="style-grid">
-            <label>Fundo<input id="style-background" type="color"></label><label>Texto<input id="style-color" type="color"></label><label>Destaque<input id="style-accent" type="color"></label>
-            <label>Largura<select id="style-width"><option value="narrow">Estreita</option><option value="contained">Contida</option><option value="wide">Ampla</option></select></label>
-            <label>Espaçamento<select id="style-spacing"><option value="compact">Compacto</option><option value="comfortable">Confortável</option><option value="airy">Arejado</option></select></label>
-            <label>Cantos<select id="style-radius"><option value="square">Retos</option><option value="soft">Suaves</option><option value="round">Arredondados</option></select></label>
-          </div><div class="image-field"><label>Imagem de fundo<input id="background-upload" type="file" accept="image/*"></label><button id="remove-background" type="button">Remover</button><small id="background-status"></small></div></details>
         </section>
         <section class="items-section">
           <div class="form-heading inline"><div><small>ITENS DO SEGMENTO</small><h2>Conteúdo</h2></div><div class="add-item"><select id="new-item-type"></select><button id="add-item">+ Item</button></div></div>
           <div id="item-list" class="item-list"></div>
           <div id="item-editor" class="item-editor hidden"></div>
         </section>
+        </div>
+        <div data-editor-pane="design" class="hidden design-pane">
+          <div class="form-heading"><small>DESIGN DO SEGMENTO</small><h2>Escolha uma linguagem visual</h2><p>O modelo é aplicado apenas ao segmento selecionado. Depois, você ainda pode ajustar cada detalhe.</p></div>
+          <div id="variant-picker" class="variant-picker">
+            <button type="button" data-variant="institutional"><i class="variant-institutional"><span></span><span></span></i><strong>Institucional</strong><small>Linhas finas, cantos discretos e leitura direta.</small></button>
+            <button type="button" data-variant="editorial"><i class="variant-editorial"><span></span><span></span></i><strong>Editorial</strong><small>Mais respiro e destaque para a tipografia.</small></button>
+            <button type="button" data-variant="compact"><i class="variant-compact"><span></span><span></span></i><strong>Compacto</strong><small>Mais informação ocupando menos espaço.</small></button>
+            <button type="button" data-variant="soft"><i class="variant-soft"><span></span><span></span></i><strong>Suave</strong><small>Cantos maiores e aparência mais acolhedora.</small></button>
+          </div>
+          <section class="design-controls"><div class="form-heading"><small>AJUSTES FINOS</small><h2>Aparência</h2></div><div class="style-grid">
+            <label>Fundo<input id="style-background" type="color"></label><label>Texto<input id="style-color" type="color"></label><label>Destaque<input id="style-accent" type="color"></label>
+            <label>Largura<select id="style-width"><option value="narrow">Estreita</option><option value="contained">Contida</option><option value="wide">Ampla</option></select></label>
+            <label>Espaçamento<select id="style-spacing"><option value="compact">Compacto</option><option value="comfortable">Confortável</option><option value="airy">Arejado</option></select></label>
+            <label>Cantos<select id="style-radius"><option value="square">Retos</option><option value="soft">Discretos</option><option value="round">Arredondados</option></select></label>
+          </div><div class="image-field"><label>Imagem de fundo<input id="background-upload" type="file" accept="image/*"></label><button id="remove-background" type="button">Remover</button><small id="background-status"></small></div></section>
+        </div>
       </div>
       <div class="right-footer"><button id="save" class="primary">Salvar alterações</button></div>
     </aside>

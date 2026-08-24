@@ -16,7 +16,7 @@
           "id": "utility",
           "name": "Barra de acessibilidade",
           "type": "utility",
-          "enabled": true,
+          "enabled": false,
           "style": { "background": "#ffffff", "color": "#65756f", "accent": "#c9344c", "width": "wide", "spacing": "compact", "radius": "square", "backgroundImage": "" },
           "items": [
             { "id": "utility-label", "type": "text", "role": "label", "label": "Texto institucional", "value": "Portal oficial do Município de Amargosa" },
@@ -49,8 +49,8 @@
           "style": { "background": "#0b6b50", "color": "#ffffff", "accent": "#c9344c", "width": "wide", "spacing": "airy", "radius": "soft", "backgroundImage": "" },
           "items": [
             { "id": "hero-eyebrow", "type": "text", "role": "eyebrow", "label": "Identificador", "value": "Central de Serviços de Amargosa" },
-            { "id": "hero-title", "type": "text", "role": "title", "label": "Título principal", "value": "Encontre o serviço que você precisa" },
-            { "id": "hero-description", "type": "text", "role": "description", "label": "Descrição", "value": "Busque por assunto ou escolha o seu perfil. A Central direciona você para o canal oficial responsável." },
+            { "id": "hero-title", "type": "text", "role": "title", "label": "Título principal", "value": "Encontre o serviço certo, sem perder tempo." },
+            { "id": "hero-description", "type": "text", "role": "description", "label": "Descrição", "value": "Pesquise o que você precisa e siga direto para o canal oficial responsável pelo atendimento." },
             { "id": "hero-search", "type": "search", "role": "search", "label": "Campo de busca", "placeholder": "Ex.: IPTU, nota fiscal, matrícula, iluminação pública", "buttonText": "Buscar" },
             { "id": "hero-privacy", "type": "text", "role": "notice", "label": "Aviso de privacidade", "value": "Sem cadastro. Esta central apenas direciona você e não armazena dados pessoais." }
           ]
