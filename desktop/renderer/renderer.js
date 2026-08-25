@@ -6,29 +6,26 @@ let dirty = false;
 let editorMode = "content";
 let project;
 let previewAssets;
+let activeDevice = "desktop";
+const deviceViewports = { desktop: { width: 1440, height: 900 }, tablet: { width: 768, height: 1024 }, mobile: { width: 390, height: 844 } };
 const $ = (selector) => document.querySelector(selector);
 const $$ = (selector) => [...document.querySelectorAll(selector)];
 const segmentTypes = ["utility", "header", "hero", "audiences", "featured", "categories", "catalog", "help", "footer", "amanda", "generic"];
 const itemTypes = ["text", "link", "image", "search", "audience", "category", "service", "serviceRef"];
 const typeLabels = { utility: "Barra utilitária", header: "Cabeçalho", hero: "Busca principal", audiences: "Públicos", featured: "Mais usados", categories: "Categorias", catalog: "Catálogo", help: "Ajuda", footer: "Rodapé", amanda: "Amanda — assistente virtual", generic: "Livre", text: "Texto", link: "Link / botão", image: "Imagem / logo", search: "Campo de busca", audience: "Público", category: "Categoria", service: "Serviço", serviceRef: "Serviço em destaque" };
-const baseModels = [
-  { value: "institutional", label: "Editorial cívico", title: "Composição municipal equilibrada" },
-  { value: "editorial", label: "Diretório aberto", title: "Listas abertas com pouca moldura" },
-  { value: "compact", label: "Acesso direto", title: "Mais atalhos em menos espaço" },
-  { value: "soft", label: "Painel modular", title: "Conteúdo reunido em um painel" }
-];
+const modelKeys = ["institutional", "editorial", "compact", "soft", "contrast"];
 const segmentModels = {
-  hero: ["Busca editorial", "Busca panorâmica", "Busca essencial", "Busca cívica"],
-  audiences: ["Cartões sobrepostos", "Diretório por público", "Perfis de acesso rápido", "Painel de públicos"],
-  featured: ["Grade ranqueada", "Lista editorial", "Acesso rápido", "Mosaico de destaques"],
-  categories: ["Diretório em colunas", "Lista editorial", "Grade de atalhos", "Painel de categorias"],
-  catalog: ["Catálogo institucional", "Lista editorial", "Lista compacta", "Cartões modulares"],
-  header: ["Cabeçalho municipal", "Cabeçalho editorial", "Barra compacta", "Cabeçalho em camadas"],
-  utility: ["Faixa institucional", "Linha editorial", "Faixa compacta", "Faixa modular"],
-  help: ["Ajuda institucional", "Ajuda editorial", "Ajuda compacta", "Painel de ajuda"],
-  footer: ["Rodapé municipal", "Rodapé editorial", "Rodapé compacto", "Rodapé modular"],
-  amanda: ["Amanda discreta", "Amanda editorial", "Amanda compacta", "Amanda em painel"],
-  generic: ["Bloco institucional", "Bloco editorial", "Bloco compacto", "Bloco modular"]
+  hero: ["Busca central", "Busca panorâmica", "Busca essencial", "Busca em painel", "Busca de alto contraste"],
+  audiences: ["Cartões sobrepostos", "Diretório por público", "Perfis compactos", "Painel de públicos", "Faixas de público"],
+  featured: ["Grade ranqueada", "Lista editorial", "Acesso rápido", "Mosaico de destaques", "Faixa de prioridades"],
+  categories: ["Diretório em colunas", "Lista editorial", "Grade de atalhos", "Painel de categorias", "Blocos de assunto"],
+  catalog: ["Catálogo institucional", "Lista editorial", "Lista compacta", "Cartões modulares", "Diretório destacado"],
+  header: ["Cabeçalho municipal", "Cabeçalho editorial", "Barra compacta", "Cabeçalho em camadas", "Cabeçalho de contraste"],
+  utility: ["Faixa institucional", "Linha editorial", "Faixa compacta", "Faixa modular", "Faixa de contraste"],
+  help: ["Ajuda institucional", "Ajuda editorial", "Ajuda compacta", "Painel de ajuda", "Chamada destacada"],
+  footer: ["Rodapé municipal", "Rodapé editorial", "Rodapé compacto", "Rodapé modular", "Rodapé de contraste"],
+  amanda: ["Amanda discreta", "Amanda editorial", "Amanda compacta", "Amanda em painel", "Amanda destacada"],
+  generic: ["Bloco institucional", "Bloco editorial", "Bloco compacto", "Bloco modular", "Bloco de contraste"]
 };
 
 function escapeHtml(value = "") { return String(value).replace(/[&<>'"]/g, (character) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#39;", '"': "&quot;" }[character])); }
@@ -102,6 +99,8 @@ function renderEditor() {
   $("#style-width").value = style.width || "contained";
   $("#style-spacing").value = style.spacing || "comfortable";
   $("#style-radius").value = style.radius || "soft";
+  $("#style-heading-font").value = style.headingFont || "lora";
+  $("#style-body-font").value = style.bodyFont || "source";
   renderVariantPicker(current);
   $("#background-status").textContent = style.backgroundImage ? "Imagem incorporada ao projeto" : "Nenhuma imagem";
   $("#new-item-type").innerHTML = itemTypes.map((value) => `<option value="${value}">${typeLabels[value]}</option>`).join("");
@@ -140,7 +139,7 @@ function renderVariantPicker(current) {
   const active = current.style?.variant || "institutional";
   $("#variant-heading").textContent = `Modelos de ${typeLabels[current.type].toLocaleLowerCase("pt-BR")}`;
   $("#variant-picker").dataset.segmentKind = current.type;
-  $("#variant-picker").innerHTML = baseModels.map((model, index) => `<button type="button" data-variant="${model.value}" class="${model.value === active ? "active" : ""}" title="${escapeHtml(model.title)}"><i class="variant-${model.value}"><span></span><span></span><span></span></i><strong>${escapeHtml(names[index])}</strong></button>`).join("");
+  $("#variant-picker").innerHTML = modelKeys.map((value, index) => `<button type="button" data-variant="${value}" class="${value === active ? "active" : ""}"><i class="variant-${value}"><span></span><span></span><span></span></i><strong>${escapeHtml(names[index])}</strong></button>`).join("");
   $$('[data-variant]').forEach((button) => button.addEventListener("click", () => applyVariant(button.dataset.variant)));
 }
 
@@ -151,6 +150,7 @@ function applyVariant(value) {
   if (value === "editorial") { style.radius = "square"; style.spacing = "airy"; }
   if (value === "compact") { style.radius = "square"; style.spacing = "compact"; }
   if (value === "soft") { style.radius = "soft"; style.spacing = "comfortable"; }
+  if (value === "contrast") { style.radius = "square"; style.spacing = "comfortable"; }
   renderEditor();
   markDirty();
 }
@@ -319,6 +319,23 @@ function previewHtml() {
 function previewHeading(entry) { return `<div class="heading"><small>${escapeHtml(textByRole(entry, "eyebrow"))}</small><h2>${escapeHtml(textByRole(entry, "title", entry.name))}</h2><p>${escapeHtml(textByRole(entry, "description"))}</p></div>`; }
 function renderPreview() { $("#preview").srcdoc = previewHtml(); }
 
+function fitPreview() {
+  const stage = $(".preview-stage");
+  const viewport = $("#preview-viewport");
+  const frame = $("#preview");
+  if (!stage || !viewport || !frame) return;
+  const native = deviceViewports[activeDevice];
+  const availableWidth = Math.max(1, stage.clientWidth - 48);
+  const availableHeight = Math.max(1, stage.clientHeight - 24);
+  const scale = Math.min(1, availableWidth / native.width, availableHeight / native.height);
+  frame.style.width = `${native.width}px`;
+  frame.style.height = `${native.height}px`;
+  frame.style.transform = `scale(${scale})`;
+  viewport.style.width = `${Math.round(native.width * scale)}px`;
+  viewport.style.height = `${Math.round(native.height * scale)}px`;
+  $("#viewport-label").textContent = `${native.width} × ${native.height} · ${Math.round(scale * 100)}%`;
+}
+
 function showMessage(title, messages, success = false) { $(".dialog-icon").textContent = success ? "✓" : "!"; $("#dialog-title").textContent = title; $("#dialog-content").innerHTML = Array.isArray(messages) ? `<ul>${messages.map((message) => `<li>${escapeHtml(message)}</li>`).join("")}</ul>` : escapeHtml(messages); $("#validation-dialog").showModal(); }
 function showValidation(errors) { const success = errors.length === 0; showMessage(success ? "Pronto para gerar" : "Revise estes pontos", success ? "A estrutura de páginas, segmentos e itens foi validada." : errors, success); }
 async function save() {
@@ -386,20 +403,20 @@ function bindStaticEvents() {
   $("#page-name").addEventListener("input", (event) => { page().name = event.target.value; $("#page-select").selectedOptions[0].textContent = event.target.value || "Página sem nome"; markDirty(); });
   $("#page-slug").addEventListener("input", (event) => { page().slug = event.target.value; markDirty(); });
   $("#add-page").addEventListener("click", () => { const id = uid("pagina"); content.pages.push({ id, name: "Nova página", slug: `/${id}`, segments: [] }); selectedPageId = id; selectedSegmentId = null; selectedItemId = null; renderEditor(); markDirty(); });
-  $("#add-segment").addEventListener("click", () => { const entry = { id: uid("segmento"), name: "Novo segmento", type: "generic", enabled: true, mergeWithPrevious: false, style: { background: "#ffffff", color: "#193a31", accent: content.site.primaryColor, width: "contained", spacing: "comfortable", radius: "soft", variant: "institutional", backgroundImage: "" }, items: [] }; page().segments.push(entry); selectedSegmentId = entry.id; selectedItemId = null; renderEditor(); markDirty(); });
+  $("#add-segment").addEventListener("click", () => { const entry = { id: uid("segmento"), name: "Novo segmento", type: "generic", enabled: true, mergeWithPrevious: false, style: { background: "#ffffff", color: "#193a31", accent: content.site.primaryColor, width: "contained", spacing: "comfortable", radius: "soft", variant: "institutional", headingFont: "lora", bodyFont: "source", backgroundImage: "" }, items: [] }; page().segments.push(entry); selectedSegmentId = entry.id; selectedItemId = null; renderEditor(); markDirty(); });
   $("#segment-name").addEventListener("input", (event) => { segment().name = event.target.value; $("#segment-heading").textContent = event.target.value; renderSegments(); markDirty(); });
   $("#segment-type").addEventListener("change", (event) => { segment().type = event.target.value; renderEditor(); markDirty(); });
   $("#segment-enabled").addEventListener("change", (event) => { segment().enabled = event.target.checked; renderSegments(); markDirty(); });
-  [["style-background", "background"], ["style-color", "color"], ["style-accent", "accent"], ["style-width", "width"], ["style-spacing", "spacing"], ["style-radius", "radius"]].forEach(([id, field]) => $("#" + id).addEventListener("input", (event) => { segment().style[field] = event.target.value; markDirty(); }));
+  [["style-background", "background"], ["style-color", "color"], ["style-accent", "accent"], ["style-width", "width"], ["style-spacing", "spacing"], ["style-radius", "radius"], ["style-heading-font", "headingFont"], ["style-body-font", "bodyFont"]].forEach(([id, field]) => $("#" + id).addEventListener("input", (event) => { segment().style[field] = event.target.value; markDirty(); }));
   $("#background-upload").addEventListener("change", (event) => readImage(event.target.files[0], (source) => { segment().style.backgroundImage = source; renderEditor(); markDirty(); }));
   $("#remove-background").addEventListener("click", () => { segment().style.backgroundImage = ""; renderEditor(); markDirty(); });
   $("#merge-previous").addEventListener("change", (event) => { const current = segment(); if (!current) return; current.mergeWithPrevious = event.target.checked; renderMergeControls(); markDirty(); });
   $("#reset-size").addEventListener("click", () => { const target = resizeTarget(); if (!target?.size) return; delete target.size; renderResizeControls(); markDirty(); });
   $("#segment-up").addEventListener("click", () => { const segments = page().segments; if (move(segments, segments.findIndex((entry) => entry.id === selectedSegmentId), -1)) { renderEditor(); markDirty(); } });
   $("#segment-down").addEventListener("click", () => { const segments = page().segments; if (move(segments, segments.findIndex((entry) => entry.id === selectedSegmentId), 1)) { renderEditor(); markDirty(); } });
-  $("#delete-segment").addEventListener("click", () => { if (!confirm("Excluir este segmento e todos os seus itens?")) return; page().segments = page().segments.filter((entry) => entry.id !== selectedSegmentId); selectedSegmentId = page().segments[0]?.id; selectedItemId = null; renderEditor(); markDirty(); });
+  $("#delete-segment").addEventListener("click", () => { if (!confirm("Remover definitivamente esta seção do site e todos os seus itens? O portal ficará menor após salvar.")) return; page().segments = page().segments.filter((entry) => entry.id !== selectedSegmentId); selectedSegmentId = page().segments[0]?.id; selectedItemId = null; renderEditor(); markDirty(); });
   $("#add-item").addEventListener("click", () => { const entry = defaultItem($("#new-item-type").value); segment().items.push(entry); selectedItemId = entry.id; renderEditor(); markDirty(); });
-  $$(".devices button").forEach((button) => button.addEventListener("click", () => { $$(".devices button").forEach((entry) => entry.classList.toggle("active", entry === button)); $("#preview").className = button.dataset.device === "desktop" ? "" : button.dataset.device; $("#viewport-label").textContent = button.dataset.device === "desktop" ? "1440 × 900 · 100%" : button.dataset.device === "tablet" ? "768 × 1024" : "390 × 844"; }));
+  $$(".devices button").forEach((button) => button.addEventListener("click", () => { $$(".devices button").forEach((entry) => entry.classList.toggle("active", entry === button)); activeDevice = button.dataset.device; fitPreview(); }));
   $("#save").addEventListener("click", save); $("#validate").addEventListener("click", async () => showValidation(await window.centralAPI.validate(content)));
   $("#export").addEventListener("click", async () => {
     if (project?.portalType === "react") {
@@ -416,6 +433,7 @@ function bindStaticEvents() {
   });
   $("#close-dialog").addEventListener("click", () => $("#validation-dialog").close());
   window.addEventListener("message", handlePreviewResize);
+  new ResizeObserver(fitPreview).observe($(".preview-stage"));
   window.addEventListener("focus", async () => {
     if (project?.kind !== "portal") return;
     const result = await window.centralAPI.checkPortalChanges();
@@ -427,5 +445,5 @@ function bindStaticEvents() {
   window.addEventListener("beforeunload", (event) => { if (dirty) { event.preventDefault(); event.returnValue = ""; } });
 }
 
-async function init() { const initial = await window.centralAPI.load(); content = initial.content; project = initial.project; previewAssets = initial.previewAssets; selectedPageId = content.pages[0]?.id; selectedSegmentId = content.pages[0]?.segments[0]?.id; bindStaticEvents(); renderProjectInfo(); renderEditor(); renderPreview(); }
+async function init() { const initial = await window.centralAPI.load(); content = initial.content; project = initial.project; previewAssets = initial.previewAssets; selectedPageId = content.pages[0]?.id; selectedSegmentId = content.pages[0]?.segments[0]?.id; bindStaticEvents(); renderProjectInfo(); renderEditor(); renderPreview(); requestAnimationFrame(fitPreview); }
 init();

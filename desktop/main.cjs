@@ -43,6 +43,19 @@ function templateDirectory() {
 }
 
 function readPreviewAssets(portalDirectory = null) {
+  if (portalDirectory && isReactPortal(portalDirectory)) {
+    const fallbacks = { "legacy.css": "styles.css", "segments.css": "dynamic.css", "fonts.css": "fonts.css", "accessibility.css": "accessibility.css" };
+    const readReactCss = (file) => {
+      const candidate = path.join(portalDirectory, "app", file);
+      return fs.readFileSync(fs.existsSync(candidate) ? candidate : path.join(templateDirectory(), fallbacks[file]), "utf8");
+    };
+    const fontCss = readReactCss("fonts.css").replaceAll('url("/fonts/', 'url("public/fonts/').replaceAll('url("fonts/', 'url("public/fonts/');
+    return {
+      baseUrl: pathToFileURL(`${portalDirectory}${path.sep}`).href,
+      css: [readReactCss("legacy.css"), readReactCss("segments.css"), fontCss, readReactCss("accessibility.css")],
+      appScript: fs.readFileSync(path.join(templateDirectory(), "app.js"), "utf8"),
+    };
+  }
   const sourceDirectory = portalDirectory || templateDirectory();
   const fallbackDirectory = templateDirectory();
   const readAsset = (file) => {
@@ -93,14 +106,6 @@ function withoutDeprecatedContent(content) {
 function normalizeContent(content) {
   const template = JSON.parse(fs.readFileSync(templateContentPath(), "utf8"));
   if ((content?.schemaVersion || 1) >= 3 && Array.isArray(content.pages)) {
-    for (const templatePage of template.pages) {
-      const currentPage = content.pages.find((page) => page.id === templatePage.id);
-      if (!currentPage) { content.pages.push(JSON.parse(JSON.stringify(templatePage))); continue; }
-      for (const templateSegment of templatePage.segments) {
-        const currentSegment = currentPage.segments.find((segment) => segment.id === templateSegment.id);
-        if (!currentSegment) currentPage.segments.push(JSON.parse(JSON.stringify(templateSegment)));
-      }
-    }
     return withoutDeprecatedContent(content);
   }
   const migrated = JSON.parse(JSON.stringify(template));

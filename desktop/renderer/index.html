@@ -28,7 +28,7 @@
     </aside>
     <section class="canvas">
       <header><span>PRÉVIA DA PÁGINA</span><strong id="viewport-label">1440 × 900 · 100%</strong></header>
-      <div class="preview-stage"><iframe id="preview" title="Prévia do portal"></iframe></div>
+      <div class="preview-stage"><div id="preview-viewport" class="preview-viewport"><iframe id="preview" title="Prévia do portal"></iframe></div></div>
     </section>
     <aside class="right-panel component-panel">
       <header class="right-tabs"><button class="active" data-editor-mode="content">Conteúdo</button><button type="button" data-editor-mode="design">Design</button></header>
@@ -38,7 +38,7 @@
         <section class="segment-settings">
           <div class="form-heading inline"><div><small>SEGMENTO</small><h2 id="segment-heading">Segmento</h2></div><div class="mini-actions"><button id="segment-up">↑</button><button id="segment-down">↓</button><button id="delete-segment" class="danger">Excluir</button></div></div>
           <label>Nome do segmento<input id="segment-name"></label>
-          <div class="two-fields"><label>Tipo<select id="segment-type"></select></label><label class="check compact-check"><input id="segment-enabled" type="checkbox"><span>Visível</span></label></div>
+          <div class="two-fields"><label>Tipo<select id="segment-type"></select></label><label class="check compact-check"><input id="segment-enabled" type="checkbox"><span>Exibir no portal</span></label></div>
         </section>
         <section class="items-section">
           <div class="form-heading inline"><div><small>ITENS DO SEGMENTO</small><h2>Conteúdo</h2></div><div class="add-item"><select id="new-item-type"></select><button id="add-item">+ Item</button></div></div>
@@ -54,6 +54,8 @@
             <label>Largura<select id="style-width"><option value="narrow">Estreita</option><option value="contained">Contida</option><option value="wide">Ampla</option></select></label>
             <label>Espaçamento<select id="style-spacing"><option value="compact">Compacto</option><option value="comfortable">Confortável</option><option value="airy">Arejado</option></select></label>
             <label>Cantos<select id="style-radius"><option value="square">Retos</option><option value="soft">Discretos</option><option value="round">Arredondados</option></select></label>
+            <label>Fonte dos títulos<select id="style-heading-font"><option value="lora">Lora</option><option value="source">Source Sans 3</option><option value="segoe">Segoe UI</option><option value="georgia">Georgia</option><option value="cambria">Cambria</option><option value="arial">Arial</option></select></label>
+            <label>Fonte dos textos<select id="style-body-font"><option value="source">Source Sans 3</option><option value="segoe">Segoe UI</option><option value="lora">Lora</option><option value="georgia">Georgia</option><option value="cambria">Cambria</option><option value="arial">Arial</option></select></label>
           </div><div class="image-field"><label>Imagem de fundo<input id="background-upload" type="file" accept="image/*"></label><button id="remove-background" type="button">Remover</button><small id="background-status"></small></div></section>
           <section class="merge-controls"><label class="merge-option"><input id="merge-previous" type="checkbox"><span><strong>Mesclar com o segmento anterior</strong><small id="merge-previous-label"></small></span></label></section>
           <section class="resize-controls"><div><small>TAMANHO</small><strong id="resize-target">Segmento</strong><span id="resize-value">Automático</span></div><button id="reset-size" type="button">Restaurar automático</button></section>

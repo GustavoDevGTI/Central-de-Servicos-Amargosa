@@ -4,7 +4,7 @@ Portal municipal de direcionamento para serviços públicos e construtor desktop
 
 - Portal publicado: [central-servicos-amargosa.gustavoborges132.chatgpt.site](https://central-servicos-amargosa.gustavoborges132.chatgpt.site/)
 - Menu Acessibilidade: [`/menu`](https://central-servicos-amargosa.gustavoborges132.chatgpt.site/menu)
-- Versão atual do construtor: **0.7.2**
+- Versão atual do construtor: **0.8.0**
 - Instalador Windows: [baixar a versão mais recente pelo GitHub Releases](https://github.com/GustavoDevGTI/Central-de-Servicos-Amargosa/releases/latest)
 
 ## O que existe neste repositório
@@ -95,7 +95,8 @@ Uma página possui nome, endereço e segmentos. Cada segmento possui:
 - identificador e nome;
 - tipo, como cabeçalho, busca, públicos, destaques, categorias ou catálogo;
 - estado visível ou oculto;
-- modelo visual e ajustes de cor, largura, espaçamento, cantos e imagem de fundo;
+- cinco modelos visuais próprios para cada tipo de segmento;
+- ajustes de cor, largura, espaçamento, cantos, imagem de fundo e fontes de títulos e textos;
 - lista de itens editáveis.
 
 Os principais tipos de item são texto, link, imagem, busca, público, categoria, serviço e referência de serviço. As referências determinam manualmente a ordem dos serviços mais usados sem duplicar o cadastro do serviço.
@@ -112,6 +113,7 @@ O construtor foi criado especificamente para a Central de Serviços de Amargosa.
 - cadastrar textos, links, logos e imagens;
 - organizar públicos, categorias e serviços;
 - escolher modelos visuais diferentes para cada segmento;
+- visualizar Desktop, Tablet e Celular nas dimensões reais, reduzidas apenas visualmente para caber no construtor;
 - visualizar o portal em desktop, tablet e celular;
 - validar hierarquia, referências e URLs;
 - gerar cópias de segurança locais do conteúdo;
