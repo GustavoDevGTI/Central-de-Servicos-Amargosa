@@ -4,8 +4,8 @@ Portal municipal de direcionamento para serviços públicos e construtor desktop
 
 - Portal publicado: [central-servicos-amargosa.gustavoborges132.chatgpt.site](https://central-servicos-amargosa.gustavoborges132.chatgpt.site/)
 - Menu Acessibilidade: [`/menu`](https://central-servicos-amargosa.gustavoborges132.chatgpt.site/menu)
-- Versão atual do construtor: **0.6.2**
-- Instalador Windows: [`release-desktop/Editor Central de Serviços Amargosa Setup 0.6.2.exe`](release-desktop/Editor%20Central%20de%20Serviços%20Amargosa%20Setup%200.6.2.exe)
+- Versão atual do construtor: **0.7.0**
+- Instalador Windows: [`release-desktop/Editor Central de Serviços Amargosa Setup 0.7.0.exe`](release-desktop/Editor%20Central%20de%20Serviços%20Amargosa%20Setup%200.7.0.exe)
 
 ## O que existe neste repositório
 
@@ -107,6 +107,7 @@ O construtor foi criado especificamente para a Central de Serviços de Amargosa.
 - criar e editar páginas;
 - adicionar, remover, ocultar e reordenar segmentos;
 - editar separadamente cada item de um segmento;
+- redimensionar segmentos e itens diretamente na prévia por oito alças laterais e de canto;
 - cadastrar textos, links, logos e imagens;
 - organizar públicos, categorias e serviços;
 - escolher modelos visuais diferentes para cada segmento;
@@ -116,6 +117,8 @@ O construtor foi criado especificamente para a Central de Serviços de Amargosa.
 - criar uma nova pasta estática publicável;
 - abrir e continuar editando versões estáticas existentes;
 - preservar personalizações feitas manualmente fora do aplicativo.
+
+Os tamanhos personalizados ficam registrados no conteúdo do portal. O botão **Restaurar automático**, disponível na aba Design, devolve o elemento ao comportamento responsivo padrão.
 
 ### Abrir o construtor durante o desenvolvimento
 

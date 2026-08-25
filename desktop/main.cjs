@@ -193,6 +193,11 @@ function createWindow() {
 
 function validateContent(content) {
   const errors = [];
+  const validateSize = (size, label, minimumWidth) => {
+    if (size == null) return;
+    const width = Number(size.width); const height = Number(size.height);
+    if (!Number.isFinite(width) || width < minimumWidth || width > 4096 || !Number.isFinite(height) || height < 32 || height > 4096) errors.push(`${label}: o tamanho personalizado é inválido.`);
+  };
   if (content?.schemaVersion !== 3) errors.push("O projeto precisa usar a estrutura atual (versão 3).");
   if (!Array.isArray(content?.pages) || content.pages.length === 0) return [...errors, "Cadastre ao menos uma página."];
   const slugs = new Set();
@@ -214,12 +219,14 @@ function validateContent(content) {
       const segmentLabel = segment.name || `Segmento ${segmentIndex + 1}`;
       if (!segment.name?.trim()) errors.push(`${pageLabel}, segmento ${segmentIndex + 1}: informe o nome.`);
       if (!segment.type?.trim()) errors.push(`${segmentLabel}: informe o tipo.`);
+      validateSize(segment.size, segmentLabel, 160);
       if (segmentIds.has(segment.id)) errors.push(`${segmentLabel}: identificador de segmento repetido.`); else segmentIds.add(segment.id);
       if (!Array.isArray(segment.items)) errors.push(`${segmentLabel}: a lista de itens é inválida.`);
       const itemIds = new Set();
       for (const [itemIndex, item] of (segment.items || []).entries()) {
         const itemLabel = item.label || item.title || `Item ${itemIndex + 1}`;
         if (!item.id || itemIds.has(item.id)) errors.push(`${segmentLabel}: o identificador de “${itemLabel}” é inválido ou repetido.`); else itemIds.add(item.id);
+        validateSize(item.size, `${segmentLabel}, ${itemLabel}`, 40);
         if (item.type === "link" && !validUrl(item.url, true)) errors.push(`${segmentLabel}, ${itemLabel}: informe uma URL completa ou uma âncora iniciada por #.`);
         if (item.type === "image" && item.src && !/^data:image\//.test(item.src) && !validUrl(item.src)) errors.push(`${segmentLabel}, ${itemLabel}: a imagem é inválida.`);
         if (item.type === "image" && item.src?.length > 2_900_000) errors.push(`${segmentLabel}, ${itemLabel}: a imagem ultrapassa o limite de 2 MB.`);

@@ -41,7 +41,8 @@ function audiences() { return content.pages.flatMap((entry) => entry.segments).f
 function textByRole(entry, role, fallback = "") { return entry.items.find((item) => item.role === role)?.value || fallback; }
 
 function showToast(message) { const toast = $("#toast"); toast.textContent = message; toast.classList.add("show"); setTimeout(() => toast.classList.remove("show"), 2400); }
-function markDirty() { dirty = true; $(".save-state").className = "save-state dirty"; $("#save-state").textContent = "Alterações ainda não salvas"; renderPreview(); }
+function setDirtyState() { dirty = true; $(".save-state").className = "save-state dirty"; $("#save-state").textContent = "Alterações ainda não salvas"; }
+function markDirty() { setDirtyState(); renderPreview(); }
 function move(array, index, direction) { const target = index + direction; if (index < 0 || target < 0 || target >= array.length) return false; [array[index], array[target]] = [array[target], array[index]]; return true; }
 
 function renderProjectInfo() {
@@ -104,6 +105,17 @@ function renderEditor() {
   $("#background-status").textContent = style.backgroundImage ? "Imagem incorporada ao projeto" : "Nenhuma imagem";
   $("#new-item-type").innerHTML = itemTypes.map((value) => `<option value="${value}">${typeLabels[value]}</option>`).join("");
   renderItems();
+  renderResizeControls();
+}
+
+function resizeTarget() { return item() || segment(); }
+function renderResizeControls() {
+  const target = resizeTarget();
+  if (!target || !$("#resize-target")) return;
+  const targetIsItem = Boolean(item());
+  $("#resize-target").textContent = targetIsItem ? (target.label || target.title || target.text || typeLabels[target.type] || "Item") : target.name;
+  $("#resize-value").textContent = target.size?.width && target.size?.height ? `${target.size.width} × ${target.size.height} px` : "Automático";
+  $("#reset-size").disabled = !target.size;
 }
 
 function renderVariantPicker(current) {
@@ -129,7 +141,7 @@ function applyVariant(value) {
 function renderItems() {
   const current = segment(); if (!current) return;
   $("#item-list").innerHTML = current.items.map((entry, index) => `<button type="button" data-item-id="${escapeHtml(entry.id)}" class="${entry.id === selectedItemId ? "active" : ""}"><i>${String(index + 1).padStart(2, "0")}</i><span><strong>${escapeHtml(entry.label || entry.title || entry.text || entry.value || typeLabels[entry.type])}</strong></span><em>›</em></button>`).join("");
-  $$('[data-item-id]').forEach((button) => button.addEventListener("click", () => { selectedItemId = button.dataset.itemId; renderItems(); renderPreview(); }));
+  $$('[data-item-id]').forEach((button) => button.addEventListener("click", () => { selectedItemId = button.dataset.itemId; renderItems(); renderResizeControls(); renderPreview(); }));
   renderItemEditor();
 }
 
@@ -178,6 +190,84 @@ function readImage(file, done) {
   const reader = new FileReader(); reader.onload = () => done(reader.result); reader.readAsDataURL(file);
 }
 
+function handlePreviewResize(event) {
+  if (event.source !== $("#preview").contentWindow || event.data?.source !== "central-editor-preview" || event.data?.type !== "resize") return;
+  const width = Math.round(Number(event.data.width));
+  const height = Math.round(Number(event.data.height));
+  if (!Number.isFinite(width) || !Number.isFinite(height)) return;
+  const currentSegment = page()?.segments.find((entry) => entry.id === event.data.segmentId);
+  const target = event.data.targetKind === "item" ? currentSegment?.items.find((entry) => entry.id === event.data.itemId) : currentSegment;
+  if (!target) return;
+  target.size = { width: Math.max(event.data.targetKind === "segment" ? 160 : 40, width), height: Math.max(32, height) };
+  setDirtyState();
+  renderResizeControls();
+}
+
+function resizePreviewScript() {
+  return `(() => {
+    const selection = window.CENTRAL_EDITOR_SELECTION || {};
+    const segment = [...document.querySelectorAll("[data-editor-segment-id]")].find((element) => element.dataset.editorSegmentId === selection.segmentId);
+    const selectedItems = selection.itemId ? [...document.querySelectorAll("[data-editor-item-id]")].filter((element) => element.dataset.editorItemId === selection.itemId) : [];
+    const selectedItem = selectedItems.find((element) => element.offsetParent) || selectedItems[0];
+    const target = selectedItem || segment;
+    if (!target) return;
+    const targetKind = selectedItem ? "item" : "segment";
+    const overlay = document.createElement("div");
+    overlay.className = "editor-resize-overlay editor-resize-" + targetKind;
+    overlay.setAttribute("aria-hidden", "true");
+    ["nw", "n", "ne", "e", "se", "s", "sw", "w"].forEach((direction) => {
+      const handle = document.createElement("span");
+      handle.className = "editor-resize-handle";
+      handle.dataset.direction = direction;
+      overlay.append(handle);
+    });
+    document.body.append(overlay);
+    const sync = () => {
+      const rect = target.getBoundingClientRect();
+      Object.assign(overlay.style, { left: rect.left + "px", top: rect.top + "px", width: rect.width + "px", height: rect.height + "px" });
+    };
+    const notify = (width, height) => window.parent.postMessage({ source: "central-editor-preview", type: "resize", targetKind, segmentId: selection.segmentId, itemId: selection.itemId || null, width, height }, "*");
+    let drag = null;
+    overlay.addEventListener("pointerdown", (event) => {
+      const handle = event.target.closest(".editor-resize-handle");
+      if (!handle) return;
+      event.preventDefault();
+      event.stopPropagation();
+      const rect = target.getBoundingClientRect();
+      drag = { direction: handle.dataset.direction, x: event.clientX, y: event.clientY, width: rect.width, height: rect.height };
+      handle.setPointerCapture(event.pointerId);
+    });
+    overlay.addEventListener("pointermove", (event) => {
+      if (!drag) return;
+      const dx = event.clientX - drag.x;
+      const dy = event.clientY - drag.y;
+      const horizontal = drag.direction.includes("e") ? dx : drag.direction.includes("w") ? -dx : 0;
+      const vertical = drag.direction.includes("s") ? dy : drag.direction.includes("n") ? -dy : 0;
+      const width = Math.round(Math.min(4096, Math.max(targetKind === "segment" ? 160 : 40, drag.width + horizontal)));
+      const height = Math.round(Math.min(4096, Math.max(32, drag.height + vertical)));
+      target.style.width = width + "px";
+      target.style.maxWidth = "100%";
+      target.style.minHeight = height + "px";
+      if (targetKind === "segment") target.style.marginInline = "auto";
+      sync();
+      notify(width, height);
+    });
+    const finish = (event) => {
+      if (!drag) return;
+      const rect = target.getBoundingClientRect();
+      notify(Math.round(rect.width), Math.round(rect.height));
+      drag = null;
+      event.target.releasePointerCapture?.(event.pointerId);
+    };
+    overlay.addEventListener("pointerup", finish);
+    overlay.addEventListener("pointercancel", finish);
+    new ResizeObserver(sync).observe(target);
+    addEventListener("scroll", sync, true);
+    addEventListener("resize", sync);
+    requestAnimationFrame(sync);
+  })();`;
+}
+
 function previewHtml() {
   const selectedPage = page();
   const previewContent = { ...content, pages: [selectedPage, ...content.pages.filter((entry) => entry.id !== selectedPage.id)] };
@@ -186,7 +276,7 @@ function previewHtml() {
   const importedCss = (previewAssets?.css || []).join("\n").replace(/<\/style/gi, "<\\/style");
   const trustedAppScript = (previewAssets?.appScript || "").replace(/<\/script/gi, "<\\/script");
   const baseUrl = escapeHtml(previewAssets?.baseUrl || "");
-  return `<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><base href="${baseUrl}"><style>${importedCss}</style><style>.editor-selected-segment{position:relative!important;z-index:40!important;border-radius:0!important;outline:3px solid #f2c94c!important;outline-offset:-3px!important;scroll-margin:64px}.editor-selected-segment::before{content:"SEGMENTO SELECIONADO";position:absolute;z-index:90;top:0;left:0;padding:5px 8px;background:#f2c94c;color:#302400;font:800 8px/1 "Source Sans 3 Variable","Segoe UI",sans-serif;letter-spacing:.08em;pointer-events:none}.editor-selected-item{position:relative!important;z-index:50!important;border-radius:0!important;outline:3px solid #f28c28!important;outline-offset:2px!important;scroll-margin:90px}</style><script>window.CENTRAL_CONTENT=${serialized};window.CENTRAL_EDITOR_SELECTION=${selection};</script></head><body><div class="skip-links" aria-label="Atalhos de navegação"><a class="skip" href="#conteudo">Ir para o conteúdo</a><a class="skip" href="#service-search">Ir para a busca</a><a class="skip" href="#publicos">Ir para os públicos</a><a class="skip" href="#todos-os-servicos">Ir para os serviços</a></div><main id="conteudo" tabindex="-1"></main><script>${trustedAppScript}</script></body></html>`;
+  return `<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><base href="${baseUrl}"><style>${importedCss}</style><style>.editor-selected-segment{position:relative!important;z-index:40!important;border-radius:0!important;outline:3px solid #f2c94c!important;outline-offset:-3px!important;scroll-margin:64px}.editor-selected-segment::before{content:"SEGMENTO SELECIONADO";position:absolute;z-index:90;top:0;left:0;padding:5px 8px;background:#f2c94c;color:#302400;font:800 8px/1 "Source Sans 3 Variable","Segoe UI",sans-serif;letter-spacing:.08em;pointer-events:none}.editor-selected-item{position:relative!important;z-index:50!important;border-radius:0!important;outline:3px solid #f28c28!important;outline-offset:2px!important;scroll-margin:90px}.editor-resize-overlay{--resize-color:#f2c94c;position:fixed;z-index:2147483000;border:1px dashed var(--resize-color);pointer-events:none}.editor-resize-overlay.editor-resize-item{--resize-color:#f28c28}.editor-resize-handle{position:absolute;width:11px;height:11px;border:2px solid var(--resize-color);background:#fff;pointer-events:auto}.editor-resize-handle[data-direction="nw"]{left:-6px;top:-6px;cursor:nwse-resize}.editor-resize-handle[data-direction="n"]{left:50%;top:-6px;transform:translateX(-50%);cursor:ns-resize}.editor-resize-handle[data-direction="ne"]{right:-6px;top:-6px;cursor:nesw-resize}.editor-resize-handle[data-direction="e"]{right:-6px;top:50%;transform:translateY(-50%);cursor:ew-resize}.editor-resize-handle[data-direction="se"]{right:-6px;bottom:-6px;cursor:nwse-resize}.editor-resize-handle[data-direction="s"]{left:50%;bottom:-6px;transform:translateX(-50%);cursor:ns-resize}.editor-resize-handle[data-direction="sw"]{left:-6px;bottom:-6px;cursor:nesw-resize}.editor-resize-handle[data-direction="w"]{left:-6px;top:50%;transform:translateY(-50%);cursor:ew-resize}</style><script>window.CENTRAL_CONTENT=${serialized};window.CENTRAL_EDITOR_SELECTION=${selection};</script></head><body><div class="skip-links" aria-label="Atalhos de navegação"><a class="skip" href="#conteudo">Ir para o conteúdo</a><a class="skip" href="#service-search">Ir para a busca</a><a class="skip" href="#publicos">Ir para os públicos</a><a class="skip" href="#todos-os-servicos">Ir para os serviços</a></div><main id="conteudo" tabindex="-1"></main><script>${trustedAppScript}</script><script>${resizePreviewScript()}</script></body></html>`;
   /* O código abaixo é mantido temporariamente apenas como fallback para instalações antigas. */
   const current = page();
   const services = current.segments.find((entry) => entry.type === "catalog")?.items.filter((entry) => entry.type === "service") || [];
@@ -264,6 +354,7 @@ function bindStaticEvents() {
   [["style-background", "background"], ["style-color", "color"], ["style-accent", "accent"], ["style-width", "width"], ["style-spacing", "spacing"], ["style-radius", "radius"]].forEach(([id, field]) => $("#" + id).addEventListener("input", (event) => { segment().style[field] = event.target.value; markDirty(); }));
   $("#background-upload").addEventListener("change", (event) => readImage(event.target.files[0], (source) => { segment().style.backgroundImage = source; renderEditor(); markDirty(); }));
   $("#remove-background").addEventListener("click", () => { segment().style.backgroundImage = ""; renderEditor(); markDirty(); });
+  $("#reset-size").addEventListener("click", () => { const target = resizeTarget(); if (!target?.size) return; delete target.size; renderResizeControls(); markDirty(); });
   $("#segment-up").addEventListener("click", () => { const segments = page().segments; if (move(segments, segments.findIndex((entry) => entry.id === selectedSegmentId), -1)) { renderEditor(); markDirty(); } });
   $("#segment-down").addEventListener("click", () => { const segments = page().segments; if (move(segments, segments.findIndex((entry) => entry.id === selectedSegmentId), 1)) { renderEditor(); markDirty(); } });
   $("#delete-segment").addEventListener("click", () => { if (!confirm("Excluir este segmento e todos os seus itens?")) return; page().segments = page().segments.filter((entry) => entry.id !== selectedSegmentId); selectedSegmentId = page().segments[0]?.id; selectedItemId = null; renderEditor(); markDirty(); });
@@ -272,6 +363,7 @@ function bindStaticEvents() {
   $("#save").addEventListener("click", save); $("#validate").addEventListener("click", async () => showValidation(await window.centralAPI.validate(content)));
   $("#export").addEventListener("click", async () => { if (dirty && !(await save())) return; const result = await window.centralAPI.exportSite(content); if (result.canceled) return; if (!result.ok) return showMessage("Não foi possível gerar a versão", result.errors || ["Escolha outra pasta."]); showToast(result.basedOnOpenPortal ? "Nova versão criada com as mudanças externas" : "Portal estático gerado"); });
   $("#close-dialog").addEventListener("click", () => $("#validation-dialog").close());
+  window.addEventListener("message", handlePreviewResize);
   window.addEventListener("beforeunload", (event) => { if (dirty) { event.preventDefault(); event.returnValue = ""; } });
 }
 

@@ -9,6 +9,7 @@ const {
   contentSignature,
   extractAssignedJson,
   readPortalProject,
+  serializeContentScript,
   writePortalContent,
 } = portalProject;
 
@@ -21,6 +22,12 @@ const sample = {
 test("lê CENTRAL_CONTENT mesmo com JavaScript antes e depois do objeto", () => {
   const source = `/* edição externa */\nwindow.CENTRAL_CONTENT = ${JSON.stringify(sample)};\nconsole.info("portal");`;
   assert.deepEqual(extractAssignedJson(source), sample);
+});
+
+test("preserva tamanhos personalizados de segmentos e itens", () => {
+  const sized = structuredClone(sample);
+  sized.pages[0].segments.push({ id: "busca", name: "Busca", type: "hero", enabled: true, size: { width: 980, height: 420 }, style: {}, items: [{ id: "titulo", type: "text", size: { width: 620, height: 96 } }] });
+  assert.deepEqual(extractAssignedJson(serializeContentScript(sized)), sized);
 });
 
 test("abre, atualiza e reabre uma pasta estática sem substituir seus arquivos externos", (context) => {

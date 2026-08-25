@@ -2,9 +2,9 @@
   "format": "central-servicos-amargosa",
   "formatVersion": 1,
   "schemaVersion": 3,
-  "builderVersion": "0.6.2",
-  "exportedAt": "2026-08-25T12:09:13.402Z",
-  "updatedAt": "2026-08-25T12:09:13.402Z",
+  "builderVersion": "0.7.0",
+  "exportedAt": "2026-08-25T12:32:29.169Z",
+  "updatedAt": "2026-08-25T12:32:29.169Z",
   "contentFiles": [
     "content.js",
     "content.json"
