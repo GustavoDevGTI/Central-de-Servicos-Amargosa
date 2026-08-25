@@ -5,7 +5,7 @@ Portal municipal de direcionamento para serviços públicos e construtor desktop
 - Portal publicado: [central-servicos-amargosa.gustavoborges132.chatgpt.site](https://central-servicos-amargosa.gustavoborges132.chatgpt.site/)
 - Menu Acessibilidade: [`/menu`](https://central-servicos-amargosa.gustavoborges132.chatgpt.site/menu)
 - Versão atual do construtor: **0.7.2**
-- Instalador Windows: [`release-desktop/Editor Central de Serviços Amargosa Setup 0.7.2.exe`](release-desktop/Editor%20Central%20de%20Serviços%20Amargosa%20Setup%200.7.2.exe)
+- Instalador Windows: [baixar a versão mais recente pelo GitHub Releases](https://github.com/GustavoDevGTI/Central-de-Servicos-Amargosa/releases/latest)
 
 ## O que existe neste repositório
 
@@ -130,7 +130,7 @@ Na aba **Design**, a opção **Mesclar com o segmento anterior** remove a linha 
 npm run editor
 ```
 
-Também é possível instalar e abrir a versão distribuída na pasta `release-desktop/`.
+Também é possível baixar e instalar a versão distribuída na página [Releases](https://github.com/GustavoDevGTI/Central-de-Servicos-Amargosa/releases/latest).
 
 ## Como usar o construtor
 
@@ -269,7 +269,15 @@ Amanda é o espaço reservado para a futura agente de IA da Central. A interface
 npm run editor:package
 ```
 
-O instalador é criado em `release-desktop/`. A distribuição deste repositório mantém somente o instalador mais recente; diretórios temporários, mapas de atualização e instaladores anteriores não devem ser versionados.
+O instalador é criado localmente em `release-desktop/`, que permanece ignorada pelo Git. O executável não deve ser adicionado aos commits: a distribuição acontece por um [GitHub Release](https://github.com/GustavoDevGTI/Central-de-Servicos-Amargosa/releases).
+
+### Como baixar uma versão pronta
+
+1. Abra a página [Releases](https://github.com/GustavoDevGTI/Central-de-Servicos-Amargosa/releases/latest).
+2. Na versão marcada como **Latest**, abra a seção **Assets**.
+3. Baixe o arquivo `.exe` identificado como instalador Windows.
+
+Não é necessário clonar o projeto nem conhecer comandos Git para instalar o construtor.
 
 ## Fluxo recomendado de manutenção
 
@@ -280,9 +288,9 @@ O instalador é criado em `release-desktop/`. A distribuição deste repositóri
 5. Teste links, busca, teclado e visualização móvel.
 6. Faça alterações avançadas diretamente nos componentes React ou estilos quando necessário; depois use **Recarregar** no construtor.
 7. Regenere `portal-estatico/` somente quando a entrega estática também for necessária.
-8. Gere o instalador somente quando o próprio construtor mudar e mantenha apenas a versão mais recente.
+8. Gere o instalador somente quando o próprio construtor mudar e anexe-o a um novo GitHub Release.
 9. Execute testes, lint e build.
-10. Faça commit e push do projeto único, documentação, exportação estática aprovada e instalador atual. A publicação do portal continua sendo uma etapa explícita.
+10. Faça commit e push somente do código, conteúdo, documentação e exportação estática aprovada. Instaladores ficam fora do histórico Git e a publicação do portal continua sendo uma etapa explícita.
 
 ## Estrutura do código-fonte
 
@@ -296,7 +304,7 @@ desktop/renderer/            Interface do construtor
 desktop/templates/           Modelo usado nas exportações estáticas
 portal-estatico/             Portal pronto para hospedagem
 public/                      Fontes, favicon e imagem social
-release-desktop/             Instalador Windows atual
+release-desktop/             Saída local ignorada do empacotamento
 scripts/export-static.mjs    Exportação reproduzível para o repositório
 tests/                       Testes do formato portátil
 ```
