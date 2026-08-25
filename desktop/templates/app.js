@@ -81,20 +81,4 @@
     if (selectedItems.length && selectedSegment?.id === "amanda-widget") toggleAmanda(true);
     requestAnimationFrame(() => (selectedItems.find((element) => element.offsetParent) || selectedSegment)?.scrollIntoView({ behavior: "smooth", block: "center" }));
   }
-  // When served over HTTP, refresh the portal after the builder updates content.js.
-  // This keeps an already-open preview synchronized without requiring a new export folder.
-  if (["http:", "https:"].includes(location.protocol)) {
-    let portalSnapshot = "";
-    const checkPortalUpdate = async () => {
-      try {
-        const response = await fetch(`content.js?check=${Date.now()}`, { cache: "no-store" });
-        if (!response.ok) return;
-        const source = await response.text();
-        if (!portalSnapshot) portalSnapshot = source;
-        else if (source !== portalSnapshot) location.reload();
-      } catch { /* the portal may be opened as a local file or temporarily offline */ }
-    };
-    checkPortalUpdate();
-    setInterval(checkPortalUpdate, 1000);
-  }
 })();

@@ -2,22 +2,23 @@
 
 ## Decisão
 
-O projeto usa uma central pública estática e um editor Electron local. Essa combinação atende ao requisito de não manter login, banco de dados ou informações do cidadão e, ao mesmo tempo, permite que a Prefeitura atualize os direcionamentos sem editar código.
+O projeto usa um portal React canônico e um editor Electron independente. O portal continua público e sem login, banco de dados ou informações do cidadão. A pasta estática é uma entrega opcional para hospedagem convencional, não uma segunda origem do projeto.
 
 ## Fluxo de atualização
 
-1. O editor abre o conteúdo local em `content/site.json` ou uma pasta estática compatível escolhida em **Abrir portal**.
+1. O editor abre a pasta raiz do projeto React, identificada por `package.json`, `app/` ou `src/` e `content/site.json`. Versões estáticas antigas continuam compatíveis.
 2. Cada página é formada por uma sequência ordenada de segmentos.
 3. Cada segmento possui aparência, visibilidade e uma lista ordenada de itens tipados.
 4. A equipe altera textos, links, logos, imagens, públicos, categorias e serviços por formulários.
 5. A validação verifica a hierarquia, os vínculos entre itens e as URLs.
 6. Os serviços são vinculados a públicos como Cidadão, Empresas, Servidor, Órgãos públicos e Turista.
 7. Itens de referência definem manualmente a sequência dos serviços mais usados.
-8. Cada salvamento cria uma cópia de segurança local.
-9. Em um portal aberto, **Recarregar** traz mudanças externas e o controle de conflito impede sobrescrever conteúdo alterado por outra pessoa.
-10. **Gerar portal** cria uma nova pasta estática com data e hora, sem sobrescrever exportações anteriores.
-11. **Gerar nova versão** copia também os arquivos personalizados da pasta aberta.
-12. A pasta gerada é publicada no servidor da Prefeitura.
+8. As alterações permanecem como rascunho na memória até o botão **Salvar alterações** ser pressionado.
+9. O salvamento verifica conflitos, cria uma cópia de segurança, grava `content/site.json` de forma atômica e executa `npm run build`.
+10. **Recarregar** traz mudanças externas e o controle de conflito impede sobrescrever conteúdo alterado por outra pessoa.
+11. Componentes React, CSS e outros arquivos alterados manualmente são preservados; o construtor grava somente o conteúdo estruturado e seu manifesto.
+12. A publicação é uma ação explícita posterior ao salvamento. Ela não acontece automaticamente.
+13. Em versões estáticas legadas, **Gerar nova versão** cria uma cópia independente e preserva seus arquivos personalizados.
 
 ## Limites desta primeira versão
 

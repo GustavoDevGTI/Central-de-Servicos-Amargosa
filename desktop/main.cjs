@@ -4,9 +4,14 @@ const path = require("node:path");
 const { pathToFileURL } = require("node:url");
 const {
   contentSignature,
+  isPathInside,
+  isReactPortal,
   readPortalProject,
+  writeFileAtomic,
   writePortalContent,
+  writeReactPortalContent,
 } = require("./portal-project.cjs");
+const { runPortalBuild } = require("./project-build.cjs");
 
 let mainWindow;
 let activePortal = null;
@@ -57,9 +62,10 @@ function projectInfo(portal = activePortal) {
   if (!portal) return { kind: "internal", name: "Projeto interno", directory: null, version: app.getVersion(), contentSource: "site.json" };
   return {
     kind: "portal",
+    portalType: portal.portalType,
     name: path.basename(portal.directory),
     directory: portal.directory,
-    version: portal.manifest?.builderVersion || "versão anterior",
+    version: portal.manifest?.builderVersion || portal.packageJson?.version || "versão anterior",
     contentSource: portal.contentSource,
   };
 }
@@ -154,16 +160,23 @@ function backupContent(filePath) {
   for (const oldBackup of backups.slice(20)) fs.rmSync(path.join(backupDirectory, oldBackup.file));
 }
 
-function backupPortalContent(directory) {
+function backupPortalContent(portal) {
+  const directory = portal.directory;
   const safeName = path.basename(directory).replace(/[^a-z0-9_-]+/gi, "-").slice(0, 80) || "portal";
   const backupRoot = path.join(app.getPath("userData"), "portal-backups", safeName);
   const stamp = new Date().toISOString().replaceAll(":", "-").replaceAll(".", "-");
   const destination = path.join(backupRoot, stamp);
-  const files = ["content.js", "content.json", "portal-project.json"];
+  const files = portal.portalType === "react"
+    ? [path.join("content", "site.json"), "portal-project.json"]
+    : ["content.js", "content.json", "portal-project.json"];
   fs.mkdirSync(destination, { recursive: true });
   for (const file of files) {
     const source = path.join(directory, file);
-    if (fs.existsSync(source)) fs.copyFileSync(source, path.join(destination, file));
+    const target = path.join(destination, file);
+    if (fs.existsSync(source)) {
+      fs.mkdirSync(path.dirname(target), { recursive: true });
+      fs.copyFileSync(source, target);
+    }
   }
   const backups = fs.existsSync(backupRoot)
     ? fs.readdirSync(backupRoot, { withFileTypes: true }).filter((entry) => entry.isDirectory()).sort().reverse()
@@ -244,15 +257,21 @@ function validateContent(content) {
 
 ipcMain.handle("content:load", () => {
   seedPackagedContent();
+  if (!app.isPackaged && isReactPortal(process.cwd())) {
+    const portal = readPortalProject(process.cwd());
+    portal.content = normalizeContent(portal.content);
+    activePortal = portal;
+    return { content: portal.content, project: projectInfo(), previewAssets: readPreviewAssets(portal.directory) };
+  }
   const content = normalizeContent(JSON.parse(fs.readFileSync(editableContentPath(), "utf8")));
   return { content, project: projectInfo(null), previewAssets: readPreviewAssets() };
 });
 
-ipcMain.handle("content:save", (_event, content) => {
+ipcMain.handle("content:save", async (_event, content) => {
   const errors = validateContent(content);
   if (errors.length) return { ok: false, errors };
   if (activePortal) {
-    const currentSignature = contentSignature(activePortal.directory);
+    const currentSignature = contentSignature(activePortal.directory, activePortal.portalType);
     if (currentSignature !== activePortal.signature) {
       return {
         ok: false,
@@ -260,17 +279,25 @@ ipcMain.handle("content:save", (_event, content) => {
         errors: ["O conteúdo desta pasta foi alterado fora do construtor depois que ela foi aberta. Recarregue o portal para trazer essas mudanças antes de salvar."],
       };
     }
-    backupPortalContent(activePortal.directory);
-    const written = writePortalContent(activePortal.directory, content, app.getVersion());
+    backupPortalContent(activePortal);
+    const written = activePortal.portalType === "react"
+      ? writeReactPortalContent(activePortal.directory, content, app.getVersion())
+      : writePortalContent(activePortal.directory, content, app.getVersion());
     activePortal.signature = written.signature;
     activePortal.manifest = written.manifest;
-    activePortal.contentSource = "content.js";
-    return { ok: true, filePath: path.join(activePortal.directory, "content.js"), project: projectInfo() };
+    activePortal.contentSource = written.contentSource;
+    const build = activePortal.portalType === "react" ? await runPortalBuild(activePortal.directory) : null;
+    return {
+      ok: true,
+      filePath: path.join(activePortal.directory, written.contentSource),
+      project: projectInfo(),
+      build,
+    };
   }
   const filePath = editableContentPath();
   if (fs.existsSync(filePath)) backupContent(filePath);
   fs.mkdirSync(path.dirname(filePath), { recursive: true });
-  fs.writeFileSync(filePath, `${JSON.stringify(content, null, 2)}\n`, "utf8");
+  writeFileAtomic(filePath, `${JSON.stringify(content, null, 2)}\n`);
   return { ok: true, filePath, project: projectInfo(null) };
 });
 
@@ -278,7 +305,7 @@ ipcMain.handle("content:validate", (_event, content) => validateContent(content)
 
 ipcMain.handle("site:open", async () => {
   const selected = await dialog.showOpenDialog(mainWindow, {
-    title: "Abrir uma versão do portal estático",
+    title: "Abrir projeto React ou versão estática do portal",
     buttonLabel: "Abrir portal",
     properties: ["openDirectory"],
   });
@@ -317,16 +344,34 @@ ipcMain.handle("site:reload", () => {
   }
 });
 
+ipcMain.handle("site:status", () => {
+  if (!activePortal) return { ok: true, changed: false };
+  try {
+    return {
+      ok: true,
+      changed: contentSignature(activePortal.directory, activePortal.portalType) !== activePortal.signature,
+    };
+  } catch (error) {
+    return { ok: false, errors: [error.message || "Não foi possível verificar a pasta do portal."] };
+  }
+});
+
+ipcMain.handle("site:build", async () => {
+  if (!activePortal || activePortal.portalType !== "react") {
+    return { ok: false, errors: ["Abra um projeto React para executar a compilação."] };
+  }
+  const build = await runPortalBuild(activePortal.directory);
+  return build.ok ? { ok: true, build } : { ok: false, build, errors: [build.error] };
+});
+
 ipcMain.handle("site:export", async (_event, content) => {
   const errors = validateContent(content);
   if (errors.length) return { ok: false, errors };
-  if (activePortal) {
-    backupPortalContent(activePortal.directory);
-    const written = writePortalContent(activePortal.directory, content, app.getVersion(), { updatedAt: new Date().toISOString() });
-    activePortal.signature = written.signature;
-    activePortal.manifest = written.manifest;
-    activePortal.contentSource = "content.js";
-    return { ok: true, exportDirectory: activePortal.directory, updatedOpenPortal: true, basedOnOpenPortal: true };
+  if (activePortal?.portalType === "react") {
+    const build = await runPortalBuild(activePortal.directory);
+    return build.ok
+      ? { ok: true, exportDirectory: activePortal.directory, compiledReactPortal: true, build }
+      : { ok: false, build, errors: [build.error] };
   }
   const selected = await dialog.showOpenDialog(mainWindow, {
     title: "Escolha onde criar a versão publicável",
@@ -337,13 +382,20 @@ ipcMain.handle("site:export", async (_event, content) => {
   const now = new Date();
   const suffix = [now.getFullYear(), String(now.getMonth() + 1).padStart(2, "0"), String(now.getDate()).padStart(2, "0"), String(now.getHours()).padStart(2, "0"), String(now.getMinutes()).padStart(2, "0"), String(now.getSeconds()).padStart(2, "0")].join("");
   const exportDirectory = path.join(selected.filePaths[0], `central-servicos-amargosa-${suffix}`);
-  fs.mkdirSync(exportDirectory, { recursive: false });
-  const templates = templateDirectory();
-  for (const file of ["index.html", "styles.css", "dynamic.css", "fonts.css", "accessibility.css", "app.js"]) {
-    fs.copyFileSync(path.join(templates, file), path.join(exportDirectory, file));
+  if (activePortal && isPathInside(activePortal.directory, exportDirectory)) {
+    return { ok: false, errors: ["Crie a nova versão fora da pasta do portal que está aberto."] };
   }
-  fs.cpSync(path.join(templates, "fonts"), path.join(exportDirectory, "fonts"), { recursive: true });
-  fs.cpSync(path.join(templates, "menu"), path.join(exportDirectory, "menu"), { recursive: true });
+  fs.mkdirSync(exportDirectory, { recursive: false });
+  if (activePortal) {
+    fs.cpSync(activePortal.directory, exportDirectory, { recursive: true });
+  } else {
+    const templates = templateDirectory();
+    for (const file of ["index.html", "styles.css", "dynamic.css", "fonts.css", "accessibility.css", "app.js"]) {
+      fs.copyFileSync(path.join(templates, file), path.join(exportDirectory, file));
+    }
+    fs.cpSync(path.join(templates, "fonts"), path.join(exportDirectory, "fonts"), { recursive: true });
+    fs.cpSync(path.join(templates, "menu"), path.join(exportDirectory, "menu"), { recursive: true });
+  }
   writePortalContent(exportDirectory, content, app.getVersion(), { exportedAt: new Date().toISOString() });
   shell.showItemInFolder(path.join(exportDirectory, "index.html"));
   return { ok: true, exportDirectory, basedOnOpenPortal: Boolean(activePortal) };

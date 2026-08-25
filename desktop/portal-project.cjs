@@ -6,6 +6,8 @@ const PORTAL_FORMAT = "central-servicos-amargosa";
 const MANIFEST_FILE = "portal-project.json";
 const CONTENT_SCRIPT_FILE = "content.js";
 const CONTENT_JSON_FILE = "content.json";
+const REACT_CONTENT_FILE = path.join("content", "site.json");
+const PACKAGE_FILE = "package.json";
 
 function extractAssignedJson(source) {
   const assignment = /(?:window\.)?CENTRAL_CONTENT\s*=/.exec(source);
@@ -43,10 +45,38 @@ function readManifest(directory) {
   try { return readJson(filePath); } catch { return null; }
 }
 
+function readPackage(directory) {
+  const filePath = path.join(directory, PACKAGE_FILE);
+  if (!fs.existsSync(filePath)) return null;
+  try { return readJson(filePath); } catch { return null; }
+}
+
+function isReactPortal(directory) {
+  const resolved = path.resolve(directory);
+  const packageJson = readPackage(resolved);
+  return Boolean(
+    packageJson?.scripts?.build
+    && fs.existsSync(path.join(resolved, REACT_CONTENT_FILE))
+    && (fs.existsSync(path.join(resolved, "app")) || fs.existsSync(path.join(resolved, "src"))),
+  );
+}
+
 function readPortalProject(directory) {
   const resolved = path.resolve(directory);
+  if (isReactPortal(resolved)) {
+    const contentPath = path.join(resolved, REACT_CONTENT_FILE);
+    return {
+      directory: resolved,
+      portalType: "react",
+      content: readJson(contentPath),
+      contentSource: REACT_CONTENT_FILE,
+      manifest: readManifest(resolved),
+      packageJson: readPackage(resolved),
+      signature: contentSignature(resolved, "react"),
+    };
+  }
   const indexPath = path.join(resolved, "index.html");
-  if (!fs.existsSync(indexPath)) throw new Error("Escolha a pasta principal do portal, onde está o arquivo index.html.");
+  if (!fs.existsSync(indexPath)) throw new Error("Escolha a pasta principal do projeto React ou de uma versão estática do portal.");
   const scriptPath = path.join(resolved, CONTENT_SCRIPT_FILE);
   const jsonPath = path.join(resolved, CONTENT_JSON_FILE);
   const legacyPaths = [path.join(resolved, "content", "site.json"), path.join(resolved, "site.json")];
@@ -72,15 +102,27 @@ function readPortalProject(directory) {
   }
   return {
     directory: resolved,
+    portalType: "static",
     content,
     contentSource,
     manifest: readManifest(resolved),
-    signature: contentSignature(resolved),
+    signature: contentSignature(resolved, "static"),
   };
 }
 
 function serializeContentScript(content) {
   return `window.CENTRAL_CONTENT = ${JSON.stringify(content, null, 2)};\n`;
+}
+
+function writeFileAtomic(filePath, contents) {
+  fs.mkdirSync(path.dirname(filePath), { recursive: true });
+  const temporary = path.join(path.dirname(filePath), `.${path.basename(filePath)}.${process.pid}.${Date.now()}.tmp`);
+  try {
+    fs.writeFileSync(temporary, contents, "utf8");
+    fs.renameSync(temporary, filePath);
+  } finally {
+    if (fs.existsSync(temporary)) fs.rmSync(temporary);
+  }
 }
 
 function writePortalContent(directory, content, builderVersion, dates = {}) {
@@ -97,10 +139,31 @@ function writePortalContent(directory, content, builderVersion, dates = {}) {
     updatedAt: dates.updatedAt || exportedAt,
     contentFiles: [CONTENT_SCRIPT_FILE, CONTENT_JSON_FILE],
   };
-  fs.writeFileSync(path.join(resolved, CONTENT_SCRIPT_FILE), serializeContentScript(content), "utf8");
-  fs.writeFileSync(path.join(resolved, CONTENT_JSON_FILE), `${JSON.stringify(content, null, 2)}\n`, "utf8");
-  fs.writeFileSync(path.join(resolved, MANIFEST_FILE), `${JSON.stringify(manifest, null, 2)}\n`, "utf8");
-  return { manifest, signature: contentSignature(resolved) };
+  writeFileAtomic(path.join(resolved, CONTENT_SCRIPT_FILE), serializeContentScript(content));
+  writeFileAtomic(path.join(resolved, CONTENT_JSON_FILE), `${JSON.stringify(content, null, 2)}\n`);
+  writeFileAtomic(path.join(resolved, MANIFEST_FILE), `${JSON.stringify(manifest, null, 2)}\n`);
+  return { manifest, contentSource: CONTENT_SCRIPT_FILE, signature: contentSignature(resolved, "static") };
+}
+
+function writeReactPortalContent(directory, content, builderVersion, dates = {}) {
+  const resolved = path.resolve(directory);
+  if (!isReactPortal(resolved)) throw new Error("Esta pasta não contém um projeto React compatível com a Central de Serviços.");
+  const updatedAt = dates.updatedAt || new Date().toISOString();
+  const existingManifest = readManifest(resolved) || {};
+  const manifest = {
+    ...existingManifest,
+    format: PORTAL_FORMAT,
+    formatVersion: 2,
+    portalType: "react",
+    schemaVersion: content.schemaVersion,
+    builderVersion,
+    updatedAt,
+    contentFiles: [REACT_CONTENT_FILE.replaceAll("\\", "/")],
+    buildCommand: "npm run build",
+  };
+  writeFileAtomic(path.join(resolved, REACT_CONTENT_FILE), `${JSON.stringify(content, null, 2)}\n`);
+  writeFileAtomic(path.join(resolved, MANIFEST_FILE), `${JSON.stringify(manifest, null, 2)}\n`);
+  return { manifest, contentSource: REACT_CONTENT_FILE, signature: contentSignature(resolved, "react") };
 }
 
 function hashFile(filePath, hash) {
@@ -109,10 +172,13 @@ function hashFile(filePath, hash) {
   hash.update(fs.readFileSync(filePath));
 }
 
-function contentSignature(directory) {
+function contentSignature(directory, portalType = isReactPortal(directory) ? "react" : "static") {
   const hash = crypto.createHash("sha256");
-  hashFile(path.join(directory, CONTENT_SCRIPT_FILE), hash);
-  hashFile(path.join(directory, CONTENT_JSON_FILE), hash);
+  if (portalType === "react") hashFile(path.join(directory, REACT_CONTENT_FILE), hash);
+  else {
+    hashFile(path.join(directory, CONTENT_SCRIPT_FILE), hash);
+    hashFile(path.join(directory, CONTENT_JSON_FILE), hash);
+  }
   return hash.digest("hex");
 }
 
@@ -125,11 +191,15 @@ module.exports = {
   CONTENT_JSON_FILE,
   CONTENT_SCRIPT_FILE,
   MANIFEST_FILE,
+  REACT_CONTENT_FILE,
   PORTAL_FORMAT,
   contentSignature,
   extractAssignedJson,
   isPathInside,
+  isReactPortal,
   readPortalProject,
   serializeContentScript,
+  writeFileAtomic,
   writePortalContent,
+  writeReactPortalContent,
 };

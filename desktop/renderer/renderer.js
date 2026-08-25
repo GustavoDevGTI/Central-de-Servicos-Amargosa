@@ -47,12 +47,13 @@ function move(array, index, direction) { const target = index + direction; if (i
 
 function renderProjectInfo() {
   const openedPortal = project?.kind === "portal";
+  const reactPortal = openedPortal && project.portalType === "react";
   const label = openedPortal ? `${project.name} · ${project.version}` : "Projeto interno";
   $("#project-source").textContent = label;
   $("#project-source").title = project?.directory || label;
   $("#reload-portal").hidden = !openedPortal;
-  $("#save").textContent = openedPortal ? "Atualizar portal aberto" : "Salvar alterações";
-  $("#export").textContent = openedPortal ? "Gerar nova versão" : "Gerar portal";
+  $("#save").textContent = reactPortal ? "Salvar alterações" : openedPortal ? "Atualizar portal aberto" : "Salvar alterações";
+  $("#export").textContent = reactPortal ? "Compilar portal" : openedPortal ? "Gerar nova versão" : "Gerar portal estático";
 }
 
 function applyProjectPayload(payload, message) {
@@ -321,7 +322,20 @@ function renderPreview() { $("#preview").srcdoc = previewHtml(); }
 function showMessage(title, messages, success = false) { $(".dialog-icon").textContent = success ? "✓" : "!"; $("#dialog-title").textContent = title; $("#dialog-content").innerHTML = Array.isArray(messages) ? `<ul>${messages.map((message) => `<li>${escapeHtml(message)}</li>`).join("")}</ul>` : escapeHtml(messages); $("#validation-dialog").showModal(); }
 function showValidation(errors) { const success = errors.length === 0; showMessage(success ? "Pronto para gerar" : "Revise estes pontos", success ? "A estrutura de páginas, segmentos e itens foi validada." : errors, success); }
 async function save() {
-  const result = await window.centralAPI.save(content);
+  const saveButton = $("#save");
+  const originalLabel = saveButton.textContent;
+  saveButton.disabled = true;
+  saveButton.textContent = project?.portalType === "react" ? "Salvando e compilando…" : "Salvando…";
+  let result;
+  try {
+    result = await window.centralAPI.save(content);
+  } catch (error) {
+    showMessage("Não foi possível salvar", error?.message || "O construtor não conseguiu acessar o projeto.");
+    return false;
+  } finally {
+    saveButton.disabled = false;
+    saveButton.textContent = originalLabel;
+  }
   if (!result.ok) {
     showMessage(result.conflict ? "O portal mudou fora do construtor" : "Não foi possível salvar", result.errors || ["Revise o conteúdo e tente novamente."]);
     return false;
@@ -329,9 +343,18 @@ async function save() {
   project = result.project || project;
   dirty = false;
   $(".save-state").className = "save-state";
-  $("#save-state").textContent = project?.kind === "portal" ? "Portal aberto atualizado" : "Todas as alterações foram salvas";
+  if (result.build && !result.build.ok) {
+    $(".save-state").className = "save-state error";
+    $("#save-state").textContent = "Conteúdo salvo; compilação pendente";
+  } else {
+    $("#save-state").textContent = project?.portalType === "react" ? "Portal React salvo e compilado" : project?.kind === "portal" ? "Portal aberto atualizado" : "Todas as alterações foram salvas";
+  }
   renderProjectInfo();
-  showToast(project?.kind === "portal" ? "Conteúdo atualizado na pasta do portal" : "Projeto salvo com cópia de segurança");
+  if (result.build && !result.build.ok) {
+    showMessage("O conteúdo foi salvo, mas a compilação falhou", [result.build.error || "Execute a compilação novamente depois de corrigir o projeto."]);
+  } else {
+    showToast(project?.portalType === "react" ? "Conteúdo gravado e portal compilado" : project?.kind === "portal" ? "Conteúdo atualizado na pasta do portal" : "Projeto salvo com cópia de segurança");
+  }
   return true;
 }
 
@@ -341,7 +364,7 @@ function bindStaticEvents() {
     const result = await window.centralAPI.openPortal();
     if (result.canceled) return;
     if (!result.ok) return showMessage("Não foi possível abrir o portal", result.errors || ["Escolha outra pasta."]);
-    applyProjectPayload(result, "Portal estático aberto");
+    applyProjectPayload(result, result.project?.portalType === "react" ? "Projeto React aberto" : "Portal estático aberto");
     showToast("Portal aberto para edição");
     if (result.errors?.length) showMessage("Portal aberto com pontos para revisar", result.errors);
   });
@@ -378,9 +401,29 @@ function bindStaticEvents() {
   $("#add-item").addEventListener("click", () => { const entry = defaultItem($("#new-item-type").value); segment().items.push(entry); selectedItemId = entry.id; renderEditor(); markDirty(); });
   $$(".devices button").forEach((button) => button.addEventListener("click", () => { $$(".devices button").forEach((entry) => entry.classList.toggle("active", entry === button)); $("#preview").className = button.dataset.device === "desktop" ? "" : button.dataset.device; $("#viewport-label").textContent = button.dataset.device === "desktop" ? "1440 × 900 · 100%" : button.dataset.device === "tablet" ? "768 × 1024" : "390 × 844"; }));
   $("#save").addEventListener("click", save); $("#validate").addEventListener("click", async () => showValidation(await window.centralAPI.validate(content)));
-  $("#export").addEventListener("click", async () => { if (dirty && !(await save())) return; const result = await window.centralAPI.exportSite(content); if (result.canceled) return; if (!result.ok) return showMessage("Não foi possível gerar a versão", result.errors || ["Escolha outra pasta."]); showToast(result.updatedOpenPortal ? "Portal aberto atualizado" : "Portal estático gerado"); });
+  $("#export").addEventListener("click", async () => {
+    if (project?.portalType === "react") {
+      if (dirty) return void (await save());
+      const result = await window.centralAPI.buildPortal();
+      if (!result.ok) return showMessage("Não foi possível compilar o portal", result.errors || ["Revise o projeto React e tente novamente."]);
+      return showToast("Portal React compilado");
+    }
+    if (dirty && !(await save())) return;
+    const result = await window.centralAPI.exportSite(content);
+    if (result.canceled) return;
+    if (!result.ok) return showMessage("Não foi possível gerar a versão", result.errors || ["Escolha outra pasta."]);
+    showToast("Portal estático gerado");
+  });
   $("#close-dialog").addEventListener("click", () => $("#validation-dialog").close());
   window.addEventListener("message", handlePreviewResize);
+  window.addEventListener("focus", async () => {
+    if (project?.kind !== "portal") return;
+    const result = await window.centralAPI.checkPortalChanges();
+    if (result.ok && result.changed) {
+      $(".save-state").className = "save-state error";
+      $("#save-state").textContent = "Mudanças externas detectadas — clique em Recarregar";
+    }
+  });
   window.addEventListener("beforeunload", (event) => { if (dirty) { event.preventDefault(); event.returnValue = ""; } });
 }
 

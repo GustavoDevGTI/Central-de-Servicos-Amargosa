@@ -6,6 +6,8 @@ contextBridge.exposeInMainWorld("centralAPI", {
   validate: (content) => ipcRenderer.invoke("content:validate", content),
   openPortal: () => ipcRenderer.invoke("site:open"),
   reloadPortal: () => ipcRenderer.invoke("site:reload"),
+  checkPortalChanges: () => ipcRenderer.invoke("site:status"),
+  buildPortal: () => ipcRenderer.invoke("site:build"),
   exportSite: (content) => ipcRenderer.invoke("site:export", content),
   openExternal: (url) => ipcRenderer.invoke("external:open", url),
 });

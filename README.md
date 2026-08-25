@@ -4,8 +4,8 @@ Portal municipal de direcionamento para serviços públicos e construtor desktop
 
 - Portal publicado: [central-servicos-amargosa.gustavoborges132.chatgpt.site](https://central-servicos-amargosa.gustavoborges132.chatgpt.site/)
 - Menu Acessibilidade: [`/menu`](https://central-servicos-amargosa.gustavoborges132.chatgpt.site/menu)
-- Versão atual do construtor: **0.7.1**
-- Instalador Windows: [`release-desktop/Editor Central de Serviços Amargosa Setup 0.7.1.exe`](release-desktop/Editor%20Central%20de%20Serviços%20Amargosa%20Setup%200.7.1.exe)
+- Versão atual do construtor: **0.7.2**
+- Instalador Windows: [`release-desktop/Editor Central de Serviços Amargosa Setup 0.7.2.exe`](release-desktop/Editor%20Central%20de%20Serviços%20Amargosa%20Setup%200.7.2.exe)
 
 ## O que existe neste repositório
 
@@ -16,11 +16,11 @@ O projeto possui três entregas que compartilham o mesmo catálogo:
 3. **Portal estático:** versão formada apenas por HTML, CSS, JavaScript, fontes e conteúdo, pronta para hospedagem convencional.
 
 ```text
-content/site.json
-        │
-        ├── portal web em app/
-        ├── construtor desktop em desktop/
-        └── exportação em portal-estatico/
+Projeto React canônico
+├── app/                     interface e comportamento
+├── content/site.json        conteúdo editável
+├── desktop/                 construtor independente
+└── portal-estatico/         exportação legada opcional
 ```
 
 ## Objetivo e princípios
@@ -116,6 +116,7 @@ O construtor foi criado especificamente para a Central de Serviços de Amargosa.
 - validar hierarquia, referências e URLs;
 - gerar cópias de segurança locais do conteúdo;
 - criar uma nova pasta estática publicável;
+- abrir diretamente a pasta raiz do projeto React canônico;
 - abrir e continuar editando versões estáticas existentes;
 - preservar personalizações feitas manualmente fora do aplicativo.
 
@@ -133,23 +134,28 @@ Também é possível instalar e abrir a versão distribuída na pasta `release-d
 
 ## Como usar o construtor
 
-### Editar o projeto interno
+### Editar o portal React canônico
 
 1. Abra o construtor.
-2. Escolha a página e o segmento na coluna esquerda.
-3. Use **Conteúdo** para editar itens e **Design** para escolher o modelo e ajustar a aparência.
-4. Confira a prévia central em desktop, tablet ou celular.
-5. Use **Validar**.
-6. Use **Salvar alterações**.
-7. Use **Gerar portal** para criar uma pasta estática com data e hora. Se um portal já estiver aberto, o construtor atualiza essa mesma pasta.
+2. Clique em **Abrir portal** e selecione a pasta raiz que contém `package.json`, `app/` e `content/site.json`. Durante o desenvolvimento deste repositório, essa pasta é reconhecida automaticamente.
+3. Escolha a página e o segmento na coluna esquerda.
+4. Use **Conteúdo** para editar itens e **Design** para escolher o modelo e ajustar a aparência.
+5. Confira a prévia central em desktop, tablet ou celular e use **Validar**.
+6. Enquanto você edita, as mudanças ficam somente na memória do construtor.
+7. Pressione **Salvar alterações**. Só nesse momento o aplicativo cria o backup, grava `content/site.json` e executa `npm run build`.
 
-### Abrir uma versão estática existente
+O construtor e o portal têm ciclos independentes. Atualizar o aplicativo não cria outro portal e editar o portal não cria outro instalador. Existe um único projeto React, incrementado dentro ou fora do construtor.
+
+Se `npm run dev` estiver aberto, o servidor de desenvolvimento perceberá a gravação feita pelo botão **Salvar alterações** e atualizará a página. Em produção nada é publicado automaticamente: ainda é necessário fazer commit e executar o fluxo explícito de publicação.
+
+### Abrir um projeto React ou uma versão estática existente
 
 1. Clique em **Abrir portal**.
 2. Selecione a **pasta principal** do portal. Não selecione o arquivo `index.html` e não escolha a subpasta `menu/`.
-3. A pasta correta deve conter `index.html` e ao menos um arquivo de conteúdo compatível.
-4. O construtor procura, nesta ordem, a representação de conteúdo mais recente entre `content.js` e `content.json`. Versões antigas com `content/site.json` ou `site.json` também são aceitas.
-5. O nome da pasta e a versão aparecem abaixo do título do construtor.
+3. Para React, a pasta correta contém `package.json`, `app/` ou `src/`, e `content/site.json`. Não selecione um arquivo interno.
+4. Para uma versão estática legada, a pasta deve conter `index.html` e `content.js` ou `content.json`.
+5. Em versões estáticas, o construtor procura a representação de conteúdo mais recente entre `content.js` e `content.json`. Versões antigas com `content/site.json` ou `site.json` também são aceitas.
+6. O nome da pasta, o tipo e a versão aparecem no construtor.
 
 Ao abrir um portal, seus arquivos CSS são usados na prévia. O aplicativo utiliza o modelo estruturado para apresentar páginas, segmentos e itens editáveis.
 
@@ -158,17 +164,17 @@ Ao abrir um portal, seus arquivos CSS são usados na prévia. O aplicativo utili
 Se um colega modificar o portal manualmente:
 
 1. Abra novamente a pasta com **Abrir portal**, ou clique em **Recarregar** se ela já estiver aberta.
-2. O construtor lê novamente o conteúdo e os estilos externos.
+2. O construtor lê novamente o conteúdo externo. Arquivos React, CSS e demais arquivos de código continuam intactos.
 3. Continue a edição normalmente.
-4. Use **Atualizar portal aberto** para sincronizar o conteúdo na mesma pasta.
+4. Use **Salvar alterações** no projeto React ou **Atualizar portal aberto** na versão estática.
 
-Se `content.js` ou `content.json` mudar externamente enquanto há uma edição aberta, o salvamento é bloqueado. É necessário usar **Recarregar** antes de salvar, evitando a perda do trabalho do colega.
+Se o arquivo de conteúdo mudar externamente enquanto há uma edição aberta, o construtor avisa ao recuperar o foco e bloqueia o salvamento conflitante. Use **Recarregar** antes de salvar, evitando a perda do trabalho do colega. Não existe consulta periódica nem sincronização silenciosa.
 
-### Gerar outra versão a partir de um portal aberto
+### Compilar e gerar versões estáticas
 
-Ao trabalhar em um portal aberto, **Salvar alterações** e **Gerar portal** atualizam a mesma pasta. A página servida por HTTP recarrega automaticamente quando o conteúdo é salvo. Para criar uma cópia independente, use o construtor sem abrir um portal existente e gere uma nova pasta.
+Em um projeto React aberto, **Salvar alterações** grava e compila o mesmo projeto. **Compilar portal** repete apenas a compilação, sem criar cópias com data e hora. Em uma versão estática aberta, **Gerar nova versão** cria uma cópia independente e preserva os arquivos personalizados da origem.
 
-O construtor não converte código HTML ou JavaScript arbitrário em novos controles visuais. Para que um conteúdo continue editável como segmento ou item, ele deve permanecer representado em `content.js` ou `content.json`.
+O construtor não converte automaticamente código React, HTML ou JavaScript arbitrário em controles visuais. Para continuar editável como segmento ou item, o conteúdo precisa permanecer representado em `content/site.json` no React ou em `content.js`/`content.json` no estático. Alterações manuais nos componentes e estilos são preservadas e podem complementar o conteúdo estruturado.
 
 ## Como funciona o portal estático
 
@@ -255,7 +261,7 @@ Amanda é o espaço reservado para a futura agente de IA da Central. A interface
 | `npm run editor` | Abre o construtor Electron |
 | `npm run editor:package` | Gera o instalador Windows |
 | `npm run portal:export` | Recria `portal-estatico/` |
-| `node --test tests/portal-project.test.mjs` | Testa abertura e atualização de portais estáticos |
+| `node --test tests/*.test.mjs` | Testa abertura, salvamento e compilação de projetos React e estáticos |
 
 ## Gerar o instalador Windows
 
@@ -267,24 +273,25 @@ O instalador é criado em `release-desktop/`. A distribuição deste repositóri
 
 ## Fluxo recomendado de manutenção
 
-1. Abra no construtor a versão atualmente usada pela equipe.
-2. Recarregue possíveis alterações externas.
-3. Edite e valide o conteúdo.
-4. Gere uma nova versão estática.
+1. Abra a pasta raiz do projeto React canônico no construtor.
+2. Recarregue possíveis alterações externas antes de editar.
+3. Edite e valide o conteúdo; nada é gravado durante essa etapa.
+4. Pressione **Salvar alterações** para criar backup, gravar o JSON e compilar o portal.
 5. Teste links, busca, teclado e visualização móvel.
-6. Atualize `portal-estatico/` com a versão aprovada.
-7. Gere o novo instalador do construtor quando houver mudanças no aplicativo ou nos modelos.
-8. Mantenha apenas o instalador mais recente.
+6. Faça alterações avançadas diretamente nos componentes React ou estilos quando necessário; depois use **Recarregar** no construtor.
+7. Regenere `portal-estatico/` somente quando a entrega estática também for necessária.
+8. Gere o instalador somente quando o próprio construtor mudar e mantenha apenas a versão mais recente.
 9. Execute testes, lint e build.
-10. Faça commit e push do código, portal estático, documentação e instalador atual.
+10. Faça commit e push do projeto único, documentação, exportação estática aprovada e instalador atual. A publicação do portal continua sendo uma etapa explícita.
 
 ## Estrutura do código-fonte
 
 ```text
 app/                         Portal React e rota /menu
-content/site.json            Fonte de conteúdo do projeto interno
+content/site.json            Fonte de conteúdo do portal React canônico
 desktop/main.cjs             Janela, arquivos, validação, importação e exportação
-desktop/portal-project.cjs   Formato portátil e leitura de versões estáticas
+desktop/portal-project.cjs   Leitura e gravação de projetos React e versões estáticas
+desktop/project-build.cjs    Compilação do portal React após o salvamento
 desktop/renderer/            Interface do construtor
 desktop/templates/           Modelo usado nas exportações estáticas
 portal-estatico/             Portal pronto para hospedagem
