@@ -141,7 +141,7 @@ Também é possível instalar e abrir a versão distribuída na pasta `release-d
 4. Confira a prévia central em desktop, tablet ou celular.
 5. Use **Validar**.
 6. Use **Salvar alterações**.
-7. Use **Gerar portal** para criar uma pasta estática com data e hora.
+7. Use **Gerar portal** para criar uma pasta estática com data e hora. Se um portal já estiver aberto, o construtor atualiza essa mesma pasta.
 
 ### Abrir uma versão estática existente
 
@@ -166,7 +166,7 @@ Se `content.js` ou `content.json` mudar externamente enquanto há uma edição a
 
 ### Gerar outra versão a partir de um portal aberto
 
-Use **Gerar nova versão**. Nesse caso, o construtor copia a pasta aberta inteira antes de atualizar o conteúdo. Alterações manuais em HTML, CSS, JavaScript, fontes e outros arquivos acompanham a nova versão.
+Ao trabalhar em um portal aberto, **Salvar alterações** e **Gerar portal** atualizam a mesma pasta. A página servida por HTTP recarrega automaticamente quando o conteúdo é salvo. Para criar uma cópia independente, use o construtor sem abrir um portal existente e gere uma nova pasta.
 
 O construtor não converte código HTML ou JavaScript arbitrário em novos controles visuais. Para que um conteúdo continue editável como segmento ou item, ele deve permanecer representado em `content.js` ou `content.json`.
 

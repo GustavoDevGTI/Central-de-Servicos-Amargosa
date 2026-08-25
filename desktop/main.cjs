@@ -4,7 +4,6 @@ const path = require("node:path");
 const { pathToFileURL } = require("node:url");
 const {
   contentSignature,
-  isPathInside,
   readPortalProject,
   writePortalContent,
 } = require("./portal-project.cjs");
@@ -321,6 +320,14 @@ ipcMain.handle("site:reload", () => {
 ipcMain.handle("site:export", async (_event, content) => {
   const errors = validateContent(content);
   if (errors.length) return { ok: false, errors };
+  if (activePortal) {
+    backupPortalContent(activePortal.directory);
+    const written = writePortalContent(activePortal.directory, content, app.getVersion(), { updatedAt: new Date().toISOString() });
+    activePortal.signature = written.signature;
+    activePortal.manifest = written.manifest;
+    activePortal.contentSource = "content.js";
+    return { ok: true, exportDirectory: activePortal.directory, updatedOpenPortal: true, basedOnOpenPortal: true };
+  }
   const selected = await dialog.showOpenDialog(mainWindow, {
     title: "Escolha onde criar a versão publicável",
     buttonLabel: "Criar nesta pasta",
@@ -330,20 +337,13 @@ ipcMain.handle("site:export", async (_event, content) => {
   const now = new Date();
   const suffix = [now.getFullYear(), String(now.getMonth() + 1).padStart(2, "0"), String(now.getDate()).padStart(2, "0"), String(now.getHours()).padStart(2, "0"), String(now.getMinutes()).padStart(2, "0"), String(now.getSeconds()).padStart(2, "0")].join("");
   const exportDirectory = path.join(selected.filePaths[0], `central-servicos-amargosa-${suffix}`);
-  if (activePortal && isPathInside(activePortal.directory, exportDirectory)) {
-    return { ok: false, errors: ["Crie a nova versão fora da pasta do portal que está aberto."] };
-  }
   fs.mkdirSync(exportDirectory, { recursive: false });
-  if (activePortal) {
-    fs.cpSync(activePortal.directory, exportDirectory, { recursive: true });
-  } else {
-    const templates = templateDirectory();
-    for (const file of ["index.html", "styles.css", "dynamic.css", "fonts.css", "accessibility.css", "app.js"]) {
-      fs.copyFileSync(path.join(templates, file), path.join(exportDirectory, file));
-    }
-    fs.cpSync(path.join(templates, "fonts"), path.join(exportDirectory, "fonts"), { recursive: true });
-    fs.cpSync(path.join(templates, "menu"), path.join(exportDirectory, "menu"), { recursive: true });
+  const templates = templateDirectory();
+  for (const file of ["index.html", "styles.css", "dynamic.css", "fonts.css", "accessibility.css", "app.js"]) {
+    fs.copyFileSync(path.join(templates, file), path.join(exportDirectory, file));
   }
+  fs.cpSync(path.join(templates, "fonts"), path.join(exportDirectory, "fonts"), { recursive: true });
+  fs.cpSync(path.join(templates, "menu"), path.join(exportDirectory, "menu"), { recursive: true });
   writePortalContent(exportDirectory, content, app.getVersion(), { exportedAt: new Date().toISOString() });
   shell.showItemInFolder(path.join(exportDirectory, "index.html"));
   return { ok: true, exportDirectory, basedOnOpenPortal: Boolean(activePortal) };
