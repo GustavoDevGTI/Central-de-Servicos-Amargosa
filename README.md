@@ -4,8 +4,8 @@ Portal municipal de direcionamento para serviços públicos e construtor desktop
 
 - Portal publicado: [central-servicos-amargosa.gustavoborges132.chatgpt.site](https://central-servicos-amargosa.gustavoborges132.chatgpt.site/)
 - Menu Acessibilidade: [`/menu`](https://central-servicos-amargosa.gustavoborges132.chatgpt.site/menu)
-- Versão atual do construtor: **0.6.1**
-- Instalador Windows: [`release-desktop/Editor Central de Serviços Amargosa Setup 0.6.1.exe`](release-desktop/Editor%20Central%20de%20Serviços%20Amargosa%20Setup%200.6.1.exe)
+- Versão atual do construtor: **0.6.2**
+- Instalador Windows: [`release-desktop/Editor Central de Serviços Amargosa Setup 0.6.2.exe`](release-desktop/Editor%20Central%20de%20Serviços%20Amargosa%20Setup%200.6.2.exe)
 
 ## O que existe neste repositório
 
