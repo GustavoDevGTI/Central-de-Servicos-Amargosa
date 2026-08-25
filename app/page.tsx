@@ -6,7 +6,7 @@ import siteContent from "../content/site.json";
 
 type Size = { width?: number; height?: number };
 type Item = { id: string; type: string; role?: string; label?: string; value?: string; text?: string; url?: string; src?: string; alt?: string; placeholder?: string; buttonText?: string; description?: string; initials?: string; title?: string; department?: string; category?: string; audienceId?: string; destination?: string; serviceId?: string; size?: Size };
-type Segment = { id: string; name: string; type: string; enabled: boolean; size?: Size; style: { background?: string; color?: string; accent?: string; width?: string; spacing?: string; radius?: string; variant?: string; backgroundImage?: string }; items: Item[] };
+type Segment = { id: string; name: string; type: string; enabled: boolean; mergeWithPrevious?: boolean; size?: Size; style: { background?: string; color?: string; accent?: string; width?: string; spacing?: string; radius?: string; variant?: string; backgroundImage?: string }; items: Item[] };
 type Service = Item & { title: string; department: string; category: string; audienceId: string; destination: string; url: string; initials: string };
 const page = siteContent.pages[0] as unknown as { segments: Segment[] };
 
@@ -73,7 +73,8 @@ export default function Home() {
   }
   function askAmanda(question: string) { const value = question.trim(); if (!value) return; setAmandaMessages((current) => [...current, { author: "user", text: value }, { author: "amanda", text: "Minha inteligência ainda está sendo preparada. Em breve vou responder e indicar o canal oficial mais adequado para você." }]); setAmandaDraft(""); }
   function segmentStyle(segment: Segment) { return { "--segment-bg": segment.style.background, "--segment-color": segment.style.color, "--segment-accent": segment.style.accent, backgroundImage: segment.style.backgroundImage ? `url(${JSON.stringify(segment.style.backgroundImage).slice(1, -1)})` : undefined, ...sizeStyle(segment, true) } as CSSProperties; }
-  function classes(segment: Segment, base: string) { return `${base} editable-segment segment-${segment.type} variant-${segment.style.variant || "institutional"} width-${segment.style.width || "contained"} spacing-${segment.style.spacing || "comfortable"} radius-${segment.style.radius || "soft"}${segment.size ? " user-sized-segment" : ""}`; }
+  function mergeClasses(segment: Segment) { const flow = segments.filter((entry) => entry.type !== "amanda"); const index = flow.findIndex((entry) => entry.id === segment.id); if (index < 0) return ""; return `${index > 0 && segment.mergeWithPrevious ? " merge-with-previous" : ""}${flow[index + 1]?.mergeWithPrevious ? " merge-with-next" : ""}`; }
+  function classes(segment: Segment, base: string) { return `${base} editable-segment segment-${segment.type} variant-${segment.style.variant || "institutional"} width-${segment.style.width || "contained"} spacing-${segment.style.spacing || "comfortable"} radius-${segment.style.radius || "soft"}${segment.size ? " user-sized-segment" : ""}${mergeClasses(segment)}`; }
   function serviceCard(service: Service, index: number, featured = false, editorItem: Item = service) {
     return <a key={`${service.id}-${index}`} {...itemSizeProps(editorItem)} className={featured ? "featured-card" : "service-card"} href={service.url} {...external(service.url)}>{featured && <span className="rank">{String(index + 1).padStart(2, "0")}</span>}<span><small>{service.category}</small><strong>{service.title}</strong><em>{service.department}</em></span><b>{featured ? "↗" : <>{service.destination} ↗</>}</b></a>;
   }

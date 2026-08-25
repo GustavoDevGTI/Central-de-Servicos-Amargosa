@@ -30,6 +30,15 @@ test("preserva tamanhos personalizados de segmentos e itens", () => {
   assert.deepEqual(extractAssignedJson(serializeContentScript(sized)), sized);
 });
 
+test("preserva a mesclagem visual entre segmentos", () => {
+  const merged = structuredClone(sample);
+  merged.pages[0].segments.push(
+    { id: "cabecalho", name: "Cabeçalho", type: "header", enabled: true, style: {}, items: [] },
+    { id: "busca", name: "Busca", type: "hero", enabled: true, mergeWithPrevious: true, style: {}, items: [] },
+  );
+  assert.deepEqual(extractAssignedJson(serializeContentScript(merged)), merged);
+});
+
 test("abre, atualiza e reabre uma pasta estática sem substituir seus arquivos externos", (context) => {
   const directory = fs.mkdtempSync(path.join(os.tmpdir(), "central-portal-test-"));
   context.after(() => fs.rmSync(directory, { recursive: true, force: true }));

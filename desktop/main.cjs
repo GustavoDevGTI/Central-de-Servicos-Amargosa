@@ -220,6 +220,7 @@ function validateContent(content) {
       if (!segment.name?.trim()) errors.push(`${pageLabel}, segmento ${segmentIndex + 1}: informe o nome.`);
       if (!segment.type?.trim()) errors.push(`${segmentLabel}: informe o tipo.`);
       validateSize(segment.size, segmentLabel, 160);
+      if (segment.mergeWithPrevious != null && typeof segment.mergeWithPrevious !== "boolean") errors.push(`${segmentLabel}: a opção de mesclagem é inválida.`);
       if (segmentIds.has(segment.id)) errors.push(`${segmentLabel}: identificador de segmento repetido.`); else segmentIds.add(segment.id);
       if (!Array.isArray(segment.items)) errors.push(`${segmentLabel}: a lista de itens é inválida.`);
       const itemIds = new Set();

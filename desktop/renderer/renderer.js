@@ -105,7 +105,23 @@ function renderEditor() {
   $("#background-status").textContent = style.backgroundImage ? "Imagem incorporada ao projeto" : "Nenhuma imagem";
   $("#new-item-type").innerHTML = itemTypes.map((value) => `<option value="${value}">${typeLabels[value]}</option>`).join("");
   renderItems();
+  renderMergeControls();
   renderResizeControls();
+}
+
+function previousVisibleSegment(current = segment()) {
+  const segments = page()?.segments || [];
+  const index = segments.findIndex((entry) => entry.id === current?.id);
+  return index > 0 ? [...segments.slice(0, index)].reverse().find((entry) => entry.enabled && entry.type !== "amanda") : null;
+}
+
+function renderMergeControls() {
+  const current = segment();
+  const previous = previousVisibleSegment(current);
+  const available = Boolean(current && previous && current.type !== "amanda");
+  $("#merge-previous").checked = available && current.mergeWithPrevious === true;
+  $("#merge-previous").disabled = !available;
+  $("#merge-previous-label").textContent = previous ? previous.name : "Primeiro segmento da página";
 }
 
 function resizeTarget() { return item() || segment(); }
@@ -347,13 +363,14 @@ function bindStaticEvents() {
   $("#page-name").addEventListener("input", (event) => { page().name = event.target.value; $("#page-select").selectedOptions[0].textContent = event.target.value || "Página sem nome"; markDirty(); });
   $("#page-slug").addEventListener("input", (event) => { page().slug = event.target.value; markDirty(); });
   $("#add-page").addEventListener("click", () => { const id = uid("pagina"); content.pages.push({ id, name: "Nova página", slug: `/${id}`, segments: [] }); selectedPageId = id; selectedSegmentId = null; selectedItemId = null; renderEditor(); markDirty(); });
-  $("#add-segment").addEventListener("click", () => { const entry = { id: uid("segmento"), name: "Novo segmento", type: "generic", enabled: true, style: { background: "#ffffff", color: "#193a31", accent: content.site.primaryColor, width: "contained", spacing: "comfortable", radius: "soft", variant: "institutional", backgroundImage: "" }, items: [] }; page().segments.push(entry); selectedSegmentId = entry.id; selectedItemId = null; renderEditor(); markDirty(); });
+  $("#add-segment").addEventListener("click", () => { const entry = { id: uid("segmento"), name: "Novo segmento", type: "generic", enabled: true, mergeWithPrevious: false, style: { background: "#ffffff", color: "#193a31", accent: content.site.primaryColor, width: "contained", spacing: "comfortable", radius: "soft", variant: "institutional", backgroundImage: "" }, items: [] }; page().segments.push(entry); selectedSegmentId = entry.id; selectedItemId = null; renderEditor(); markDirty(); });
   $("#segment-name").addEventListener("input", (event) => { segment().name = event.target.value; $("#segment-heading").textContent = event.target.value; renderSegments(); markDirty(); });
   $("#segment-type").addEventListener("change", (event) => { segment().type = event.target.value; renderEditor(); markDirty(); });
   $("#segment-enabled").addEventListener("change", (event) => { segment().enabled = event.target.checked; renderSegments(); markDirty(); });
   [["style-background", "background"], ["style-color", "color"], ["style-accent", "accent"], ["style-width", "width"], ["style-spacing", "spacing"], ["style-radius", "radius"]].forEach(([id, field]) => $("#" + id).addEventListener("input", (event) => { segment().style[field] = event.target.value; markDirty(); }));
   $("#background-upload").addEventListener("change", (event) => readImage(event.target.files[0], (source) => { segment().style.backgroundImage = source; renderEditor(); markDirty(); }));
   $("#remove-background").addEventListener("click", () => { segment().style.backgroundImage = ""; renderEditor(); markDirty(); });
+  $("#merge-previous").addEventListener("change", (event) => { const current = segment(); if (!current) return; current.mergeWithPrevious = event.target.checked; renderMergeControls(); markDirty(); });
   $("#reset-size").addEventListener("click", () => { const target = resizeTarget(); if (!target?.size) return; delete target.size; renderResizeControls(); markDirty(); });
   $("#segment-up").addEventListener("click", () => { const segments = page().segments; if (move(segments, segments.findIndex((entry) => entry.id === selectedSegmentId), -1)) { renderEditor(); markDirty(); } });
   $("#segment-down").addEventListener("click", () => { const segments = page().segments; if (move(segments, segments.findIndex((entry) => entry.id === selectedSegmentId), 1)) { renderEditor(); markDirty(); } });

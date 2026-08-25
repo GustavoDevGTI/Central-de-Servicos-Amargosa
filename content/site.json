@@ -114,6 +114,7 @@
           "name": "Busca principal",
           "type": "hero",
           "enabled": true,
+          "mergeWithPrevious": true,
           "style": {
             "background": "#0b6b50",
             "color": "#ffffff",
