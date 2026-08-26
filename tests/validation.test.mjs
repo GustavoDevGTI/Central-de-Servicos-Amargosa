@@ -37,13 +37,13 @@ test("valida a galeria de imagens do carrossel da busca", () => {
   assert.ok(errors.some((message) => message.includes("arquivo é inválido")));
 });
 
-test("valida as escolhas globais do site completo", () => {
+test("valida tema global e interações por segmento", () => {
   const content = structuredClone(valid);
   content.site = { design: { theme: "institutional", palette: "amargosa", headingFont: "lora", bodyFont: "source", fontSize: "large" } };
   assert.deepEqual(validation.validateContent(content), []);
   content.site.design.theme = "modelo-inexistente";
   assert.ok(validation.validateContent(content).some((message) => message.includes("Site completo")));
   content.site.design.theme = "institutional";
-  content.site.design.hoverEffect = "efeito-inexistente";
-  assert.ok(validation.validateContent(content).some((message) => message.includes("Site completo")));
+  content.pages[0].segments[0].style.hoverEffect = "efeito-inexistente";
+  assert.ok(validation.validateContent(content).some((message) => message.includes(content.pages[0].segments[0].name)));
 });

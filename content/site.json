@@ -16,7 +16,7 @@
       "headingFont": "lora",
       "bodyFont": "source",
       "fontSize": "large",
-      "hoverEffect": "none",
+      "hoverEffect": "lift",
       "clickEffect": "none"
     }
   },
@@ -71,6 +71,7 @@
             "width": "wide",
             "spacing": "comfortable",
             "radius": "soft",
+            "hoverEffect": "none",
             "backgroundImage": ""
           },
           "items": [
@@ -112,14 +113,6 @@
               "label": "Menu: categorias",
               "text": "Categorias",
               "url": "#categorias"
-            },
-            {
-              "id": "nav-help",
-              "type": "link",
-              "role": "navigation",
-              "label": "Menu: ajuda",
-              "text": "Ajuda",
-              "url": "#ajuda"
             }
           ]
         },
@@ -136,6 +129,7 @@
             "width": "wide",
             "spacing": "airy",
             "radius": "soft",
+            "hoverEffect": "none",
             "backgroundImage": ""
           },
           "items": [
@@ -175,6 +169,7 @@
             "width": "contained",
             "spacing": "comfortable",
             "radius": "soft",
+            "hoverEffect": "shadow",
             "backgroundImage": ""
           },
           "items": [
@@ -239,6 +234,7 @@
             "width": "contained",
             "spacing": "airy",
             "radius": "soft",
+            "hoverEffect": "shadow",
             "backgroundImage": ""
           },
           "items": [
@@ -312,6 +308,7 @@
             "width": "contained",
             "spacing": "airy",
             "radius": "soft",
+            "hoverEffect": "none",
             "backgroundImage": ""
           },
           "items": [
@@ -406,7 +403,7 @@
           "id": "catalog",
           "name": "Catálogo de serviços",
           "type": "catalog",
-          "enabled": true,
+          "enabled": false,
           "style": {
             "background": "#ffffff",
             "color": "#17352a",
@@ -588,7 +585,7 @@
           "id": "help",
           "name": "Ajuda e atendimento",
           "type": "help",
-          "enabled": true,
+          "enabled": false,
           "style": {
             "background": "#146b3a",
             "color": "#ffffff",
@@ -596,6 +593,7 @@
             "width": "wide",
             "spacing": "comfortable",
             "radius": "square",
+            "hoverEffect": "none",
             "backgroundImage": ""
           },
           "items": [
@@ -642,6 +640,7 @@
             "width": "wide",
             "spacing": "comfortable",
             "radius": "square",
+            "hoverEffect": "none",
             "backgroundImage": ""
           },
           "items": [

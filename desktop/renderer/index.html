@@ -46,10 +46,6 @@
             <label>Fonte dos textos<select id="site-body-font"><option value="source">Source Sans 3</option><option value="segoe">Segoe UI</option><option value="lora">Lora</option><option value="georgia">Georgia</option><option value="cambria">Cambria</option><option value="arial">Arial</option></select></label>
             <label>Escala geral<select id="site-font-size"><option value="small">Pequena</option><option value="normal">Padrão</option><option value="large">Grande</option><option value="xlarge">Muito grande</option></select></label>
           </div></section>
-          <section class="site-global-section"><div class="form-heading"><small>INTERAÇÃO DOS BOTÕES</small><h2>Hover e clique</h2><p>Escolha o retorno visual dos elementos interativos. O foco por teclado permanece sempre visível.</p></div><div class="global-type-grid">
-            <label>Ao passar o cursor<select id="site-hover-effect"><option value="none">Sem efeito</option><option value="lift">Elevar com sombra</option><option value="shadow">Somente sombra</option><option value="outline">Contorno de destaque</option></select></label>
-            <label>Ao clicar<select id="site-click-effect"><option value="none">Sem efeito</option><option value="press">Recuar como botão</option><option value="shrink">Contrair levemente</option><option value="accent">Contorno de destaque</option></select></label>
-          </div></section>
         </div>
       </div>
       <div id="segment-empty" class="empty-editor">Selecione um segmento para editar.</div>
@@ -80,6 +76,10 @@
           </div><div class="image-field"><label><span id="background-label">Imagem de fundo</span><input id="background-upload" type="file" accept="image/*"></label><button id="remove-background" type="button">Remover</button><small id="background-status"></small></div>
           <section id="hero-gallery-controls" class="hero-gallery-controls" hidden><div class="form-heading inline"><div><small>BUSCA SOBRE CARROSSEL</small><h2>Imagens do carrossel</h2></div><button id="clear-hero-gallery" type="button">Limpar</button></div><label>Adicionar imagens<input id="hero-gallery-upload" type="file" accept="image/*" multiple></label><small id="hero-gallery-status"></small><div id="hero-gallery-list" class="hero-gallery-list"></div></section></section>
           <section class="merge-controls"><label class="merge-option"><input id="merge-previous" type="checkbox"><span><strong>Mesclar com o segmento anterior</strong><small id="merge-previous-label"></small></span></label></section>
+          <section class="site-global-section segment-interaction-controls"><div class="form-heading"><small>INTERAÇÃO DOS BOTÕES</small><h2>Hover e clique deste segmento</h2><p>Os efeitos abaixo valem somente para os elementos interativos deste segmento.</p></div><div class="global-type-grid">
+            <label>Ao passar o cursor<select id="style-hover-effect"><option value="none">Sem efeito</option><option value="lift">Elevar com sombra</option><option value="shadow">Somente sombra</option><option value="outline">Contorno de destaque</option></select></label>
+            <label>Ao clicar<select id="style-click-effect"><option value="none">Sem efeito</option><option value="press">Recuar como botão</option><option value="shrink">Contrair levemente</option><option value="accent">Contorno de destaque</option></select></label>
+          </div></section>
           <section class="resize-controls"><div><small>TAMANHO E POSIÇÃO</small><strong id="resize-target">Segmento</strong><span id="resize-value">Automático</span></div><button id="reset-size" type="button">Restaurar</button></section>
         </div>
       </div>

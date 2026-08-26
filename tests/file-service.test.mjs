@@ -14,4 +14,6 @@ test("separa conteúdo editável e informações do portal", (context) => {
   const service = fileModule.createFileService({ app, moduleDirectory: path.join(root, "desktop"), workingDirectory: root });
   assert.equal(service.editableContentPath(), path.join(root, "content", "site.json"));
   assert.deepEqual(service.projectInfo(null, "0.8.0"), { kind: "internal", name: "Projeto interno", directory: null, version: "0.8.0", contentSource: "site.json" });
+  service.rememberPortalDirectory(root);
+  assert.equal(service.readRecentPortalDirectory(), root);
 });

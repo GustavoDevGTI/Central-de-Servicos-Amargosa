@@ -4,7 +4,7 @@ Portal municipal de direcionamento para serviços públicos e construtor desktop
 
 - Portal publicado: [central-servicos-amargosa.gustavoborges132.chatgpt.site](https://central-servicos-amargosa.gustavoborges132.chatgpt.site/)
 - Menu Acessibilidade: [`/menu`](https://central-servicos-amargosa.gustavoborges132.chatgpt.site/menu)
-- Versão atual do construtor: **0.8.1**
+- Versão atual do construtor: **0.8.2**
 - Instalador Windows: [baixar a versão mais recente pelo GitHub Releases](https://github.com/GustavoDevGTI/Central-de-Servicos-Amargosa/releases/latest)
 
 ## O que existe neste repositório
@@ -64,7 +64,7 @@ npm install
 ### Opção 1 — instalar somente o construtor no Windows
 
 1. Abra a página do [Release mais recente](https://github.com/GustavoDevGTI/Central-de-Servicos-Amargosa/releases/latest).
-2. Em **Assets**, baixe `Editor.Central.de.Servicos.Amargosa.Setup.0.8.1.exe`.
+2. Em **Assets**, baixe o instalador `Editor Central de Serviços Amargosa Setup 0.8.2.exe`.
 3. Execute o instalador e abra **Editor — Central de Serviços de Amargosa**.
 4. Clique em **Abrir portal** e selecione a pasta raiz deste projeto React. Não selecione `index.html`.
 
@@ -112,6 +112,15 @@ npm run start
 ```
 
 O comando `npm run start` deve ser executado depois de `npm run build`. Por padrão, o portal fica disponível em `http://localhost:3000`.
+
+## Mudanças da versão 0.8.2
+
+- a prévia do construtor agora executa os próprios componentes React e os mesmos arquivos CSS do portal;
+- remoção da segunda implementação visual baseada em `desktop/templates/app.js` para projetos React;
+- rascunho React isolado em pasta temporária: mudanças aparecem na prévia sem alterar `content/site.json` antes de salvar;
+- seleção, destaque, redimensionamento, arraste e guias continuam disponíveis sobre a renderização React real;
+- páginas inicial, internas e explicativas são abertas no mesmo runtime visual usado pelo portal;
+- o processo de prévia é encerrado e seus arquivos temporários são removidos ao fechar normalmente o construtor.
 
 ## Mudanças da versão 0.8.1
 
@@ -212,7 +221,7 @@ Se `npm run dev` estiver aberto, o servidor de desenvolvimento perceberá a grav
 5. Em versões estáticas, o construtor procura a representação de conteúdo mais recente entre `content.js` e `content.json`. Versões antigas com `content/site.json` ou `site.json` também são aceitas.
 6. O nome da pasta, o tipo e a versão aparecem no construtor.
 
-Ao abrir um portal, seus arquivos CSS são usados na prévia. O aplicativo utiliza o modelo estruturado para apresentar páginas, segmentos e itens editáveis.
+Ao abrir um projeto React, o construtor inicia uma cópia temporária e isolada do próprio portal. A prévia executa os componentes de `app/` e os mesmos arquivos CSS usados no navegador. As alterações em edição são gravadas somente nessa cópia temporária; a pasta real muda apenas ao pressionar **Salvar alterações**. Para versões estáticas antigas, permanece disponível a prévia compatível baseada nos arquivos do próprio portal estático.
 
 ### Trazer alterações feitas fora do construtor
 

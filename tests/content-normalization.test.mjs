@@ -18,3 +18,12 @@ test("remove categoria descontinuada e suas referências", () => {
   assert.equal(normalized.pages[0].segments[0].items.length, 0);
   assert.equal(normalized.pages[0].segments[1].items.length, 0);
 });
+
+test("migra a interação global antiga para cada segmento", () => {
+  const content = { schemaVersion: 3, site: { design: { hoverEffect: "lift", clickEffect: "press" } }, pages: [{ segments: [
+    { id: "cabecalho", name: "Cabeçalho", style: {}, items: [] },
+    { id: "busca", name: "Busca", style: { hoverEffect: "outline", clickEffect: "none" }, items: [] },
+  ] }] };
+  const normalized = normalization.normalizeContent(content, content);
+  assert.deepEqual(normalized.pages[0].segments.map((segment) => [segment.style.hoverEffect, segment.style.clickEffect]), [["lift", "press"], ["outline", "none"]]);
+});

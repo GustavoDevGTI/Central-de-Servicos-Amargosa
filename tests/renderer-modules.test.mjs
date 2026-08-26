@@ -51,7 +51,8 @@ test("comunicação encaminha chamadas somente pela ponte segura", async () => {
   const api = new Proxy({}, { get: (_target, method) => (...args) => { calls.push([method, ...args]); return Promise.resolve(method); } });
   const bridge = communicationModule.createEditorCommunication(api);
   assert.equal(await bridge.save({ pages: [] }), "save");
-  assert.deepEqual(calls, [["save", { pages: [] }]]);
+  assert.equal(await bridge.updatePreview({ pages: [{ id: "home" }] }), "updatePreview");
+  assert.deepEqual(calls, [["save", { pages: [] }], ["updatePreview", { pages: [{ id: "home" }] }]]);
 });
 
 test("prévia mantém o contrato visual, a tipografia editável e o painel oculto", () => {
@@ -66,7 +67,7 @@ test("prévia mantém o contrato visual, a tipografia editável e o painel ocult
   assert.match(appScript, /hero-carousel/);
   assert.match(appScript, /site-root site-theme-/);
   assert.match(appScript, /siteDesign\.fontSize/);
-  assert.match(appScript, /site-hover-\$\{siteDesign\.hoverEffect/);
+  assert.match(appScript, /segment-hover-\$\{escapeHtml\(entry\.style\.hoverEffect/);
   assert.match(appScript, /routeParams\.get\("publico"\)/);
   assert.match(appScript, /internal-query/);
   assert.match(appScript, /routeParams\.get\("servico"\)/);
@@ -80,17 +81,22 @@ test("prévia mantém o contrato visual, a tipografia editável e o painel ocult
   assert.match(previewScript, /type: "move"/);
   assert.match(previewScript, /editor-alignment-guide/);
   assert.match(previewScript, /type: "reveal-selection"/);
+  assert.match(previewScript, /previewRuntime\?\.mode === "react"/);
+  assert.match(previewScript, /communication\.updatePreview\(content\)/);
   assert.doesNotMatch(appScript, /selectedSegment\)\?\.scrollIntoView/);
   const editorHtml = fs.readFileSync(path.join(process.cwd(), "desktop", "renderer", "index.html"), "utf8");
   const editorCss = fs.readFileSync(path.join(process.cwd(), "desktop", "renderer", "extensions.css"), "utf8");
   assert.doesNotMatch(editorHtml, /id="segment-(?:up|down)"/);
+  assert.match(editorHtml, /id="style-hover-effect"/);
+  assert.match(editorHtml, /id="style-click-effect"/);
+  assert.doesNotMatch(editorHtml, /id="site-hover-effect"/);
   assert.match(editorHtml, /id="segment-type" hidden/);
   assert.match(editorCss, /\.right-panel\{height:100%;max-height:100%;min-height:0;display:grid;grid-template-rows:50px minmax\(0,1fr\) auto;overflow:hidden\}/);
   assert.match(editorCss, /\.dynamic-editor\{width:100%;height:100%;max-height:100%;min-height:0;overflow-x:hidden;overflow-y:auto/);
   assert.match(portalCss, /\.amanda-panel\[hidden\]\{display:none!important\}/);
   assert.match(portalCss, /\.editable-segment\.text-size-large/);
-  assert.match(portalAccessibilityCss, /translateY\(-3px\)/);
-  assert.match(portalAccessibilityCss, /\.site-hover-lift/);
+  assert.match(portalAccessibilityCss, /--segment-hover-transform:translateY\(-3px\)/);
+  assert.match(portalAccessibilityCss, /\.segment-hover-lift/);
   assert.doesNotMatch(portalAccessibilityCss, /^:where\([^\n]+:hover\{/m);
   assert.match(portalAccessibilityCss, /prefers-reduced-motion:reduce.*transform:none!important/s);
   assert.match(staticCss, /\.amanda-panel\[hidden\]\{display:none!important\}/);
@@ -98,4 +104,11 @@ test("prévia mantém o contrato visual, a tipografia editável e o painel ocult
   assert.match(staticCss, /\.segment-contextualSearch\.variant-contrast/);
   assert.match(staticCss, /\.segment-serviceContent\.variant-editorial/);
   assert.match(staticAccessibilityCss, /translateY\(-3px\)/);
+});
+
+test("aplicativo empacotado também abre o projeto React da pasta atual", () => {
+  const mainSource = fs.readFileSync(path.join(process.cwd(), "desktop", "main.cjs"), "utf8");
+  assert.match(mainSource, /\[process\.cwd\(\), files\.readRecentPortalDirectory\(\)\]/);
+  assert.match(mainSource, /isReactPortal\(directory\)/);
+  assert.doesNotMatch(mainSource, /!app\.isPackaged\s*&&\s*isReactPortal/);
 });

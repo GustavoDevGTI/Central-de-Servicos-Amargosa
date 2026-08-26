@@ -6,6 +6,9 @@ function withoutDeprecatedContent(content) {
     page.segments = (page.segments || []).filter((segment) => !isAdministration(segment.name));
     const removedServices = new Set();
     for (const segment of page.segments) {
+      const style = segment.style ||= {};
+      if (style.hoverEffect == null) style.hoverEffect = content?.site?.design?.hoverEffect || "none";
+      if (style.clickEffect == null) style.clickEffect = content?.site?.design?.clickEffect || "none";
       segment.items = (segment.items || []).filter((item) => {
         if (removedItemIds.has(item.id)) return false;
         if (item.type === "category" && isAdministration(item.label)) return false;

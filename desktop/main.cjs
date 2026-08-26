@@ -6,9 +6,14 @@ const { runPortalBuild } = require("./services/compilation-service.cjs");
 const { createBackupService } = require("./services/backup-service.cjs");
 const { normalizeContent } = require("./services/content-normalization.cjs");
 const { createFileService } = require("./services/file-service.cjs");
+const { createReactPreviewService } = require("./services/preview-service.cjs");
+const { createLocalPortalService } = require("./services/local-portal-service.cjs");
 const { validateContent } = require("./services/validation.cjs");
 
 const files = createFileService({ app, moduleDirectory: __dirname });
+const reactPreview = createReactPreviewService();
+const localPortal = createLocalPortalService();
+const browserOpenedForPortal = new Set();
 let backups;
 let mainWindow;
 let activePortal = null;
@@ -30,17 +35,25 @@ function createWindow() {
   mainWindow.loadFile(path.join(__dirname, "renderer", "index.html"));
 }
 
-function portalPayload(portal, ok = true) {
-  return { ok, content: portal.content, errors: validateContent(portal.content), project: projectInfo(portal), previewAssets: files.readPreviewAssets(portal.directory) };
+async function portalPayload(portal, ok = true) {
+  const errors = validateContent(portal.content);
+  let previewRuntime = null;
+  if (portal.portalType === "react") {
+    try { previewRuntime = await reactPreview.start(portal.directory, portal.content); }
+    catch (error) { errors.push(`A prévia React real não pôde ser iniciada: ${error.message}`); }
+  } else await reactPreview.stop();
+  return { ok, content: portal.content, errors, project: projectInfo(portal), previewAssets: files.readPreviewAssets(portal.directory), previewRuntime };
 }
 
-ipcMain.handle("content:load", () => {
+ipcMain.handle("content:load", async () => {
   files.seedPackagedContent();
-  if (!app.isPackaged && isReactPortal(process.cwd())) {
-    const portal = readPortalProject(process.cwd());
+  const startupDirectory = [process.cwd(), files.readRecentPortalDirectory()].find((directory) => directory && isReactPortal(directory));
+  if (startupDirectory) {
+    const portal = readPortalProject(startupDirectory);
     portal.content = normalize(portal.content);
     activePortal = portal;
-    return portalPayload(portal);
+    files.rememberPortalDirectory(portal.directory);
+    return await portalPayload(portal);
   }
   const content = normalize(JSON.parse(fs.readFileSync(files.editableContentPath(), "utf8")));
   return { content, project: projectInfo(null), previewAssets: files.readPreviewAssets() };
@@ -58,7 +71,16 @@ ipcMain.handle("content:save", async (_event, content) => {
     activePortal.manifest = written.manifest;
     activePortal.contentSource = written.contentSource;
     const build = activePortal.portalType === "react" ? await runPortalBuild(activePortal.directory) : null;
-    return { ok: true, filePath: path.join(activePortal.directory, written.contentSource), project: projectInfo(), build };
+    let local = null;
+    if (build?.ok) {
+      local = await localPortal.restart(activePortal.directory);
+      if (local.ok && !browserOpenedForPortal.has(activePortal.directory)) {
+        await shell.openExternal(local.url);
+        browserOpenedForPortal.add(activePortal.directory);
+        local.openedBrowser = true;
+      }
+    }
+    return { ok: true, filePath: path.join(activePortal.directory, written.contentSource), project: projectInfo(), build, localPortal: local };
   }
   const filePath = files.editableContentPath();
   if (fs.existsSync(filePath)) backups.backupContent(filePath);
@@ -72,22 +94,24 @@ ipcMain.handle("site:open", async () => {
   const selected = await dialog.showOpenDialog(mainWindow, { title: "Abrir projeto React ou versão estática do portal", buttonLabel: "Abrir portal", properties: ["openDirectory"] });
   if (selected.canceled || !selected.filePaths[0]) return { ok: false, canceled: true };
   try {
+    await localPortal.stop();
     const portal = readPortalProject(selected.filePaths[0]);
     portal.content = normalize(portal.content);
     activePortal = portal;
-    return portalPayload(portal);
+    files.rememberPortalDirectory(portal.directory);
+    return await portalPayload(portal);
   } catch (error) {
     return { ok: false, errors: [error.message || "Não foi possível abrir esta pasta."] };
   }
 });
 
-ipcMain.handle("site:reload", () => {
+ipcMain.handle("site:reload", async () => {
   if (!activePortal) return { ok: false, errors: ["Nenhum portal está aberto."] };
   try {
     const portal = readPortalProject(activePortal.directory);
     portal.content = normalize(portal.content);
     activePortal = portal;
-    return portalPayload(portal);
+    return await portalPayload(portal);
   } catch (error) {
     return { ok: false, errors: [error.message || "Não foi possível recarregar esta pasta."] };
   }
@@ -98,6 +122,8 @@ ipcMain.handle("site:status", () => {
   try { return { ok: true, changed: contentSignature(activePortal.directory, activePortal.portalType) !== activePortal.signature }; }
   catch (error) { return { ok: false, errors: [error.message || "Não foi possível verificar a pasta do portal."] }; }
 });
+
+ipcMain.handle("preview:update", (_event, content) => reactPreview.update(content));
 
 ipcMain.handle("site:build", async () => {
   if (!activePortal || activePortal.portalType !== "react") return { ok: false, errors: ["Abra um projeto React para executar a compilação."] };
@@ -133,4 +159,5 @@ app.whenReady().then(() => {
   app.on("activate", () => { if (BrowserWindow.getAllWindows().length === 0) createWindow(); });
 });
 
+app.on("before-quit", () => { void reactPreview.stop(); void localPortal.stop(); });
 app.on("window-all-closed", () => { if (process.platform !== "darwin") app.quit(); });

@@ -9,8 +9,8 @@ type Audience = { id: string; label: string; description?: string };
 type Category = { id: string; label: string; description?: string };
 type Service = { id: string; slug?: string; title: string; category: string; audienceId?: string; audienceIds?: string[]; department: string; destination: string; url: string; summary?: string; eligibility?: string; documents?: string[]; steps?: string[]; cost?: string; duration?: string; updatedAt?: string };
 type InternalItem = { id: string; type: string; role?: string; value?: string; text?: string; url?: string; src?: string; alt?: string; placeholder?: string; buttonText?: string };
-type InternalSegment = { id: string; type: string; enabled: boolean; style: { background?: string; color?: string; accent?: string; width?: string; spacing?: string; radius?: string; variant?: string; headingFont?: string; bodyFont?: string; fontSize?: string; backgroundImage?: string }; items: InternalItem[] };
-type Mode = "audience" | "category";
+type InternalSegment = { id: string; type: string; enabled: boolean; style: { background?: string; color?: string; accent?: string; width?: string; spacing?: string; radius?: string; variant?: string; headingFont?: string; bodyFont?: string; fontSize?: string; hoverEffect?: string; clickEffect?: string; backgroundImage?: string }; items: InternalItem[] };
+type Mode = "audience" | "category" | "all";
 
 const page = siteContent.pages[0];
 const segment = (type: string) => page.segments.find((entry) => entry.type === type);
@@ -34,12 +34,12 @@ function internalStyle(entry?: InternalSegment) {
 }
 function internalClasses(entry: InternalSegment | undefined, base: string) {
   if (!entry) return base;
-  return `${base} internal-editable segment-${entry.type} variant-${entry.style.variant || design.theme || "institutional"} width-${entry.style.width || "contained"} spacing-${entry.style.spacing || "comfortable"} radius-${entry.style.radius || "square"} text-size-${entry.style.fontSize || design.fontSize || "normal"}`;
+  return `${base} internal-editable segment-${entry.type} variant-${entry.style.variant || design.theme || "institutional"} width-${entry.style.width || "contained"} spacing-${entry.style.spacing || "comfortable"} radius-${entry.style.radius || "square"} text-size-${entry.style.fontSize || design.fontSize || "normal"} segment-hover-${entry.style.hoverEffect || design.hoverEffect || "none"} segment-click-${entry.style.clickEffect || design.clickEffect || "none"}`;
 }
 
 function rootProps() {
   return {
-    className: `site-root internal-site site-theme-${design.theme || "institutional"} site-palette-${design.palette || "amargosa"} site-hover-${design.hoverEffect || "none"} site-click-${design.clickEffect || "none"}`,
+    className: `site-root internal-site site-theme-${design.theme || "institutional"} site-palette-${design.palette || "amargosa"}`,
     style: { "--green": siteContent.site.primaryColor, "--red": siteContent.site.accentColor, "--deep": siteContent.site.deepColor, "--cream": siteContent.site.surfaceColor, "--ink": siteContent.site.textColor, "--muted": siteContent.site.mutedColor, "--site-heading-font": fontStacks[design.headingFont || "lora"], "--site-body-font": fontStacks[design.bodyFont || "source"] } as CSSProperties,
   };
 }
@@ -55,7 +55,8 @@ function PortalHeader({ pageEntry = detailPage }: { pageEntry?: typeof directory
 
 function PortalFooter() {
   const description = footer?.items.find((item) => item.role === "description");
-  return <footer className="internal-footer"><strong>Central de Serviços de Amargosa</strong><p>{description?.value || "O caminho certo para cada serviço público."}</p></footer>;
+  const entry = footer as unknown as InternalSegment | undefined;
+  return <footer className={internalClasses(entry, "internal-footer")} style={internalStyle(entry)}><strong>Central de Serviços de Amargosa</strong><p>{description?.value || "O caminho certo para cada serviço público."}</p></footer>;
 }
 
 function AudienceTags({ service }: { service: Service }) {
@@ -86,14 +87,14 @@ export function LegacyServiceDirectory({ mode, value }: { mode: Mode; value: str
   return <main {...rootProps()}><a className="skip" href="#lista-servicos">Ir para os serviços</a><PortalHeader pageEntry={directoryPage}/><section className={internalClasses(introSegment, "context-heading")} style={internalStyle(introSegment)}><nav aria-label="Caminho de navegação"><Link href="/">Início</Link><span>›</span><strong>{selectionTitle}</strong></nav><h1>{title}</h1><div className="context-tabs" aria-label="Formas de navegar"><Link className={mode === "category" ? "active" : ""} href="/#categorias">Por categorias</Link><Link className={mode === "audience" ? "active" : ""} href="/#publicos">Por públicos</Link><span>Por órgãos responsáveis</span><span>Por iniciais (A–Z)</span></div></section><section className={internalClasses(searchSegment, "context-search")} style={internalStyle(searchSegment)} aria-labelledby="context-search-title"><header className="context-selection"><div><small>{mode === "audience" ? "PÚBLICO SELECIONADO" : "CATEGORIA SELECIONADA"}</small><strong id="context-search-title">{selectionTitle}</strong><span>{scoped.length} serviço{scoped.length === 1 ? "" : "s"}</span></div><p>{description}</p></header><div className="context-filter-grid"><label className="context-query"><span>Buscar por serviço</span><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder={searchItem?.placeholder || "Digite para buscar"} /></label>{mode === "audience" && <label>{internalText(searchSegment, "categoryLabel", "Categoria")}<select value={categoryFilter} onChange={(event) => setCategoryFilter(event.target.value)}><option value="todos">Todas as categorias</option>{availableCategories.map((entry) => <option key={entry.id} value={entry.label}>{entry.label}</option>)}</select></label>}{mode === "category" && <label>{internalText(searchSegment, "audienceLabel", "Público")}<select value={audienceFilter} onChange={(event) => setAudienceFilter(event.target.value)}><option value="todos">Todos os públicos</option>{audiences.map((entry) => <option key={entry.id} value={entry.id}>{entry.label}</option>)}</select></label>}<label>Ordenar por<select value={sortOrder} onChange={(event) => setSortOrder(event.target.value)}><option value="alphabetical">Ordem alfabética</option><option value="department">Órgão responsável</option></select></label><button type="button" onClick={() => { setQuery(""); setCategoryFilter(mode === "category" ? category?.label || "todos" : "todos"); setAudienceFilter(mode === "audience" ? audience?.id || "todos" : "todos"); }}>{searchItem?.buttonText || "Limpar filtros"}</button></div></section><section id="lista-servicos" className={internalClasses(catalogSegment, "context-results")} style={internalStyle(catalogSegment)}><header><p>Exibindo <strong>{scoped.length}</strong> resultado{scoped.length === 1 ? "" : "s"}</p><b role="status" aria-live="polite">{selectionTitle}</b></header><div className="context-service-grid">{scoped.map((service) => <Link className="context-service-card" key={service.id} href={serviceHref(service)}><i aria-hidden="true">+</i><span><small>{service.category}</small><strong>{service.title}</strong><em>{service.department}</em><AudienceTags service={service}/></span><b>{internalText(catalogSegment, "action", "Acessar →")}</b></Link>)}</div>{scoped.length === 0 && <p className="context-empty">{internalText(catalogSegment, "empty", "Nenhum serviço corresponde aos filtros escolhidos.")}</p>}</section><PortalFooter/></main>;
 }
 
-export function ServiceDirectory({ mode, value }: { mode: Mode; value: string }) {
+export function ServiceDirectory({ mode, value, initialQuery = "" }: { mode: Mode; value: string; initialQuery?: string }) {
   const introSegment = internalSegment(directoryPage, "internalHero");
   const searchSegment = internalSegment(directoryPage, "contextualSearch");
   const catalogSegment = internalSegment(directoryPage, "internalCatalog");
   const searchItem = internalSearch(searchSegment);
   const audience = mode === "audience" ? audiences.find((entry) => entry.id === value) : undefined;
   const category = mode === "category" ? categories.find((entry) => slugify(entry.label) === value || entry.id === value) : undefined;
-  const [query, setQuery] = useState("");
+  const [query, setQuery] = useState(initialQuery);
   const [categoryFilter, setCategoryFilter] = useState(category?.label || "todos");
   const [audienceFilter, setAudienceFilter] = useState(audience?.id || "todos");
   const [departmentFilter, setDepartmentFilter] = useState("todos");

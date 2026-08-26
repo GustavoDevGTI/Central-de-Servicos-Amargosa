@@ -7,6 +7,7 @@ function createEditorCommunication(api) {
     openPortal: () => api.openPortal(),
     reloadPortal: () => api.reloadPortal(),
     checkPortalChanges: () => api.checkPortalChanges(),
+    updatePreview: (nextContent) => api.updatePreview(nextContent),
     buildPortal: () => api.buildPortal(),
     exportSite: (nextContent) => api.exportSite(nextContent),
     openExternal: (url) => api.openExternal(url),
@@ -37,9 +38,11 @@ async function save() {
   if (!result.ok) { showMessage(result.conflict ? "O portal mudou fora do construtor" : "Não foi possível salvar", result.errors || ["Revise o conteúdo e tente novamente."]); return false; }
   project = result.project || project; dirty = false; $(".save-state").className = "save-state";
   if (result.build && !result.build.ok) { $(".save-state").className = "save-state error"; $("#save-state").textContent = "Conteúdo salvo; compilação pendente"; }
+  else if (result.localPortal && !result.localPortal.ok) { $(".save-state").className = "save-state error"; $("#save-state").textContent = "Portal salvo; servidor local indisponível"; }
   else $("#save-state").textContent = project?.portalType === "react" ? "Portal React salvo e compilado" : project?.kind === "portal" ? "Portal aberto atualizado" : "Todas as alterações foram salvas";
   renderProjectInfo();
   if (result.build && !result.build.ok) showMessage("O conteúdo foi salvo, mas a compilação falhou", [result.build.error || "Execute a compilação novamente depois de corrigir o projeto."]);
+  else if (result.localPortal && !result.localPortal.ok) showMessage("O portal foi salvo, mas não abriu no navegador", [result.localPortal.error || "Não foi possível iniciar o servidor local."]);
   else showToast(project?.portalType === "react" ? "Conteúdo gravado e portal compilado" : project?.kind === "portal" ? "Conteúdo atualizado na pasta do portal" : "Projeto salvo com cópia de segurança");
   return true;
 }

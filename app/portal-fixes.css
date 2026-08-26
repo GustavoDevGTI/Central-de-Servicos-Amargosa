@@ -9,3 +9,19 @@
 @media(max-width:1100px){.context-filter-grid{grid-template-columns:repeat(3,1fr)}.context-service-grid{grid-template-columns:repeat(3,1fr)}}
 @media(max-width:760px){.segment-header.header{grid-template-columns:1fr auto}.segment-header.header>nav{display:none}.context-filter-grid{grid-template-columns:1fr 1fr}.context-service-grid{grid-template-columns:repeat(2,1fr)}.context-service-card{aspect-ratio:auto;min-height:210px}}
 @media(max-width:480px){.context-filter-grid,.context-service-grid{grid-template-columns:1fr}.context-service-card{min-height:190px}}
+
+/* Ajustes finais da página inicial: mais área útil, hierarquia direta e menos ruído. */
+.site-root>.segment-header.header{min-height:96px;padding-block:12px}
+.site-root>.segment-hero.hero{min-height:390px;padding-top:42px;padding-bottom:52px;background:linear-gradient(118deg,#06422f 0%,#0b6b50 52%,#228052 100%)!important}
+.site-root>.segment-categories.categories-section{padding-block:62px;background:linear-gradient(180deg,#edf5f0 0%,#f5f8f6 100%)}
+.site-root>.segment-categories .categories{grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:30px}
+.site-root>.segment-categories .categories button{min-height:132px;display:grid;grid-template-columns:1fr auto;align-items:start;gap:16px;padding:21px 20px;border:1px solid #cbdad4;border-top:4px solid var(--segment-accent);border-radius:2px;background:#fff;text-align:left}
+.site-root>.segment-categories .categories button>span{height:100%}
+.site-root>.segment-categories .categories strong{font-size:18px;line-height:1.18}
+.site-root>.segment-categories .categories small{max-width:28ch;margin-top:auto;padding-top:13px;font-size:10px;line-height:1.45}
+.site-root>.segment-categories .categories b{align-self:start;color:var(--segment-accent);font-size:17px}
+.site-root>.segment-footer{min-height:148px;padding-top:46px;padding-bottom:46px;background:#06422f}
+
+@media(max-width:1000px){.site-root>.segment-categories .categories{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:760px){.site-root>.segment-header.header{min-height:88px}.site-root>.segment-hero.hero{min-height:360px;padding-top:36px;padding-bottom:44px}.site-root>.segment-categories .categories{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:480px){.site-root>.segment-hero.hero{min-height:340px;padding-top:30px;padding-bottom:38px}.site-root>.segment-categories.categories-section{padding-block:48px}.site-root>.segment-categories .categories{grid-template-columns:1fr}.site-root>.segment-categories .categories button{min-height:112px}.site-root>.segment-footer{min-height:160px;padding-top:42px;padding-bottom:42px}}

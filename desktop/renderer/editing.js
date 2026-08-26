@@ -20,6 +20,7 @@ function applyProjectPayload(payload, message) {
   content = payload.content;
   project = payload.project;
   previewAssets = payload.previewAssets;
+  previewRuntime = payload.previewRuntime || null;
   selectedPageId = content.pages[0]?.id;
   selectedSegmentId = content.pages[0]?.segments[0]?.id;
   selectedItemId = null;
@@ -71,6 +72,8 @@ function renderEditor() {
   $("#style-heading-font").value = style.headingFont || "lora";
   $("#style-body-font").value = style.bodyFont || "source";
   $("#style-font-size").value = style.fontSize || "normal";
+  $("#style-hover-effect").value = style.hoverEffect || content.site?.design?.hoverEffect || "none";
+  $("#style-click-effect").value = style.clickEffect || content.site?.design?.clickEffect || "none";
   renderVariantPicker(current);
   renderHeroGallery(current, style);
   $("#background-label").textContent = ["hero", "internalHero", "serviceHero"].includes(current.type) ? "Imagem principal do segmento" : "Imagem de fundo";
@@ -81,8 +84,7 @@ function renderEditor() {
 
 function ensureSiteDesign() {
   const site = content.site ||= {};
-  const design = site.design ||= { theme: "institutional", palette: "amargosa", headingFont: "lora", bodyFont: "source", fontSize: "large", hoverEffect: "none", clickEffect: "none" };
-  design.hoverEffect ||= "none"; design.clickEffect ||= "none";
+  const design = site.design ||= { theme: "institutional", palette: "amargosa", headingFont: "lora", bodyFont: "source", fontSize: "large" };
   return design;
 }
 
@@ -95,8 +97,6 @@ function renderSiteEditor() {
   $("#site-heading-font").value = design.headingFont || "lora";
   $("#site-body-font").value = design.bodyFont || "source";
   $("#site-font-size").value = design.fontSize || "large";
-  $("#site-hover-effect").value = design.hoverEffect || "none";
-  $("#site-click-effect").value = design.clickEffect || "none";
 }
 
 function allSegments() { return content.pages.flatMap((entry) => entry.segments || []); }
@@ -132,11 +132,6 @@ function applySiteTypography(field, value) {
     if (field === "bodyFont") style.bodyFont = value;
     if (field === "fontSize") style.fontSize = value;
   }
-  renderSiteEditor(); markDirty();
-}
-
-function applySiteInteraction(field, value) {
-  ensureSiteDesign()[field] = value;
   renderSiteEditor(); markDirty();
 }
 
@@ -251,5 +246,5 @@ function readImage(file, done) {
   const reader = new FileReader(); reader.onload = () => done(reader.result); reader.readAsDataURL(file);
 }
 
-globalThis.CentralEditorEditing = { applySiteInteraction, applySitePalette, applySiteTheme, applySiteTypography, defaultItem, ensureSiteDesign, paletteForSegment, previousVisibleSegment, variantDefaults };
+globalThis.CentralEditorEditing = { applySitePalette, applySiteTheme, applySiteTypography, defaultItem, ensureSiteDesign, paletteForSegment, previousVisibleSegment, variantDefaults };
 if (typeof module !== "undefined" && module.exports) module.exports = { paletteForSegment, variantDefaults };

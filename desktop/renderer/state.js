@@ -6,6 +6,7 @@ let dirty = false;
 let editorMode = "content";
 let project;
 let previewAssets;
+let previewRuntime;
 let activeDevice = "desktop";
 let previewZoomMode = "readable";
 let previewDocumentHeight = 900;

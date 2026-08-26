@@ -29,14 +29,13 @@ function bindStaticEvents() {
   $("#page-slug").addEventListener("input", (event) => { page().slug = event.target.value; markDirty(); });
   $("#add-page").addEventListener("click", () => { const id = uid("pagina"); content.pages.push({ id, name: "Nova página", slug: `/${id}`, segments: [] }); selectedPageId = id; selectedSegmentId = null; selectedItemId = null; renderEditor(); markDirty(); });
   $("#add-segment").addEventListener("click", () => {
-    const entry = { id: uid("segmento"), name: "Novo segmento", type: "generic", enabled: true, mergeWithPrevious: false, style: { background: "#ffffff", color: "#193a31", accent: content.site.primaryColor, width: "contained", spacing: "comfortable", radius: "soft", variant: "institutional", headingFont: "lora", bodyFont: "source", fontSize: "normal", backgroundImage: "" }, items: [] };
+    const entry = { id: uid("segmento"), name: "Novo segmento", type: "generic", enabled: true, mergeWithPrevious: false, style: { background: "#ffffff", color: "#193a31", accent: content.site.primaryColor, width: "contained", spacing: "comfortable", radius: "soft", variant: "institutional", headingFont: "lora", bodyFont: "source", fontSize: "normal", hoverEffect: "none", clickEffect: "none", backgroundImage: "" }, items: [] };
     page().segments.push(entry); selectedSegmentId = entry.id; selectedItemId = null; renderEditor(); markDirty();
   });
   $("#segment-name").addEventListener("input", (event) => { segment().name = event.target.value; $("#segment-heading").textContent = event.target.value; renderSegments(); markDirty(); });
   $("#segment-enabled").addEventListener("change", (event) => { segment().enabled = event.target.checked; renderSegments(); markDirty(); });
-  [["style-background", "background"], ["style-color", "color"], ["style-accent", "accent"], ["style-width", "width"], ["style-spacing", "spacing"], ["style-radius", "radius"], ["style-heading-font", "headingFont"], ["style-body-font", "bodyFont"], ["style-font-size", "fontSize"]].forEach(([id, field]) => $("#" + id).addEventListener("input", (event) => { segment().style[field] = event.target.value; markDirty(); }));
+  [["style-background", "background"], ["style-color", "color"], ["style-accent", "accent"], ["style-width", "width"], ["style-spacing", "spacing"], ["style-radius", "radius"], ["style-heading-font", "headingFont"], ["style-body-font", "bodyFont"], ["style-font-size", "fontSize"], ["style-hover-effect", "hoverEffect"], ["style-click-effect", "clickEffect"]].forEach(([id, field]) => $("#" + id).addEventListener("input", (event) => { segment().style[field] = event.target.value; markDirty(); }));
   [["site-heading-font", "headingFont"], ["site-body-font", "bodyFont"], ["site-font-size", "fontSize"]].forEach(([id, field]) => $("#" + id).addEventListener("input", (event) => applySiteTypography(field, event.target.value)));
-  [["site-hover-effect", "hoverEffect"], ["site-click-effect", "clickEffect"]].forEach(([id, field]) => $("#" + id).addEventListener("input", (event) => applySiteInteraction(field, event.target.value)));
   $("#background-upload").addEventListener("change", (event) => readImage(event.target.files[0], (source) => { segment().style.backgroundImage = source; renderEditor(); markDirty(); }));
   $("#remove-background").addEventListener("click", () => { segment().style.backgroundImage = ""; renderEditor(); markDirty(); });
   $("#hero-gallery-upload").addEventListener("change", (event) => {
@@ -72,7 +71,7 @@ function bindStaticEvents() {
   });
   $("#close-dialog").addEventListener("click", () => $("#validation-dialog").close());
   window.addEventListener("message", handlePreviewResize);
-  $("#preview").addEventListener("load", fitPreview);
+  $("#preview").addEventListener("load", () => { fitPreview(); postReactPreviewSelection(); });
   new ResizeObserver(fitPreview).observe($(".preview-stage"));
   window.addEventListener("focus", async () => {
     if (project?.kind !== "portal") return;
@@ -84,7 +83,7 @@ function bindStaticEvents() {
 
 async function init() {
   const initial = await communication.load();
-  content = initial.content; project = initial.project; previewAssets = initial.previewAssets;
+  content = initial.content; project = initial.project; previewAssets = initial.previewAssets; previewRuntime = initial.previewRuntime || null;
   selectedPageId = content.pages[0]?.id; selectedSegmentId = content.pages[0]?.segments[0]?.id;
   bindStaticEvents(); renderProjectInfo(); renderEditor(); renderPreview(); requestAnimationFrame(fitPreview);
 }

@@ -1,7 +1,8 @@
 function validateContent(content) {
   const errors = [];
   const siteDesign = content?.site?.design;
-  const allowed = { theme: ["institutional", "editorial", "compact", "soft", "contrast"], palette: ["amargosa", "harvest", "civic", "earth", "graphite"], headingFont: ["lora", "source", "segoe", "georgia", "cambria", "arial"], bodyFont: ["lora", "source", "segoe", "georgia", "cambria", "arial"], fontSize: ["small", "normal", "large", "xlarge"], hoverEffect: ["none", "lift", "shadow", "outline"], clickEffect: ["none", "press", "shrink", "accent"] };
+  const allowed = { theme: ["institutional", "editorial", "compact", "soft", "contrast"], palette: ["amargosa", "harvest", "civic", "earth", "graphite"], headingFont: ["lora", "source", "segoe", "georgia", "cambria", "arial"], bodyFont: ["lora", "source", "segoe", "georgia", "cambria", "arial"], fontSize: ["small", "normal", "large", "xlarge"] };
+  const interactionAllowed = { hoverEffect: ["none", "lift", "shadow", "outline"], clickEffect: ["none", "press", "shrink", "accent"] };
   if (siteDesign != null) for (const [field, values] of Object.entries(allowed)) if (siteDesign[field] != null && !values.includes(siteDesign[field])) errors.push(`Site completo: a opção de ${field} é inválida.`);
   const validateSize = (size, label, minimumWidth) => {
     if (size == null) return;
@@ -35,6 +36,7 @@ function validateContent(content) {
       const segmentLabel = segment.name || `Segmento ${segmentIndex + 1}`;
       if (!segment.name?.trim()) errors.push(`${pageLabel}, segmento ${segmentIndex + 1}: informe o nome.`);
       if (!segment.type?.trim()) errors.push(`${segmentLabel}: informe o tipo.`);
+      for (const [field, values] of Object.entries(interactionAllowed)) if (segment.style?.[field] != null && !values.includes(segment.style[field])) errors.push(`${segmentLabel}: a opção de ${field} é inválida.`);
       validateSize(segment.size, segmentLabel, 160);
       validatePosition(segment.position, segmentLabel);
       const backgroundImages = segment.style?.backgroundImages;

@@ -6,6 +6,7 @@ const { isPathInside, isReactPortal } = require("../portal-project.cjs");
 function createFileService({ app, moduleDirectory, workingDirectory = process.cwd() }) {
   const sourceContentPath = () => path.join(workingDirectory, "content", "site.json");
   const templateDirectory = () => path.join(moduleDirectory, "templates");
+  const recentProjectPath = () => path.join(app.getPath("userData"), "recent-project.json");
   const editableContentPath = () => {
     const source = sourceContentPath();
     if (!app.isPackaged && fs.existsSync(source)) return source;
@@ -13,6 +14,15 @@ function createFileService({ app, moduleDirectory, workingDirectory = process.cw
   };
   const templateContentPath = () => app.isPackaged ? path.join(process.resourcesPath, "content", "site.json") : sourceContentPath();
   const readTemplateContent = () => JSON.parse(fs.readFileSync(templateContentPath(), "utf8"));
+  const readRecentPortalDirectory = () => {
+    try { return JSON.parse(fs.readFileSync(recentProjectPath(), "utf8")).directory || null; }
+    catch { return null; }
+  };
+  const rememberPortalDirectory = (directory) => {
+    const destination = recentProjectPath();
+    fs.mkdirSync(path.dirname(destination), { recursive: true });
+    fs.writeFileSync(destination, `${JSON.stringify({ directory: path.resolve(directory) }, null, 2)}\n`, "utf8");
+  };
 
   function seedPackagedContent() {
     const destination = editableContentPath();
@@ -51,7 +61,7 @@ function createFileService({ app, moduleDirectory, workingDirectory = process.cw
 
   function projectInfo(portal, version) {
     if (!portal) return { kind: "internal", name: "Projeto interno", directory: null, version, contentSource: "site.json" };
-    return { kind: "portal", portalType: portal.portalType, name: path.basename(portal.directory), directory: portal.directory, version: portal.manifest?.builderVersion || portal.packageJson?.version || "versão anterior", contentSource: portal.contentSource };
+    return { kind: "portal", portalType: portal.portalType, name: path.basename(portal.directory), directory: portal.directory, version: portal.portalType === "react" ? portal.packageJson?.version || portal.manifest?.builderVersion || "versão anterior" : portal.manifest?.builderVersion || "versão anterior", contentSource: portal.contentSource };
   }
 
   function createExportDirectory(parentDirectory, activePortal) {
@@ -70,7 +80,7 @@ function createFileService({ app, moduleDirectory, workingDirectory = process.cw
     return exportDirectory;
   }
 
-  return { createExportDirectory, editableContentPath, projectInfo, readPreviewAssets, readTemplateContent, seedPackagedContent, sourceContentPath, templateContentPath, templateDirectory };
+  return { createExportDirectory, editableContentPath, projectInfo, readPreviewAssets, readRecentPortalDirectory, readTemplateContent, recentProjectPath, rememberPortalDirectory, seedPackagedContent, sourceContentPath, templateContentPath, templateDirectory };
 }
 
 module.exports = { createFileService };

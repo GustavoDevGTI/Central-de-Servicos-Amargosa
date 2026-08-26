@@ -3,10 +3,10 @@
   "formatVersion": 2,
   "portalType": "react",
   "schemaVersion": 3,
-  "builderVersion": "0.8.0",
+  "builderVersion": "0.8.2",
   "contentFiles": [
     "content/site.json"
   ],
   "buildCommand": "npm run build",
-  "updatedAt": "2026-08-26T17:26:40.348Z"
+  "updatedAt": "2026-08-26T19:35:35.316Z"
 }

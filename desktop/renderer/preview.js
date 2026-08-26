@@ -13,6 +13,7 @@ function handlePreviewResize(event) {
     fitPreview();
     return;
   }
+  if (event.data?.type === "ready") { postReactPreviewSelection(); return; }
   if (event.data?.type === "reveal-selection") {
     if (event.data.fixed) return;
     const stage = $(".preview-stage"); const native = deviceViewports[activeDevice];
@@ -38,6 +39,38 @@ function handlePreviewResize(event) {
   if (!target) return;
   target.size = { width: Math.max(event.data.targetKind === "segment" ? 160 : 40, width), height: Math.max(32, height) };
   setDirtyState(); renderResizeControls();
+}
+
+let reactPreviewUpdateTimer = null;
+let lastReactPreviewContent = "";
+
+function reactPreviewUrl() {
+  if (!previewRuntime?.url) return "";
+  const selected = page();
+  const parameters = new URLSearchParams({ editorPage: selected?.id || "home" });
+  if (selected?.id === "directory") parameters.set("value", audiences()[0]?.id || "cidadao");
+  if (selected?.id === "service-detail") {
+    const service = catalogServices()[0];
+    parameters.set("value", service?.slug || service?.id || "isencao-iptu");
+  }
+  return previewRuntime.url + "/?" + parameters;
+}
+
+function postReactPreviewSelection() {
+  if (previewRuntime?.mode !== "react") return;
+  $("#preview")?.contentWindow?.postMessage({ source: "central-editor-host", type: "selection", selection: { segmentId: selectedSegmentId || null, itemId: selectedItemId || null } }, "*");
+}
+
+function updateReactPreviewDraft() {
+  const serialized = JSON.stringify(content);
+  if (serialized === lastReactPreviewContent) return;
+  lastReactPreviewContent = serialized;
+  clearTimeout(reactPreviewUpdateTimer);
+  reactPreviewUpdateTimer = setTimeout(async () => {
+    const result = await communication.updatePreview(content);
+    if (!result?.ok) console.warn(result?.error || "Não foi possível atualizar a prévia React.");
+    setTimeout(postReactPreviewSelection, 180);
+  }, 90);
 }
 
 function resizePreviewScript() {
@@ -140,7 +173,22 @@ function previewHtml() {
   return `<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><base href="${baseUrl}"><style>${importedCss}</style><style>${editorCss}</style><script>window.CENTRAL_CONTENT=${serialized};window.CENTRAL_EDITOR_SELECTION=${selection};</script></head><body><div class="skip-links" aria-label="Atalhos de navegação"><a class="skip" href="#conteudo">Ir para o conteúdo</a><a class="skip" href="#service-search">Ir para a busca</a><a class="skip" href="#publicos">Ir para os públicos</a><a class="skip" href="#todos-os-servicos">Ir para os serviços</a></div><main id="conteudo" tabindex="-1"></main><script>${trustedAppScript}</script><script>${resizePreviewScript()}</script></body></html>`;
 }
 
-function renderPreview() { previewDocumentHeight = deviceViewports[activeDevice].height; $("#preview").srcdoc = previewHtml(); }
+function renderPreview() {
+  previewDocumentHeight = deviceViewports[activeDevice].height;
+  const frame = $("#preview");
+  if (previewRuntime?.mode === "react" && previewRuntime.url) {
+    const url = reactPreviewUrl();
+    frame.removeAttribute("srcdoc");
+    if (frame.dataset.reactUrl !== url) { frame.dataset.reactUrl = url; frame.src = url; }
+    updateReactPreviewDraft();
+    postReactPreviewSelection();
+    requestAnimationFrame(fitPreview);
+    return;
+  }
+  delete frame.dataset.reactUrl;
+  frame.removeAttribute("src");
+  frame.srcdoc = previewHtml();
+}
 
 function calculatePreviewScale(stageWidth, viewport, mode = "readable", horizontalPadding = 48) {
   if (mode === "actual") return 1;
@@ -160,5 +208,5 @@ function fitPreview() {
   $("#viewport-label").textContent = `${native.width} × ${native.height} · ${zoomLabel}`;
 }
 
-globalThis.CentralEditorPreview = { calculatePreviewScale, fitPreview, previewHtml, resizePreviewScript };
+globalThis.CentralEditorPreview = { calculatePreviewScale, fitPreview, previewHtml, reactPreviewUrl, resizePreviewScript };
 if (typeof module !== "undefined" && module.exports) module.exports = { calculatePreviewScale, resizePreviewScript };
