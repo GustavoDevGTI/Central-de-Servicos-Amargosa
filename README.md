@@ -4,7 +4,7 @@ Portal municipal de direcionamento para serviços públicos e construtor desktop
 
 - Portal publicado: [central-servicos-amargosa.gustavoborges132.chatgpt.site](https://central-servicos-amargosa.gustavoborges132.chatgpt.site/)
 - Menu Acessibilidade: [`/menu`](https://central-servicos-amargosa.gustavoborges132.chatgpt.site/menu)
-- Versão atual do construtor: **0.8.0**
+- Versão atual do construtor: **0.8.1**
 - Instalador Windows: [baixar a versão mais recente pelo GitHub Releases](https://github.com/GustavoDevGTI/Central-de-Servicos-Amargosa/releases/latest)
 
 ## O que existe neste repositório
@@ -59,6 +59,31 @@ Instale as dependências:
 npm install
 ```
 
+## Instalação completa
+
+### Opção 1 — instalar somente o construtor no Windows
+
+1. Abra a página do [Release mais recente](https://github.com/GustavoDevGTI/Central-de-Servicos-Amargosa/releases/latest).
+2. Em **Assets**, baixe `Editor.Central.de.Servicos.Amargosa.Setup.0.8.1.exe`.
+3. Execute o instalador e abra **Editor — Central de Serviços de Amargosa**.
+4. Clique em **Abrir portal** e selecione a pasta raiz deste projeto React. Não selecione `index.html`.
+
+O instalador contém apenas o aplicativo editor. O portal continua sendo um projeto independente, versionado neste repositório.
+
+### Opção 2 — instalar portal React e construtor pelo código-fonte
+
+```bash
+git clone https://github.com/GustavoDevGTI/Central-de-Servicos-Amargosa.git
+cd Central-de-Servicos-Amargosa
+npm install
+```
+
+Depois da instalação, use `npm run dev` para o portal ou `npm run editor` para o construtor.
+
+### Opção 3 — usar somente o portal estático
+
+Baixe o repositório e abra `portal-estatico/index.html`, ou publique todo o conteúdo dessa pasta em um servidor web convencional. Essa opção não exige Node.js.
+
 ## Executar o portal web
 
 Ambiente de desenvolvimento:
@@ -67,17 +92,39 @@ Ambiente de desenvolvimento:
 npm run dev
 ```
 
+Acesse [http://localhost:3000](http://localhost:3000). Rotas úteis:
+
+- [http://localhost:3000/publicos/cidadao](http://localhost:3000/publicos/cidadao) — serviços do cidadão;
+- [http://localhost:3000/categorias/tributos](http://localhost:3000/categorias/tributos) — serviços tributários;
+- [http://localhost:3000/servicos/isencao-de-iptu](http://localhost:3000/servicos/isencao-de-iptu) — página explicativa;
+- [http://localhost:3000/menu](http://localhost:3000/menu) — Menu Acessibilidade.
+
 Compilação de produção:
 
 ```bash
 npm run build
 ```
 
-Executar a compilação local:
+Executar a compilação local de produção:
 
 ```bash
 npm run start
 ```
+
+O comando `npm run start` deve ser executado depois de `npm run build`. Por padrão, o portal fica disponível em `http://localhost:3000`.
+
+## Mudanças da versão 0.8.1
+
+- nova identidade baseada na bandeira de Amargosa, aplicada ao portal, à prévia e ao construtor;
+- paleta verde e branca compartilhada entre todas as páginas;
+- cabeçalho da página inicial sem marca duplicada e com navegação centralizada;
+- páginas internas simplificadas, independentes do desenho da página inicial;
+- remoção da barra superior de modos de navegação;
+- busca, categoria, público, órgão responsável e inicial reunidos em um único painel de filtros;
+- serviços internos exibidos em grade de cartões lado a lado, com quatro colunas no desktop e adaptação responsiva;
+- prévia e portal React usando o mesmo conteúdo, estilos e regras de identidade;
+- construtor modularizado em estado, edição, prévia, comunicação, arquivos, backups, validação e compilação;
+- exportação estática atualizada com as mesmas páginas internas e identidade visual.
 
 ## Como o conteúdo é organizado
 
@@ -97,6 +144,7 @@ Uma página possui nome, endereço e segmentos. Cada segmento possui:
 - estado visível ou oculto;
 - cinco modelos visuais próprios para cada tipo de segmento;
 - ajustes de cor, largura, espaçamento, cantos, imagem de fundo e fontes de títulos e textos;
+- modelos de busca com degradê, geometria, composição compacta, imagem principal ou carrossel de até seis imagens;
 - lista de itens editáveis.
 
 Os principais tipos de item são texto, link, imagem, busca, público, categoria, serviço e referência de serviço. As referências determinam manualmente a ordem dos serviços mais usados sem duplicar o cadastro do serviço.
@@ -113,7 +161,12 @@ O construtor foi criado especificamente para a Central de Serviços de Amargosa.
 - cadastrar textos, links, logos e imagens;
 - organizar públicos, categorias e serviços;
 - escolher modelos visuais diferentes para cada segmento;
-- visualizar Desktop, Tablet e Celular nas dimensões reais, reduzidas apenas visualmente para caber no construtor;
+- selecionar **Site completo** para aplicar um tema estrutural coerente a todos os segmentos;
+- trocar a paleta global, redistribuindo fundos, textos, superfícies e destaques por todo o portal;
+- definir famílias de títulos e textos e uma escala tipográfica geral para o site inteiro;
+- escolher separadamente os efeitos de hover e clique dos botões, inclusive a opção sem efeito;
+- visualizar Desktop, Tablet e Celular em modo Legível, ajustado à largura disponível e com rolagem até o rodapé, ou em 100% para inspeção do tamanho real;
+- escolher por segmento a família e o tamanho das fontes, mantendo a adaptação responsiva no portal gerado;
 - visualizar o portal em desktop, tablet e celular;
 - validar hierarquia, referências e URLs;
 - gerar cópias de segurança locais do conteúdo;
@@ -140,7 +193,7 @@ Também é possível baixar e instalar a versão distribuída na página [Releas
 
 1. Abra o construtor.
 2. Clique em **Abrir portal** e selecione a pasta raiz que contém `package.json`, `app/` e `content/site.json`. Durante o desenvolvimento deste repositório, essa pasta é reconhecida automaticamente.
-3. Escolha a página e o segmento na coluna esquerda.
+3. Escolha **Site completo** para temas, paletas e tipografia geral, ou selecione um segmento para ajustes locais.
 4. Use **Conteúdo** para editar itens e **Design** para escolher o modelo e ajustar a aparência.
 5. Confira a prévia central em desktop, tablet ou celular e use **Validar**.
 6. Enquanto você edita, as mudanças ficam somente na memória do construtor.
@@ -217,7 +270,24 @@ Esse comando recria `portal-estatico/` usando os modelos atuais e `content/site.
 
 ## Busca e direcionamento
 
-A busca filtra serviços por título, secretaria, categoria e destino. Os públicos e as categorias também funcionam como filtros. Ao selecionar um serviço, o usuário segue para a URL oficial cadastrada.
+A busca grande da página inicial filtra serviços por título, secretaria, categoria e destino. Ao escolher um público ou uma categoria, o portal abre uma página interna sem o destaque de busca da página inicial: permanecem o cabeçalho e uma busca contextual compacta acima da lista de serviços.
+
+- `/publicos/cidadao`: exibe todos os serviços relacionados ao público escolhido e permite filtrar por nome, categoria, público, órgão responsável e inicial.
+- `/categorias/tributos`: exibe os serviços da categoria escolhida com o mesmo conjunto de filtros contextuais.
+- `/servicos/isencao-de-iptu`: abre a página explicativa do serviço, com público atendido, órgão responsável, documentos, etapas, custo, prazo e acesso ao canal oficial.
+
+Na exportação estática, o mesmo fluxo usa endereços compatíveis com abertura direta da pasta: `?publico=cidadao`, `?categoria=tributos` e `?servico=isencao-de-iptu`.
+
+Um mesmo serviço pode estar relacionado a mais de um público. Essa relação é editável no construtor e é usada automaticamente pelos filtros das páginas internas.
+
+### Modelos das páginas internas no construtor
+
+As páginas internas não são estruturas fixas separadas do editor. No seletor **Página**, o construtor oferece:
+
+- **Listagem por público ou categoria**, formada pelos segmentos Introdução da página interna, Busca específica e filtros e Serviços relacionados;
+- **Página explicativa de serviço**, formada pelos segmentos Apresentação do serviço e Orientações do serviço.
+
+Cada um desses segmentos possui cinco modelos próprios na aba **Design**. Tema, paleta, tipografia, imagens, espaçamento e ajustes globais do nível **Site completo** também alcançam essas páginas. Os textos de interface e os dados de cada serviço permanecem editáveis na aba **Conteúdo**.
 
 Os links existentes no conteúdo inicial ainda devem ser revisados e substituídos pelos endereços oficiais específicos de cada serviço antes da publicação institucional definitiva.
 
@@ -259,6 +329,7 @@ Amanda é o espaço reservado para a futura agente de IA da Central. A interface
 | `npm run dev` | Inicia o portal web em desenvolvimento |
 | `npm run build` | Compila o portal para produção |
 | `npm run start` | Executa a compilação local |
+| `npm test` | Executa os testes automatizados do portal e do construtor |
 | `npm run lint` | Verifica o código web |
 | `npm run editor` | Abre o construtor Electron |
 | `npm run editor:package` | Gera o instalador Windows |
@@ -271,7 +342,7 @@ Amanda é o espaço reservado para a futura agente de IA da Central. A interface
 npm run editor:package
 ```
 
-O instalador é criado localmente em `release-desktop/`, que permanece ignorada pelo Git. O executável não deve ser adicionado aos commits: a distribuição acontece por um [GitHub Release](https://github.com/GustavoDevGTI/Central-de-Servicos-Amargosa/releases).
+O instalador é criado localmente em `release-desktop/`, que permanece ignorada pelo Git. O executável não é armazenado no histórico do repositório porque ultrapassa o limite recomendado do GitHub; ele é distribuído como arquivo de um [GitHub Release](https://github.com/GustavoDevGTI/Central-de-Servicos-Amargosa/releases).
 
 ### Como baixar uma versão pronta
 
@@ -299,10 +370,14 @@ Não é necessário clonar o projeto nem conhecer comandos Git para instalar o c
 ```text
 app/                         Portal React e rota /menu
 content/site.json            Fonte de conteúdo do portal React canônico
-desktop/main.cjs             Janela, arquivos, validação, importação e exportação
-desktop/portal-project.cjs   Leitura e gravação de projetos React e versões estáticas
-desktop/project-build.cjs    Compilação do portal React após o salvamento
-desktop/renderer/            Interface do construtor
+desktop/main.cjs             Janela e registro dos canais de comunicação
+desktop/portal-contract.cjs  Contrato e versões de portal-project.json
+desktop/portal-project.cjs   Leitura e gravação de projetos React e estáticos
+desktop/services/            Arquivos, backups, validação, migração e compilação
+desktop/renderer/state.js    Estado e catálogo de tipos/modelos da interface
+desktop/renderer/editing.js  Formulários e operações de edição
+desktop/renderer/preview.js  Prévia, escala real e redimensionamento visual
+desktop/renderer/communication.js  Ponte de salvamento e comunicação segura
 desktop/templates/           Modelo usado nas exportações estáticas
 portal-estatico/             Portal pronto para hospedagem
 public/                      Fontes, favicon e imagem social
@@ -310,6 +385,8 @@ release-desktop/             Saída local ignorada do empacotamento
 scripts/export-static.mjs    Exportação reproduzível para o repositório
 tests/                       Testes do formato portátil
 ```
+
+O empacotamento usa uma lista explícita de arquivos do construtor e ignora as dependências do portal React. Assim, mudar a stack web não aumenta automaticamente o aplicativo desktop.
 
 ## Segurança e privacidade
 

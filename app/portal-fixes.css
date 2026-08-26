@@ -1,0 +1,11 @@
+/* Paridade visual entre o portal React e a prévia do construtor. */
+.segment-header.header{display:grid;grid-template-columns:minmax(190px,1fr) auto minmax(190px,1fr);gap:24px;background:var(--segment-bg);color:var(--segment-color)}
+.segment-header.header>a{justify-self:start}.segment-header.header>nav{justify-self:center;margin:0}.segment-header.header>.header-actions{justify-self:end}.segment-header .brand-image{width:70px;height:46px;object-fit:cover;border-radius:2px}.segment-header .brand>span:last-child{display:flex}.segment-header .brand strong{font-family:var(--site-body-font)!important;font-size:15px!important;color:var(--segment-color)}
+.context-heading{padding-bottom:8px}.context-heading h1{margin-bottom:24px}.context-tabs{display:none}
+.context-filter-grid{grid-template-columns:minmax(220px,1.4fr) repeat(4,minmax(145px,1fr)) auto}
+.context-service-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;margin-top:18px}
+.context-service-card{aspect-ratio:1.12;min-height:0;display:flex;align-items:flex-start;flex-direction:column;padding:22px;border:1px solid #ccd8d2;border-radius:3px;background:#fff;box-shadow:0 5px 15px rgba(11,79,44,.08)}
+.context-service-card>i{width:48px;height:48px;flex:0 0 auto;display:grid;place-items:center;background:var(--segment-accent);color:#fff;font-size:24px;font-style:normal}.context-service-card>span{margin-top:14px}.context-service-card strong{font-size:18px}.context-service-card>b{margin-top:auto;padding:12px 0 0;border:0;color:var(--green)}
+@media(max-width:1100px){.context-filter-grid{grid-template-columns:repeat(3,1fr)}.context-service-grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:760px){.segment-header.header{grid-template-columns:1fr auto}.segment-header.header>nav{display:none}.context-filter-grid{grid-template-columns:1fr 1fr}.context-service-grid{grid-template-columns:repeat(2,1fr)}.context-service-card{aspect-ratio:auto;min-height:210px}}
+@media(max-width:480px){.context-filter-grid,.context-service-grid{grid-template-columns:1fr}.context-service-card{min-height:190px}}

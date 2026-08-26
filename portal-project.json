@@ -7,5 +7,6 @@
   "contentFiles": [
     "content/site.json"
   ],
-  "buildCommand": "npm run build"
+  "buildCommand": "npm run build",
+  "updatedAt": "2026-08-26T17:26:40.348Z"
 }

@@ -6,11 +6,12 @@
   <title>Editor — Central de Serviços de Amargosa</title>
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="extensions.css">
+  <link rel="stylesheet" href="identity.css">
   <link rel="stylesheet" href="../templates/fonts.css">
 </head>
 <body>
   <header class="topbar">
-    <div class="editor-brand"><span>A</span><div><strong>Construtor da Central</strong><small id="project-source">Projeto interno</small></div></div>
+    <div class="editor-brand"><span><img id="editor-brand-image" alt="Bandeira de Amargosa"></span><div><strong>Construtor da Central</strong><small id="project-source">Projeto interno</small></div></div>
     <div class="save-state"><i></i><span id="save-state">Conteúdo carregado</span></div>
     <div class="top-actions">
       <button id="open-portal" class="secondary">Abrir portal</button><button id="reload-portal" class="secondary" hidden>Recarregar</button>
@@ -27,18 +28,37 @@
       <nav id="segment-nav" class="section-nav"></nav>
     </aside>
     <section class="canvas">
-      <header><span>PRÉVIA DA PÁGINA</span><strong id="viewport-label">1440 × 900 · 100%</strong></header>
+      <header><span>PRÉVIA DA PÁGINA</span><div class="preview-tools"><label for="preview-zoom">Zoom</label><select id="preview-zoom"><option value="readable" selected>Legível</option><option value="actual">100%</option></select><strong id="viewport-label">1440 × 900 · Legível</strong></div></header>
       <div class="preview-stage"><div id="preview-viewport" class="preview-viewport"><iframe id="preview" title="Prévia do portal"></iframe></div></div>
     </section>
     <aside class="right-panel component-panel">
       <header class="right-tabs"><button class="active" data-editor-mode="content">Conteúdo</button><button type="button" data-editor-mode="design">Design</button></header>
+      <div id="site-editor" class="dynamic-editor hidden">
+        <div data-editor-pane="content">
+          <section class="site-overview"><div class="form-heading"><small>SITE COMPLETO</small><h2>Identidade geral</h2><p>Este nível controla a linguagem visual compartilhada por todas as páginas e segmentos do portal.</p></div><div class="site-overview-grid"><span><b>Tema estrutural</b>Distribui modelos coerentes pelos segmentos.</span><span><b>Paleta global</b>Redistribui cores de fundo, texto e destaque.</span><span><b>Tipografia geral</b>Atualiza famílias e escala em todo o portal.</span></div></section>
+        </div>
+        <div data-editor-pane="design" class="hidden design-pane site-design-pane">
+          <div class="form-heading"><small>TEMA DO SITE</small><h2>Estrutura completa</h2><p>Escolha uma direção visual para todos os segmentos. Depois, cada segmento ainda pode ser ajustado separadamente.</p></div>
+          <div id="site-theme-picker" class="site-theme-picker"></div>
+          <section class="site-global-section"><div class="form-heading"><small>CORES DO SITE</small><h2>Paleta global</h2></div><div id="site-palette-picker" class="site-palette-picker"></div></section>
+          <section class="site-global-section"><div class="form-heading"><small>TIPOGRAFIA GLOBAL</small><h2>Fonte e escala</h2></div><div class="global-type-grid">
+            <label>Fonte dos títulos<select id="site-heading-font"><option value="lora">Lora</option><option value="source">Source Sans 3</option><option value="segoe">Segoe UI</option><option value="georgia">Georgia</option><option value="cambria">Cambria</option><option value="arial">Arial</option></select></label>
+            <label>Fonte dos textos<select id="site-body-font"><option value="source">Source Sans 3</option><option value="segoe">Segoe UI</option><option value="lora">Lora</option><option value="georgia">Georgia</option><option value="cambria">Cambria</option><option value="arial">Arial</option></select></label>
+            <label>Escala geral<select id="site-font-size"><option value="small">Pequena</option><option value="normal">Padrão</option><option value="large">Grande</option><option value="xlarge">Muito grande</option></select></label>
+          </div></section>
+          <section class="site-global-section"><div class="form-heading"><small>INTERAÇÃO DOS BOTÕES</small><h2>Hover e clique</h2><p>Escolha o retorno visual dos elementos interativos. O foco por teclado permanece sempre visível.</p></div><div class="global-type-grid">
+            <label>Ao passar o cursor<select id="site-hover-effect"><option value="none">Sem efeito</option><option value="lift">Elevar com sombra</option><option value="shadow">Somente sombra</option><option value="outline">Contorno de destaque</option></select></label>
+            <label>Ao clicar<select id="site-click-effect"><option value="none">Sem efeito</option><option value="press">Recuar como botão</option><option value="shrink">Contrair levemente</option><option value="accent">Contorno de destaque</option></select></label>
+          </div></section>
+        </div>
+      </div>
       <div id="segment-empty" class="empty-editor">Selecione um segmento para editar.</div>
       <div id="segment-editor" class="dynamic-editor hidden">
         <div data-editor-pane="content">
         <section class="segment-settings">
-          <div class="form-heading inline"><div><small>SEGMENTO</small><h2 id="segment-heading">Segmento</h2></div><div class="mini-actions"><button id="segment-up">↑</button><button id="segment-down">↓</button><button id="delete-segment" class="danger">Excluir</button></div></div>
+          <div class="form-heading inline"><div><small>SEGMENTO</small><h2 id="segment-heading">Segmento</h2></div><div class="mini-actions"><button id="delete-segment" class="danger">Excluir</button></div></div>
           <label>Nome do segmento<input id="segment-name"></label>
-          <div class="two-fields"><label>Tipo<select id="segment-type"></select></label><label class="check compact-check"><input id="segment-enabled" type="checkbox"><span>Exibir no portal</span></label></div>
+          <div class="two-fields"><div class="readonly-type"><small>TIPO DE SEGMENTO</small><strong id="segment-type-label">Segmento</strong><select id="segment-type" hidden aria-hidden="true" tabindex="-1"></select></div><label class="check compact-check"><input id="segment-enabled" type="checkbox"><span>Exibir no portal</span></label></div>
         </section>
         <section class="items-section">
           <div class="form-heading inline"><div><small>ITENS DO SEGMENTO</small><h2>Conteúdo</h2></div><div class="add-item"><select id="new-item-type"></select><button id="add-item">+ Item</button></div></div>
@@ -56,9 +76,11 @@
             <label>Cantos<select id="style-radius"><option value="square">Retos</option><option value="soft">Discretos</option><option value="round">Arredondados</option></select></label>
             <label>Fonte dos títulos<select id="style-heading-font"><option value="lora">Lora</option><option value="source">Source Sans 3</option><option value="segoe">Segoe UI</option><option value="georgia">Georgia</option><option value="cambria">Cambria</option><option value="arial">Arial</option></select></label>
             <label>Fonte dos textos<select id="style-body-font"><option value="source">Source Sans 3</option><option value="segoe">Segoe UI</option><option value="lora">Lora</option><option value="georgia">Georgia</option><option value="cambria">Cambria</option><option value="arial">Arial</option></select></label>
-          </div><div class="image-field"><label>Imagem de fundo<input id="background-upload" type="file" accept="image/*"></label><button id="remove-background" type="button">Remover</button><small id="background-status"></small></div></section>
+            <label>Tamanho da fonte<select id="style-font-size"><option value="small">Pequena</option><option value="normal">Padrão</option><option value="large">Grande</option><option value="xlarge">Muito grande</option></select></label>
+          </div><div class="image-field"><label><span id="background-label">Imagem de fundo</span><input id="background-upload" type="file" accept="image/*"></label><button id="remove-background" type="button">Remover</button><small id="background-status"></small></div>
+          <section id="hero-gallery-controls" class="hero-gallery-controls" hidden><div class="form-heading inline"><div><small>BUSCA SOBRE CARROSSEL</small><h2>Imagens do carrossel</h2></div><button id="clear-hero-gallery" type="button">Limpar</button></div><label>Adicionar imagens<input id="hero-gallery-upload" type="file" accept="image/*" multiple></label><small id="hero-gallery-status"></small><div id="hero-gallery-list" class="hero-gallery-list"></div></section></section>
           <section class="merge-controls"><label class="merge-option"><input id="merge-previous" type="checkbox"><span><strong>Mesclar com o segmento anterior</strong><small id="merge-previous-label"></small></span></label></section>
-          <section class="resize-controls"><div><small>TAMANHO</small><strong id="resize-target">Segmento</strong><span id="resize-value">Automático</span></div><button id="reset-size" type="button">Restaurar automático</button></section>
+          <section class="resize-controls"><div><small>TAMANHO E POSIÇÃO</small><strong id="resize-target">Segmento</strong><span id="resize-value">Automático</span></div><button id="reset-size" type="button">Restaurar</button></section>
         </div>
       </div>
       <div class="right-footer"><button id="save" class="primary">Salvar alterações</button></div>
@@ -66,6 +88,10 @@
   </div>
   <div id="toast" role="status" aria-live="polite"></div>
   <dialog id="validation-dialog"><div class="dialog-icon">✓</div><h2 id="dialog-title">Tudo certo</h2><div id="dialog-content"></div><button id="close-dialog">Fechar</button></dialog>
+  <script src="state.js"></script>
+  <script src="communication.js"></script>
+  <script src="editing.js"></script>
+  <script src="preview.js"></script>
   <script src="renderer.js"></script>
 </body>
 </html>

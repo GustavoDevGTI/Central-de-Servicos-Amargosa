@@ -3,7 +3,7 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import test from "node:test";
-import projectBuild from "../desktop/project-build.cjs";
+import projectBuild from "../desktop/services/compilation-service.cjs";
 
 const { buildConfiguration } = projectBuild;
 

@@ -1,11 +1,8 @@
 {
   "name": "editor-central-servicos-amargosa",
-  "version": "0.8.0",
+  "version": "0.8.1",
   "description": "Editor local da Central de Serviços da Prefeitura de Amargosa",
   "author": "Prefeitura de Amargosa",
   "private": true,
-  "main": "main.cjs",
-  "dependencies": {
-    "central-editor-runtime": "file:runtime"
-  }
+  "main": "main.cjs"
 }

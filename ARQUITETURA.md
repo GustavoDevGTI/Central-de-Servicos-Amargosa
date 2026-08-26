@@ -20,6 +20,14 @@ O projeto usa um portal React canônico e um editor Electron independente. O por
 12. A publicação é uma ação explícita posterior ao salvamento. Ela não acontece automaticamente.
 13. Em versões estáticas legadas, **Gerar nova versão** cria uma cópia independente e preserva seus arquivos personalizados.
 
+## Limites internos do construtor
+
+O Electron funciona como uma camada de edição independente do portal. `desktop/main.cjs` apenas cria a janela e registra os canais de comunicação; as responsabilidades de arquivos, backups, validação e compilação ficam em serviços separados. A interface também é modular: estado, edição, prévia e comunicação não ficam mais concentrados em um único arquivo.
+
+O contrato portátil está centralizado em `desktop/portal-contract.cjs`. Esse módulo define nomes de arquivos, versão do formato, versão do esquema e a forma do manifesto `portal-project.json`. A leitura e a gravação de projetos usam esse mesmo contrato, evitando regras duplicadas.
+
+O pacote desktop não leva React, Next.js, Vinext ou as dependências do portal. O construtor usa apenas Electron, APIs nativas do Node.js e seus próprios arquivos HTML, CSS e JavaScript. Cada módulo extraído possui teste automatizado independente.
+
 ## Limites desta primeira versão
 
 - os links iniciais apontam para o portal geral de Amargosa e precisam ser substituídos pelos canais específicos;

@@ -28,7 +28,7 @@ if (path.dirname(outputDirectory) !== projectRoot || path.basename(outputDirecto
 if (fs.existsSync(outputDirectory)) fs.rmSync(outputDirectory, { recursive: true });
 fs.mkdirSync(outputDirectory, { recursive: false });
 
-for (const file of ["index.html", "styles.css", "dynamic.css", "fonts.css", "accessibility.css", "app.js"]) {
+for (const file of ["index.html", "styles.css", "dynamic.css", "portal-fixes.css", "fonts.css", "accessibility.css", "app.js"]) {
   fs.copyFileSync(path.join(templateDirectory, file), path.join(outputDirectory, file));
 }
 

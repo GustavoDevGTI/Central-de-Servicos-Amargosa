@@ -1,13 +1,16 @@
 const crypto = require("node:crypto");
 const fs = require("node:fs");
 const path = require("node:path");
-
-const PORTAL_FORMAT = "central-servicos-amargosa";
-const MANIFEST_FILE = "portal-project.json";
-const CONTENT_SCRIPT_FILE = "content.js";
-const CONTENT_JSON_FILE = "content.json";
-const REACT_CONTENT_FILE = path.join("content", "site.json");
-const PACKAGE_FILE = "package.json";
+const {
+  CONTENT_JSON_FILE,
+  CONTENT_SCRIPT_FILE,
+  MANIFEST_FILE,
+  PACKAGE_FILE,
+  PORTAL_FORMAT,
+  REACT_CONTENT_FILE,
+  createReactManifest,
+  createStaticManifest,
+} = require("./portal-contract.cjs");
 
 function extractAssignedJson(source) {
   const assignment = /(?:window\.)?CENTRAL_CONTENT\s*=/.exec(source);
@@ -127,18 +130,8 @@ function writeFileAtomic(filePath, contents) {
 
 function writePortalContent(directory, content, builderVersion, dates = {}) {
   const resolved = path.resolve(directory);
-  const exportedAt = dates.exportedAt || new Date().toISOString();
   const existingManifest = readManifest(resolved) || {};
-  const manifest = {
-    ...existingManifest,
-    format: PORTAL_FORMAT,
-    formatVersion: 1,
-    schemaVersion: content.schemaVersion,
-    builderVersion,
-    exportedAt: existingManifest.exportedAt || exportedAt,
-    updatedAt: dates.updatedAt || exportedAt,
-    contentFiles: [CONTENT_SCRIPT_FILE, CONTENT_JSON_FILE],
-  };
+  const manifest = createStaticManifest(existingManifest, content, builderVersion, dates);
   writeFileAtomic(path.join(resolved, CONTENT_SCRIPT_FILE), serializeContentScript(content));
   writeFileAtomic(path.join(resolved, CONTENT_JSON_FILE), `${JSON.stringify(content, null, 2)}\n`);
   writeFileAtomic(path.join(resolved, MANIFEST_FILE), `${JSON.stringify(manifest, null, 2)}\n`);
@@ -148,19 +141,8 @@ function writePortalContent(directory, content, builderVersion, dates = {}) {
 function writeReactPortalContent(directory, content, builderVersion, dates = {}) {
   const resolved = path.resolve(directory);
   if (!isReactPortal(resolved)) throw new Error("Esta pasta não contém um projeto React compatível com a Central de Serviços.");
-  const updatedAt = dates.updatedAt || new Date().toISOString();
   const existingManifest = readManifest(resolved) || {};
-  const manifest = {
-    ...existingManifest,
-    format: PORTAL_FORMAT,
-    formatVersion: 2,
-    portalType: "react",
-    schemaVersion: content.schemaVersion,
-    builderVersion,
-    updatedAt,
-    contentFiles: [REACT_CONTENT_FILE.replaceAll("\\", "/")],
-    buildCommand: "npm run build",
-  };
+  const manifest = createReactManifest(existingManifest, content, builderVersion, dates);
   writeFileAtomic(path.join(resolved, REACT_CONTENT_FILE), `${JSON.stringify(content, null, 2)}\n`);
   writeFileAtomic(path.join(resolved, MANIFEST_FILE), `${JSON.stringify(manifest, null, 2)}\n`);
   return { manifest, contentSource: REACT_CONTENT_FILE, signature: contentSignature(resolved, "react") };
