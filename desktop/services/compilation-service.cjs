@@ -14,7 +14,7 @@ function buildConfiguration(directory) {
   return {
     directory: resolved,
     command: windows ? process.env.ComSpec || "cmd.exe" : "npm",
-    args: windows ? ["/d", "/s", "/c", "npm run build"] : ["run", "build"],
+    args: windows ? ["/d", "/s", "/c", `pushd "${resolved}" && npm run build`] : ["run", "build"],
   };
 }
 
@@ -51,7 +51,10 @@ function runPortalBuild(directory) {
     child.stdout?.on("data", (chunk) => { output = appendOutput(output, chunk.toString()); });
     child.stderr?.on("data", (chunk) => { output = appendOutput(output, chunk.toString()); });
     child.on("error", (error) => finish({ ok: false, error: error.code === "ENOENT" ? "O Node.js e o npm precisam estar instalados para compilar o portal React." : error.message }));
-    child.on("close", (code) => finish(code === 0 ? { ok: true } : { ok: false, error: `A compilação terminou com o código ${code}.` }));
+    child.on("close", (code) => finish(code === 0 ? { ok: true } : {
+      ok: false,
+      error: `A compilação terminou com o código ${code}.${output.trim() ? `\n\n${output.trim()}` : ""}`,
+    }));
   });
 }
 

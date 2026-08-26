@@ -16,7 +16,9 @@ test("configura a compilação do portal React pela pasta raiz", (context) => {
   assert.equal(configuration.directory, path.resolve(directory));
   if (process.platform === "win32") {
     assert.match(configuration.command, /cmd\.exe$/i);
-    assert.deepEqual(configuration.args, ["/d", "/s", "/c", "npm run build"]);
+    assert.deepEqual(configuration.args, [
+      "/d", "/s", "/c", `pushd "${path.resolve(directory)}" && npm run build`,
+    ]);
   } else {
     assert.equal(configuration.command, "npm");
     assert.deepEqual(configuration.args, ["run", "build"]);

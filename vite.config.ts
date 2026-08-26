@@ -9,8 +9,10 @@ const SITE_CREATOR_PLACEHOLDER_DATABASE_ID =
 
 const { d1, r2 } = hostingConfig;
 
-// macOS Seatbelt blocks FSEvents, so Codex previews need polling for HMR.
-const isCodexSeatbeltSandbox = process.env.CODEX_SANDBOX === 'seatbelt';
+// Network shares do not reliably emit filesystem events on Windows. Polling
+// keeps HMR working for the local preview and for projects opened from UNC
+// paths, while also covering the Codex sandbox case.
+const usePolling = process.env.CODEX_SANDBOX === 'seatbelt' || process.platform === 'win32';
 
 const localBindingConfig = {
   main: 'vinext/server/app-router-entry',
@@ -46,8 +48,8 @@ export default defineConfig(async () => {
 
   return {
     css: { postcss: { plugins: [tailwindcss()] } },
-    server: isCodexSeatbeltSandbox
-      ? { watch: { useFsEvents: false, usePolling: true } }
+    server: usePolling
+      ? { watch: { useFsEvents: false, usePolling: true, interval: 500 } }
       : undefined,
     plugins: [
       vinext(),

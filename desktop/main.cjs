@@ -6,6 +6,7 @@ const { runPortalBuild } = require("./services/compilation-service.cjs");
 const { createBackupService } = require("./services/backup-service.cjs");
 const { normalizeContent } = require("./services/content-normalization.cjs");
 const { createFileService } = require("./services/file-service.cjs");
+const { exportStaticPortal } = require("./services/static-export-service.cjs");
 const { validateContent } = require("./services/validation.cjs");
 
 const files = createFileService({ app, moduleDirectory: __dirname });
@@ -58,7 +59,10 @@ ipcMain.handle("content:save", async (_event, content) => {
     activePortal.manifest = written.manifest;
     activePortal.contentSource = written.contentSource;
     const build = activePortal.portalType === "react" ? await runPortalBuild(activePortal.directory) : null;
-    return { ok: true, filePath: path.join(activePortal.directory, written.contentSource), project: projectInfo(), build };
+    const staticExport = activePortal.portalType === "react"
+      ? exportStaticPortal({ projectDirectory: activePortal.directory, templateDirectory: files.templateDirectory(), content, builderVersion: app.getVersion() })
+      : null;
+    return { ok: true, filePath: path.join(activePortal.directory, written.contentSource), project: projectInfo(), build, staticExport };
   }
   const filePath = files.editableContentPath();
   if (fs.existsSync(filePath)) backups.backupContent(filePath);
