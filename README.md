@@ -96,56 +96,49 @@ A branch `main` contém a versão atual do portal. O fluxo recomendado é:
 3. revisar o portal localmente;
 4. criar um commit e enviar para `main`.
 
-## Docker
+## Imagem Docker
 
-O portal possui uma imagem de produção em múltiplos estágios. A etapa de compilação instala as dependências e gera o servidor Vinext `standalone`; a imagem final contém somente os arquivos necessários para executar o portal.
+O servidor não precisa compilar o projeto. Cada push na branch `main` aciona o GitHub Actions, que executa o `Dockerfile` e publica uma imagem pronta no GitHub Container Registry:
 
-Crie o arquivo local de configuração:
+```text
+ghcr.io/gustavodevgti/central-de-servicos-amargosa:latest
+```
+
+Também é criada uma tag imutável com o SHA do commit. A variável de repositório `NEXT_PUBLIC_SITE_URL` pode ser configurada em **Settings → Secrets and variables → Actions → Variables**. Sem ela, a compilação usa `https://servicos.amargosa.ba.gov.br`.
+
+Para executar com Docker Compose:
 
 ```bash
 cp .env.example .env
+docker compose pull
+docker compose up -d
 ```
 
-Defina em `.env` a URL pública e, se necessário, a porta do servidor. Depois execute:
-
-```bash
-docker compose up -d --build
-```
-
-O portal estará disponível em `http://localhost:3000`. Para conferir o estado do serviço:
-
-```bash
-docker compose ps
-docker compose logs -f portal
-```
-
-O healthcheck consulta `GET /api/health`. O contêiner é executado com usuário sem privilégios, política de reinício automático e bloqueio de elevação de privilégios.
-
-Para atualizar uma instalação existente:
-
-```bash
-git pull origin main
-docker compose up -d --build --remove-orphans
-```
-
-O valor `NEXT_PUBLIC_SITE_URL` participa da compilação. Portanto, depois de alterá-lo é necessário reconstruir a imagem; apenas reiniciar o contêiner não atualiza essa URL.
+O healthcheck consulta `GET /api/health`. O contêiner é executado sem privilégios, com reinício automático e sem banco de dados ou volume persistente.
 
 ## Portainer
 
-Esta Stack foi preparada para um ambiente **Docker Standalone** no Portainer:
+O Portainer utiliza somente a imagem pronta. Ele não clona o código, não executa `npm ci` e não compila o React.
 
 1. acesse **Stacks** e selecione **Add stack**;
-2. escolha **Repository** como método de implantação;
-3. informe `https://github.com/GustavoDevGTI/Central-de-Servicos-Amargosa.git`;
-4. use a referência `refs/heads/main` e o caminho `docker-compose.yml`;
-5. adicione as variáveis `NEXT_PUBLIC_SITE_URL`, `PORTAL_PORT` e `IMAGE_NAME` conforme o `.env.example`;
-6. selecione **Deploy the stack**.
+2. escolha **Web editor**;
+3. cole o conteúdo de `docker-compose.yml`;
+4. defina `PORTAL_PORT=3000` ou outra porta livre;
+5. selecione **Deploy the stack**.
 
-Para receber uma nova versão da `main`, abra a Stack, habilite a opção de baixar novamente a imagem ou o repositório e use **Update the stack** com reconstrução da imagem.
+Se o pacote GHCR estiver privado, cadastre `ghcr.io` em **Registries** usando o usuário GitHub e um token com permissão `read:packages`. Para uma imagem pública, não é necessária autenticação.
 
-Em produção, recomenda-se colocar o serviço atrás de um proxy reverso com HTTPS, como Nginx Proxy Manager, Traefik ou Caddy. Nesse cenário, o proxy deve encaminhar o domínio público para `portal:3000` quando estiver na mesma rede Docker, ou para a porta definida em `PORTAL_PORT` quando acessar pelo host.
+### Atualização do portal
 
-O portal não requer volume persistente, banco de dados ou segredos. Todo o conteúdo publicado está versionado no repositório e incorporado à imagem durante a compilação.
+1. envie as alterações para `main`;
+2. aguarde o workflow **Publicar imagem Docker** terminar no GitHub Actions;
+3. abra a Stack no Portainer;
+4. selecione **Update the stack**;
+5. habilite **Re-pull image** e confirme a atualização.
+
+O Portainer baixa a nova tag `latest`, substitui o contêiner e publica a versão atualizada. Não é necessário reconstruir a imagem no servidor.
+
+Em produção, recomenda-se colocar o serviço atrás de um proxy reverso com HTTPS, como Nginx Proxy Manager, Traefik ou Caddy. O proxy deve encaminhar o domínio para a porta definida em `PORTAL_PORT` ou compartilhar uma rede Docker com a Stack.
 
 ## Licença e fontes
 

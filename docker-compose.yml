@@ -1,11 +1,7 @@
 services:
   portal:
-    image: ${IMAGE_NAME:-central-servicos-amargosa:latest}
-    build:
-      context: .
-      dockerfile: Dockerfile
-      args:
-        NEXT_PUBLIC_SITE_URL: ${NEXT_PUBLIC_SITE_URL:-http://localhost:3000}
+    image: ${IMAGE_NAME:-ghcr.io/gustavodevgti/central-de-servicos-amargosa:latest}
+    pull_policy: always
     restart: unless-stopped
     init: true
     ports:
