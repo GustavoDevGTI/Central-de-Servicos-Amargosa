@@ -53,7 +53,7 @@ export default function AccessibilityMenu() {
         <h2 id={`titulo-${safeId(audience.id)}`}><span>{audience.label}</span><small>{categories.reduce((total, entry) => total + entry.services.length, 0)} serviços</small></h2>
         {categories.map(({ category, services: categoryServices }) => <section key={category} className="accessibility-category-group">
           <h3><span>{category}</span><small>{categoryServices.length} serviço{categoryServices.length === 1 ? "" : "s"}</small></h3>
-          <ul>{categoryServices.map((service) => <li key={service.id}><a href={`/servicos/${service.slug || service.id}`}><span><strong>{service.title}</strong>{service.department && <small>{service.department}</small>}</span><b>Ver serviço →</b></a></li>)}</ul>
+          <ul>{categoryServices.map((service) => { const href = service.slug ? `/servicos/${service.slug}` : service.url || "/servicos"; return <li key={service.id}><a href={href} target={service.slug ? undefined : "_blank"} rel={service.slug ? undefined : "noreferrer"}><span><strong>{service.title}</strong>{service.department && <small>{service.department}</small>}</span><b>Ver serviço →</b></a></li>; })}</ul>
         </section>)}
       </section>)}
     </div>

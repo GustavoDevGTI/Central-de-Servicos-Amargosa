@@ -79,7 +79,8 @@ export default function Home() {
   function interactionClasses(segment: Segment) { return `segment-hover-${segment.style.hoverEffect || siteDesign.hoverEffect || "none"} segment-click-${segment.style.clickEffect || siteDesign.clickEffect || "none"}`; }
   function classes(segment: Segment, base: string) { return `${base} editable-segment segment-${segment.type} variant-${segment.style.variant || siteDesign.theme || "institutional"} width-${segment.style.width || "contained"} spacing-${segment.style.spacing || "comfortable"} radius-${segment.style.radius || "soft"} text-size-${segment.style.fontSize || siteDesign.fontSize || "normal"} ${interactionClasses(segment)}${segment.size ? " user-sized-segment" : ""}${mergeClasses(segment)}`; }
   function serviceCard(service: Service, index: number, featured = false, editorItem: Item = service) {
-    return <a key={`${service.id}-${index}`} {...itemSizeProps(editorItem)} className={featured ? "featured-card" : "service-card"} href={`/servicos/${service.slug || service.id}`}>{featured && <span className="rank">{String(index + 1).padStart(2, "0")}</span>}<span><small>{service.category}</small><strong>{service.title}</strong><em>{service.department}</em></span><b>{featured ? "→" : <>Ver serviço →</>}</b></a>;
+    const href = service.slug ? `/servicos/${service.slug}` : service.url;
+    return <a key={`${service.id}-${index}`} {...itemSizeProps(editorItem)} className={featured ? "featured-card" : "service-card"} href={href} {...external(href)}>{featured && <span className="rank">{String(index + 1).padStart(2, "0")}</span>}<span><small>{service.category}</small><strong>{service.title}</strong><em>{service.department}</em></span><b>{featured ? "→" : <>Ver serviço →</>}</b></a>;
   }
 
   function renderAmanda(segment: Segment) {

@@ -19,3 +19,18 @@
 
 /* Cabeçalho limpo, sem a antiga faixa de destaque no topo. */
 .internal-header{border-top:0}
+
+/* Carta de serviço: abertura centralizada e informações sem aparência de botão. */
+.service-detail-rich>header{display:block;text-align:center}
+.service-detail-rich>header>div{width:min(900px,100%);margin-inline:auto}
+.service-detail-rich h1{max-width:900px;margin-inline:auto}
+.service-detail-rich header p{max-width:820px;margin-inline:auto}
+.service-detail-rich .service-identity{justify-content:center}
+.service-reference-notice small{flex:0 0 auto;color:#0759a5;font-size:13px;font-weight:900;letter-spacing:.01em}
+.service-reference-notice:hover small{text-decoration:underline;text-underline-offset:3px}
+.service-detail-rich .service-facts{gap:0;border-top:1px solid #cdd9d4;border-bottom:1px solid #cdd9d4}
+.service-detail-rich .service-facts div{min-height:150px;justify-content:center;padding:28px 30px;border:0;background:transparent}
+.service-detail-rich .service-facts div+div{border-left:1px solid #cdd9d4}
+.service-detail-rich .service-facts span{color:var(--green);font-size:11px;font-weight:900;letter-spacing:.08em}
+.service-detail-rich .service-facts strong{max-width:38ch;margin-top:12px;font-family:var(--site-body-font);font-size:17px;font-weight:600;line-height:1.5}
+@media(max-width:760px){.service-reference-notice small{width:100%;padding-top:12px;border-top:1px solid #add7e8;text-align:center}.service-detail-rich .service-facts div{min-height:0;padding:24px 6px}.service-detail-rich .service-facts div+div{border-left:0;border-top:1px solid #cdd9d4}}
