@@ -21,6 +21,7 @@ Portal municipal em React para localizar serviços públicos e encaminhar cada p
 - TypeScript;
 - CSS responsivo;
 - Cloudflare Workers/Sites para hospedagem.
+- Docker e Portainer para hospedagem própria.
 
 ## Instalação
 
@@ -94,6 +95,57 @@ A branch `main` contém a versão atual do portal. O fluxo recomendado é:
 2. executar `npm run lint` e `npm run build`;
 3. revisar o portal localmente;
 4. criar um commit e enviar para `main`.
+
+## Docker
+
+O portal possui uma imagem de produção em múltiplos estágios. A etapa de compilação instala as dependências e gera o servidor Vinext `standalone`; a imagem final contém somente os arquivos necessários para executar o portal.
+
+Crie o arquivo local de configuração:
+
+```bash
+cp .env.example .env
+```
+
+Defina em `.env` a URL pública e, se necessário, a porta do servidor. Depois execute:
+
+```bash
+docker compose up -d --build
+```
+
+O portal estará disponível em `http://localhost:3000`. Para conferir o estado do serviço:
+
+```bash
+docker compose ps
+docker compose logs -f portal
+```
+
+O healthcheck consulta `GET /api/health`. O contêiner é executado com usuário sem privilégios, política de reinício automático e bloqueio de elevação de privilégios.
+
+Para atualizar uma instalação existente:
+
+```bash
+git pull origin main
+docker compose up -d --build --remove-orphans
+```
+
+O valor `NEXT_PUBLIC_SITE_URL` participa da compilação. Portanto, depois de alterá-lo é necessário reconstruir a imagem; apenas reiniciar o contêiner não atualiza essa URL.
+
+## Portainer
+
+Esta Stack foi preparada para um ambiente **Docker Standalone** no Portainer:
+
+1. acesse **Stacks** e selecione **Add stack**;
+2. escolha **Repository** como método de implantação;
+3. informe `https://github.com/GustavoDevGTI/Central-de-Servicos-Amargosa.git`;
+4. use a referência `refs/heads/main` e o caminho `docker-compose.yml`;
+5. adicione as variáveis `NEXT_PUBLIC_SITE_URL`, `PORTAL_PORT` e `IMAGE_NAME` conforme o `.env.example`;
+6. selecione **Deploy the stack**.
+
+Para receber uma nova versão da `main`, abra a Stack, habilite a opção de baixar novamente a imagem ou o repositório e use **Update the stack** com reconstrução da imagem.
+
+Em produção, recomenda-se colocar o serviço atrás de um proxy reverso com HTTPS, como Nginx Proxy Manager, Traefik ou Caddy. Nesse cenário, o proxy deve encaminhar o domínio público para `portal:3000` quando estiver na mesma rede Docker, ou para a porta definida em `PORTAL_PORT` quando acessar pelo host.
+
+O portal não requer volume persistente, banco de dados ou segredos. Todo o conteúdo publicado está versionado no repositório e incorporado à imagem durante a compilação.
 
 ## Licença e fontes
 
