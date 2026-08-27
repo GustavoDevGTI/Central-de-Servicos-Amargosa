@@ -2301,13 +2301,6 @@
               "value": "Posso ajudar você a encontrar o serviço certo e chegar ao canal oficial responsável."
             },
             {
-              "id": "amanda-status",
-              "type": "text",
-              "role": "status",
-              "label": "Estado atual",
-              "value": "Demonstração — a inteligência da Amanda será conectada em breve."
-            },
-            {
               "id": "amanda-prompt-1",
               "type": "text",
               "role": "prompt",

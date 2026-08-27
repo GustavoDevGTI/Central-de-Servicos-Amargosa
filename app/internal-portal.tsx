@@ -126,12 +126,12 @@ export function ServiceDirectory({ mode, value, initialQuery = "" }: { mode: Mod
     return sortMode === "nameDesc" ? -alphabetical : alphabetical;
   }), [audienceFilter, categoryFilter, departmentFilter, query, sortMode]);
   const selectedAudience = audienceFilter === "todos" ? undefined : audiences.find((entry) => entry.id === audienceFilter);
-  const selectionTitle = mode === "audience" ? selectedAudience?.label || "Todos os serviços" : mode === "category" ? categoryFilter === "todos" ? "Todos os serviços" : categoryFilter : "Todos os serviços";
+  const selectionTitle = mode === "audience" ? selectedAudience?.label || "Todos os serviços" : categoryFilter === "todos" ? "Todos os serviços" : categoryFilter;
   const selectionOptions = mode === "audience"
     ? [{ id: "todos", label: "Todos os serviços", href: "/servicos" }, ...audiences.map((entry) => ({ id: entry.id, label: entry.label, href: `/publicos/${entry.id}` }))].filter((entry) => entry.id !== audienceFilter)
     : mode === "category"
       ? [{ id: "todos", label: "Todos os serviços", href: "/servicos" }, ...categories.map((entry) => ({ id: entry.id, label: entry.label, href: `/categorias/${slugify(entry.label)}` }))].filter((entry) => entry.label !== categoryFilter && !(entry.id === "todos" && categoryFilter === "todos"))
-      : [];
+      : [{ id: "todos", label: "Todos os serviços", href: "/servicos" }, ...categories.map((entry) => ({ id: entry.id, label: entry.label, href: `/categorias/${slugify(entry.label)}` }))].filter((entry) => entry.label !== categoryFilter && !(entry.id === "todos" && categoryFilter === "todos"));
   const selectionAction = mode === "audience" ? "Alterar público" : "Alterar categoria";
   const reset = () => { setQuery(""); setCategoryFilter(mode === "category" ? categoryFilter : "todos"); setAudienceFilter(mode === "audience" ? audienceFilter : "todos"); setDepartmentFilter("todos"); };
   const selectDirectory = (option: { id: string; label: string; href: string }) => {
@@ -140,7 +140,7 @@ export function ServiceDirectory({ mode, value, initialQuery = "" }: { mode: Mod
     if (mode === "audience") {
       setAudienceFilter(option.id);
       setCategoryFilter("todos");
-    } else if (mode === "category") {
+    } else {
       setCategoryFilter(option.id === "todos" ? "todos" : option.label);
       setAudienceFilter("todos");
     }

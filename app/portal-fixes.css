@@ -14,7 +14,7 @@
 
 /* Ajustes finais da página inicial: mais área útil, hierarquia direta e menos ruído. */
 .site-root>.segment-header.header{min-height:96px;padding-block:12px}
-.site-root>.segment-hero.hero{min-height:390px;padding-top:42px;padding-bottom:52px;background:linear-gradient(118deg,#06422f 0%,#0b6b50 52%,#228052 100%)!important}
+.site-root>.segment-hero.hero{min-height:390px;padding-top:42px;padding-bottom:52px;background:radial-gradient(circle at 84% 18%,rgba(78,174,105,.5) 0%,rgba(78,174,105,0) 34%),radial-gradient(circle at 16% 88%,rgba(1,48,36,.72) 0%,rgba(1,48,36,0) 42%),linear-gradient(118deg,#033f2c 0%,#075b43 35%,#117554 67%,#2d9261 100%)!important}
 .site-root>.segment-hero h1{max-width:none;font-size:clamp(38px,3.4vw,52px);white-space:nowrap}
 .site-root>.segment-hero .popular{width:min(1000px,100%);display:grid;grid-template-columns:auto repeat(4,auto);align-items:center;justify-content:center;gap:9px;margin-top:18px}
 .site-root>.segment-hero .popular span{align-self:center;color:rgba(255,255,255,.88);font-size:14px;font-weight:800;line-height:1.25;white-space:nowrap}
