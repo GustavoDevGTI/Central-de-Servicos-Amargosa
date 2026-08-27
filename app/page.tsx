@@ -1,5 +1,5 @@
 "use client";
-/* eslint-disable @next/next/no-img-element -- imagens locais do construtor usam data URLs */
+/* eslint-disable @next/next/no-img-element -- a identidade municipal pode usar imagens incorporadas */
 
 import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import siteContent from "../content/site.json";

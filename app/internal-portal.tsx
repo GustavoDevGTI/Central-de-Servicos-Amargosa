@@ -1,5 +1,5 @@
 "use client";
-/* eslint-disable @next/next/no-img-element -- logos do construtor podem ser data URLs */
+/* eslint-disable @next/next/no-img-element -- a identidade municipal pode usar imagens incorporadas */
 
 import { useMemo, useState, type AnchorHTMLAttributes, type CSSProperties, type ReactNode } from "react";
 import siteContent from "../content/site.json";
@@ -142,14 +142,9 @@ function RichServiceDetail({ service }: { service: Service }) {
           <p>{service.summary}</p>
           <div className="service-identity"><AudienceTags service={service}/><span>{service.category}</span></div>
         </div>
-        <aside>
-          <span>Órgão responsável</span>
-          <strong>{service.department}</strong>
-          <a href={service.url} target="_blank" rel="noreferrer">{service.requestLabel || "Solicitar serviço"} ↗</a>
-        </aside>
       </header>
 
-      {service.notice && <div className="service-reference-notice"><span>{service.notice}</span><a href={service.url} target="_blank" rel="noreferrer">Acessar o E-SIC oficial ↗</a></div>}
+      {service.notice && <a className="service-reference-notice" href={service.url} target="_blank" rel="noreferrer"><span>{service.notice}</span><b>Acessar o E-SIC oficial ↗</b></a>}
 
       <div className={internalClasses(contentSegment, "service-detail-layout")} style={internalStyle(contentSegment)}>
         <nav aria-label="Nesta página">

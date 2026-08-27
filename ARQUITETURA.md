@@ -1,36 +1,49 @@
-# Arquitetura escolhida
+# Arquitetura do portal
 
-## Decisão
+## Visão geral
 
-O projeto usa um portal React canônico e um editor Electron independente. O portal continua público e sem login, banco de dados ou informações do cidadão. A pasta estática é uma entrega opcional para hospedagem convencional, não uma segunda origem do projeto.
+A Central de Serviços de Amargosa é um único portal React. O conteúdo municipal fica separado da apresentação para facilitar manutenção, revisão e publicação sem duplicar versões do site.
 
-## Fluxo de atualização
+## Camadas
 
-1. O editor abre a pasta raiz do projeto React, identificada por `package.json`, `app/` ou `src/` e `content/site.json`. Versões estáticas antigas continuam compatíveis.
-2. Cada página é formada por uma sequência ordenada de segmentos.
-3. Cada segmento possui aparência, visibilidade e uma lista ordenada de itens tipados.
-4. A equipe altera textos, links, logos, imagens, públicos, categorias e serviços por formulários.
-5. A validação verifica a hierarquia, os vínculos entre itens e as URLs.
-6. Os serviços são vinculados a públicos como Cidadão, Empresas, Servidor, Órgãos públicos e Turista.
-7. Itens de referência definem manualmente a sequência dos serviços mais usados.
-8. As alterações permanecem como rascunho na memória até o botão **Salvar alterações** ser pressionado.
-9. O salvamento verifica conflitos, cria uma cópia de segurança, grava `content/site.json` de forma atômica e executa `npm run build`.
-10. **Recarregar** traz mudanças externas e o controle de conflito impede sobrescrever conteúdo alterado por outra pessoa.
-11. Componentes React, CSS e outros arquivos alterados manualmente são preservados; o construtor grava somente o conteúdo estruturado e seu manifesto.
-12. A publicação é uma ação explícita posterior ao salvamento. Ela não acontece automaticamente.
-13. Em versões estáticas legadas, **Gerar nova versão** cria uma cópia independente e preserva seus arquivos personalizados.
+### Conteúdo
 
-## Limites internos do construtor
+`content/site.json` é a fonte estruturada de identidade, páginas, segmentos, públicos, categorias e serviços.
 
-O Electron funciona como uma camada de edição independente do portal. `desktop/main.cjs` apenas cria a janela e registra os canais de comunicação; as responsabilidades de arquivos, backups, validação e compilação ficam em serviços separados. A interface também é modular: estado, edição, prévia e comunicação não ficam mais concentrados em um único arquivo.
+### Interface
 
-O contrato portátil está centralizado em `desktop/portal-contract.cjs`. Esse módulo define nomes de arquivos, versão do formato, versão do esquema e a forma do manifesto `portal-project.json`. A leitura e a gravação de projetos usam esse mesmo contrato, evitando regras duplicadas.
+`app/` contém as rotas, os componentes React e os estilos. A página inicial apresenta descoberta ampla; páginas internas usam uma composição mais funcional para filtros, resultados e cartas de serviço.
 
-O pacote desktop não leva React, Next.js, Vinext ou as dependências do portal. O construtor usa apenas Electron, APIs nativas do Node.js e seus próprios arquivos HTML, CSS e JavaScript. Cada módulo extraído possui teste automatizado independente.
+### Arquivos públicos
 
-## Limites desta primeira versão
+`public/` armazena fontes, ícones e a imagem de compartilhamento social.
 
-- os links iniciais apontam para o portal geral de Amargosa e precisam ser substituídos pelos canais específicos;
-- novas páginas podem ser estruturadas no editor; a publicação web atual usa a página inicial como rota principal;
-- a publicação institucional definitiva ainda depende da definição do ambiente e das credenciais da Prefeitura;
-- imagens são incorporadas ao JSON como dados locais e por isso devem permanecer leves.
+### Compilação e hospedagem
+
+Vinext e Vite compilam a aplicação React para execução compatível com Cloudflare Workers/Sites. A branch `main` representa a versão publicável.
+
+## Fluxo de dados
+
+1. As rotas carregam `content/site.json`.
+2. Públicos e categorias determinam os filtros disponíveis.
+3. Serviços podem pertencer a um ou mais públicos.
+4. A página interna filtra os serviços no navegador.
+5. A página final apresenta as orientações e o endereço do canal oficial.
+
+## Rotas
+
+- `/`: página inicial;
+- `/menu`: índice acessível;
+- `/servicos`: diretório geral;
+- `/publicos/[publico]`: filtro por público;
+- `/categorias/[categoria]`: filtro por categoria;
+- `/servicos/[servico]`: página explicativa.
+
+## Princípios
+
+- ausência de autenticação e persistência de dados pessoais;
+- encaminhamento para sistemas oficiais externos;
+- conteúdo estruturado e reutilizado entre rotas;
+- navegação integral por teclado;
+- interface responsiva;
+- uma única base React como fonte do portal.

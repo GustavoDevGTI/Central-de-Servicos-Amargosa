@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-html-link-for-pages -- links diretos preservam a navegação estável no Vinext */
 import type { Metadata } from "next";
 import siteContent from "../../content/site.json";
 

@@ -2,7 +2,6 @@
   "name": "central-servicos-amargosa",
   "version": "0.8.2",
   "private": true,
-  "main": "desktop/main.cjs",
   "engines": {
     "node": ">=22.13.0"
   },
@@ -10,11 +9,7 @@
     "dev": "vinext dev",
     "build": "vinext build",
     "start": "vinext start",
-    "test": "node --test tests/*.test.mjs",
-    "lint": "eslint . --ignore-pattern dist --ignore-pattern .next --ignore-pattern desktop",
-    "portal:export": "node scripts/export-static.mjs",
-    "editor": "electron .",
-    "editor:package": "electron-builder --win nsis"
+    "lint": "eslint . --ignore-pattern dist --ignore-pattern .next"
   },
   "dependencies": {
     "next": "^16.3.2",
@@ -31,8 +26,6 @@
     "@types/react-dom": "19.2.3",
     "@vitejs/plugin-react": "6.0.2",
     "@vitejs/plugin-rsc": "0.5.26",
-    "electron": "^43.4.1",
-    "electron-builder": "^26.15.3",
     "eslint": "9.39.4",
     "eslint-config-next": "16.2.6",
     "react-server-dom-webpack": "19.2.6",
@@ -42,35 +35,5 @@
     "vite": "8.0.13",
     "wrangler": "4.92.0"
   },
-  "type": "module",
-  "build": {
-    "appId": "br.gov.ba.amargosa.centralservicos",
-    "productName": "Editor Central de Serviços Amargosa",
-    "directories": {
-      "app": "desktop",
-      "output": "release-desktop"
-    },
-    "files": [
-      "main.cjs",
-      "preload.cjs",
-      "portal-contract.cjs",
-      "portal-project.cjs",
-      "services/**/*",
-      "renderer/**/*",
-      "preview-runtime/**/*",
-      "templates/**/*",
-      "licenses/**/*",
-      "package.json"
-    ],
-    "beforeBuild": "./desktop/build-hooks.cjs",
-    "extraResources": [
-      {
-        "from": "content/site.json",
-        "to": "content/site.json"
-      }
-    ],
-    "win": {
-      "target": "nsis"
-    }
-  }
+  "type": "module"
 }

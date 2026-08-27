@@ -1,4 +1,4 @@
-/* Paridade visual entre o portal React e a prévia do construtor. */
+/* Ajustes de composição compartilhados pelas páginas do portal. */
 .segment-header.header{display:grid;grid-template-columns:minmax(190px,1fr) auto minmax(190px,1fr);gap:24px;background:var(--segment-bg);color:var(--segment-color)}
 .segment-header.header>a{justify-self:start}.segment-header.header>nav{justify-self:center;margin:0}.segment-header.header>.header-actions{justify-self:end}.segment-header .brand-image{width:70px;height:46px;object-fit:cover;border-radius:2px}.segment-header .brand>span:last-child{display:flex}.segment-header .brand strong{font-family:var(--site-body-font)!important;font-size:15px!important;color:var(--segment-color)}
 .context-heading{padding-bottom:8px}.context-heading h1{margin-bottom:24px}.context-tabs{display:none}
