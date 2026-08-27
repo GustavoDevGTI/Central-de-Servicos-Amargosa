@@ -12,8 +12,8 @@
 :where(.editable-segment,.internal-editable,.editable) :where(button,a){transition:transform .16s ease,filter .16s ease,outline-color .16s ease}
 @media(hover:hover) and (pointer:fine){:where(.editable-segment,.internal-editable,.editable) :where(button,a):not(:disabled):hover{position:relative;z-index:2;transform:var(--segment-hover-transform);filter:var(--segment-hover-filter);outline:var(--segment-hover-outline);outline-offset:2px}}
 :where(.editable-segment,.internal-editable,.editable) :where(button,a):not(:disabled):active{transform:var(--segment-click-transform);filter:var(--segment-click-filter);outline:var(--segment-click-outline);outline-offset:2px}
-:where(a,button,input,textarea,select,[tabindex]):focus-visible{outline:3px solid #ffbf47!important;outline-offset:3px!important;box-shadow:0 0 0 6px #17251f!important}
-.search:has(input:focus-visible){outline:3px solid #ffbf47;outline-offset:3px}.search input:focus-visible{border-radius:2px;outline:0!important;box-shadow:none!important}
+:where(a,button,input,textarea,select,[tabindex]):focus-visible{outline:3px solid #c9344c!important;outline-offset:3px!important;box-shadow:0 0 0 6px #17251f!important}
+.search:has(input:focus-visible){outline:3px solid #c9344c;outline-offset:3px}.search input:focus-visible{border-radius:2px;outline:0!important;box-shadow:none!important}
 .audiences button[aria-pressed="true"],.categories button[aria-pressed="true"]{border-color:var(--green);box-shadow:inset 0 -4px 0 var(--green)}
 #results-title{scroll-margin-top:28px}
 #results-title:focus-visible{border-radius:2px}
