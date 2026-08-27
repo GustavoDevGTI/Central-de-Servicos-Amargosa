@@ -1,13 +1,18 @@
 "use client";
 /* eslint-disable @next/next/no-img-element -- logos do construtor podem ser data URLs */
 
-import { useMemo, useState, type CSSProperties } from "react";
-import Link from "next/link";
+import { useMemo, useState, type AnchorHTMLAttributes, type CSSProperties, type ReactNode } from "react";
 import siteContent from "../content/site.json";
+
+// O roteador cliente do Vinext pode cancelar a navegação ao preparar o RSC.
+// Links internos simples preservam a URL e funcionam também sem JavaScript.
+function Link({ href, children, ...props }: AnchorHTMLAttributes<HTMLAnchorElement> & { href: string; children?: ReactNode }) {
+  return <a href={href} {...props}>{children}</a>;
+}
 
 type Audience = { id: string; label: string; description?: string };
 type Category = { id: string; label: string; description?: string };
-type Service = { id: string; slug?: string; title: string; category: string; audienceId?: string; audienceIds?: string[]; department: string; destination: string; url: string; summary?: string; eligibility?: string; documents?: string[]; steps?: string[]; cost?: string; duration?: string; updatedAt?: string };
+type Service = { id: string; slug?: string; title: string; category: string; audienceId?: string; audienceIds?: string[]; department: string; destination: string; url: string; summary?: string; eligibility?: string; documents?: string[]; steps?: string[]; whereWhen?: string; cost?: string; duration?: string; channels?: { label: string; value: string; url?: string }[]; legislation?: { label: string; url: string }[]; relatedServiceIds?: string[]; notice?: string; requestLabel?: string; updatedAt?: string };
 type InternalItem = { id: string; type: string; role?: string; value?: string; text?: string; url?: string; src?: string; alt?: string; placeholder?: string; buttonText?: string };
 type InternalSegment = { id: string; type: string; enabled: boolean; style: { background?: string; color?: string; accent?: string; width?: string; spacing?: string; radius?: string; variant?: string; headingFont?: string; bodyFont?: string; fontSize?: string; hoverEffect?: string; clickEffect?: string; backgroundImage?: string }; items: InternalItem[] };
 type Mode = "audience" | "category" | "all";
@@ -99,6 +104,7 @@ export function ServiceDirectory({ mode, value, initialQuery = "" }: { mode: Mod
   const [audienceFilter, setAudienceFilter] = useState(audience?.id || "todos");
   const [departmentFilter, setDepartmentFilter] = useState("todos");
   const [initialFilter, setInitialFilter] = useState("todos");
+  const [selectionOpen, setSelectionOpen] = useState(false);
   const departments = useMemo(() => [...new Set(services.map((service) => service.department))].sort((a, b) => a.localeCompare(b, "pt-BR")), []);
   const initials = useMemo(() => [...new Set(services.map((service) => service.title.trim().charAt(0).toLocaleUpperCase("pt-BR")))].sort((a, b) => a.localeCompare(b, "pt-BR")), []);
   const scoped = useMemo(() => services.filter((service) => {
@@ -110,8 +116,70 @@ export function ServiceDirectory({ mode, value, initialQuery = "" }: { mode: Mod
       && (!normalized || `${service.title} ${service.category} ${service.department}`.toLocaleLowerCase("pt-BR").includes(normalized));
   }).sort((a, b) => a.title.localeCompare(b.title, "pt-BR")), [audienceFilter, categoryFilter, departmentFilter, initialFilter, query]);
   const selectionTitle = audience?.label || category?.label || "Todos os serviços";
+  const selectionOptions = mode === "audience"
+    ? audiences.filter((entry) => entry.id !== audience?.id).map((entry) => ({ id: entry.id, label: entry.label, href: `/publicos/${entry.id}` }))
+    : mode === "category"
+      ? categories.filter((entry) => entry.id !== category?.id).map((entry) => ({ id: entry.id, label: entry.label, href: `/categorias/${slugify(entry.label)}` }))
+      : [];
+  const selectionAction = mode === "audience" ? "Alterar público" : "Alterar categoria";
   const reset = () => { setQuery(""); setCategoryFilter(category?.label || "todos"); setAudienceFilter(audience?.id || "todos"); setDepartmentFilter("todos"); setInitialFilter("todos"); };
-  return <main {...rootProps()}><a className="skip" href="#lista-servicos">Ir para os serviços</a><PortalHeader pageEntry={directoryPage}/><section className={internalClasses(introSegment, "context-heading")} style={internalStyle(introSegment)}><nav aria-label="Caminho de navegação"><Link href="/">Início</Link><span>›</span><strong>{selectionTitle}</strong></nav><h1>{internalText(introSegment, "title", "Central de serviços")}</h1></section><section className={internalClasses(searchSegment, "context-search")} style={internalStyle(searchSegment)} aria-labelledby="context-search-title"><header className="context-selection"><div><strong id="context-search-title">{selectionTitle}</strong><span>{scoped.length} serviço{scoped.length === 1 ? "" : "s"}</span></div></header><div className="context-filter-grid"><label className="context-query">Buscar por serviço<input value={query} onChange={(event) => setQuery(event.target.value)} placeholder={searchItem?.placeholder || "Digite para buscar"}/></label><label>Categoria<select value={categoryFilter} onChange={(event) => setCategoryFilter(event.target.value)}><option value="todos">Todas</option>{categories.map((entry) => <option key={entry.id} value={entry.label}>{entry.label}</option>)}</select></label><label>Público<select value={audienceFilter} onChange={(event) => setAudienceFilter(event.target.value)}><option value="todos">Todos</option>{audiences.map((entry) => <option key={entry.id} value={entry.id}>{entry.label}</option>)}</select></label><label>Órgão responsável<select value={departmentFilter} onChange={(event) => setDepartmentFilter(event.target.value)}><option value="todos">Todos</option>{departments.map((entry) => <option key={entry} value={entry}>{entry}</option>)}</select></label><label>Inicial (A–Z)<select value={initialFilter} onChange={(event) => setInitialFilter(event.target.value)}><option value="todos">Todas</option>{initials.map((entry) => <option key={entry}>{entry}</option>)}</select></label><button type="button" onClick={reset}>{searchItem?.buttonText || "Limpar"}</button></div></section><section id="lista-servicos" className={internalClasses(catalogSegment, "context-results")} style={internalStyle(catalogSegment)}><header><p>Exibindo <strong>{scoped.length}</strong> resultado{scoped.length === 1 ? "" : "s"}</p><b role="status" aria-live="polite">{selectionTitle}</b></header><div className="context-service-grid">{scoped.map((service) => <Link className="context-service-card" key={service.id} href={serviceHref(service)}><i aria-hidden="true">+</i><span><small>{service.category}</small><strong>{service.title}</strong><em>{service.department}</em><AudienceTags service={service}/></span><b>{internalText(catalogSegment, "action", "Acessar →")}</b></Link>)}</div>{scoped.length === 0 && <p className="context-empty">{internalText(catalogSegment, "empty", "Nenhum serviço corresponde aos filtros escolhidos.")}</p>}</section><PortalFooter/></main>;
+  return <main {...rootProps()}><a className="skip" href="#lista-servicos">Ir para os serviços</a><PortalHeader pageEntry={directoryPage}/><section className={internalClasses(introSegment, "context-heading")} style={internalStyle(introSegment)}><nav aria-label="Caminho de navegação"><Link href="/">Início</Link><span>›</span><strong>{selectionTitle}</strong></nav><h1>{internalText(introSegment, "title", "Central de serviços")}</h1></section><section className={internalClasses(searchSegment, "context-search")} style={internalStyle(searchSegment)} aria-labelledby="context-search-title"><header className={`context-selection${selectionOpen ? " is-open" : ""}`}><div className="context-selection-summary"><div><strong id="context-search-title">{selectionTitle}</strong><span>{scoped.length} serviço{scoped.length === 1 ? "" : "s"}</span></div>{mode !== "all" && <button type="button" className="context-selection-toggle" aria-expanded={selectionOpen} aria-controls="context-selection-options" onClick={() => setSelectionOpen((open) => !open)}><span>{selectionAction}</span><b aria-hidden="true">{selectionOpen ? "⌃" : "⌄"}</b></button>}</div>{selectionOpen && selectionOptions.length > 0 && <nav id="context-selection-options" className="context-selection-options" aria-label={mode === "audience" ? "Outros públicos" : "Outras categorias"}>{selectionOptions.map((option) => <Link key={option.id} href={option.href} onClick={() => setSelectionOpen(false)}>{option.label}</Link>)}</nav>}</header><div className="context-filter-grid"><label className="context-query">Buscar por serviço<input value={query} onChange={(event) => setQuery(event.target.value)} placeholder={searchItem?.placeholder || "Digite para buscar"}/></label><label>Categoria<select value={categoryFilter} onChange={(event) => setCategoryFilter(event.target.value)}><option value="todos">Todas</option>{categories.map((entry) => <option key={entry.id} value={entry.label}>{entry.label}</option>)}</select></label><label>Público<select value={audienceFilter} onChange={(event) => setAudienceFilter(event.target.value)}><option value="todos">Todos</option>{audiences.map((entry) => <option key={entry.id} value={entry.id}>{entry.label}</option>)}</select></label><label>Órgão responsável<select value={departmentFilter} onChange={(event) => setDepartmentFilter(event.target.value)}><option value="todos">Todos</option>{departments.map((entry) => <option key={entry} value={entry}>{entry}</option>)}</select></label><label>Inicial (A–Z)<select value={initialFilter} onChange={(event) => setInitialFilter(event.target.value)}><option value="todos">Todas</option>{initials.map((entry) => <option key={entry}>{entry}</option>)}</select></label><button type="button" onClick={reset}>{searchItem?.buttonText || "Limpar"}</button></div></section><section id="lista-servicos" className={internalClasses(catalogSegment, "context-results")} style={internalStyle(catalogSegment)}><header><p>Exibindo <strong>{scoped.length}</strong> resultado{scoped.length === 1 ? "" : "s"}</p><b role="status" aria-live="polite">{selectionTitle}</b></header><div className="context-service-grid">{scoped.map((service) => <Link className="context-service-card" key={service.id} href={serviceHref(service)}><i aria-hidden="true">+</i><span><small>{service.category}</small><strong>{service.title}</strong><em>{service.department}</em><AudienceTags service={service}/></span><b>{internalText(catalogSegment, "action", "Acessar →")}</b></Link>)}</div>{scoped.length === 0 && <p className="context-empty">{internalText(catalogSegment, "empty", "Nenhum serviço corresponde aos filtros escolhidos.")}</p>}</section><PortalFooter/></main>;
+}
+
+function RichServiceDetail({ service }: { service: Service }) {
+  const heroSegment = internalSegment(detailPage, "serviceHero");
+  const contentSegment = internalSegment(detailPage, "serviceContent");
+  const relatedServices = services.filter((entry) => service.relatedServiceIds?.includes(entry.id));
+
+  return <main {...rootProps()}>
+    <a className="skip" href="#conteudo-servico">Ir para o conteúdo do serviço</a>
+    <PortalHeader/>
+    <article id="conteudo-servico" className={`${internalClasses(heroSegment, "service-detail")} service-detail-rich`} style={internalStyle(heroSegment)}>
+      <header>
+        <div>
+          <small>{service.category}</small>
+          <h1>{service.title}</h1>
+          <p>{service.summary}</p>
+          <div className="service-identity"><AudienceTags service={service}/><span>{service.category}</span></div>
+        </div>
+        <aside>
+          <span>Órgão responsável</span>
+          <strong>{service.department}</strong>
+          <a href={service.url} target="_blank" rel="noreferrer">{service.requestLabel || "Solicitar serviço"} ↗</a>
+        </aside>
+      </header>
+
+      {service.notice && <div className="service-reference-notice"><span>{service.notice}</span><a href={service.url} target="_blank" rel="noreferrer">Acessar o E-SIC oficial ↗</a></div>}
+
+      <div className={internalClasses(contentSegment, "service-detail-layout")} style={internalStyle(contentSegment)}>
+        <nav aria-label="Nesta página">
+          <strong>Nesta página</strong>
+          <a href="#o-que-e">O que é</a>
+          <a href="#quem-pode">Quem pode solicitar</a>
+          <a href="#documentos">Documentos necessários</a>
+          <a href="#como-solicitar">Como solicitar</a>
+          {service.whereWhen && <a href="#onde-quando">Onde e quando solicitar</a>}
+          {service.channels?.length && <a href="#canais">Canais de atendimento</a>}
+          {service.legislation?.length && <a href="#legislacao">Legislação</a>}
+          {relatedServices.length > 0 && <a href="#relacionados">Serviços relacionados</a>}
+        </nav>
+
+        <div className="service-detail-content">
+          <section id="o-que-e"><h2>O que é</h2><p>{service.summary}</p></section>
+          <section id="quem-pode"><h2>Quem pode solicitar</h2><p>{service.eligibility}</p></section>
+          <section id="documentos"><h2>Documentos necessários</h2><ul>{service.documents?.map((entry) => <li key={entry}>{entry}</li>)}</ul></section>
+          <section id="como-solicitar"><h2>Como solicitar</h2><ol className="service-steps">{service.steps?.map((entry, index) => <li key={entry}><b>{index + 1}</b><span>{entry}</span></li>)}</ol></section>
+          {service.whereWhen && <section id="onde-quando"><h2>Onde e quando solicitar</h2><p>{service.whereWhen}</p></section>}
+          <section id="informacoes" className="service-facts"><div><span>Custo</span><strong>{service.cost}</strong></div><div><span>Prazo estimado</span><strong>{service.duration}</strong></div></section>
+          {service.channels?.length && <section id="canais"><h2>Canais de atendimento</h2><div className="service-channel-list">{service.channels.map((channel) => <div key={channel.label}><span>{channel.label}</span>{channel.url ? <a href={channel.url} target={channel.url.startsWith("http") ? "_blank" : undefined} rel={channel.url.startsWith("http") ? "noreferrer" : undefined}>{channel.value}</a> : <strong>{channel.value}</strong>}</div>)}</div></section>}
+          {service.legislation?.length && <section id="legislacao"><h2>Legislação relacionada</h2><div className="service-legislation">{service.legislation.map((law) => <a key={law.label} href={law.url} target="_blank" rel="noreferrer">{law.label}<span aria-hidden="true">↗</span></a>)}</div></section>}
+          {relatedServices.length > 0 && <section id="relacionados"><h2>Serviços relacionados</h2><div className="service-related-list">{relatedServices.map((related) => <Link key={related.id} href={serviceHref(related)}><span>{related.category}</span><strong>{related.title}</strong><b>Acessar →</b></Link>)}</div></section>}
+          {service.updatedAt && <small className="service-updated">Última atualização: {service.updatedAt}</small>}
+        </div>
+      </div>
+    </article>
+    <PortalFooter/>
+  </main>;
 }
 
 export function ServiceDetail({ slug }: { slug: string }) {
@@ -119,6 +187,7 @@ export function ServiceDetail({ slug }: { slug: string }) {
   const contentSegment = internalSegment(detailPage, "serviceContent");
   const service = services.find((entry) => (entry.slug || entry.id) === slug);
   if (!service) return <main {...rootProps()}><PortalHeader/><section className="service-not-found"><h1>Serviço não encontrado</h1><Link href="/">Voltar para a Central</Link></section><PortalFooter/></main>;
+  if (service.id === "acesso-informacao") return <RichServiceDetail service={service}/>;
   const audienceLinks = serviceAudiences(service).map((id) => audiences.find((entry) => entry.id === id)).filter(Boolean) as Audience[];
   return <main {...rootProps()}><a className="skip" href="#conteudo-servico">Ir para o conteúdo do serviço</a><PortalHeader/><article id="conteudo-servico" className={internalClasses(heroSegment, "service-detail")} style={internalStyle(heroSegment)}><nav aria-label="Caminho de navegação"><Link href="/">Início</Link><span>›</span>{audienceLinks[0] && <><Link href={`/publicos/${audienceLinks[0].id}`}>{audienceLinks[0].label}</Link><span>›</span></>}<Link href={`/categorias/${slugify(service.category)}`}>{service.category}</Link><span>›</span><strong>{service.title}</strong></nav><header><div><small>{internalText(heroSegment, "eyebrow", service.category)}</small><h1>{service.title}</h1><p>{service.summary || `Consulte as orientações para ${service.title.toLocaleLowerCase("pt-BR")} e siga para o canal oficial responsável.`}</p><AudienceTags service={service}/></div><aside><span>{internalText(heroSegment, "responsibleLabel", "Órgão responsável")}</span><strong>{service.department}</strong><a href={service.url} target="_blank" rel="noreferrer">{service.destination || internalText(heroSegment, "action", "Acessar canal oficial")} ↗</a></aside></header><div className={internalClasses(contentSegment, "service-detail-layout")} style={internalStyle(contentSegment)}><nav aria-label="Nesta página"><strong>Nesta página</strong><a href="#o-que-e">{internalText(contentSegment, "aboutTitle", "O que é")}</a><a href="#quem-pode">{internalText(contentSegment, "eligibilityTitle", "Quem pode solicitar")}</a><a href="#documentos">{internalText(contentSegment, "documentsTitle", "Documentos")}</a><a href="#como-fazer">{internalText(contentSegment, "stepsTitle", "Como fazer")}</a><a href="#informacoes">Custo e prazo</a></nav><div className="service-detail-content"><section id="o-que-e"><h2>{internalText(contentSegment, "aboutTitle", "O que é")}</h2><p>{service.summary || "Página explicativa do serviço municipal e do canal responsável pelo atendimento."}</p></section><section id="quem-pode"><h2>{internalText(contentSegment, "eligibilityTitle", "Quem pode solicitar")}</h2><p>{service.eligibility || "Os critérios de atendimento devem ser confirmados com o órgão responsável antes da publicação definitiva."}</p></section><section id="documentos"><h2>{internalText(contentSegment, "documentsTitle", "Documentos necessários")}</h2>{service.documents?.length ? <ul>{service.documents.map((entry) => <li key={entry}>{entry}</li>)}</ul> : <p>A relação oficial de documentos ainda será confirmada pelo órgão responsável.</p>}</section><section id="como-fazer"><h2>{internalText(contentSegment, "stepsTitle", "Como fazer")}</h2>{service.steps?.length ? <ol>{service.steps.map((entry) => <li key={entry}>{entry}</li>)}</ol> : <ol><li>Confira os critérios e documentos.</li><li>Acesse o canal oficial indicado nesta página.</li><li>Acompanhe a solicitação diretamente no sistema responsável.</li></ol>}</section><section id="informacoes" className="service-facts"><div><span>{internalText(contentSegment, "costLabel", "Quanto custa")}</span><strong>{service.cost || "A confirmar"}</strong></div><div><span>{internalText(contentSegment, "durationLabel", "Quanto tempo leva")}</span><strong>{service.duration || "A confirmar"}</strong></div></section>{service.updatedAt && <small className="service-updated">Última atualização: {service.updatedAt}</small>}</div></div></article><PortalFooter/></main>;
 }

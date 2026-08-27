@@ -178,7 +178,7 @@
               "type": "text",
               "role": "title",
               "label": "Título",
-              "value": "Serviços para cada público"
+              "value": "Serviços"
             },
             {
               "id": "cidadao",
@@ -213,6 +213,22 @@
               "initials": "OP"
             },
             {
+              "id": "ouvidoria",
+              "type": "audience",
+              "role": "entry",
+              "label": "Ouvidoria",
+              "description": "Manifestações, dúvidas, denúncias, sugestões e acompanhamento",
+              "initials": "OU"
+            },
+            {
+              "id": "precatorio-fundef",
+              "type": "audience",
+              "role": "entry",
+              "label": "Precatório FUNDEF",
+              "description": "Direcionamento oficial para atendimento relacionado ao precatório",
+              "initials": "PF"
+            },
+            {
               "id": "turista",
               "type": "audience",
               "role": "entry",
@@ -224,7 +240,7 @@
         },
         {
           "id": "featured",
-          "name": "Serviços mais usados",
+          "name": "Acesso rápido",
           "type": "featured",
           "enabled": true,
           "style": {
@@ -243,14 +259,14 @@
               "type": "text",
               "role": "eyebrow",
               "label": "Identificador",
-              "value": "Acesso rápido"
+              "value": ""
             },
             {
               "id": "featured-title",
               "type": "text",
               "role": "title",
               "label": "Título",
-              "value": "Serviços mais usados"
+              "value": "Acesso rápido"
             },
             {
               "id": "featured-nota",
@@ -263,22 +279,22 @@
               "id": "featured-saude",
               "type": "serviceRef",
               "role": "entry",
-              "label": "Marcar atendimento de saúde",
-              "serviceId": "atendimento-saude"
+              "label": "Alvará Sanitário",
+              "serviceId": "alvara-sanitario"
             },
             {
               "id": "featured-matricula",
               "type": "serviceRef",
               "role": "entry",
-              "label": "Matrícula escolar",
-              "serviceId": "matricula-escolar"
+              "label": "Acesso à Informação",
+              "serviceId": "acesso-informacao"
             },
             {
               "id": "featured-iptu",
               "type": "serviceRef",
               "role": "entry",
-              "label": "Consultar IPTU",
-              "serviceId": "iptu"
+              "label": "Certidão de lançamento do IPTU",
+              "serviceId": "certidao-primeiro-lancamento-iptu"
             },
             {
               "id": "featured-contracheque",
@@ -291,8 +307,8 @@
               "id": "featured-iluminacao",
               "type": "serviceRef",
               "role": "entry",
-              "label": "Iluminação pública",
-              "serviceId": "iluminacao-publica"
+              "label": "Abastecimento de água",
+              "serviceId": "abastecimento-agua"
             }
           ]
         },
@@ -308,7 +324,7 @@
             "width": "contained",
             "spacing": "airy",
             "radius": "soft",
-            "hoverEffect": "none",
+            "hoverEffect": "shadow",
             "backgroundImage": ""
           },
           "items": [
@@ -317,7 +333,7 @@
               "type": "text",
               "role": "eyebrow",
               "label": "Identificador",
-              "value": "Navegue por assunto"
+              "value": ""
             },
             {
               "id": "categories-title",
@@ -325,13 +341,6 @@
               "role": "title",
               "label": "Título",
               "value": "Todas as categorias"
-            },
-            {
-              "id": "categories-description",
-              "type": "text",
-              "role": "description",
-              "label": "Descrição",
-              "value": "Uma organização ampla inspirada em centrais municipais de referência."
             },
             {
               "id": "cat-cultura",
@@ -429,47 +438,302 @@
               "value": "Todos os serviços"
             },
             {
-              "id": "iptu",
+              "id": "abastecimento-agua",
               "type": "service",
               "role": "entry",
-              "title": "Consultar IPTU",
-              "department": "Secretaria da Fazenda",
-              "category": "Tributos",
+              "title": "Abastecimento de água",
+              "department": "Prefeitura de Amargosa",
+              "category": "Cidade",
               "audienceId": "cidadao",
-              "destination": "Portal Tributário",
-              "url": "https://amargosa.ba.gov.br/",
-              "initials": "IP"
+              "destination": "Central oficial de serviços",
+              "url": "https://servicos.amargosa.ba.gov.br/b.php?pg=o/wp",
+              "initials": "AA"
             },
             {
-              "id": "isencao-iptu",
-              "slug": "isencao-de-iptu",
+              "id": "acesso-informacao",
               "type": "service",
               "role": "entry",
-              "title": "Requerer isenção de IPTU",
-              "department": "Secretaria da Fazenda",
-              "category": "Tributos",
+              "title": "Acesso à Informação (LAI 12.527/2011)",
+              "department": "Controladoria Geral do Município",
+              "category": "Documentos",
               "audienceId": "cidadao",
-              "audienceIds": [
-                "cidadao"
-              ],
-              "destination": "Atendimento Tributário",
-              "url": "https://amargosa.ba.gov.br/",
-              "initials": "II",
-              "summary": "Orientações para solicitar a análise do direito à isenção do Imposto Predial e Territorial Urbano no Município de Amargosa.",
-              "eligibility": "Os critérios legais e o período de solicitação precisam ser confirmados pela Secretaria Municipal da Fazenda antes da publicação definitiva.",
+              "destination": "E-SIC de Amargosa",
+              "url": "https://amargosa.1doc.com.br/b.php?is=920&itd=12&pg=wp/wp&s=amargosa",
+              "initials": "AI",
+              "requestLabel": "Solicitar serviço",
+              "summary": "Canal oficial para solicitar informações públicas produzidas ou mantidas pela Prefeitura de Amargosa e acompanhar a resposta pelo número de protocolo.",
+              "eligibility": "Qualquer pessoa física ou jurídica pode apresentar um pedido de acesso à informação. Não é necessário justificar o motivo da solicitação.",
               "documents": [
-                "Documento de identificação do responsável",
-                "Documentos do imóvel",
-                "Comprovantes exigidos para o enquadramento legal"
+                "Não há documento específico obrigatório para formular o pedido.",
+                "Informe seus dados de identificação quando optar por se identificar.",
+                "Descreva de forma clara e objetiva a informação pública desejada."
               ],
               "steps": [
-                "Confira os critérios e reúna a documentação necessária.",
-                "Acesse o canal oficial da Secretaria da Fazenda.",
-                "Protocole o pedido e acompanhe a análise no canal informado."
+                "Acesse o E-SIC pelo botão Solicitar serviço.",
+                "Identifique-se ou escolha a opção disponibilizada pelo canal oficial.",
+                "Descreva a informação desejada com clareza e envie o pedido.",
+                "Guarde o número do protocolo para consultar o andamento e receber a resposta."
               ],
-              "cost": "A confirmar com o órgão responsável",
-              "duration": "A confirmar com o órgão responsável",
-              "updatedAt": "26/08/2026"
+              "whereWhen": "O pedido pode ser registrado pela internet a qualquer momento. O atendimento presencial da Ouvidoria Municipal funciona de segunda a sexta-feira, das 08h às 12h e das 14h às 17h, na Avenida Dr. Luís Sandes, Valle Shopping, Amargosa – BA.",
+              "cost": "Gratuito. Poderá haver cobrança apenas do custo de reprodução de documentos, quando aplicável.",
+              "duration": "Acesso imediato quando a informação estiver disponível ou resposta em até 20 dias, prorrogáveis por mais 10 dias mediante justificativa.",
+              "channels": [
+                {
+                  "label": "Online",
+                  "value": "E-SIC / 1Doc",
+                  "url": "https://amargosa.1doc.com.br/b.php?is=920&itd=12&pg=wp/wp&s=amargosa"
+                },
+                {
+                  "label": "Telefone",
+                  "value": "(75) 3512-7811 – Ramal 4141"
+                },
+                {
+                  "label": "E-mail",
+                  "value": "cgm.ouvim@amargosa.ba.gov.br",
+                  "url": "mailto:cgm.ouvim@amargosa.ba.gov.br"
+                },
+                {
+                  "label": "Presencial",
+                  "value": "Ouvidoria Municipal – Avenida Dr. Luís Sandes, Valle Shopping"
+                }
+              ],
+              "legislation": [
+                {
+                  "label": "Lei Federal nº 12.527/2011 – Lei de Acesso à Informação",
+                  "url": "https://www.planalto.gov.br/ccivil_03/_ato2011-2014/2011/lei/l12527.htm"
+                },
+                {
+                  "label": "Lei Municipal nº 465/2016 – Regulamentação da LAI em Amargosa",
+                  "url": "https://www.leismunicipais.com.br/a/ba/a/amargosa/lei-ordinaria/2016/46/465/lei-ordinaria-n-465-2016-dispoe-sobre-o-acesso-a-informacoes-previsto-no-inciso-xxxiii-do-art-5%C2%BA-no-inciso-ii-do-3%C2%BA-do-art-37-e-no-2%C2%BA-do-art-216-da-constituicao-federal-e-na-lei-federal-12527-de-18-de-novembro-de-2011-cria-o-servico-de-informacoes-ao-cidadao-no-ambito-municipal-e-da-outras-providencias"
+                }
+              ],
+              "relatedServiceIds": [
+                "ouvidoria-geral"
+              ],
+              "notice": "O pedido de acesso à informação é registrado e acompanhado no E-SIC oficial da Prefeitura de Amargosa.",
+              "updatedAt": "27/08/2026"
+            },
+            {
+              "id": "alteracao-cadastro-economico",
+              "type": "service",
+              "role": "entry",
+              "title": "Alteração do cadastro econômico",
+              "department": "Secretaria Municipal da Fazenda",
+              "category": "Empresa e negócio",
+              "audienceId": "cidadao",
+              "audienceIds": ["cidadao", "empresa"],
+              "destination": "Central oficial de serviços",
+              "url": "https://servicos.amargosa.ba.gov.br/b.php?pg=o/wp",
+              "initials": "AC"
+            },
+            {
+              "id": "alvara-obras",
+              "type": "service",
+              "role": "entry",
+              "title": "Alvará de Obras (Construção, Ampliação, Reforma e Demolição)",
+              "department": "Secretaria Municipal de Infraestrutura",
+              "category": "Cidade",
+              "audienceId": "cidadao",
+              "destination": "Central oficial de serviços",
+              "url": "https://servicos.amargosa.ba.gov.br/b.php?pg=o/wp",
+              "initials": "AO"
+            },
+            {
+              "id": "alvara-sanitario",
+              "type": "service",
+              "role": "entry",
+              "title": "Alvará Sanitário",
+              "department": "Secretaria Municipal de Saúde",
+              "category": "Saúde",
+              "audienceId": "cidadao",
+              "audienceIds": ["cidadao", "empresa"],
+              "destination": "Central oficial de serviços",
+              "url": "https://servicos.amargosa.ba.gov.br/b.php?pg=o/wp",
+              "initials": "AS"
+            },
+            {
+              "id": "alvara-temporario-diversoes-circo",
+              "type": "service",
+              "role": "entry",
+              "title": "Alvará Temporário para Parque de Diversões e Circo",
+              "department": "Secretaria Municipal da Fazenda",
+              "category": "Cultura, turismo e lazer",
+              "audienceId": "cidadao",
+              "destination": "Central oficial de serviços",
+              "url": "https://servicos.amargosa.ba.gov.br/b.php?pg=o/wp",
+              "initials": "AT"
+            },
+            {
+              "id": "autorizacao-eventos-espaco-publico",
+              "type": "service",
+              "role": "entry",
+              "title": "Autorização para Eventos em Espaço Público",
+              "department": "Prefeitura de Amargosa",
+              "category": "Cultura, turismo e lazer",
+              "audienceId": "cidadao",
+              "destination": "Central oficial de serviços",
+              "url": "https://servicos.amargosa.ba.gov.br/b.php?pg=o/wp",
+              "initials": "AE"
+            },
+            {
+              "id": "averbacao-imoveis",
+              "type": "service",
+              "role": "entry",
+              "title": "Averbação de imóveis",
+              "department": "Secretaria Municipal da Fazenda",
+              "category": "Tributos",
+              "audienceId": "cidadao",
+              "destination": "Central oficial de serviços",
+              "url": "https://servicos.amargosa.ba.gov.br/b.php?pg=o/wp",
+              "initials": "AV"
+            },
+            {
+              "id": "baixa-cadastro-inscricao-municipal",
+              "type": "service",
+              "role": "entry",
+              "title": "Baixa do Cadastro de Inscrição Municipal",
+              "department": "Secretaria Municipal da Fazenda",
+              "category": "Empresa e negócio",
+              "audienceId": "cidadao",
+              "audienceIds": ["cidadao", "empresa"],
+              "destination": "Central oficial de serviços",
+              "url": "https://servicos.amargosa.ba.gov.br/b.php?pg=o/wp",
+              "initials": "BI"
+            },
+            {
+              "id": "cadastramento-area-urbana-origem-rural",
+              "type": "service",
+              "role": "entry",
+              "title": "Cadastramento de área urbana com origem rural",
+              "department": "Secretaria Municipal da Fazenda",
+              "category": "Tributos",
+              "audienceId": "cidadao",
+              "destination": "Central oficial de serviços",
+              "url": "https://servicos.amargosa.ba.gov.br/b.php?pg=o/wp",
+              "initials": "CA"
+            },
+            {
+              "id": "cadastro-imobiliario",
+              "type": "service",
+              "role": "entry",
+              "title": "Cadastro Imobiliário",
+              "department": "Secretaria Municipal da Fazenda",
+              "category": "Tributos",
+              "audienceId": "cidadao",
+              "destination": "Central oficial de serviços",
+              "url": "https://servicos.amargosa.ba.gov.br/b.php?pg=o/wp",
+              "initials": "CI"
+            },
+            {
+              "id": "cancelamento-baixa-credito-tributario",
+              "type": "service",
+              "role": "entry",
+              "title": "Cancelamento ou Baixa de Crédito Tributário",
+              "department": "Secretaria Municipal da Fazenda",
+              "category": "Tributos",
+              "audienceId": "cidadao",
+              "destination": "Central oficial de serviços",
+              "url": "https://servicos.amargosa.ba.gov.br/b.php?pg=o/wp",
+              "initials": "CB"
+            },
+            {
+              "id": "cancelamento-retificacao-nfse",
+              "type": "service",
+              "role": "entry",
+              "title": "Cancelamento/Retificação de NFS-e",
+              "department": "Secretaria Municipal da Fazenda",
+              "category": "Empresa e negócio",
+              "audienceId": "cidadao",
+              "audienceIds": ["cidadao", "empresa"],
+              "destination": "Central oficial de serviços",
+              "url": "https://servicos.amargosa.ba.gov.br/b.php?pg=o/wp",
+              "initials": "CN"
+            },
+            {
+              "id": "certidao-primeiro-lancamento-iptu",
+              "type": "service",
+              "role": "entry",
+              "title": "Certidão de 1º Lançamento do IPTU",
+              "department": "Secretaria Municipal da Fazenda",
+              "category": "Tributos",
+              "audienceId": "cidadao",
+              "destination": "Central oficial de serviços",
+              "url": "https://servicos.amargosa.ba.gov.br/b.php?pg=o/wp",
+              "initials": "CL"
+            },
+            {
+              "id": "certidao-comprovacao-endereco",
+              "type": "service",
+              "role": "entry",
+              "title": "Certidão de Comprovação de Endereço",
+              "department": "Secretaria Municipal da Fazenda",
+              "category": "Documentos",
+              "audienceId": "cidadao",
+              "destination": "Central oficial de serviços",
+              "url": "https://servicos.amargosa.ba.gov.br/b.php?pg=o/wp",
+              "initials": "CE"
+            },
+            {
+              "id": "certidao-inexigibilidade-ci",
+              "type": "service",
+              "role": "entry",
+              "title": "Certidão de Inexigibilidade - CI",
+              "department": "Secretaria Municipal da Fazenda",
+              "category": "Documentos",
+              "audienceId": "cidadao",
+              "destination": "Central oficial de serviços",
+              "url": "https://servicos.amargosa.ba.gov.br/b.php?pg=o/wp",
+              "initials": "CI"
+            },
+            {
+              "id": "certidao-inexistencia-inscricao",
+              "type": "service",
+              "role": "entry",
+              "title": "Certidão de Inexistência de Inscrição",
+              "department": "Secretaria Municipal da Fazenda",
+              "category": "Documentos",
+              "audienceId": "cidadao",
+              "destination": "Central oficial de serviços",
+              "url": "https://servicos.amargosa.ba.gov.br/b.php?pg=o/wp",
+              "initials": "CI"
+            },
+            {
+              "id": "certidao-inscricao-municipal-empresa",
+              "type": "service",
+              "role": "entry",
+              "title": "Certidão de Inscrição Municipal - Empresa",
+              "department": "Secretaria Municipal da Fazenda",
+              "category": "Empresa e negócio",
+              "audienceId": "cidadao",
+              "audienceIds": ["cidadao", "empresa"],
+              "destination": "Central oficial de serviços",
+              "url": "https://servicos.amargosa.ba.gov.br/b.php?pg=o/wp",
+              "initials": "CM"
+            },
+            {
+              "id": "certidao-lancamento-numero-imovel",
+              "type": "service",
+              "role": "entry",
+              "title": "Certidão de Lançamento de Número de Imóvel",
+              "department": "Secretaria Municipal da Fazenda",
+              "category": "Tributos",
+              "audienceId": "cidadao",
+              "destination": "Central oficial de serviços",
+              "url": "https://servicos.amargosa.ba.gov.br/b.php?pg=o/wp",
+              "initials": "CN"
+            },
+            {
+              "id": "certidao-regularidade-fiscal-empresas",
+              "type": "service",
+              "role": "entry",
+              "title": "Certidão de Regularidade Fiscal - Empresas",
+              "department": "Secretaria Municipal da Fazenda",
+              "category": "Empresa e negócio",
+              "audienceId": "cidadao",
+              "audienceIds": ["cidadao", "empresa"],
+              "destination": "Central oficial de serviços",
+              "url": "https://servicos.amargosa.ba.gov.br/b.php?pg=o/wp",
+              "initials": "CR"
             },
             {
               "id": "nota-fiscal",
@@ -484,42 +748,6 @@
               "initials": "NF"
             },
             {
-              "id": "atendimento-saude",
-              "type": "service",
-              "role": "entry",
-              "title": "Marcar atendimento de saúde",
-              "department": "Secretaria de Saúde",
-              "category": "Saúde",
-              "audienceId": "cidadao",
-              "destination": "Saúde Digital",
-              "url": "https://amargosa.ba.gov.br/",
-              "initials": "SA"
-            },
-            {
-              "id": "matricula-escolar",
-              "type": "service",
-              "role": "entry",
-              "title": "Consultar matrícula escolar",
-              "department": "Secretaria de Educação",
-              "category": "Educação",
-              "audienceId": "cidadao",
-              "destination": "Portal da Educação",
-              "url": "https://amargosa.ba.gov.br/",
-              "initials": "ED"
-            },
-            {
-              "id": "iluminacao-publica",
-              "type": "service",
-              "role": "entry",
-              "title": "Solicitar iluminação pública",
-              "department": "Secretaria de Infraestrutura",
-              "category": "Cidade",
-              "audienceId": "cidadao",
-              "destination": "Atendimento ao Cidadão",
-              "url": "https://amargosa.ba.gov.br/",
-              "initials": "IL"
-            },
-            {
               "id": "contracheque",
               "type": "service",
               "role": "entry",
@@ -530,18 +758,6 @@
               "destination": "Portal do Servidor",
               "url": "https://amargosa.ba.gov.br/",
               "initials": "CT"
-            },
-            {
-              "id": "diario-oficial",
-              "type": "service",
-              "role": "entry",
-              "title": "Acessar o Diário Oficial",
-              "department": "Prefeitura de Amargosa",
-              "category": "Documentos",
-              "audienceId": "cidadao",
-              "destination": "Diário Oficial",
-              "url": "https://amargosa.ba.gov.br/",
-              "initials": "DO"
             },
             {
               "id": "licitacoes",
@@ -578,6 +794,42 @@
               "destination": "Agenda de Amargosa",
               "url": "https://amargosa.ba.gov.br/",
               "initials": "EV"
+            },
+            {
+              "id": "duvidas-concursos-processos-seletivos",
+              "type": "service",
+              "role": "entry",
+              "title": "Dúvidas sobre concursos e processos seletivos",
+              "department": "Secretaria Municipal de Administração",
+              "category": "Vida funcional",
+              "audienceId": "ouvidoria",
+              "destination": "Protocolo 1Doc",
+              "url": "https://amargosa.1doc.com.br/verificacao/b.php?pg=wp/wp&itd=4&iser=01K59ZV28W803VRHKQ45BP79FS",
+              "initials": "DC"
+            },
+            {
+              "id": "ouvidoria-geral",
+              "type": "service",
+              "role": "entry",
+              "title": "Ouvidoria Geral",
+              "department": "Ouvidoria Geral do Município",
+              "category": "Documentos",
+              "audienceId": "ouvidoria",
+              "destination": "Ouvidoria 1Doc",
+              "url": "https://amargosa.1doc.com.br/verificacao/b.php?pg=wp/wp&itd=4&iser=01JSF8AV282HVZ7P7XM8PADMND",
+              "initials": "OG"
+            },
+            {
+              "id": "servico-precatorio-fundef",
+              "type": "service",
+              "role": "entry",
+              "title": "Precatório FUNDEF",
+              "department": "Secretaria Municipal de Educação",
+              "category": "Educação",
+              "audienceId": "precatorio-fundef",
+              "destination": "Protocolo 1Doc",
+              "url": "https://amargosa.1doc.com.br/verificacao/b.php?pg=wp/wp&itd=4&iser=01JG4Q3SF4DR86KWKA91HAN6HD",
+              "initials": "PF"
             }
           ]
         },
@@ -664,7 +916,7 @@
               "type": "text",
               "role": "description",
               "label": "Descrição",
-              "value": "Um ponto de partida para os canais oficiais do Município de Amargosa."
+              "value": ""
             },
             {
               "id": "footer-publicos",

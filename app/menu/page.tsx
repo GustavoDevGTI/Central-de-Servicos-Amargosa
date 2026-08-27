@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import siteContent from "../../content/site.json";
 
 export const metadata: Metadata = {
@@ -11,14 +10,23 @@ type Item = { id: string; slug?: string; type: string; label?: string; descripti
 type Segment = { type: string; enabled: boolean; items: Item[] };
 
 const page = siteContent.pages[0] as unknown as { segments: Segment[] };
-const segments = page.segments.filter((segment) => segment.enabled);
+// O menu acessível é um índice completo do portal. A visibilidade dos segmentos
+// na página inicial não pode esconder os dados de públicos, categorias ou serviços.
+const segments = page.segments;
 const audiences = segments.find((segment) => segment.type === "audiences")?.items.filter((item) => item.type === "audience") || [];
+const categoryOrder = (segments.find((segment) => segment.type === "categories")?.items.filter((item) => item.type === "category") || []).map((item) => item.label || "");
 const services = segments.find((segment) => segment.type === "catalog")?.items.filter((item) => item.type === "service") || [];
 const safeId = (value = "grupo") => value.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-zA-Z0-9_-]+/g, "-").replace(/^-|-$/g, "").toLowerCase();
 
 function categoriesFor(audienceId: string) {
   const audienceServices = services.filter((service) => (service.audienceIds?.length ? service.audienceIds : [service.audienceId]).includes(audienceId));
-  return [...new Set(audienceServices.map((service) => service.category || "Outros serviços"))].map((category) => ({ category, services: audienceServices.filter((service) => (service.category || "Outros serviços") === category) }));
+  return [...new Set(audienceServices.map((service) => service.category || "Outros serviços"))]
+    .sort((a, b) => {
+      const first = categoryOrder.indexOf(a);
+      const second = categoryOrder.indexOf(b);
+      return (first < 0 ? 999 : first) - (second < 0 ? 999 : second) || a.localeCompare(b, "pt-BR");
+    })
+    .map((category) => ({ category, services: audienceServices.filter((service) => (service.category || "Outros serviços") === category).sort((a, b) => (a.title || "").localeCompare(b.title || "", "pt-BR")) }));
 }
 
 export default function AccessibilityMenu() {
@@ -30,10 +38,10 @@ export default function AccessibilityMenu() {
   return <main id="conteudo-menu" className="accessibility-menu">
     <div className="skip-links"><a className="skip" href="#lista-servicos">Ir para a lista de serviços</a></div>
     <header className="accessibility-menu-header">
-      <Link className="accessibility-menu-back" href="/">← Voltar à Central de Serviços</Link>
+      <a className="accessibility-menu-back" href="/">← Voltar à Central de Serviços</a>
       <p>Prefeitura de Amargosa</p>
       <h1>Menu Acessibilidade</h1>
-      <span>Todos os serviços organizados em uma estrutura simples.</span>
+      <span>Todos os serviços em uma estrutura direta, aberta e navegável por teclado.</span>
     </header>
     <nav className="accessibility-menu-index" aria-label="Públicos disponíveis">
       <strong>Ir para:</strong>
@@ -41,13 +49,13 @@ export default function AccessibilityMenu() {
     </nav>
     <div id="lista-servicos" className="accessibility-menu-groups">
       {groups.map(({ audience, categories }) => <section key={audience.id} id={`publico-${safeId(audience.id)}`} className="accessibility-public-group" aria-labelledby={`titulo-${safeId(audience.id)}`}>
-        <h2 id={`titulo-${safeId(audience.id)}`}>{audience.label}</h2>
+        <h2 id={`titulo-${safeId(audience.id)}`}><span>{audience.label}</span><small>{categories.reduce((total, entry) => total + entry.services.length, 0)} serviços</small></h2>
         {categories.map(({ category, services: categoryServices }) => <section key={category} className="accessibility-category-group">
-          <h3>{category}</h3>
+          <h3><span>{category}</span><small>{categoryServices.length} serviço{categoryServices.length === 1 ? "" : "s"}</small></h3>
           <ul>{categoryServices.map((service) => <li key={service.id}><a href={`/servicos/${service.slug || service.id}`}><span><strong>{service.title}</strong>{service.department && <small>{service.department}</small>}</span><b>Ver serviço →</b></a></li>)}</ul>
         </section>)}
       </section>)}
     </div>
-    <footer className="accessibility-menu-footer"><Link href="/">← Voltar à Central de Serviços</Link></footer>
+    <footer className="accessibility-menu-footer"><a href="/">← Voltar à Central de Serviços</a></footer>
   </main>;
 }
