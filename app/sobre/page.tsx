@@ -41,18 +41,18 @@ export default function AboutPage() {
             <section className="about-org-branch about-org-gti" aria-labelledby="about-gti-title">
               <article className="about-unit-card">
                 <h3 id="about-gti-title">Gestão de Tecnologia da Informação <span className="about-unit-acronym">— GTI</span></h3>
-                <p><strong>Jurandyr Junior</strong><span>Gestor</span></p>
+                <p><strong>Jurandy Silva dos Santos Júnior</strong><span>Gestor</span></p>
               </article>
 
               <div className="about-org-developers" aria-label="Corpo técnico subordinado à GTI">
                 <article className="about-person-card">
                   <small>CORPO TÉCNICO · GTI</small>
-                  <strong>Gustavo Borges</strong>
+                  <strong>Gustavo Almeida Borges</strong>
                   <span>Desenvolvedor Full Stack</span>
                 </article>
                 <article className="about-person-card">
                   <small>CORPO TÉCNICO · GTI</small>
-                  <strong>Immanuel Vicente</strong>
+                  <strong>Immanuel da Rocha Barbosa Vicente</strong>
                   <span>Desenvolvedor Full Stack</span>
                 </article>
               </div>
