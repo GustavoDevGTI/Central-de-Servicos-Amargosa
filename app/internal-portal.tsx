@@ -3,6 +3,7 @@
 
 import { useMemo, useState, type AnchorHTMLAttributes, type CSSProperties, type ReactNode } from "react";
 import siteContent from "../content/site.json";
+import SharedPortalFooter from "./portal-footer";
 
 // O roteador cliente do Vinext pode cancelar a navegação ao preparar o RSC.
 // Links internos simples preservam a URL e funcionam também sem JavaScript.
@@ -24,7 +25,6 @@ const audiences = (segment("audiences")?.items.filter((item) => item.type === "a
 const categories = (segment("categories")?.items.filter((item) => item.type === "category") || []) as unknown as Category[];
 const services = (segment("catalog")?.items.filter((item) => item.type === "service") || []) as unknown as Service[];
 const header = segment("header");
-const footer = segment("footer");
 const directoryPage = siteContent.pages.find((entry) => entry.id === "directory");
 const detailPage = siteContent.pages.find((entry) => entry.id === "service-detail");
 const design = siteContent.site.design;
@@ -62,9 +62,7 @@ function PortalHeader({ pageEntry = detailPage }: { pageEntry?: typeof directory
 }
 
 function PortalFooter() {
-  const description = footer?.items.find((item) => item.role === "description");
-  const entry = footer as unknown as InternalSegment | undefined;
-  return <footer className={internalClasses(entry, "internal-footer")} style={internalStyle(entry)}><strong>Central de Serviços de Amargosa</strong><p>{description?.value || "O caminho certo para cada serviço público."}</p></footer>;
+  return <SharedPortalFooter />;
 }
 
 function AudienceTags({ service }: { service: Service }) {

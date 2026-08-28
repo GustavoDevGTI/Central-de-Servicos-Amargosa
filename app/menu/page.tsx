@@ -1,6 +1,7 @@
 /* eslint-disable @next/next/no-html-link-for-pages -- links diretos preservam a navegação estável no Vinext */
 import type { Metadata } from "next";
 import siteContent from "../../content/site.json";
+import PortalFooter from "../portal-footer";
 
 export const metadata: Metadata = {
   title: "Menu Acessibilidade | Central de Serviços de Amargosa",
@@ -57,6 +58,6 @@ export default function AccessibilityMenu() {
         </section>)}
       </section>)}
     </div>
-    <footer className="accessibility-menu-footer"><a href="/">← Voltar à Central de Serviços</a></footer>
+    <PortalFooter />
   </main>;
 }

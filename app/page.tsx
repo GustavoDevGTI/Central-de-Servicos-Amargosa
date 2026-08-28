@@ -3,6 +3,7 @@
 
 import { useEffect, useState, type CSSProperties, type ReactNode } from "react";
 import siteContent from "../content/site.json";
+import PortalFooter from "./portal-footer";
 
 type Size = { width?: number; height?: number };
 type Position = { x?: number; y?: number };
@@ -14,7 +15,6 @@ const page = siteContent.pages[0] as unknown as { segments: Segment[] };
 const siteDesign = siteContent.site.design as SiteDesign;
 
 const items = (segment: Segment | undefined, type: string) => segment?.items.filter((item) => item.type === type) || [];
-const text = (segment: Segment | undefined, role: string, fallback = "") => segment?.items.find((item) => item.role === role)?.value || fallback;
 const external = (url = "") => /^https?:\/\//i.test(url) ? { target: "_blank", rel: "noreferrer" } : {};
 const dimension = (value: unknown, minimum: number) => { const number = Math.round(Number(value)); return Number.isFinite(number) && number >= minimum ? number : undefined; };
 const sizeStyle = (entry?: { size?: Size }, segmentSize = false) => ({ width: dimension(entry?.size?.width, segmentSize ? 160 : 40), minHeight: dimension(entry?.size?.height, 32), maxWidth: entry?.size?.width ? "100%" : undefined }) as CSSProperties;
@@ -68,7 +68,7 @@ export default function Home() {
     if (segment.type === "featured") { const featured = items(segment, "serviceRef").map((ref) => ({ ref, service: services.find((service) => service.id === ref.serviceId) })).filter((entry): entry is { ref: Item; service: Service } => Boolean(entry.service)); return <section key={segment.id} id="mais-usados" className={classes(segment, "section")} style={segmentStyle(segment)}><SectionHeading segment={segment} /><div className="featured">{featured.map(({ ref, service }, index) => serviceCard(service, index, true, ref))}</div></section>; }
     if (segment.type === "categories") return <section key={segment.id} id="categorias" className={classes(segment, "categories-section")} style={segmentStyle(segment)}><div className="boundary"><SectionHeading segment={segment} /><div className="categories" role="group" aria-label="Acessar serviços por categoria">{items(segment, "category").map((item) => <button key={item.id} {...itemSizeProps(item)} type="button" onClick={() => window.location.assign(`/categorias/${item.label?.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "")}`)}><span><strong>{item.label}</strong><small>{item.description}</small></span><b aria-hidden="true">→</b></button>)}</div></div></section>;
     if (segment.type === "help") { const eyebrow = segment.items.find((item) => item.role === "eyebrow"); const title = segment.items.find((item) => item.role === "title"); const description = segment.items.find((item) => item.role === "description"); const action = items(segment, "link")[0]; return <section key={segment.id} id="ajuda" className={classes(segment, "help")} style={segmentStyle(segment)}><div><span {...itemSizeProps(eyebrow)}>{eyebrow?.value}</span><h2 {...itemSizeProps(title)}>{title?.value}</h2><p {...itemSizeProps(description)}>{description?.value}</p></div>{action && <a {...itemSizeProps(action)} href={action.url} {...external(action.url)}>{action.text}</a>}</section>; }
-    if (segment.type === "footer") { const header = segments.find((entry) => entry.type === "header"); const description = segment.items.find((item) => item.role === "description"); return <footer key={segment.id} className={classes(segment, "segment-footer")} style={segmentStyle(segment)}>{header && <Brand segment={header} />}<p {...itemSizeProps(description)}>{description?.value}</p></footer>; }
+    if (segment.type === "footer") return <PortalFooter key={segment.id} />;
     if (segment.type === "amanda") return null;
     return <section key={segment.id} className={classes(segment, "generic")} style={segmentStyle(segment)}><SectionHeading segment={segment} /><div className="generic-items">{segment.items.map((item) => item.type === "image" && item.src ? <img key={item.id} {...itemSizeProps(item)} src={item.src} alt={item.alt || ""} /> : item.type === "link" ? <a key={item.id} {...itemSizeProps(item)} href={item.url}>{item.text}</a> : <p key={item.id} {...itemSizeProps(item)}>{item.value || item.label}</p>)}</div></section>;
   }
