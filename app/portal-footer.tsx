@@ -68,7 +68,6 @@ export default function PortalFooter() {
 
   const logo = header?.items.find((item) => item.type === "image" && item.role === "logo");
   const subtitle = header?.items.find((item) => item.role === "subtitle");
-  const description = footer.items.find((item) => item.role === "description");
   const className = [
     "segment-footer",
     "portal-footer-shared",
@@ -99,19 +98,37 @@ export default function PortalFooter() {
 
   return (
     <footer className={className} style={style}>
-      {header && (
-        <span className="brand">
-          {logo?.src ? (
-            <img {...itemProps(logo)} className="brand-image" src={logo.src} alt={logo.alt || "Bandeira de Amargosa"} />
-          ) : (
-            <span {...itemProps(logo)} className="mark">AM</span>
+      <div className="portal-footer-grid">
+        <section className="portal-footer-identity" aria-label="Central de Serviços de Amargosa">
+          {header && (
+            <span className="brand">
+              {logo?.src ? (
+                <img {...itemProps(logo)} className="brand-image" src={logo.src} alt={logo.alt || "Bandeira de Amargosa"} />
+              ) : (
+                <span {...itemProps(logo)} className="mark">AM</span>
+              )}
+              <span>
+                <small>Prefeitura de Amargosa</small>
+                <strong {...itemProps(subtitle)}>{subtitle?.value || "Central de Serviços"}</strong>
+              </span>
+            </span>
           )}
-          <span>
-            <strong {...itemProps(subtitle)}>{subtitle?.value || "Central de Serviços"}</strong>
-          </span>
-        </span>
-      )}
-      {description?.value && <p {...itemProps(description)}>{description.value}</p>}
+        </section>
+
+        <section className="portal-footer-contact" aria-label="Informações de contato da Prefeitura de Amargosa">
+          <p><strong>CNPJ:</strong> 13.825.484/0001-50</p>
+          <p><strong>Endereço:</strong> Praça Lourival Monte, nº 001, Centro, Amargosa – BA</p>
+          <p><strong>CEP:</strong> 45300-000</p>
+          <p><strong>Telefone:</strong> <a href="tel:+557535127811">(75) 3512-7811</a></p>
+          <p><strong>E-mail:</strong> <a href="mailto:contato@amargosa.ba.gov.br">contato@amargosa.ba.gov.br</a></p>
+          <p><strong>Atendimento:</strong> segunda a sexta, das 8h às 16h30</p>
+        </section>
+
+      </div>
+      <div className="portal-footer-bottom">
+        <span>© Prefeitura Municipal de Amargosa</span>
+        <span>Central de Serviços</span>
+      </div>
     </footer>
   );
 }

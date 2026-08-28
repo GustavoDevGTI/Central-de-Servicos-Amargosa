@@ -94,25 +94,17 @@
               "id": "nav-publicos",
               "type": "link",
               "role": "navigation",
-              "label": "Menu: públicos",
-              "text": "Serviços por público",
-              "url": "#publicos"
+              "label": "Menu: serviços públicos",
+              "text": "Serviços públicos",
+              "url": "/servicos"
             },
             {
-              "id": "nav-featured",
+              "id": "nav-about",
               "type": "link",
               "role": "navigation",
-              "label": "Menu: mais usados",
-              "text": "Mais usados",
-              "url": "#mais-usados"
-            },
-            {
-              "id": "nav-categories",
-              "type": "link",
-              "role": "navigation",
-              "label": "Menu: categorias",
-              "text": "Categorias",
-              "url": "#categorias"
+              "label": "Menu: sobre",
+              "text": "Sobre",
+              "url": "/sobre"
             }
           ]
         },

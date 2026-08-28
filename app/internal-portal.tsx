@@ -3,6 +3,7 @@
 
 import { useEffect, useMemo, useRef, useState, type AnchorHTMLAttributes, type CSSProperties, type ReactNode } from "react";
 import siteContent from "../content/site.json";
+import HeaderMenu from "./header-menu";
 import SharedPortalFooter from "./portal-footer";
 
 // O roteador cliente do Vinext pode cancelar a navegação ao preparar o RSC.
@@ -55,13 +56,13 @@ function rootProps() {
   };
 }
 
-function PortalHeader({ pageEntry = detailPage }: { pageEntry?: typeof directoryPage } = {}) {
+export function PortalHeader({ pageEntry = detailPage }: { pageEntry?: typeof directoryPage } = {}) {
   const entry = internalSegment(pageEntry, "internalHeader");
   const localLogo = entry?.items.find((item) => item.type === "image" && item.role === "logo") as (InternalItem & { src?: string; alt?: string }) | undefined;
   const homeLogo = header?.items.find((item) => item.type === "image" && item.role === "logo");
   const logo = localLogo?.src ? localLogo : homeLogo;
   const links = (entry?.items.filter((item) => item.type === "link") || []) as (InternalItem & { text?: string; url?: string })[];
-  return <header className={internalClasses(entry, "internal-header")} style={internalStyle(entry)}><Link className="internal-brand" href="/">{logo?.src ? <img src={logo.src} alt={logo.alt || "Prefeitura de Amargosa"} /> : <span className="internal-mark">AM</span>}<span><strong>{internalText(entry, "title", "Município de Amargosa")}</strong><small>{internalText(entry, "subtitle", "Central de Serviços")}</small></span></Link><nav aria-label="Navegação interna">{links.map((item) => <Link key={item.id} href={item.url || "/"}>{item.text}</Link>)}</nav></header>;
+  return <header className={internalClasses(entry, "internal-header")} style={internalStyle(entry)}><Link className="internal-brand" href="/">{logo?.src ? <img src={logo.src} alt={logo.alt || "Prefeitura de Amargosa"} /> : <span className="internal-mark">AM</span>}<span><strong>{internalText(entry, "title", "Município de Amargosa")}</strong><small>{internalText(entry, "subtitle", "Central de Serviços")}</small></span></Link><nav aria-label="Navegação interna">{links.filter((item) => item.role !== "menu").map((item) => <Link key={item.id} href={item.url || "/"}>{item.text}</Link>)}<HeaderMenu/></nav></header>;
 }
 
 function PortalFooter() {
@@ -120,14 +121,21 @@ export function ServiceDirectory({ mode, value, initialQuery = "", initialCatego
   };
   useEffect(() => {
     const mobile = window.matchMedia("(max-width: 760px)");
+    const wide = window.matchMedia("(min-width: 1500px)");
     const updateLayout = () => {
-      setCarouselLayout(mobile.matches ? { rows: 2, visibleColumns: 2, gap: 12 } : { rows: 3, visibleColumns: 4, gap: 16 });
+      setCarouselLayout(mobile.matches
+        ? { rows: 2, visibleColumns: 2, gap: 12 }
+        : { rows: 3, visibleColumns: wide.matches ? 5 : 4, gap: 16 });
       setCarouselColumn(0);
       carouselRef.current?.scrollTo({ left: 0, behavior: "auto" });
     };
     updateLayout();
     mobile.addEventListener("change", updateLayout);
-    return () => mobile.removeEventListener("change", updateLayout);
+    wide.addEventListener("change", updateLayout);
+    return () => {
+      mobile.removeEventListener("change", updateLayout);
+      wide.removeEventListener("change", updateLayout);
+    };
   }, []);
   const departments = useMemo(() => [...new Set(services
     .filter((service) => (categoryFilter === "todos" || service.category === categoryFilter)

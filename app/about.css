@@ -1,0 +1,39 @@
+.about-page{background:#f5f8f6}
+.about-project{width:min(1180px,calc(100% - 40px));display:flex;align-items:center;flex-direction:column;gap:42px;margin:auto;padding:72px 0 70px}
+.about-section-heading>span,.about-team>header>span{display:block;color:var(--green);font-size:10px;font-weight:900;letter-spacing:.16em}
+.about-section-heading h2,.about-team>header h2{margin:12px 0 0;font-size:clamp(35px,4vw,50px);line-height:1.08;letter-spacing:-.035em}
+.about-project .about-section-heading{text-align:center}
+.about-project-copy{width:min(850px,100%);padding-left:0;border-left:0}
+.about-project-copy p{margin:0;color:#4e625a;font-size:17px;line-height:1.75}
+.about-project-copy p+p{margin-top:22px}
+.about-project-copy a{color:var(--green);font-weight:800;text-decoration:underline;text-underline-offset:3px}
+
+.about-team{padding:74px max(24px,calc((100% - 1180px)/2)) 96px;background:#e9f3ee}
+.about-team>header{max-width:690px;margin-inline:auto;text-align:center}
+.about-org{width:min(1180px,100%);margin:46px auto 0}
+.about-unit-card,.about-person-card{position:relative;border:1px solid #bfcfc8;background:#fff;box-shadow:0 8px 22px rgba(12,73,54,.06)}
+.about-unit-card{min-height:220px;display:flex;flex-direction:column;padding:27px 29px}
+.about-person-card small{color:var(--green);font-size:10px;font-weight:900;letter-spacing:.12em}
+.about-unit-card h3{margin:0 0 28px;font-size:21px;line-height:1.28}
+.about-unit-acronym{display:inline;color:var(--green);font-family:var(--site-body-font);font-size:11px;font-weight:900;letter-spacing:.08em;white-space:nowrap}
+.about-unit-card p{display:flex;flex-direction:column;margin:auto 0 0;padding-top:17px;border-top:1px solid #d8e3de}
+.about-unit-card p strong,.about-person-card>strong{font-size:17px}
+.about-unit-card p span,.about-person-card>span{margin-top:5px;color:#687971;font-size:13px}
+.about-unit-card-root{width:min(580px,100%);min-height:0;margin:auto}
+.about-unit-card-root::after{content:"";position:absolute;bottom:-32px;left:50%;width:1px;height:32px;background:#8eafa1}
+
+.about-org-branches{position:relative;display:grid;grid-template-columns:1fr 1fr;gap:46px;margin-top:64px}
+.about-org-branches::before{content:"";position:absolute;top:-32px;left:25%;right:25%;height:1px;background:#8eafa1}
+.about-org-branch{position:relative}
+.about-org-branch::before{content:"";position:absolute;top:-32px;left:50%;width:1px;height:32px;background:#8eafa1}
+.about-org-gti>.about-unit-card::after{content:"";position:absolute;bottom:-32px;left:50%;width:1px;height:32px;background:#8eafa1}
+.about-org-developers{position:relative;width:calc(200% + 46px);display:grid;grid-template-columns:1fr 1fr;gap:46px;margin-top:64px}
+.about-org-developers::before{content:"";position:absolute;top:-32px;left:25%;right:25%;height:1px;background:#8eafa1}
+.about-person-card{min-height:170px;display:flex;flex-direction:column;padding:24px 27px;border:2px solid #91b8a8;background:linear-gradient(135deg,#fff 0%,#f1f8f4 100%);box-shadow:0 12px 28px rgba(12,73,54,.1)}
+.about-person-card::before{content:"";position:absolute;top:-32px;left:50%;width:1px;height:32px;background:#8eafa1}
+.about-person-card>strong{margin-top:23px}
+.about-person-card>span{display:block;margin-top:5px;padding:0;border:0}
+
+@media(max-width:900px){.about-project{gap:35px}.about-org-branches{gap:28px}.about-unit-card{padding:23px}.about-org-developers{width:calc(200% + 28px);gap:28px}}
+@media(max-width:760px){.about-project{width:calc(100% - 32px);padding:54px 0 50px}.about-team{padding:58px 16px 72px}.about-org{margin-top:34px}.about-org-branches{grid-template-columns:1fr;gap:18px;margin-top:28px}.about-unit-card-root::after,.about-org-branches::before,.about-org-branch::before,.about-org-gti>.about-unit-card::after,.about-org-developers::before,.about-person-card::before{display:none}.about-unit-card{min-height:0}.about-org-developers{width:100%;grid-template-columns:1fr;gap:10px;margin-top:12px}.about-person-card{min-height:0}}
+@media(max-width:520px){.about-section-heading h2,.about-team>header h2{font-size:34px}.about-project-copy p{font-size:16px}.about-unit-card,.about-person-card{padding:21px 18px}}
