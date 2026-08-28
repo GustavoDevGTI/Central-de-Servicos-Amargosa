@@ -61,20 +61,11 @@ export default async function OrganogramPage() {
     <main className="site-root internal-site organogram-page">
       <a className="skip" href="#estrutura-organizacional">Ir para o organograma</a>
       <PortalHeader />
-      <section className="organogram-intro">
-        <span>ESTRUTURA ORGANIZACIONAL</span>
-        <h1>Organograma da Prefeitura de Amargosa</h1>
-        <p>Explore a hierarquia dos órgãos, setores, unidades e grupos de trabalho cadastrados no sistema 1Doc.</p>
-      </section>
       <section id="estrutura-organizacional" className="organogram-content" aria-labelledby="organogram-title">
         <header>
           <div>
-            <span>HIERARQUIA MUNICIPAL</span>
-            <h2 id="organogram-title">Município de Amargosa</h2>
-          </div>
-          <div className="organogram-legend" aria-label="Legenda">
-            <span><i aria-hidden="true" /> Setor ou unidade</span>
-            <span><b aria-hidden="true">👥</b> Grupo de trabalho</span>
+            <span>ESTRUTURA ORGANIZACIONAL</span>
+            <h1 id="organogram-title">Organograma da Prefeitura de Amargosa</h1>
           </div>
         </header>
         {entries.length ? (
@@ -82,10 +73,9 @@ export default async function OrganogramPage() {
         ) : (
           <div className="organogram-unavailable" role="status">
             <strong>Não foi possível carregar o organograma agora.</strong>
-            <p>Consulte temporariamente a <a href={sourceUrl}>estrutura publicada no 1Doc</a>.</p>
+            <p>Consulte temporariamente a <a href={sourceUrl}>estrutura oficial publicada pelo Município</a>.</p>
           </div>
         )}
-        <p className="organogram-source">Fonte: <a href={sourceUrl}>Organograma do Município de Amargosa no 1Doc</a>. Os dados são apresentados de acordo com os níveis hierárquicos publicados na plataforma.</p>
       </section>
       <PortalFooter />
     </main>

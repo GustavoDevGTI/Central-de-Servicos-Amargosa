@@ -181,7 +181,15 @@ export function ServiceDirectory({ mode, value, initialQuery = "", initialCatego
       ? [{ id: "todos", label: "Todos os serviços", href: "/servicos" }, ...categories.map((entry) => ({ id: entry.id, label: entry.label, href: `/categorias/${slugify(entry.label)}` }))].filter((entry) => entry.label !== categoryFilter && !(entry.id === "todos" && categoryFilter === "todos"))
       : [{ id: "todos", label: "Todos os serviços", href: "/servicos" }, ...categories.map((entry) => ({ id: entry.id, label: entry.label, href: `/categorias/${slugify(entry.label)}` }))].filter((entry) => entry.label !== categoryFilter && !(entry.id === "todos" && categoryFilter === "todos"));
   const selectionAction = mode === "audience" ? "Alterar público" : "Alterar categoria";
-  const reset = () => { setQuery(""); setCategoryFilter(mode === "category" ? categoryFilter : "todos"); setAudienceFilter(mode === "audience" ? audienceFilter : "todos"); setDepartmentFilter("todos"); resetCarouselPosition(); };
+  const reset = () => {
+    setQuery("");
+    setAudienceFilter("todos");
+    setCategoryFilter("todos");
+    setDepartmentFilter("todos");
+    setSelectionOpen(false);
+    resetCarouselPosition();
+    window.history.replaceState(null, "", "/servicos");
+  };
   const selectDirectory = (option: { id: string; label: string; href: string }) => {
     setQuery("");
     setDepartmentFilter("todos");
