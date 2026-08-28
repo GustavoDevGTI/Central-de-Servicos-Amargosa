@@ -1,7 +1,7 @@
 "use client";
 /* eslint-disable @next/next/no-img-element -- a identidade municipal pode usar imagens incorporadas */
 
-import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
+import { useEffect, useState, type CSSProperties, type ReactNode } from "react";
 import siteContent from "../content/site.json";
 
 type Size = { width?: number; height?: number };
@@ -34,12 +34,7 @@ function SectionHeading({ segment }: { segment: Segment }) {
 
 export default function Home() {
   const [query, setQuery] = useState("");
-  const [amandaOpen, setAmandaOpen] = useState(false);
-  const [amandaDraft, setAmandaDraft] = useState("");
-  const [amandaMessages, setAmandaMessages] = useState<Array<{ author: "user" | "amanda"; text: string }>>([]);
   const [heroSlide, setHeroSlide] = useState(0);
-  const amandaLauncherRef = useRef<HTMLButtonElement>(null);
-  const amandaPanelRef = useRef<HTMLElement>(null);
   const segments = page.segments.filter((segment) => segment.enabled);
   const heroSegment = segments.find((segment) => segment.type === "hero");
   const heroImages = heroSegment?.style.backgroundImages?.filter(Boolean) || (heroSegment?.style.backgroundImage ? [heroSegment.style.backgroundImage] : []);
@@ -52,28 +47,10 @@ export default function Home() {
     return () => window.clearInterval(timer);
   }, [heroImages.length]);
 
-  useEffect(() => {
-    if (!amandaOpen) return;
-    const panel = amandaPanelRef.current;
-    const launcher = amandaLauncherRef.current;
-    const focusable = () => [...(panel?.querySelectorAll<HTMLElement>('button:not([disabled]),a[href],textarea,input,select,[tabindex]:not([tabindex="-1"])') || [])];
-    requestAnimationFrame(() => focusable()[0]?.focus());
-    const containFocus = (event: KeyboardEvent) => {
-      if (event.key === "Escape") { event.preventDefault(); setAmandaOpen(false); return; }
-      if (event.key !== "Tab") return;
-      const controls = focusable(); if (!controls.length) return;
-      const first = controls[0]; const last = controls[controls.length - 1];
-      if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
-      if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
-    };
-    document.addEventListener("keydown", containFocus);
-    return () => { document.removeEventListener("keydown", containFocus); requestAnimationFrame(() => launcher?.focus()); };
-  }, [amandaOpen]);
   function showResults(term = query) {
     const normalizedTerm = term.trim();
     window.location.assign(normalizedTerm ? `/servicos?busca=${encodeURIComponent(normalizedTerm)}` : "/servicos");
   }
-  function askAmanda(question: string) { const value = question.trim(); if (!value) return; setAmandaMessages((current) => [...current, { author: "user", text: value }, { author: "amanda", text: "Minha inteligência ainda está sendo preparada. Em breve vou responder e indicar o canal oficial mais adequado para você." }]); setAmandaDraft(""); }
   function segmentStyle(segment: Segment) { return { "--segment-bg": segment.style.background || siteContent.site.surfaceColor, "--segment-color": segment.style.color || siteContent.site.textColor, "--segment-accent": segment.style.accent || siteContent.site.primaryColor, "--segment-heading-font": fontStacks[segment.style.headingFont || siteDesign.headingFont || "lora"], "--segment-body-font": fontStacks[segment.style.bodyFont || siteDesign.bodyFont || "source"], backgroundImage: segment.style.backgroundImage ? `linear-gradient(rgba(3,45,35,.68),rgba(3,45,35,.68)),url(${JSON.stringify(segment.style.backgroundImage)})` : undefined, ...sizeStyle(segment, true) } as CSSProperties; }
   function mergeClasses(segment: Segment) { const flow = segments.filter((entry) => entry.type !== "amanda"); const index = flow.findIndex((entry) => entry.id === segment.id); if (index < 0) return ""; return `${index > 0 && segment.mergeWithPrevious ? " merge-with-previous" : ""}${flow[index + 1]?.mergeWithPrevious ? " merge-with-next" : ""}`; }
   function interactionClasses(segment: Segment) { return `segment-hover-${segment.style.hoverEffect || siteDesign.hoverEffect || "none"} segment-click-${segment.style.clickEffect || siteDesign.clickEffect || "none"}`; }
@@ -81,12 +58,6 @@ export default function Home() {
   function serviceCard(service: Service, index: number, featured = false, editorItem: Item = service) {
     const href = service.slug ? `/servicos/${service.slug}` : service.url;
     return <a key={`${service.id}-${index}`} {...itemSizeProps(editorItem)} className={featured ? "featured-card" : "service-card"} href={href} {...external(href)}>{featured && <span className="rank">{String(index + 1).padStart(2, "0")}</span>}<span><small>{service.category}</small><strong>{service.title}</strong><em>{service.department}</em></span><b>{featured ? "→" : <>Ver serviço →</>}</b></a>;
-  }
-
-  function renderAmanda(segment: Segment) {
-    const avatar = items(segment, "image").find((item) => item.role === "avatar"); const conversation = items(segment, "search")[0]; const prompts = segment.items.filter((item) => item.role === "prompt");
-    const symbol = <span className="amanda-symbol" aria-hidden="true">{avatar?.src ? <img src={avatar.src} alt="" /> : "A"}</span>;
-    return <div key={segment.id} className={`amanda-widget editable-segment segment-amanda variant-${segment.style.variant || siteDesign.theme || "institutional"} text-size-${segment.style.fontSize || siteDesign.fontSize || "normal"} ${interactionClasses(segment)}`} style={segmentStyle(segment)}><button ref={amandaLauncherRef} className={`amanda-launcher ${amandaOpen ? "open" : ""}`} type="button" onClick={() => setAmandaOpen((open) => !open)} aria-expanded={amandaOpen} aria-controls="amanda-panel" aria-haspopup="dialog">{symbol}<span><small>{text(segment, "eyebrow")}</small><strong>Amanda</strong></span><b aria-hidden="true">{amandaOpen ? "×" : "✦"}</b></button>{amandaOpen && <aside ref={amandaPanelRef} id="amanda-panel" className="amanda-panel" role="dialog" aria-modal="true" aria-labelledby="amanda-title" aria-describedby="amanda-description"><header className="amanda-header"><div className="amanda-identity">{symbol}<div><small>{text(segment, "eyebrow")}</small><strong id="amanda-title">{text(segment, "title")}</strong></div></div><button type="button" onClick={() => setAmandaOpen(false)} aria-label="Fechar conversa com Amanda">×</button></header><div className="amanda-body"><p id="amanda-description" className="amanda-intro">{text(segment, "description")}</p><div className="amanda-status" role="status"><i aria-hidden="true"></i><span>{text(segment, "status")}</span></div>{amandaMessages.length === 0 ? <div className="amanda-prompts"><small>Você pode começar por aqui</small>{prompts.map((prompt) => <button key={prompt.id} type="button" onClick={() => askAmanda(prompt.value || "")}>{prompt.value}<b aria-hidden="true">↗</b></button>)}</div> : <div className="amanda-transcript" aria-live="polite" aria-relevant="additions">{amandaMessages.map((message, index) => <article key={`${message.author}-${index}`} className={message.author}><small>{message.author === "user" ? "Você" : "Amanda"}</small><p>{message.text}</p></article>)}</div>}</div><form className="amanda-compose" onSubmit={(event) => { event.preventDefault(); askAmanda(amandaDraft); }}><label><span className="sr-only">Mensagem para Amanda</span><textarea rows={2} value={amandaDraft} onChange={(event) => setAmandaDraft(event.target.value)} placeholder={conversation?.placeholder} /></label><button type="submit" disabled={!amandaDraft.trim()}>{conversation?.buttonText || "Enviar"} <span aria-hidden="true">↗</span></button></form><small className="amanda-notice">{text(segment, "notice")}</small></aside>}</div>;
   }
 
   function renderSegment(segment: Segment): ReactNode {
@@ -98,7 +69,7 @@ export default function Home() {
     if (segment.type === "categories") return <section key={segment.id} id="categorias" className={classes(segment, "categories-section")} style={segmentStyle(segment)}><div className="boundary"><SectionHeading segment={segment} /><div className="categories" role="group" aria-label="Acessar serviços por categoria">{items(segment, "category").map((item) => <button key={item.id} {...itemSizeProps(item)} type="button" onClick={() => window.location.assign(`/categorias/${item.label?.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "")}`)}><span><strong>{item.label}</strong><small>{item.description}</small></span><b aria-hidden="true">→</b></button>)}</div></div></section>;
     if (segment.type === "help") { const eyebrow = segment.items.find((item) => item.role === "eyebrow"); const title = segment.items.find((item) => item.role === "title"); const description = segment.items.find((item) => item.role === "description"); const action = items(segment, "link")[0]; return <section key={segment.id} id="ajuda" className={classes(segment, "help")} style={segmentStyle(segment)}><div><span {...itemSizeProps(eyebrow)}>{eyebrow?.value}</span><h2 {...itemSizeProps(title)}>{title?.value}</h2><p {...itemSizeProps(description)}>{description?.value}</p></div>{action && <a {...itemSizeProps(action)} href={action.url} {...external(action.url)}>{action.text}</a>}</section>; }
     if (segment.type === "footer") { const header = segments.find((entry) => entry.type === "header"); const description = segment.items.find((item) => item.role === "description"); return <footer key={segment.id} className={classes(segment, "segment-footer")} style={segmentStyle(segment)}>{header && <Brand segment={header} />}<p {...itemSizeProps(description)}>{description?.value}</p></footer>; }
-    if (segment.type === "amanda") return renderAmanda(segment);
+    if (segment.type === "amanda") return null;
     return <section key={segment.id} className={classes(segment, "generic")} style={segmentStyle(segment)}><SectionHeading segment={segment} /><div className="generic-items">{segment.items.map((item) => item.type === "image" && item.src ? <img key={item.id} {...itemSizeProps(item)} src={item.src} alt={item.alt || ""} /> : item.type === "link" ? <a key={item.id} {...itemSizeProps(item)} href={item.url}>{item.text}</a> : <p key={item.id} {...itemSizeProps(item)}>{item.value || item.label}</p>)}</div></section>;
   }
 
