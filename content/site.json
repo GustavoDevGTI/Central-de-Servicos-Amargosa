@@ -145,7 +145,7 @@
               "type": "text",
               "role": "title",
               "label": "Título principal",
-              "value": "Encontre o serviço certo, sem perder tempo."
+              "value": "Encontre o Serviço"
             },
             {
               "id": "hero-search",
@@ -316,39 +316,15 @@
               "type": "text",
               "role": "title",
               "label": "Título",
-              "value": "Todas as categorias"
+              "value": "Categorias"
             },
             {
-              "id": "cat-cidadaos",
+              "id": "cat-tributos",
               "type": "category",
               "role": "entry",
-              "label": "Cidadãos",
-          "description": "48 serviços municipais para cidadãs e cidadãos",
-              "url": "/categorias/cidadaos"
-            },
-            {
-              "id": "cat-empresas",
-              "type": "category",
-              "role": "entry",
-              "label": "Empresas",
-              "description": "23 serviços para empresas, fornecedores e atividades econômicas",
-              "url": "/categorias/empresas"
-            },
-            {
-              "id": "cat-semop",
-              "type": "category",
-              "role": "entry",
-              "label": "SEMOP",
-              "description": "8 serviços de operação, manutenção e espaço público",
-              "url": "/categorias/semop"
-            },
-            {
-              "id": "cat-servidores",
-              "type": "category",
-              "role": "entry",
-              "label": "Servidores",
-              "description": "28 serviços funcionais destinados aos servidores municipais",
-              "url": "/categorias/servidores"
+              "label": "Tributos",
+              "description": "44 serviços de IPTU, ISS, ITIV, TFF, TLL, cadastros e certidões fiscais",
+              "url": "/categorias/tributos"
             }
           ]
         },
@@ -613,7 +589,7 @@
               "role": "entry",
               "title": "Averbação de imóveis",
               "department": "SEAFI-SUCAI - Supervisão de Cadastro Imobiliário",
-              "category": "Cidadãos",
+              "category": "Tributos",
               "audienceId": "cidadao",
               "audienceIds": [
                 "cidadao"
@@ -629,7 +605,7 @@
               "role": "entry",
               "title": "Baixa do Cadastro de Inscrição Municipal Econômico",
               "department": "SEAFI-SUDIV - Supervisão de Dívida Ativa",
-              "category": "Cidadãos",
+              "category": "Tributos",
               "audienceId": "cidadao",
               "audienceIds": [
                 "cidadao"
@@ -645,7 +621,7 @@
               "role": "entry",
               "title": "Cadastramento de área urbana com origem rural",
               "department": "SEAFI-SUCAI - Supervisão de Cadastro Imobiliário",
-              "category": "Cidadãos",
+              "category": "Tributos",
               "audienceId": "cidadao",
               "audienceIds": [
                 "cidadao"
@@ -661,7 +637,7 @@
               "role": "entry",
               "title": "Cadastro Imobiliário",
               "department": "SEAFI-SUCAI - Supervisão de Cadastro Imobiliário",
-              "category": "Cidadãos",
+              "category": "Tributos",
               "audienceId": "cidadao",
               "audienceIds": [
                 "cidadao"
@@ -677,7 +653,7 @@
               "role": "entry",
               "title": "Cancelamento ou Baixa de Crédito Tributário",
               "department": "SEAFI-SUDIV - Supervisão de Dívida Ativa",
-              "category": "Cidadãos",
+              "category": "Tributos",
               "audienceId": "cidadao",
               "audienceIds": [
                 "cidadao"
@@ -693,7 +669,7 @@
               "role": "entry",
               "title": "Certidão de 1° Lançamento do IPTU",
               "department": "SEAFI-SUCAI - Supervisão de Cadastro Imobiliário",
-              "category": "Cidadãos",
+              "category": "Tributos",
               "audienceId": "cidadao",
               "audienceIds": [
                 "cidadao"
@@ -709,7 +685,7 @@
               "role": "entry",
               "title": "Certidão de Comprovação de Endereço",
               "department": "SEAFI-SUDIV - Supervisão de Dívida Ativa",
-              "category": "Cidadãos",
+              "category": "Tributos",
               "audienceId": "cidadao",
               "audienceIds": [
                 "cidadao"
@@ -725,7 +701,7 @@
               "role": "entry",
               "title": "Certidão de Inexistência de Inscrição",
               "department": "SEAFI-SUCAI - Supervisão de Cadastro Imobiliário",
-              "category": "Cidadãos",
+              "category": "Tributos",
               "audienceId": "cidadao",
               "audienceIds": [
                 "cidadao"
@@ -741,7 +717,7 @@
               "role": "entry",
               "title": "Certidão de Lançamento de Número de Imóvel",
               "department": "SEAFI-SUCAI - Supervisão de Cadastro Imobiliário",
-              "category": "Cidadãos",
+              "category": "Tributos",
               "audienceId": "cidadao",
               "audienceIds": [
                 "cidadao"
@@ -757,7 +733,7 @@
               "role": "entry",
               "title": "Certidão de Regularidade Fiscal IPTU",
               "department": "SEAFI-SUCAI - Supervisão de Cadastro Imobiliário",
-              "category": "Cidadãos",
+              "category": "Tributos",
               "audienceId": "cidadao",
               "audienceIds": [
                 "cidadao"
@@ -773,7 +749,7 @@
               "role": "entry",
               "title": "Certidão de Valor Venal / Rural",
               "department": "SEAFI-SUCAI - Supervisão de Cadastro Imobiliário",
-              "category": "Cidadãos",
+              "category": "Tributos",
               "audienceId": "cidadao",
               "audienceIds": [
                 "cidadao"
@@ -789,7 +765,7 @@
               "role": "entry",
               "title": "Certidão de Valor Venal / Urbano",
               "department": "SEAFI-SUCAI - Supervisão de Cadastro Imobiliário",
-              "category": "Cidadãos",
+              "category": "Tributos",
               "audienceId": "cidadao",
               "audienceIds": [
                 "cidadao"
@@ -805,7 +781,7 @@
               "role": "entry",
               "title": "Certidão Negativa de Pessoa Física",
               "department": "SEAFI-SUDIV - Supervisão de Dívida Ativa",
-              "category": "Cidadãos",
+              "category": "Tributos",
               "audienceId": "cidadao",
               "audienceIds": [
                 "cidadao"
@@ -821,7 +797,7 @@
               "role": "entry",
               "title": "Compensação - Pessoa Física e Jurídica",
               "department": "SEAFI-SUDIV - Supervisão de Dívida Ativa",
-              "category": "Cidadãos",
+              "category": "Tributos",
               "audienceId": "cidadao",
               "audienceIds": [
                 "cidadao"
@@ -837,7 +813,7 @@
               "role": "entry",
               "title": "Consulta de débitos e informações cadastrais",
               "department": "SEAFI-SUDIV - Supervisão de Dívida Ativa",
-              "category": "Cidadãos",
+              "category": "Tributos",
               "audienceId": "cidadao",
               "audienceIds": [
                 "cidadao"
@@ -853,7 +829,7 @@
               "role": "entry",
               "title": "Desmembramento de Área - Rural",
               "department": "SEAFI-SUCAI - Supervisão de Cadastro Imobiliário",
-              "category": "Cidadãos",
+              "category": "Tributos",
               "audienceId": "cidadao",
               "audienceIds": [
                 "cidadao"
@@ -869,7 +845,7 @@
               "role": "entry",
               "title": "Desmembramento de Área - Urbano",
               "department": "SEAFI-SUCAI - Supervisão de Cadastro Imobiliário",
-              "category": "Cidadãos",
+              "category": "Tributos",
               "audienceId": "cidadao",
               "audienceIds": [
                 "cidadao"
@@ -885,7 +861,7 @@
               "role": "entry",
               "title": "Extinção ou Suspensão de Execução Extrajudicial ou Judicial",
               "department": "AJU - DA - Assessoria Jurídica - Dívida Ativa",
-              "category": "Cidadãos",
+              "category": "Tributos",
               "audienceId": "cidadao",
               "audienceIds": [
                 "cidadao"
@@ -901,7 +877,7 @@
               "role": "entry",
               "title": "Impugnação de lançamento",
               "department": "SEAFI-SUDIV - Supervisão de Dívida Ativa",
-              "category": "Cidadãos",
+              "category": "Tributos",
               "audienceId": "cidadao",
               "audienceIds": [
                 "cidadao"
@@ -917,7 +893,7 @@
               "role": "entry",
               "title": "Inscrição Municipal cadastro Econômico",
               "department": "SEAFI-SUDIV - Supervisão de Dívida Ativa",
-              "category": "Cidadãos",
+              "category": "Tributos",
               "audienceId": "cidadao",
               "audienceIds": [
                 "cidadao"
@@ -933,7 +909,7 @@
               "role": "entry",
               "title": "Isenção de IPTU",
               "department": "SEAFI-SUCAI - Supervisão de Cadastro Imobiliário",
-              "category": "Cidadãos",
+              "category": "Tributos",
               "audienceId": "cidadao",
               "audienceIds": [
                 "cidadao"
@@ -949,7 +925,7 @@
               "role": "entry",
               "title": "Isenção de ITBI/ITV",
               "department": "SEAFI-SUCAI - Supervisão de Cadastro Imobiliário",
-              "category": "Cidadãos",
+              "category": "Tributos",
               "audienceId": "cidadao",
               "audienceIds": [
                 "cidadao"
@@ -965,7 +941,7 @@
               "role": "entry",
               "title": "Isenção de Taxas",
               "department": "SEAFI-SUDIV - Supervisão de Dívida Ativa",
-              "category": "Cidadãos",
+              "category": "Tributos",
               "audienceId": "cidadao",
               "audienceIds": [
                 "cidadao"
@@ -981,7 +957,7 @@
               "role": "entry",
               "title": "Lançamento de Inscrição Imobiliária",
               "department": "SEAFI-SUCAI - Supervisão de Cadastro Imobiliário",
-              "category": "Cidadãos",
+              "category": "Tributos",
               "audienceId": "cidadao",
               "audienceIds": [
                 "cidadao"
@@ -997,7 +973,7 @@
               "role": "entry",
               "title": "Lançamento de unidades empreendimento Imobiliário/Loteamento",
               "department": "DIRAP - SEAFI - Diretoria de Análise de Projetos",
-              "category": "Cidadãos",
+              "category": "Tributos",
               "audienceId": "cidadao",
               "audienceIds": [
                 "cidadao"
@@ -1013,7 +989,7 @@
               "role": "entry",
               "title": "Lançamento do ISSQN Habite-se",
               "department": "SEAFI-SUDIV - Supervisão de Dívida Ativa",
-              "category": "Cidadãos",
+              "category": "Tributos",
               "audienceId": "cidadao",
               "audienceIds": [
                 "cidadao"
@@ -1029,7 +1005,7 @@
               "role": "entry",
               "title": "Parcelamento de Débito do IPTU",
               "department": "SEAFI-SUCAI - Supervisão de Cadastro Imobiliário",
-              "category": "Cidadãos",
+              "category": "Tributos",
               "audienceId": "cidadao",
               "audienceIds": [
                 "cidadao"
@@ -1045,7 +1021,7 @@
               "role": "entry",
               "title": "Prescrição de crédito tributário ou de renda/IPTU/TLL/TFF",
               "department": "SEAFI-SUDIV - Supervisão de Dívida Ativa",
-              "category": "Cidadãos",
+              "category": "Tributos",
               "audienceId": "cidadao",
               "audienceIds": [
                 "cidadao"
@@ -1061,7 +1037,7 @@
               "role": "entry",
               "title": "Reconhecimento de Imunidade, Isenção ou Não Incidência",
               "department": "SEAFI-SUDIV - Supervisão de Dívida Ativa",
-              "category": "Cidadãos",
+              "category": "Tributos",
               "audienceId": "cidadao",
               "audienceIds": [
                 "cidadao"
@@ -1077,7 +1053,7 @@
               "role": "entry",
               "title": "Restituição de Tributos",
               "department": "SEAFI-SUDIV - Supervisão de Dívida Ativa",
-              "category": "Cidadãos",
+              "category": "Tributos",
               "audienceId": "cidadao",
               "audienceIds": [
                 "cidadao"
@@ -1093,7 +1069,7 @@
               "role": "entry",
               "title": "Revisão de Área",
               "department": "SEAFI-SUCAI - Supervisão de Cadastro Imobiliário",
-              "category": "Cidadãos",
+              "category": "Tributos",
               "audienceId": "cidadao",
               "audienceIds": [
                 "cidadao"
@@ -1109,7 +1085,7 @@
               "role": "entry",
               "title": "Revisão de Cálculo de IPTU",
               "department": "SEAFI-SUCAI - Supervisão de Cadastro Imobiliário",
-              "category": "Cidadãos",
+              "category": "Tributos",
               "audienceId": "cidadao",
               "audienceIds": [
                 "cidadao"
@@ -1125,7 +1101,7 @@
               "role": "entry",
               "title": "Revisão de Cálculo de ITIV",
               "department": "SEAFI-SUCAI - Supervisão de Cadastro Imobiliário",
-              "category": "Cidadãos",
+              "category": "Tributos",
               "audienceId": "cidadao",
               "audienceIds": [
                 "cidadao"
@@ -1141,7 +1117,7 @@
               "role": "entry",
               "title": "Revisão de cálculo de TFF",
               "department": "SEAFI-SUDIV - Supervisão de Dívida Ativa",
-              "category": "Cidadãos",
+              "category": "Tributos",
               "audienceId": "cidadao",
               "audienceIds": [
                 "cidadao"
@@ -1157,7 +1133,7 @@
               "role": "entry",
               "title": "Revisão de características Imobiliária",
               "department": "SEAFI-SUCAI - Supervisão de Cadastro Imobiliário",
-              "category": "Cidadãos",
+              "category": "Tributos",
               "audienceId": "cidadao",
               "audienceIds": [
                 "cidadao"
@@ -1173,7 +1149,7 @@
               "role": "entry",
               "title": "Suspensão do cadastro econômico",
               "department": "SEAFI-SUDIV - Supervisão de Dívida Ativa",
-              "category": "Cidadãos",
+              "category": "Tributos",
               "audienceId": "cidadao",
               "audienceIds": [
                 "cidadao"
@@ -1189,7 +1165,7 @@
               "role": "entry",
               "title": "Transferência de titularidade Imobiliária",
               "department": "SEAFI-SUCAI - Supervisão de Cadastro Imobiliário",
-              "category": "Cidadãos",
+              "category": "Tributos",
               "audienceId": "cidadao",
               "audienceIds": [
                 "cidadao"
@@ -1205,7 +1181,7 @@
               "role": "entry",
               "title": "2° Via Alvará de funcionamento",
               "department": "SEAFI-SUDIV - Supervisão de Dívida Ativa",
-              "category": "Empresas",
+              "category": "Tributos",
               "audienceId": "empresa",
               "audienceIds": [
                 "empresa"
@@ -1253,7 +1229,7 @@
               "role": "entry",
               "title": "Alteração do cadastro econômico",
               "department": "SEAFI-SUDIV - Supervisão de Dívida Ativa",
-              "category": "Empresas",
+              "category": "Tributos",
               "audienceId": "empresa",
               "audienceIds": [
                 "empresa"
@@ -1285,7 +1261,7 @@
               "role": "entry",
               "title": "Cancelamento/Retificação de NFS-e",
               "department": "SEAFI-SUDIV - Supervisão de Dívida Ativa",
-              "category": "Empresas",
+              "category": "Tributos",
               "audienceId": "empresa",
               "audienceIds": [
                 "empresa"
@@ -1301,7 +1277,7 @@
               "role": "entry",
               "title": "Certidão de Inscrição Municipal - Empresa",
               "department": "SEAFI-SUDIV - Supervisão de Dívida Ativa",
-              "category": "Empresas",
+              "category": "Tributos",
               "audienceId": "empresa",
               "audienceIds": [
                 "empresa"
@@ -1317,7 +1293,7 @@
               "role": "entry",
               "title": "Certidão de Regularidade Fiscal - Empresas",
               "department": "SEAFI-SUDIV - Supervisão de Dívida Ativa",
-              "category": "Empresas",
+              "category": "Tributos",
               "audienceId": "empresa",
               "audienceIds": [
                 "empresa"
@@ -1381,7 +1357,7 @@
               "role": "entry",
               "title": "ISS (Imposto sobre serviço)",
               "department": "SEAFI-SUDIV - Supervisão de Dívida Ativa",
-              "category": "Empresas",
+              "category": "Tributos",
               "audienceId": "empresa",
               "audienceIds": [
                 "empresa"
@@ -1397,7 +1373,7 @@
               "role": "entry",
               "title": "Pedido de Certidão",
               "department": "SEAFI-SUDIV - Supervisão de Dívida Ativa",
-              "category": "Empresas",
+              "category": "Tributos",
               "audienceId": "empresa",
               "audienceIds": [
                 "empresa"
