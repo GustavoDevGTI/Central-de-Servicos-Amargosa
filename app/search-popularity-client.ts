@@ -1,17 +1,6 @@
 const endpoint = "/api/popular";
 
-function storageKey(serviceId: string) {
-  return `central-search-popularity:${new Date().toISOString().slice(0, 10)}:${serviceId}`;
-}
-
-export function recordSearchSelection(serviceId: string) {
-  try {
-    const key = storageKey(serviceId);
-    if (window.sessionStorage.getItem(key)) return;
-    window.sessionStorage.setItem(key, "1");
-  } catch {
-    // A medição é opcional; a navegação nunca depende do armazenamento do navegador.
-  }
+export function recordServiceSearch(serviceId: string) {
   void fetch(endpoint, {
     method: "POST",
     credentials: "same-origin",
@@ -21,13 +10,25 @@ export function recordSearchSelection(serviceId: string) {
   }).catch(() => undefined);
 }
 
-export async function loadPopularServiceIds() {
+export async function loadServicePopularity() {
   try {
     const response = await fetch(endpoint, { credentials: "same-origin" });
-    if (!response.ok) return [];
-    const body = await response.json() as { serviceIds?: unknown };
-    return Array.isArray(body.serviceIds) ? body.serviceIds.filter((id): id is string => typeof id === "string") : [];
+    if (!response.ok) return {};
+    const body = (await response.json()) as { services?: unknown };
+    if (!Array.isArray(body.services)) return {};
+    return Object.fromEntries(
+      body.services.flatMap((entry) => {
+        if (!entry || typeof entry !== "object") return [];
+        const { serviceId, searches } = entry as {
+          serviceId?: unknown;
+          searches?: unknown;
+        };
+        return typeof serviceId === "string" && typeof searches === "number"
+          ? [[serviceId, searches]]
+          : [];
+      }),
+    ) as Record<string, number>;
   } catch {
-    return [];
+    return {};
   }
 }
