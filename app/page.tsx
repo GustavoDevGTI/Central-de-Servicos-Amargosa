@@ -5,6 +5,7 @@ import { useEffect, useState, type CSSProperties, type ReactNode } from "react";
 import siteContent from "../content/site.json";
 import HeaderMenu from "./header-menu";
 import PortalFooter from "./portal-footer";
+import { loadPopularServiceIds } from "./search-popularity-client";
 
 type Size = { width?: number; height?: number };
 type Position = { x?: number; y?: number };
@@ -41,6 +42,7 @@ export default function Home() {
   const [query, setQuery] = useState("");
   const [heroSlide, setHeroSlide] = useState(0);
   const [quickAccessExpanded, setQuickAccessExpanded] = useState(false);
+  const [popularServiceIds, setPopularServiceIds] = useState<string[]>([]);
   const segments = page.segments.filter((segment) => segment.enabled);
   const heroSegment = segments.find((segment) => segment.type === "hero");
   const heroImages = heroSegment?.style.backgroundImages?.filter(Boolean) || (heroSegment?.style.backgroundImage ? [heroSegment.style.backgroundImage] : []);
@@ -52,6 +54,11 @@ export default function Home() {
     const timer = window.setInterval(() => setHeroSlide((current) => (current + 1) % heroImages.length), 6000);
     return () => window.clearInterval(timer);
   }, [heroImages.length]);
+  useEffect(() => {
+    let active = true;
+    void loadPopularServiceIds().then((ids) => { if (active) setPopularServiceIds(ids); });
+    return () => { active = false; };
+  }, []);
 
   function showResults(term = query) {
     const normalizedTerm = term.trim();
@@ -69,7 +76,32 @@ export default function Home() {
   function renderSegment(segment: Segment): ReactNode {
     if (segment.type === "utility") { const label = segment.items.find((item) => item.role === "label"); return <div key={segment.id} className={classes(segment, "utility")} style={segmentStyle(segment)}><span {...itemSizeProps(label)}>{label?.value}</span><nav aria-label="Links de acessibilidade">{items(segment, "link").map((item) => <a key={item.id} {...itemSizeProps(item)} href={item.url} {...external(item.url)}>{item.text}</a>)}</nav></div>; }
     if (segment.type === "header") return <header key={segment.id} className={classes(segment, "header")} style={segmentStyle(segment)}><a href="#conteudo" aria-label="Página inicial da Central de Serviços"><Brand segment={segment} /></a><nav aria-label="Navegação principal">{items(segment, "link").map((item) => <a key={item.id} {...itemSizeProps(item)} href={item.url}>{item.text}</a>)}<a className="accessibility-entry" href="/menu">Acessibilidade</a></nav><div className="header-actions"><HeaderMenu/></div></header>;
-    if (segment.type === "hero") { const eyebrow = segment.items.find((item) => item.role === "eyebrow"); const title = segment.items.find((item) => item.role === "title"); const description = segment.items.find((item) => item.role === "description"); const notice = segment.items.find((item) => item.role === "notice"); const search = items(segment, "search")[0]; const featured = segments.find((entry) => entry.type === "featured"); const shortcuts = items(featured, "serviceRef").slice(0, 4).map((ref) => services.find((service) => service.id === ref.serviceId)).filter(Boolean) as Service[]; const carousel = (segment.style.variant || siteDesign.theme) === "contrast" ? heroImages : []; return <section key={segment.id} id="conteudo" tabIndex={-1} className={classes(segment, "hero")} style={segmentStyle(segment)}>{carousel.length > 0 && <div className="hero-carousel" aria-hidden="true">{carousel.map((source, index) => <span key={`${index}-${source.slice(-18)}`} className={index === heroSlide % carousel.length ? "active" : ""} style={{ backgroundImage: `url(${JSON.stringify(source)})` }} />)}</div>}<span {...itemSizeProps(eyebrow)} className="eyebrow">{eyebrow?.value}</span><h1 {...itemSizeProps(title)}>{title?.value}</h1>{description?.value && <p {...itemSizeProps(description)}>{description.value}</p>}<form {...itemSizeProps(search)} className="search" role="search" onSubmit={(event) => { event.preventDefault(); showResults(); }}><span aria-hidden="true">⌕</span><label className="sr-only" htmlFor="service-search">Buscar serviços</label><input id="service-search" value={query} onChange={(event) => setQuery(event.target.value)} placeholder={search?.placeholder} /><button type="submit">{search?.buttonText || "Buscar"}</button></form><div className="popular" aria-label="Serviços mais buscados"><span>Mais buscados:</span>{shortcuts.map((service) => <button key={service.id} type="button" onClick={() => { setQuery(service.title); showResults(service.title); }}>{service.title}</button>)}</div>{notice?.value && <small {...itemSizeProps(notice)}>{notice.value}</small>}</section>; }
+    if (segment.type === "hero") {
+      const eyebrow = segment.items.find((item) => item.role === "eyebrow");
+      const title = segment.items.find((item) => item.role === "title");
+      const description = segment.items.find((item) => item.role === "description");
+      const notice = segment.items.find((item) => item.role === "notice");
+      const search = items(segment, "search")[0];
+      const featured = segments.find((entry) => entry.type === "featured");
+      const fallbackShortcuts = items(featured, "serviceRef").slice(0, 4).map((ref) => services.find((service) => service.id === ref.serviceId)).filter(Boolean) as Service[];
+      const measuredShortcuts = popularServiceIds.map((id) => services.find((service) => service.id === id)).filter(Boolean) as Service[];
+      const shortcuts = [...measuredShortcuts, ...fallbackShortcuts].filter((service, index, list) => list.findIndex((entry) => entry.id === service.id) === index).slice(0, 4);
+      const carousel = (segment.style.variant || siteDesign.theme) === "contrast" ? heroImages : [];
+      return <section key={segment.id} id="conteudo" tabIndex={-1} className={classes(segment, "hero")} style={segmentStyle(segment)}>
+        {carousel.length > 0 && <div className="hero-carousel" aria-hidden="true">{carousel.map((source, index) => <span key={`${index}-${source.slice(-18)}`} className={index === heroSlide % carousel.length ? "active" : ""} style={{ backgroundImage: `url(${JSON.stringify(source)})` }} />)}</div>}
+        <span {...itemSizeProps(eyebrow)} className="eyebrow">{eyebrow?.value}</span>
+        <h1 {...itemSizeProps(title)}>{title?.value}</h1>
+        {description?.value && <p {...itemSizeProps(description)}>{description.value}</p>}
+        <form {...itemSizeProps(search)} className="search" role="search" onSubmit={(event) => { event.preventDefault(); showResults(); }}>
+          <span aria-hidden="true">⌕</span>
+          <label className="sr-only" htmlFor="service-search">Buscar serviços, categorias ou públicos</label>
+          <input id="service-search" maxLength={120} value={query} onChange={(event) => setQuery(event.target.value)} placeholder={search?.placeholder} />
+          <button type="submit">{search?.buttonText || "Buscar"}</button>
+        </form>
+        <div className="popular" aria-label="Serviços mais buscados"><span>Mais buscados:</span>{shortcuts.map((service) => <button key={service.id} type="button" onClick={() => { setQuery(service.title); showResults(service.title); }}>{service.title}</button>)}</div>
+        {notice?.value && <small {...itemSizeProps(notice)}>{notice.value}</small>}
+      </section>;
+    }
     if (segment.type === "audiences") return <section key={segment.id} id="publicos" className={classes(segment, "audience-panel")} style={segmentStyle(segment)}><SectionHeading segment={segment} /><div className="audiences" role="group" aria-label="Acessar serviços por público">{items(segment, "audience").map((item) => <button key={item.id} {...itemSizeProps(item)} type="button" onClick={() => window.location.assign(`/publicos/${item.id}`)}><strong>{item.label}</strong><small>{item.description}</small><b>Ver serviços →</b></button>)}<button type="button" className="all-services-audience" onClick={() => window.location.assign("/servicos")}><strong>Todos os serviços</strong><small>Consulte o catálogo completo da Central de Serviços.</small><b>Ver todos →</b></button></div></section>;
     if (segment.type === "featured") { const featured = items(segment, "serviceRef").map((ref) => ({ ref, service: services.find((service) => service.id === ref.serviceId) })).filter((entry): entry is { ref: Item; service: Service } => Boolean(entry.service)); const hasMore = featured.length > 3; return <section key={segment.id} id="mais-usados" className={classes(segment, "section")} style={segmentStyle(segment)}><SectionHeading segment={segment} /><div className={`quick-access-list${hasMore ? " has-more" : ""}${quickAccessExpanded ? " is-expanded" : " is-collapsed"}`}><div id="quick-access-services" className="featured">{featured.map(({ ref, service }, index) => serviceCard(service, index, true, ref))}</div>{hasMore && <button type="button" className="quick-access-toggle" aria-expanded={quickAccessExpanded} aria-controls="quick-access-services" onClick={() => setQuickAccessExpanded((expanded) => !expanded)}><span className="sr-only">{quickAccessExpanded ? "Recolher serviços de acesso rápido" : "Mostrar mais serviços de acesso rápido"}</span><b aria-hidden="true">{quickAccessExpanded ? "↑" : "↓"}</b></button>}</div></section>; }
     if (segment.type === "categories") return <section key={segment.id} id="categorias" className={classes(segment, "categories-section")} style={segmentStyle(segment)}><div className="boundary"><SectionHeading segment={segment} /><div className="categories" role="group" aria-label="Acessar serviços por categoria">{items(segment, "category").map((item) => <button key={item.id} {...itemSizeProps(item)} type="button" onClick={() => window.location.assign(`/servicos?categoria=${item.label?.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "")}`)}><span><strong>{item.label}</strong><small>{item.description}</small></span><b aria-hidden="true">→</b></button>)}</div></div></section>;

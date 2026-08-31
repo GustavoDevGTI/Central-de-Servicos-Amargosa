@@ -5,6 +5,8 @@ import { useEffect, useMemo, useRef, useState, type AnchorHTMLAttributes, type C
 import siteContent from "../content/site.json";
 import HeaderMenu from "./header-menu";
 import SharedPortalFooter from "./portal-footer";
+import { searchServices } from "./search-engine";
+import { recordSearchSelection } from "./search-popularity-client";
 
 // O roteador cliente do Vinext pode cancelar a navegação ao preparar o RSC.
 // Links internos simples preservam a URL e funcionam também sem JavaScript.
@@ -18,13 +20,14 @@ type Service = { id: string; slug?: string; title: string; category: string; sub
 type InternalItem = { id: string; type: string; role?: string; value?: string; text?: string; url?: string; src?: string; alt?: string; placeholder?: string; buttonText?: string };
 type InternalSegment = { id: string; type: string; enabled: boolean; style: { background?: string; color?: string; accent?: string; width?: string; spacing?: string; radius?: string; variant?: string; headingFont?: string; bodyFont?: string; fontSize?: string; hoverEffect?: string; clickEffect?: string; backgroundImage?: string }; items: InternalItem[] };
 type Mode = "audience" | "category" | "all";
-type DirectorySort = "nameAsc" | "nameDesc" | "newest" | "oldest";
+type DirectorySort = "relevance" | "nameAsc" | "nameDesc" | "newest" | "oldest";
 type CarouselLayout = { rows: number; visibleColumns: number; gap: number };
 
 const page = siteContent.pages[0];
 const segment = (type: string) => page.segments.find((entry) => entry.type === type);
 const audiences = (segment("audiences")?.items.filter((item) => item.type === "audience") || []) as unknown as Audience[];
 const categories = (segment("categories")?.items.filter((item) => item.type === "category") || []) as unknown as Category[];
+const searchCategories = categories.map((entry) => ({ id: entry.id, label: entry.label }));
 const officialCategoryLabels = new Set(categories.map((entry) => entry.label));
 const services = (segment("catalog")?.items.filter((item) => item.type === "service") || []) as unknown as Service[];
 const header = segment("header");
@@ -112,7 +115,7 @@ export function ServiceDirectory({ mode, value, initialQuery = "", initialCatego
   const [categoryFilter, setCategoryFilter] = useState(category?.label || requestedCategory);
   const [audienceFilter, setAudienceFilter] = useState(audience?.id || "todos");
   const [departmentFilter, setDepartmentFilter] = useState("todos");
-  const [sortMode, setSortMode] = useState<DirectorySort>("nameAsc");
+  const [sortMode, setSortMode] = useState<DirectorySort>(initialQuery ? "relevance" : "nameAsc");
   const [selectionOpen, setSelectionOpen] = useState(false);
   const [filtersOpen, setFiltersOpen] = useState(false);
   const carouselRef = useRef<HTMLDivElement>(null);
@@ -140,23 +143,40 @@ export function ServiceDirectory({ mode, value, initialQuery = "", initialCatego
       wide.removeEventListener("change", updateLayout);
     };
   }, []);
+  useEffect(() => {
+    if (!query.trim()) return;
+    const recordSelection = (event: MouseEvent) => {
+      const anchor = (event.target as Element | null)?.closest<HTMLAnchorElement>("a[href]");
+      const href = anchor?.getAttribute("href");
+      const selectedService = href ? services.find((service) => serviceHref(service) === href) : undefined;
+      if (selectedService) recordSearchSelection(selectedService.id);
+    };
+    document.addEventListener("click", recordSelection);
+    return () => document.removeEventListener("click", recordSelection);
+  }, [query]);
   const departments = useMemo(() => [...new Set(services
     .filter((service) => (categoryFilter === "todos" || service.category === categoryFilter)
       && (audienceFilter === "todos" || serviceAudiences(service).includes(audienceFilter)))
     .map((service) => service.department))]
     .sort((a, b) => a.localeCompare(b, "pt-BR")), [audienceFilter, categoryFilter]);
-  const scoped = useMemo(() => services.filter((service) => {
-    const normalized = query.trim().toLocaleLowerCase("pt-BR");
-    return (audienceFilter === "todos" || serviceAudiences(service).includes(audienceFilter))
+  const explicitlyFiltered = useMemo(() => services.filter((service) =>
+    (audienceFilter === "todos" || serviceAudiences(service).includes(audienceFilter))
       && (categoryFilter === "todos" || service.category === categoryFilter)
-      && (departmentFilter === "todos" || service.department === departmentFilter)
-      && (!normalized || `${service.title} ${service.category} ${service.department}`.toLocaleLowerCase("pt-BR").includes(normalized));
-  }).sort((a, b) => {
+      && (departmentFilter === "todos" || service.department === departmentFilter)),
+  [audienceFilter, categoryFilter, departmentFilter]);
+  const searchMatches = useMemo(() => query.trim()
+    ? searchServices(explicitlyFiltered, query, audiences, searchCategories)
+    : [], [explicitlyFiltered, query]);
+  const scoped = useMemo(() => {
+    const ranked = query.trim() ? searchMatches.map((match) => match.service) : [...explicitlyFiltered];
+    if (query.trim()) return ranked;
+    return ranked.sort((a, b) => {
     if (sortMode === "newest") return (serviceCreationOrder.get(b.id) || 0) - (serviceCreationOrder.get(a.id) || 0);
     if (sortMode === "oldest") return (serviceCreationOrder.get(a.id) || 0) - (serviceCreationOrder.get(b.id) || 0);
     const alphabetical = a.title.localeCompare(b.title, "pt-BR");
     return sortMode === "nameDesc" ? -alphabetical : alphabetical;
-  }), [audienceFilter, categoryFilter, departmentFilter, query, sortMode]);
+    });
+  }, [explicitlyFiltered, query, searchMatches, sortMode]);
   const carouselTotalColumns = Math.ceil(scoped.length / carouselLayout.rows);
   const carouselMaxColumn = Math.max(0, carouselTotalColumns - carouselLayout.visibleColumns);
   const carouselVisibleStart = scoped.length ? carouselColumn * carouselLayout.rows + 1 : 0;
@@ -189,6 +209,7 @@ export function ServiceDirectory({ mode, value, initialQuery = "", initialCatego
     setAudienceFilter("todos");
     setCategoryFilter("todos");
     setDepartmentFilter("todos");
+    setSortMode("nameAsc");
     setSelectionOpen(false);
     resetCarouselPosition();
     window.history.replaceState(null, "", "/servicos");
