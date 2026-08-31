@@ -465,6 +465,7 @@ export default function Home() {
                 audiences={searchAudiences}
                 categories={searchCategories}
                 popularity={servicePopularity}
+                onClose={() => setSuggestionsOpen(false)}
                 onSelect={(service) => {
                   setSuggestionsOpen(false);
                   recordServiceSearch(service.id);

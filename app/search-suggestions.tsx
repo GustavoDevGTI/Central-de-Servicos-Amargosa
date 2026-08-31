@@ -17,6 +17,7 @@ export default function SearchSuggestions({
   categories,
   popularity,
   onSelect,
+  onClose,
   id = "search-suggestions",
 }: {
   query: string;
@@ -28,6 +29,7 @@ export default function SearchSuggestions({
     service: SuggestionService,
     event: MouseEvent<HTMLAnchorElement>,
   ) => void;
+  onClose?: () => void;
   id?: string;
 }) {
   if (query.trim().length < 2) return null;
@@ -48,7 +50,17 @@ export default function SearchSuggestions({
       role="listbox"
       aria-label="Buscas relacionadas"
     >
-      <small>Buscas relacionadas</small>
+      <div className="search-suggestions-header">
+        <small>Buscas relacionadas</small>
+        <button
+          type="button"
+          className="search-suggestions-close"
+          aria-label="Fechar buscas relacionadas"
+          onClick={onClose}
+        >
+          ×
+        </button>
+      </div>
       {suggestions.map(({ service }) => {
         const href = service.slug ? `/servicos/${service.slug}` : service.url;
         const serviceAudienceIds = service.audienceIds?.length

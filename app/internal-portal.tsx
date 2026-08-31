@@ -924,6 +924,7 @@ export function ServiceDirectory({
                 audiences={audiences}
                 categories={searchCategories}
                 popularity={servicePopularity}
+                onClose={() => setSuggestionsOpen(false)}
                 onSelect={() => setSuggestionsOpen(false)}
               />
             )}
