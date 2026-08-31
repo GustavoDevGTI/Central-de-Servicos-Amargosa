@@ -15,12 +15,22 @@ const featuredRootOrder = new Map([
   ["SEAFI", 3],
   ["CGM", 4],
 ]);
+const alphabeticalCollator = new Intl.Collator("pt-BR", { sensitivity: "base", numeric: true });
 
 function rootPriority(node: TreeNode) {
   const featuredPriority = featuredRootOrder.get(node.code.trim().toUpperCase());
   if (featuredPriority !== undefined) return featuredPriority;
   if (node.name.trim().toLocaleLowerCase("pt-BR").startsWith("secretaria")) return 5;
   return 6;
+}
+
+function sortDescendants(nodes: TreeNode[]) {
+  for (const node of nodes) {
+    node.children.sort((a, b) =>
+      alphabeticalCollator.compare(a.name, b.name) || alphabeticalCollator.compare(a.code, b.code)
+    );
+    sortDescendants(node.children);
+  }
 }
 
 function buildTree(entries: OrganogramEntry[]) {
@@ -38,6 +48,7 @@ function buildTree(entries: OrganogramEntry[]) {
     stack[entry.level] = node;
     stack.length = entry.level + 1;
   }
+  sortDescendants(roots);
   return roots.sort((a, b) => rootPriority(a) - rootPriority(b));
 }
 
