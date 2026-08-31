@@ -99,3 +99,18 @@
   .site-root>.segment-audiences .audience-service-toggle b{font-size:22px;line-height:1}
   .site-root>.segment-audiences .audience-service-list.is-expanded .audience-service-toggle{position:relative;left:auto;bottom:auto;margin:18px auto 0;transform:none}
 }
+
+/* Amanda ganha presença no desktop e vira um atalho visual no mobile. */
+.amanda-launcher{width:280px;min-height:76px;grid-template-columns:52px minmax(0,1fr) auto;gap:12px;padding:11px 14px}
+.amanda-launcher .amanda-symbol{width:52px;height:52px}
+.amanda-launcher small{font-size:8px}
+.amanda-launcher strong{font-size:20px}
+.amanda-launcher>b{font-size:22px}
+.amanda-panel{bottom:88px}
+@media(max-width:620px){
+  .amanda-widget{right:14px;bottom:14px}
+  .amanda-launcher{width:116px;min-height:70px;grid-template-columns:52px 1fr;gap:10px;padding:8px 10px;border-radius:12px}
+  .amanda-launcher>span:nth-child(2){display:none}
+  .amanda-launcher>b{display:block;justify-self:center;font-size:26px}
+  .amanda-panel{bottom:8px}
+}
