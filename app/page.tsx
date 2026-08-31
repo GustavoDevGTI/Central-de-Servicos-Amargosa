@@ -166,11 +166,11 @@ function Brand({ segment }: { segment: Segment }) {
         </span>
       )}
       <span>
-        <strong {...itemSizeProps(title)}>
-          {title?.value || "Município de Amargosa"}
-        </strong>
-        <small {...itemSizeProps(subtitle)}>
+        <strong {...itemSizeProps(subtitle)}>
           {subtitle?.value || "Central de Serviços"}
+        </strong>
+        <small {...itemSizeProps(title)}>
+          {title?.value || "Município de Amargosa"}
         </small>
       </span>
     </span>

@@ -234,10 +234,10 @@ export function PortalHeader({
         )}
         <span>
           <strong>
-            {internalText(entry, "title", "Município de Amargosa")}
+            {internalText(entry, "subtitle", "Central de Serviços")}
           </strong>
           <small>
-            {internalText(entry, "subtitle", "Central de Serviços")}
+            {internalText(entry, "title", "Município de Amargosa")}
           </small>
         </span>
       </Link>
