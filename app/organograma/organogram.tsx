@@ -37,8 +37,8 @@ function Branch({ node }: { node: TreeNode }) {
 
   return (
     <li className={`organogram-branch level-${node.level}${node.isWorkgroup ? " is-workgroup" : ""}`}>
-      {isDrawer ? <details className="organogram-drawer" open>
-        <summary className="organogram-node organogram-drawer-toggle">{nodeContent}<span className="organogram-drawer-chevron" aria-hidden="true">⌄</span></summary>
+      {isDrawer ? <details className="organogram-drawer">
+        <summary className="organogram-node organogram-drawer-toggle">{nodeContent}<span className="organogram-drawer-chevron" aria-hidden="true" /></summary>
         <ul>{node.children.map((child) => <Branch key={child.id} node={child} />)}</ul>
       </details> : <>
         <div className="organogram-node">{nodeContent}</div>
