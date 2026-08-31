@@ -560,6 +560,7 @@ export function ServiceDirectory({
         slugify(entry.label) === initialCategory,
     )?.label || "todos";
   const [query, setQuery] = useState(initialQuery);
+  const [suggestionsOpen, setSuggestionsOpen] = useState(false);
   const [categoryFilter, setCategoryFilter] = useState(
     category?.label || requestedCategory,
   );
@@ -776,6 +777,7 @@ export function ServiceDirectory({
     mode === "audience" ? "Alterar público" : "Alterar categoria";
   const reset = () => {
     setQuery("");
+    setSuggestionsOpen(false);
     setAudienceFilter("todos");
     setCategoryFilter("todos");
     setDepartmentFilter("todos");
@@ -894,13 +896,19 @@ export function ServiceDirectory({
           id="context-filters"
           className={`context-filter-grid${filtersOpen ? " is-open" : ""}`}
         >
-          <div className="context-query-wrap">
+          <div
+            className="context-query-wrap"
+            onMouseEnter={() => setSuggestionsOpen(true)}
+            onMouseLeave={() => setSuggestionsOpen(false)}
+            onFocusCapture={() => setSuggestionsOpen(true)}
+          >
             <label className="context-query">
               Buscar por serviço
               <input
                 value={query}
                 onChange={(event) => {
                   setQuery(event.target.value);
+                  setSuggestionsOpen(true);
                   resetCarouselPosition();
                 }}
                 placeholder={searchItem?.placeholder || "Digite para buscar"}
@@ -908,14 +916,17 @@ export function ServiceDirectory({
                 aria-autocomplete="list"
               />
             </label>
-            <SearchSuggestions
-              id="directory-search-suggestions"
-              query={query}
-              services={explicitlyFiltered}
-              audiences={audiences}
-              categories={searchCategories}
-              popularity={servicePopularity}
-            />
+            {suggestionsOpen && (
+              <SearchSuggestions
+                id="directory-search-suggestions"
+                query={query}
+                services={explicitlyFiltered}
+                audiences={audiences}
+                categories={searchCategories}
+                popularity={servicePopularity}
+                onSelect={() => setSuggestionsOpen(false)}
+              />
+            )}
           </div>
           <label>
             Público

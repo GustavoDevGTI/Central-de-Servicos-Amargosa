@@ -198,6 +198,7 @@ function SectionHeading({ segment }: { segment: Segment }) {
 
 export default function Home() {
   const [query, setQuery] = useState("");
+  const [suggestionsOpen, setSuggestionsOpen] = useState(false);
   const [heroSlide, setHeroSlide] = useState(0);
   const [quickAccessExpanded, setQuickAccessExpanded] = useState(false);
   const [servicePopularity, setServicePopularity] = useState<
@@ -422,13 +423,19 @@ export default function Home() {
           {description?.value && (
             <p {...itemSizeProps(description)}>{description.value}</p>
           )}
-          <div className="hero-search-wrap">
+          <div
+            className="hero-search-wrap"
+            onMouseEnter={() => setSuggestionsOpen(true)}
+            onMouseLeave={() => setSuggestionsOpen(false)}
+            onFocusCapture={() => setSuggestionsOpen(true)}
+          >
             <form
               {...itemSizeProps(search)}
               className="search"
               role="search"
               onSubmit={(event) => {
                 event.preventDefault();
+                setSuggestionsOpen(false);
                 showResults();
               }}
             >
@@ -440,22 +447,30 @@ export default function Home() {
                 id="service-search"
                 maxLength={120}
                 value={query}
-                onChange={(event) => setQuery(event.target.value)}
+                onChange={(event) => {
+                  setQuery(event.target.value);
+                  setSuggestionsOpen(true);
+                }}
                 placeholder={search?.placeholder}
                 aria-controls="home-search-suggestions"
                 aria-autocomplete="list"
               />
               <button type="submit">{search?.buttonText || "Buscar"}</button>
             </form>
-            <SearchSuggestions
-              id="home-search-suggestions"
-              query={query}
-              services={services}
-              audiences={searchAudiences}
-              categories={searchCategories}
-              popularity={servicePopularity}
-              onSelect={(service) => recordServiceSearch(service.id)}
-            />
+            {suggestionsOpen && (
+              <SearchSuggestions
+                id="home-search-suggestions"
+                query={query}
+                services={services}
+                audiences={searchAudiences}
+                categories={searchCategories}
+                popularity={servicePopularity}
+                onSelect={(service) => {
+                  setSuggestionsOpen(false);
+                  recordServiceSearch(service.id);
+                }}
+              />
+            )}
           </div>
           <div className="popular" aria-label="Serviços mais buscados">
             <span>Mais buscados:</span>
