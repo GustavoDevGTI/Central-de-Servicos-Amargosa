@@ -49,8 +49,19 @@ export default function SearchSuggestions({
       aria-label="Buscas relacionadas"
     >
       <small>Buscas relacionadas</small>
-      {suggestions.map(({ service, matchedField }) => {
+      {suggestions.map(({ service }) => {
         const href = service.slug ? `/servicos/${service.slug}` : service.url;
+        const serviceAudienceIds = service.audienceIds?.length
+          ? service.audienceIds
+          : service.audienceId
+            ? [service.audienceId]
+            : [];
+        const publicLabel = serviceAudienceIds
+          .map((audienceId) =>
+            audiences.find((audience) => audience.id === audienceId)?.label,
+          )
+          .filter(Boolean)
+          .join(" · ");
         return (
           <a
             key={service.id}
@@ -61,11 +72,18 @@ export default function SearchSuggestions({
             rel={service.slug ? undefined : "noreferrer"}
             onClick={(event) => onSelect?.(service, event)}
           >
-            <span>
-              <strong>{service.title}</strong>
-              <em>{service.category}</em>
+            <strong>{service.title}</strong>
+            <span className="search-suggestion-meta">
+              <em>
+                <b>Público:</b> {publicLabel || "Não informado"}
+              </em>
+              <em>
+                <b>Categoria:</b> {service.category}
+              </em>
+              <em>
+                <b>Órgão responsável:</b> {service.department}
+              </em>
             </span>
-            <small>Relacionado por {matchedField}</small>
           </a>
         );
       })}
