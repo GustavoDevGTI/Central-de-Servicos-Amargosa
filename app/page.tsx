@@ -200,6 +200,7 @@ export default function Home() {
   const [query, setQuery] = useState("");
   const [suggestionsOpen, setSuggestionsOpen] = useState(false);
   const [heroSlide, setHeroSlide] = useState(0);
+  const [audiencesExpanded, setAudiencesExpanded] = useState(false);
   const [quickAccessExpanded, setQuickAccessExpanded] = useState(false);
   const [servicePopularity, setServicePopularity] = useState<
     Record<string, number>
@@ -494,7 +495,20 @@ export default function Home() {
         </section>
       );
     }
-    if (segment.type === "audiences")
+    if (segment.type === "audiences") {
+      const audienceOrder = new Map([
+        ["cidadao", 0],
+        ["empresa", 1],
+        ["servidor", 2],
+        ["ouvidoria", 3],
+        ["orgaos-publicos-ongs", 4],
+      ]);
+      const audienceItems = items(segment, "audience").sort(
+        (first, second) =>
+          (audienceOrder.get(first.id) ?? Number.MAX_SAFE_INTEGER) -
+          (audienceOrder.get(second.id) ?? Number.MAX_SAFE_INTEGER),
+      );
+      const hasMore = audienceItems.length + 1 > 4;
       return (
         <section
           key={segment.id}
@@ -504,11 +518,15 @@ export default function Home() {
         >
           <SectionHeading segment={segment} />
           <div
-            className="audiences"
-            role="group"
-            aria-label="Acessar serviços por público"
+            className={`audience-service-list${hasMore ? " has-more" : ""}${audiencesExpanded ? " is-expanded" : " is-collapsed"}`}
           >
-            {items(segment, "audience").map((item) => (
+            <div
+              id="audience-services"
+              className="audiences"
+              role="group"
+              aria-label="Acessar serviços por público"
+            >
+            {audienceItems.map((item) => (
               <button
                 key={item.id}
                 {...itemSizeProps(item)}
@@ -531,9 +549,27 @@ export default function Home() {
               </small>
               <b>Ver todos →</b>
             </button>
+            </div>
+            {hasMore && (
+              <button
+                type="button"
+                className="audience-service-toggle"
+                aria-expanded={audiencesExpanded}
+                aria-controls="audience-services"
+                onClick={() => setAudiencesExpanded((expanded) => !expanded)}
+              >
+                <span className="sr-only">
+                  {audiencesExpanded
+                    ? "Recolher públicos de serviços"
+                    : "Mostrar mais públicos de serviços"}
+                </span>
+                <b aria-hidden="true">{audiencesExpanded ? "↑" : "↓"}</b>
+              </button>
+            )}
           </div>
         </section>
       );
+    }
     if (segment.type === "featured") {
       const featured = items(segment, "serviceRef")
         .map((ref) => ({
