@@ -8,6 +8,21 @@ export type OrganogramEntry = {
 
 type TreeNode = OrganogramEntry & { children: TreeNode[] };
 
+const featuredRootOrder = new Map([
+  ["GP", 0],
+  ["GVP", 1],
+  ["PJM", 2],
+  ["SEAFI", 3],
+  ["CGM", 4],
+]);
+
+function rootPriority(node: TreeNode) {
+  const featuredPriority = featuredRootOrder.get(node.code.trim().toUpperCase());
+  if (featuredPriority !== undefined) return featuredPriority;
+  if (node.name.trim().toLocaleLowerCase("pt-BR").startsWith("secretaria")) return 5;
+  return 6;
+}
+
 function buildTree(entries: OrganogramEntry[]) {
   const roots: TreeNode[] = [];
   const stack: TreeNode[] = [];
@@ -23,7 +38,7 @@ function buildTree(entries: OrganogramEntry[]) {
     stack[entry.level] = node;
     stack.length = entry.level + 1;
   }
-  return roots;
+  return roots.sort((a, b) => rootPriority(a) - rootPriority(b));
 }
 
 function Branch({ node }: { node: TreeNode }) {
