@@ -14,7 +14,8 @@
 .organogram-level-label::before{content:"";position:absolute;bottom:calc(100% + 8px);left:50%;width:1px;height:20px;background:#9db8ad}
 
 .organogram-roots,.organogram-branch ul{margin:0;padding:0;list-style:none}
-.organogram-roots{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));align-items:start;gap:22px}
+.organogram-roots{display:flex;align-items:stretch;flex-direction:column;gap:14px}
+.organogram-roots>.organogram-branch{width:100%}
 .organogram-roots>.organogram-branch{overflow:hidden;border:1px solid #b9cec5;background:#fff;box-shadow:0 8px 22px rgba(8,64,48,.055)}
 .organogram-node{position:relative;width:100%;min-height:58px;display:flex;align-items:center;gap:11px;padding:11px 13px;border:1px solid #d1dfd9;background:#fff;color:var(--ink)}
 .organogram-roots>.organogram-branch>.organogram-node{min-height:76px;padding:15px 17px;border:0;border-bottom:1px solid #b9cec5;background:#e8f3ee}
@@ -38,5 +39,5 @@
 .organogram-unavailable a{color:var(--green);font-weight:800;text-decoration:underline}
 .organogram-unavailable{margin-top:28px;padding:30px;border:1px dashed #aebfb8;background:#fff;text-align:center}.organogram-unavailable p{margin-bottom:0}
 
-@media(max-width:900px){.organogram-roots{grid-template-columns:1fr}}
+@media(max-width:900px){.organogram-roots{gap:14px}}
 @media(max-width:760px){.organogram-content{width:calc(100% - 28px);padding:42px 0 60px}.organogram-content h1{font-size:37px}.organogram-browser{margin-top:28px}.organogram-municipality{padding:16px}.organogram-level-label{line-height:1.4}.organogram-legend{margin-top:0}.organogram-roots{gap:14px}.organogram-roots>.organogram-branch>.organogram-node{min-height:68px;padding:13px}.organogram-node{padding:10px}.organogram-child-count{display:none}.organogram-branch ul{margin-left:15px;padding-left:15px}.organogram-branch ul>.organogram-branch::before{left:-15px;width:15px}.organogram-branch ul .organogram-branch ul{margin-left:8px;padding-left:11px}.organogram-branch ul .organogram-branch ul>.organogram-branch::before{left:-11px;width:11px}}
