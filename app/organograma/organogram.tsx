@@ -28,15 +28,22 @@ function buildTree(entries: OrganogramEntry[]) {
 
 function Branch({ node }: { node: TreeNode }) {
   const hasChildren = node.children.length > 0;
+  const isDrawer = node.level === 0 && hasChildren;
+  const nodeContent = <>
+    {node.isWorkgroup && <span className="organogram-workgroup-icon" aria-hidden="true">👥</span>}
+    <span className="organogram-node-text"><strong>{node.code}</strong><small>{node.name}</small></span>
+    {hasChildren && <span className="organogram-child-count">{node.children.length} {node.children.length === 1 ? "unidade" : "unidades"}</span>}
+  </>;
 
   return (
     <li className={`organogram-branch level-${node.level}${node.isWorkgroup ? " is-workgroup" : ""}`}>
-      <div className="organogram-node">
-        {node.isWorkgroup && <span className="organogram-workgroup-icon" aria-hidden="true">👥</span>}
-        <span className="organogram-node-text"><strong>{node.code}</strong><small>{node.name}</small></span>
-        {hasChildren && <span className="organogram-child-count">{node.children.length} {node.children.length === 1 ? "unidade" : "unidades"}</span>}
-      </div>
-      {hasChildren && <ul>{node.children.map((child) => <Branch key={child.id} node={child} />)}</ul>}
+      {isDrawer ? <details className="organogram-drawer" open>
+        <summary className="organogram-node organogram-drawer-toggle">{nodeContent}<span className="organogram-drawer-chevron" aria-hidden="true">⌄</span></summary>
+        <ul>{node.children.map((child) => <Branch key={child.id} node={child} />)}</ul>
+      </details> : <>
+        <div className="organogram-node">{nodeContent}</div>
+        {hasChildren && <ul>{node.children.map((child) => <Branch key={child.id} node={child} />)}</ul>}
+      </>}
     </li>
   );
 }
