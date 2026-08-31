@@ -35,6 +35,7 @@ const fontStacks: Record<string, string> = { lora: '"Lora Variable",Georgia,seri
 const slugify = (value = "") => value.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
 const serviceAudiences = (service: Service) => service.audienceIds?.length ? service.audienceIds : service.audienceId ? [service.audienceId] : [];
 const serviceAudienceLabel = (service: Service) => serviceAudiences(service).map((id) => audiences.find((entry) => entry.id === id)?.label || id).join(" · ");
+const falabrManifestationUrl = "https://falabr.cgu.gov.br/web/manifestacao/criar/selecionar-assunto";
 const serviceCreationOrder = new Map(services.map((service, index) => [service.id, index]));
 const serviceHref = (service: Service) => service.slug ? `/servicos/${service.slug}` : service.url;
 const serviceLinkProps = (service: Service) => service.slug ? {} : { target: "_blank", rel: "noreferrer" };
@@ -69,8 +70,10 @@ function PortalFooter() {
   return <SharedPortalFooter />;
 }
 
-function AudienceTags({ service }: { service: Service }) {
-  return <span className="service-audiences">{serviceAudiences(service).map((id) => <b key={id}>{audiences.find((entry) => entry.id === id)?.label || id}</b>)}</span>;
+function ServiceManifestationNotice({ service }: { service: Service }) {
+  if (serviceAudiences(service).includes("ouvidoria")) return null;
+
+  return <section id="manifestar-se" className="service-manifestation-notice"><h2>Manifestar-se</h2><p>Para orientações, dúvidas, reclamações, sugestões ou elogios, faça contato com a <a href={falabrManifestationUrl} target="_blank" rel="noreferrer">nossa Ouvidoria</a>.</p><p>Para pedido de informação segundo a Lei nº 12.527/2011, utilize <Link href="/servicos/acesso-informacao">este serviço</Link>.</p></section>;
 }
 
 export function LegacyServiceDirectory({ mode, value }: { mode: Mode; value: string }) {
@@ -249,6 +252,7 @@ function RichServiceDetail({ service }: { service: Service }) {
           {service.channels?.length && <section id="canais"><h2>Canais de atendimento</h2><div className="service-channel-list">{service.channels.map((channel) => <div key={channel.label}><span>{channel.label}</span>{channel.url ? <a href={channel.url} target={channel.url.startsWith("http") ? "_blank" : undefined} rel={channel.url.startsWith("http") ? "noreferrer" : undefined}>{channel.value}</a> : <strong>{channel.value}</strong>}</div>)}</div></section>}
           {service.legislation?.length && <section id="legislacao"><h2>Legislação relacionada</h2><div className="service-legislation">{service.legislation.map((law) => <a key={law.label} href={law.url} target="_blank" rel="noreferrer">{law.label}<span aria-hidden="true">↗</span></a>)}</div></section>}
           {relatedServices.length > 0 && <section id="relacionados"><h2>Serviços relacionados</h2><div className="service-related-list">{relatedServices.map((related) => <Link key={related.id} href={serviceHref(related)}><span>{related.category}</span><strong>{related.title}</strong><b>Acessar →</b></Link>)}</div></section>}
+          <ServiceManifestationNotice service={service}/>
           {service.updatedAt && <small className="service-updated">Última atualização: {service.updatedAt}</small>}
         </div>
       </div>
@@ -263,8 +267,27 @@ export function ServiceDetail({ slug }: { slug: string }) {
   const service = services.find((entry) => (entry.slug || entry.id) === slug);
   if (!service) return <main {...rootProps()}><PortalHeader/><section className="service-not-found"><h1>Serviço não encontrado</h1><Link href="/">Voltar para a Central</Link></section><PortalFooter/></main>;
   if (service.id === "acesso-informacao") return <RichServiceDetail service={service}/>;
-  const audienceLinks = serviceAudiences(service).map((id) => audiences.find((entry) => entry.id === id)).filter(Boolean) as Audience[];
-  return <main {...rootProps()}><a className="skip" href="#conteudo-servico">Ir para o conteúdo do serviço</a><PortalHeader/><article id="conteudo-servico" className={internalClasses(heroSegment, "service-detail")} style={internalStyle(heroSegment)}><nav aria-label="Caminho de navegação"><Link href="/">Início</Link><span>›</span>{audienceLinks[0] && <><Link href={`/publicos/${audienceLinks[0].id}`}>{audienceLinks[0].label}</Link><span>›</span></>}<Link href={`/categorias/${slugify(service.category)}`}>{service.category}</Link><span>›</span><strong>{service.title}</strong></nav><header><div><small>{internalText(heroSegment, "eyebrow", service.category)}</small><h1>{service.title}</h1><p>{service.summary || `Consulte as orientações para ${service.title.toLocaleLowerCase("pt-BR")} e siga para o canal oficial responsável.`}</p><AudienceTags service={service}/></div><aside><span>{internalText(heroSegment, "responsibleLabel", "Órgão responsável")}</span><strong>{service.department}</strong><a href={service.url} target="_blank" rel="noreferrer">{service.destination || internalText(heroSegment, "action", "Acessar canal oficial")} ↗</a></aside></header><div className={internalClasses(contentSegment, "service-detail-layout")} style={internalStyle(contentSegment)}><nav aria-label="Nesta página"><strong>Nesta página</strong><a href="#o-que-e">{internalText(contentSegment, "aboutTitle", "O que é")}</a><a href="#quem-pode">{internalText(contentSegment, "eligibilityTitle", "Quem pode solicitar")}</a><a href="#documentos">{internalText(contentSegment, "documentsTitle", "Documentos")}</a><a href="#como-fazer">{internalText(contentSegment, "stepsTitle", "Como fazer")}</a><a href="#informacoes">Custo e prazo</a></nav><div className="service-detail-content"><section id="o-que-e"><h2>{internalText(contentSegment, "aboutTitle", "O que é")}</h2><p>{service.summary || "Página explicativa do serviço municipal e do canal responsável pelo atendimento."}</p></section><section id="quem-pode"><h2>{internalText(contentSegment, "eligibilityTitle", "Quem pode solicitar")}</h2><p>{service.eligibility || "Os critérios de atendimento devem ser confirmados com o órgão responsável antes da publicação definitiva."}</p></section><section id="documentos"><h2>{internalText(contentSegment, "documentsTitle", "Documentos necessários")}</h2>{service.documents?.length ? <ul>{service.documents.map((entry) => <li key={entry}>{entry}</li>)}</ul> : <p>A relação oficial de documentos ainda será confirmada pelo órgão responsável.</p>}</section><section id="como-fazer"><h2>{internalText(contentSegment, "stepsTitle", "Como fazer")}</h2>{service.steps?.length ? <ol>{service.steps.map((entry) => <li key={entry}>{entry}</li>)}</ol> : <ol><li>Confira os critérios e documentos.</li><li>Acesse o canal oficial indicado nesta página.</li><li>Acompanhe a solicitação diretamente no sistema responsável.</li></ol>}</section><section id="informacoes" className="service-facts"><div><span>{internalText(contentSegment, "costLabel", "Quanto custa")}</span><strong>{service.cost || "A confirmar"}</strong></div><div><span>{internalText(contentSegment, "durationLabel", "Quanto tempo leva")}</span><strong>{service.duration || "A confirmar"}</strong></div></section>{service.updatedAt && <small className="service-updated">Última atualização: {service.updatedAt}</small>}</div></div></article><PortalFooter/></main>;
+  return <main {...rootProps()}>
+    <a className="skip" href="#conteudo-servico">Ir para o conteúdo do serviço</a>
+    <PortalHeader/>
+    <article id="conteudo-servico" className={`${internalClasses(heroSegment, "service-detail")} service-detail-rich service-detail-standard`} style={internalStyle(heroSegment)}>
+      <header>
+        <div>
+          <small>{serviceAudienceLabel(service) || service.category}</small>
+          <h1>{service.title}</h1>
+          <p>{service.summary || `Consulte as orientações para ${service.title.toLocaleLowerCase("pt-BR")} e siga para o canal oficial responsável.`}</p>
+        </div>
+      </header>
+
+      <a className="service-reference-notice service-reference-notice-centered" href={service.url} target="_blank" rel="noreferrer"><span>Acessar {service.destination || internalText(heroSegment, "action", "canal oficial")} ↗</span></a>
+
+      <div className={internalClasses(contentSegment, "service-detail-layout")} style={internalStyle(contentSegment)}>
+        <nav aria-label="Nesta página"><strong>Nesta página</strong><a href="#o-que-e">{internalText(contentSegment, "aboutTitle", "O que é")}</a><a href="#quem-pode">{internalText(contentSegment, "eligibilityTitle", "Quem pode solicitar")}</a><a href="#documentos">{internalText(contentSegment, "documentsTitle", "Documentos")}</a><a href="#como-fazer">{internalText(contentSegment, "stepsTitle", "Como fazer")}</a><a href="#informacoes">Custo e prazo</a></nav>
+        <div className="service-detail-content"><section id="o-que-e"><h2>{internalText(contentSegment, "aboutTitle", "O que é")}</h2><p>{service.summary || "Página explicativa do serviço municipal e do canal responsável pelo atendimento."}</p></section><section id="quem-pode"><h2>{internalText(contentSegment, "eligibilityTitle", "Quem pode solicitar")}</h2><p>{service.eligibility || "Os critérios de atendimento devem ser confirmados com o órgão responsável antes da publicação definitiva."}</p></section><section id="documentos"><h2>{internalText(contentSegment, "documentsTitle", "Documentos necessários")}</h2>{service.documents?.length ? <ul>{service.documents.map((entry) => <li key={entry}>{entry}</li>)}</ul> : <p>A relação oficial de documentos ainda será confirmada pelo órgão responsável.</p>}</section><section id="como-fazer"><h2>{internalText(contentSegment, "stepsTitle", "Como fazer")}</h2>{service.steps?.length ? <ol>{service.steps.map((entry) => <li key={entry}>{entry}</li>)}</ol> : <ol><li>Confira os critérios e documentos.</li><li>Acesse o canal oficial indicado nesta página.</li><li>Acompanhe a solicitação diretamente no sistema responsável.</li></ol>}</section><section id="informacoes" className="service-facts"><div><span>{internalText(contentSegment, "costLabel", "Quanto custa")}</span><strong>{service.cost || "A confirmar"}</strong></div><div><span>{internalText(contentSegment, "durationLabel", "Quanto tempo leva")}</span><strong>{service.duration || "A confirmar"}</strong></div></section><ServiceManifestationNotice service={service}/>{service.updatedAt && <small className="service-updated">Última atualização: {service.updatedAt}</small>}</div>
+      </div>
+    </article>
+    <PortalFooter/>
+  </main>;
 }
 
 export { audiences, categories, services, slugify };

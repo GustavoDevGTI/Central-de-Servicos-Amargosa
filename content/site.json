@@ -177,7 +177,7 @@
               "type": "audience",
               "role": "entry",
               "label": "Cidadãos",
-          "description": "48 serviços municipais para cidadãs e cidadãos",
+              "description": "Serviços destinados a moradores e pessoas físicas.",
               "url": "/publicos/cidadao"
             },
             {
@@ -185,24 +185,40 @@
               "type": "audience",
               "role": "entry",
               "label": "Empresas",
-              "description": "23 serviços para empresas, fornecedores e atividades econômicas",
+              "description": "Serviços para empresas, empreendedores e pessoas jurídicas.",
               "url": "/publicos/empresa"
-            },
-            {
-              "id": "semop",
-              "type": "audience",
-              "role": "entry",
-              "label": "SEMOP",
-              "description": "8 serviços de operação, manutenção e espaço público",
-              "url": "/publicos/semop"
             },
             {
               "id": "servidor",
               "type": "audience",
               "role": "entry",
               "label": "Servidores",
-              "description": "28 serviços funcionais destinados aos servidores municipais",
+              "description": "Serviços funcionais para servidoras e servidores municipais.",
               "url": "/publicos/servidor"
+            },
+            {
+              "id": "orgaos-publicos-ongs",
+              "type": "audience",
+              "role": "entry",
+              "label": "Órgãos Públicos e ONGs",
+              "description": "Convênios, parcerias e solicitações institucionais.",
+              "url": "/publicos/orgaos-publicos-ongs"
+            },
+            {
+              "id": "ouvidoria",
+              "type": "audience",
+              "role": "entry",
+              "label": "Ouvidoria",
+              "description": "Manifestações, dúvidas e atendimento da Ouvidoria Municipal.",
+              "url": "/publicos/ouvidoria"
+            },
+            {
+              "id": "precatorio-fundef",
+              "type": "audience",
+              "role": "entry",
+              "label": "Precatório FUNDEF",
+              "description": "Solicitações relacionadas ao Precatório FUNDEF.",
+              "url": "/publicos/precatorio-fundef"
             }
           ]
         },
@@ -350,12 +366,29 @@
               "value": "Todos os serviços"
             },
             {
+              "id": "1doc-abastecimento-de-agua",
+              "type": "service",
+              "role": "entry",
+              "title": "Abastecimento de água",
+              "department": "SEMOP-SUPESP - Superintendência de Serviços Públicos",
+              "category": "Cidadão, Empresas",
+              "audienceId": "cidadao",
+              "audienceIds": [
+                "cidadao",
+                "empresa"
+              ],
+              "destination": "Portal de Protocolos 1Doc",
+              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
+              "initials": "AD",
+              "sourceRow": 3
+            },
+            {
               "id": "acesso-informacao",
               "type": "service",
               "role": "entry",
               "title": "Acesso à Informação (LAI 12.527/2011)",
               "department": "Controladoria Geral do Município",
-              "category": "Cidadãos",
+              "category": "Cidadão",
               "audienceId": "cidadao",
               "destination": "E-SIC de Amargosa",
               "url": "https://amargosa.1doc.com.br/b.php?is=920&itd=12&pg=wp/wp&s=amargosa",
@@ -413,775 +446,24 @@
               "subject": "Documentos",
               "audienceIds": [
                 "cidadao"
-              ]
-            },
-            {
-              "id": "1doc-autorizacao-para-eventos-em-espaco-publico",
-              "type": "service",
-              "role": "entry",
-              "title": "Autorização para Eventos em Espaço Público",
-              "department": "DOP - Diretoria de Ordem Pública",
-              "category": "Cidadãos",
-              "audienceId": "cidadao",
-              "audienceIds": [
-                "cidadao"
               ],
-              "destination": "Portal de Protocolos 1Doc",
-              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
-              "initials": "AP",
-              "sourceRow": 3
-            },
-            {
-              "id": "1doc-concurso",
-              "type": "service",
-              "role": "entry",
-              "title": "Concurso",
-              "department": "SEAFI-SUGEP - Superintendência de Gestão de Pessoas",
-              "category": "Cidadãos",
-              "audienceId": "cidadao",
-              "audienceIds": [
-                "cidadao"
-              ],
-              "destination": "Portal de Protocolos 1Doc",
-              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
-              "initials": "C",
               "sourceRow": 4
             },
             {
-              "id": "1doc-concurso-do-brasao-oficial",
+              "id": "1doc-adesao-carona-licitatoria",
               "type": "service",
               "role": "entry",
-              "title": "Concurso do Brasão Oficial",
-              "department": "SEAFI-GELIC - Gerência de Licitações",
-              "category": "Cidadãos",
-              "audienceId": "cidadao",
+              "title": "Adesão - Carona licitatória",
+              "department": "SEAFI - Secretaria Municipal de Administração, Finanças e Desenvolvimento Institucional",
+              "category": "Órgãos Públicos e ONGs",
+              "audienceId": "orgaos-publicos-ongs",
               "audienceIds": [
-                "cidadao"
+                "orgaos-publicos-ongs"
               ],
               "destination": "Portal de Protocolos 1Doc",
               "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
-              "initials": "CD",
+              "initials": "AC",
               "sourceRow": 5
-            },
-            {
-              "id": "1doc-guia-de-sepultamento",
-              "type": "service",
-              "role": "entry",
-              "title": "Guia de sepultamento",
-              "department": "SAC - SAC Municipal",
-              "category": "Cidadãos",
-              "audienceId": "cidadao",
-              "audienceIds": [
-                "cidadao"
-              ],
-              "destination": "Portal de Protocolos 1Doc",
-              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
-              "initials": "GD",
-              "sourceRow": 6
-            },
-            {
-              "id": "1doc-protocolo",
-              "type": "service",
-              "role": "entry",
-              "title": "Protocolo",
-              "department": "SAC - SAC Municipal",
-              "category": "Cidadãos",
-              "audienceId": "cidadao",
-              "audienceIds": [
-                "cidadao"
-              ],
-              "destination": "Portal de Protocolos 1Doc",
-              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
-              "initials": "P",
-              "sourceRow": 7
-            },
-            {
-              "id": "1doc-regularizacao-fundiaria",
-              "type": "service",
-              "role": "entry",
-              "title": "Regularização Fundiária",
-              "department": "SEAFI-SUCAI - Supervisão de Cadastro Imobiliário",
-              "category": "Cidadãos",
-              "audienceId": "cidadao",
-              "audienceIds": [
-                "cidadao"
-              ],
-              "destination": "Portal de Protocolos 1Doc",
-              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
-              "initials": "RF",
-              "sourceRow": 8
-            },
-            {
-              "id": "1doc-requerimento-escolar",
-              "type": "service",
-              "role": "entry",
-              "title": "Requerimento escolar",
-              "department": "SEMED-GAB - Gabinete",
-              "category": "Cidadãos",
-              "audienceId": "cidadao",
-              "audienceIds": [
-                "cidadao"
-              ],
-              "destination": "Portal de Protocolos 1Doc",
-              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
-              "initials": "RE",
-              "sourceRow": 9
-            },
-            {
-              "id": "1doc-ressarcimento-e-indenizacoes",
-              "type": "service",
-              "role": "entry",
-              "title": "Ressarcimento e indenizações",
-              "department": "SEAFI-GAB - Gabinete - SEAFI",
-              "category": "Cidadãos",
-              "audienceId": "cidadao",
-              "audienceIds": [
-                "cidadao"
-              ],
-              "destination": "Portal de Protocolos 1Doc",
-              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
-              "initials": "RE",
-              "sourceRow": 10
-            },
-            {
-              "id": "1doc-sinalizacao-de-animais-soltos",
-              "type": "service",
-              "role": "entry",
-              "title": "Sinalização de Animais Soltos",
-              "department": "SECAC-GCM - Comando da Guarda Civil Municipal",
-              "category": "Cidadãos",
-              "audienceId": "cidadao",
-              "audienceIds": [
-                "cidadao"
-              ],
-              "destination": "Portal de Protocolos 1Doc",
-              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
-              "initials": "SD",
-              "sourceRow": 11
-            },
-            {
-              "id": "1doc-tributos-municipais",
-              "type": "service",
-              "role": "entry",
-              "title": "Tributos Municipais",
-              "department": "SEAFI-DITRIB - Diretoria de Tributos",
-              "category": "Cidadãos",
-              "audienceId": "cidadao",
-              "audienceIds": [
-                "cidadao"
-              ],
-              "destination": "Portal de Protocolos 1Doc",
-              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
-              "initials": "TM",
-              "sourceRow": 12
-            },
-            {
-              "id": "1doc-averbacao-de-imoveis",
-              "type": "service",
-              "role": "entry",
-              "title": "Averbação de imóveis",
-              "department": "SEAFI-SUCAI - Supervisão de Cadastro Imobiliário",
-              "category": "Tributos",
-              "audienceId": "cidadao",
-              "audienceIds": [
-                "cidadao"
-              ],
-              "destination": "Portal de Protocolos 1Doc",
-              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
-              "initials": "AD",
-              "sourceRow": 13
-            },
-            {
-              "id": "1doc-baixa-do-cadastro-de-inscricao-municipal-economico",
-              "type": "service",
-              "role": "entry",
-              "title": "Baixa do Cadastro de Inscrição Municipal Econômico",
-              "department": "SEAFI-SUDIV - Supervisão de Dívida Ativa",
-              "category": "Tributos",
-              "audienceId": "cidadao",
-              "audienceIds": [
-                "cidadao"
-              ],
-              "destination": "Portal de Protocolos 1Doc",
-              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
-              "initials": "BD",
-              "sourceRow": 14
-            },
-            {
-              "id": "1doc-cadastramento-de-area-urbana-com-origem-rural",
-              "type": "service",
-              "role": "entry",
-              "title": "Cadastramento de área urbana com origem rural",
-              "department": "SEAFI-SUCAI - Supervisão de Cadastro Imobiliário",
-              "category": "Tributos",
-              "audienceId": "cidadao",
-              "audienceIds": [
-                "cidadao"
-              ],
-              "destination": "Portal de Protocolos 1Doc",
-              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
-              "initials": "CD",
-              "sourceRow": 15
-            },
-            {
-              "id": "1doc-cadastro-imobiliario",
-              "type": "service",
-              "role": "entry",
-              "title": "Cadastro Imobiliário",
-              "department": "SEAFI-SUCAI - Supervisão de Cadastro Imobiliário",
-              "category": "Tributos",
-              "audienceId": "cidadao",
-              "audienceIds": [
-                "cidadao"
-              ],
-              "destination": "Portal de Protocolos 1Doc",
-              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
-              "initials": "CI",
-              "sourceRow": 16
-            },
-            {
-              "id": "1doc-cancelamento-ou-baixa-de-credito-tributario",
-              "type": "service",
-              "role": "entry",
-              "title": "Cancelamento ou Baixa de Crédito Tributário",
-              "department": "SEAFI-SUDIV - Supervisão de Dívida Ativa",
-              "category": "Tributos",
-              "audienceId": "cidadao",
-              "audienceIds": [
-                "cidadao"
-              ],
-              "destination": "Portal de Protocolos 1Doc",
-              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
-              "initials": "CO",
-              "sourceRow": 17
-            },
-            {
-              "id": "1doc-certidao-de-1-lancamento-do-iptu",
-              "type": "service",
-              "role": "entry",
-              "title": "Certidão de 1° Lançamento do IPTU",
-              "department": "SEAFI-SUCAI - Supervisão de Cadastro Imobiliário",
-              "category": "Tributos",
-              "audienceId": "cidadao",
-              "audienceIds": [
-                "cidadao"
-              ],
-              "destination": "Portal de Protocolos 1Doc",
-              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
-              "initials": "CD",
-              "sourceRow": 18
-            },
-            {
-              "id": "1doc-certidao-de-comprovacao-de-endereco",
-              "type": "service",
-              "role": "entry",
-              "title": "Certidão de Comprovação de Endereço",
-              "department": "SEAFI-SUDIV - Supervisão de Dívida Ativa",
-              "category": "Tributos",
-              "audienceId": "cidadao",
-              "audienceIds": [
-                "cidadao"
-              ],
-              "destination": "Portal de Protocolos 1Doc",
-              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
-              "initials": "CD",
-              "sourceRow": 19
-            },
-            {
-              "id": "1doc-certidao-de-inexistencia-de-inscricao",
-              "type": "service",
-              "role": "entry",
-              "title": "Certidão de Inexistência de Inscrição",
-              "department": "SEAFI-SUCAI - Supervisão de Cadastro Imobiliário",
-              "category": "Tributos",
-              "audienceId": "cidadao",
-              "audienceIds": [
-                "cidadao"
-              ],
-              "destination": "Portal de Protocolos 1Doc",
-              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
-              "initials": "CD",
-              "sourceRow": 20
-            },
-            {
-              "id": "1doc-certidao-de-lancamento-de-numero-de-imovel",
-              "type": "service",
-              "role": "entry",
-              "title": "Certidão de Lançamento de Número de Imóvel",
-              "department": "SEAFI-SUCAI - Supervisão de Cadastro Imobiliário",
-              "category": "Tributos",
-              "audienceId": "cidadao",
-              "audienceIds": [
-                "cidadao"
-              ],
-              "destination": "Portal de Protocolos 1Doc",
-              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
-              "initials": "CD",
-              "sourceRow": 21
-            },
-            {
-              "id": "1doc-certidao-de-regularidade-fiscal-iptu",
-              "type": "service",
-              "role": "entry",
-              "title": "Certidão de Regularidade Fiscal IPTU",
-              "department": "SEAFI-SUCAI - Supervisão de Cadastro Imobiliário",
-              "category": "Tributos",
-              "audienceId": "cidadao",
-              "audienceIds": [
-                "cidadao"
-              ],
-              "destination": "Portal de Protocolos 1Doc",
-              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
-              "initials": "CD",
-              "sourceRow": 22
-            },
-            {
-              "id": "1doc-certidao-de-valor-venal-rural",
-              "type": "service",
-              "role": "entry",
-              "title": "Certidão de Valor Venal / Rural",
-              "department": "SEAFI-SUCAI - Supervisão de Cadastro Imobiliário",
-              "category": "Tributos",
-              "audienceId": "cidadao",
-              "audienceIds": [
-                "cidadao"
-              ],
-              "destination": "Portal de Protocolos 1Doc",
-              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
-              "initials": "CD",
-              "sourceRow": 23
-            },
-            {
-              "id": "1doc-certidao-de-valor-venal-urbano",
-              "type": "service",
-              "role": "entry",
-              "title": "Certidão de Valor Venal / Urbano",
-              "department": "SEAFI-SUCAI - Supervisão de Cadastro Imobiliário",
-              "category": "Tributos",
-              "audienceId": "cidadao",
-              "audienceIds": [
-                "cidadao"
-              ],
-              "destination": "Portal de Protocolos 1Doc",
-              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
-              "initials": "CD",
-              "sourceRow": 24
-            },
-            {
-              "id": "1doc-certidao-negativa-de-pessoa-fisica",
-              "type": "service",
-              "role": "entry",
-              "title": "Certidão Negativa de Pessoa Física",
-              "department": "SEAFI-SUDIV - Supervisão de Dívida Ativa",
-              "category": "Tributos",
-              "audienceId": "cidadao",
-              "audienceIds": [
-                "cidadao"
-              ],
-              "destination": "Portal de Protocolos 1Doc",
-              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
-              "initials": "CN",
-              "sourceRow": 25
-            },
-            {
-              "id": "1doc-compensacao-pessoa-fisica-e-juridica",
-              "type": "service",
-              "role": "entry",
-              "title": "Compensação - Pessoa Física e Jurídica",
-              "department": "SEAFI-SUDIV - Supervisão de Dívida Ativa",
-              "category": "Tributos",
-              "audienceId": "cidadao",
-              "audienceIds": [
-                "cidadao"
-              ],
-              "destination": "Portal de Protocolos 1Doc",
-              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
-              "initials": "CP",
-              "sourceRow": 26
-            },
-            {
-              "id": "1doc-consulta-de-debitos-e-informacoes-cadastrais",
-              "type": "service",
-              "role": "entry",
-              "title": "Consulta de débitos e informações cadastrais",
-              "department": "SEAFI-SUDIV - Supervisão de Dívida Ativa",
-              "category": "Tributos",
-              "audienceId": "cidadao",
-              "audienceIds": [
-                "cidadao"
-              ],
-              "destination": "Portal de Protocolos 1Doc",
-              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
-              "initials": "CD",
-              "sourceRow": 27
-            },
-            {
-              "id": "1doc-desmembramento-de-area-rural",
-              "type": "service",
-              "role": "entry",
-              "title": "Desmembramento de Área - Rural",
-              "department": "SEAFI-SUCAI - Supervisão de Cadastro Imobiliário",
-              "category": "Tributos",
-              "audienceId": "cidadao",
-              "audienceIds": [
-                "cidadao"
-              ],
-              "destination": "Portal de Protocolos 1Doc",
-              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
-              "initials": "DD",
-              "sourceRow": 28
-            },
-            {
-              "id": "1doc-desmembramento-de-area-urbano",
-              "type": "service",
-              "role": "entry",
-              "title": "Desmembramento de Área - Urbano",
-              "department": "SEAFI-SUCAI - Supervisão de Cadastro Imobiliário",
-              "category": "Tributos",
-              "audienceId": "cidadao",
-              "audienceIds": [
-                "cidadao"
-              ],
-              "destination": "Portal de Protocolos 1Doc",
-              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
-              "initials": "DD",
-              "sourceRow": 29
-            },
-            {
-              "id": "1doc-extincao-ou-suspensao-de-execucao-extrajudicial-ou-judicial",
-              "type": "service",
-              "role": "entry",
-              "title": "Extinção ou Suspensão de Execução Extrajudicial ou Judicial",
-              "department": "AJU - DA - Assessoria Jurídica - Dívida Ativa",
-              "category": "Tributos",
-              "audienceId": "cidadao",
-              "audienceIds": [
-                "cidadao"
-              ],
-              "destination": "Portal de Protocolos 1Doc",
-              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
-              "initials": "EO",
-              "sourceRow": 30
-            },
-            {
-              "id": "1doc-impugnacao-de-lancamento",
-              "type": "service",
-              "role": "entry",
-              "title": "Impugnação de lançamento",
-              "department": "SEAFI-SUDIV - Supervisão de Dívida Ativa",
-              "category": "Tributos",
-              "audienceId": "cidadao",
-              "audienceIds": [
-                "cidadao"
-              ],
-              "destination": "Portal de Protocolos 1Doc",
-              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
-              "initials": "ID",
-              "sourceRow": 31
-            },
-            {
-              "id": "1doc-inscricao-municipal-cadastro-economico",
-              "type": "service",
-              "role": "entry",
-              "title": "Inscrição Municipal cadastro Econômico",
-              "department": "SEAFI-SUDIV - Supervisão de Dívida Ativa",
-              "category": "Tributos",
-              "audienceId": "cidadao",
-              "audienceIds": [
-                "cidadao"
-              ],
-              "destination": "Portal de Protocolos 1Doc",
-              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
-              "initials": "IM",
-              "sourceRow": 32
-            },
-            {
-              "id": "1doc-isencao-de-iptu",
-              "type": "service",
-              "role": "entry",
-              "title": "Isenção de IPTU",
-              "department": "SEAFI-SUCAI - Supervisão de Cadastro Imobiliário",
-              "category": "Tributos",
-              "audienceId": "cidadao",
-              "audienceIds": [
-                "cidadao"
-              ],
-              "destination": "Portal de Protocolos 1Doc",
-              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
-              "initials": "ID",
-              "sourceRow": 33
-            },
-            {
-              "id": "1doc-isencao-de-itbi-itv",
-              "type": "service",
-              "role": "entry",
-              "title": "Isenção de ITBI/ITV",
-              "department": "SEAFI-SUCAI - Supervisão de Cadastro Imobiliário",
-              "category": "Tributos",
-              "audienceId": "cidadao",
-              "audienceIds": [
-                "cidadao"
-              ],
-              "destination": "Portal de Protocolos 1Doc",
-              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
-              "initials": "ID",
-              "sourceRow": 34
-            },
-            {
-              "id": "1doc-isencao-de-taxas",
-              "type": "service",
-              "role": "entry",
-              "title": "Isenção de Taxas",
-              "department": "SEAFI-SUDIV - Supervisão de Dívida Ativa",
-              "category": "Tributos",
-              "audienceId": "cidadao",
-              "audienceIds": [
-                "cidadao"
-              ],
-              "destination": "Portal de Protocolos 1Doc",
-              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
-              "initials": "ID",
-              "sourceRow": 35
-            },
-            {
-              "id": "1doc-lancamento-de-inscricao-imobiliaria",
-              "type": "service",
-              "role": "entry",
-              "title": "Lançamento de Inscrição Imobiliária",
-              "department": "SEAFI-SUCAI - Supervisão de Cadastro Imobiliário",
-              "category": "Tributos",
-              "audienceId": "cidadao",
-              "audienceIds": [
-                "cidadao"
-              ],
-              "destination": "Portal de Protocolos 1Doc",
-              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
-              "initials": "LD",
-              "sourceRow": 36
-            },
-            {
-              "id": "1doc-lancamento-de-unidades-empreendimento-imobiliario-loteamento",
-              "type": "service",
-              "role": "entry",
-              "title": "Lançamento de unidades empreendimento Imobiliário/Loteamento",
-              "department": "DIRAP - SEAFI - Diretoria de Análise de Projetos",
-              "category": "Tributos",
-              "audienceId": "cidadao",
-              "audienceIds": [
-                "cidadao"
-              ],
-              "destination": "Portal de Protocolos 1Doc",
-              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
-              "initials": "LD",
-              "sourceRow": 37
-            },
-            {
-              "id": "1doc-lancamento-do-issqn-habite-se",
-              "type": "service",
-              "role": "entry",
-              "title": "Lançamento do ISSQN Habite-se",
-              "department": "SEAFI-SUDIV - Supervisão de Dívida Ativa",
-              "category": "Tributos",
-              "audienceId": "cidadao",
-              "audienceIds": [
-                "cidadao"
-              ],
-              "destination": "Portal de Protocolos 1Doc",
-              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
-              "initials": "LD",
-              "sourceRow": 38
-            },
-            {
-              "id": "1doc-parcelamento-de-debito-do-iptu",
-              "type": "service",
-              "role": "entry",
-              "title": "Parcelamento de Débito do IPTU",
-              "department": "SEAFI-SUCAI - Supervisão de Cadastro Imobiliário",
-              "category": "Tributos",
-              "audienceId": "cidadao",
-              "audienceIds": [
-                "cidadao"
-              ],
-              "destination": "Portal de Protocolos 1Doc",
-              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
-              "initials": "PD",
-              "sourceRow": 39
-            },
-            {
-              "id": "1doc-prescricao-de-credito-tributario-ou-de-renda-iptu-tll-tff",
-              "type": "service",
-              "role": "entry",
-              "title": "Prescrição de crédito tributário ou de renda/IPTU/TLL/TFF",
-              "department": "SEAFI-SUDIV - Supervisão de Dívida Ativa",
-              "category": "Tributos",
-              "audienceId": "cidadao",
-              "audienceIds": [
-                "cidadao"
-              ],
-              "destination": "Portal de Protocolos 1Doc",
-              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
-              "initials": "PD",
-              "sourceRow": 40
-            },
-            {
-              "id": "1doc-reconhecimento-de-imunidade-isencao-ou-nao-incidencia",
-              "type": "service",
-              "role": "entry",
-              "title": "Reconhecimento de Imunidade, Isenção ou Não Incidência",
-              "department": "SEAFI-SUDIV - Supervisão de Dívida Ativa",
-              "category": "Tributos",
-              "audienceId": "cidadao",
-              "audienceIds": [
-                "cidadao"
-              ],
-              "destination": "Portal de Protocolos 1Doc",
-              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
-              "initials": "RD",
-              "sourceRow": 41
-            },
-            {
-              "id": "1doc-restituicao-de-tributos",
-              "type": "service",
-              "role": "entry",
-              "title": "Restituição de Tributos",
-              "department": "SEAFI-SUDIV - Supervisão de Dívida Ativa",
-              "category": "Tributos",
-              "audienceId": "cidadao",
-              "audienceIds": [
-                "cidadao"
-              ],
-              "destination": "Portal de Protocolos 1Doc",
-              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
-              "initials": "RD",
-              "sourceRow": 42
-            },
-            {
-              "id": "1doc-revisao-de-area",
-              "type": "service",
-              "role": "entry",
-              "title": "Revisão de Área",
-              "department": "SEAFI-SUCAI - Supervisão de Cadastro Imobiliário",
-              "category": "Tributos",
-              "audienceId": "cidadao",
-              "audienceIds": [
-                "cidadao"
-              ],
-              "destination": "Portal de Protocolos 1Doc",
-              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
-              "initials": "RD",
-              "sourceRow": 43
-            },
-            {
-              "id": "1doc-revisao-de-calculo-de-iptu",
-              "type": "service",
-              "role": "entry",
-              "title": "Revisão de Cálculo de IPTU",
-              "department": "SEAFI-SUCAI - Supervisão de Cadastro Imobiliário",
-              "category": "Tributos",
-              "audienceId": "cidadao",
-              "audienceIds": [
-                "cidadao"
-              ],
-              "destination": "Portal de Protocolos 1Doc",
-              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
-              "initials": "RD",
-              "sourceRow": 44
-            },
-            {
-              "id": "1doc-revisao-de-calculo-de-itiv",
-              "type": "service",
-              "role": "entry",
-              "title": "Revisão de Cálculo de ITIV",
-              "department": "SEAFI-SUCAI - Supervisão de Cadastro Imobiliário",
-              "category": "Tributos",
-              "audienceId": "cidadao",
-              "audienceIds": [
-                "cidadao"
-              ],
-              "destination": "Portal de Protocolos 1Doc",
-              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
-              "initials": "RD",
-              "sourceRow": 45
-            },
-            {
-              "id": "1doc-revisao-de-calculo-de-tff",
-              "type": "service",
-              "role": "entry",
-              "title": "Revisão de cálculo de TFF",
-              "department": "SEAFI-SUDIV - Supervisão de Dívida Ativa",
-              "category": "Tributos",
-              "audienceId": "cidadao",
-              "audienceIds": [
-                "cidadao"
-              ],
-              "destination": "Portal de Protocolos 1Doc",
-              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
-              "initials": "RD",
-              "sourceRow": 46
-            },
-            {
-              "id": "1doc-revisao-de-caracteristicas-imobiliaria",
-              "type": "service",
-              "role": "entry",
-              "title": "Revisão de características Imobiliária",
-              "department": "SEAFI-SUCAI - Supervisão de Cadastro Imobiliário",
-              "category": "Tributos",
-              "audienceId": "cidadao",
-              "audienceIds": [
-                "cidadao"
-              ],
-              "destination": "Portal de Protocolos 1Doc",
-              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
-              "initials": "RD",
-              "sourceRow": 47
-            },
-            {
-              "id": "1doc-suspensao-do-cadastro-economico",
-              "type": "service",
-              "role": "entry",
-              "title": "Suspensão do cadastro econômico",
-              "department": "SEAFI-SUDIV - Supervisão de Dívida Ativa",
-              "category": "Tributos",
-              "audienceId": "cidadao",
-              "audienceIds": [
-                "cidadao"
-              ],
-              "destination": "Portal de Protocolos 1Doc",
-              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
-              "initials": "SD",
-              "sourceRow": 48
-            },
-            {
-              "id": "1doc-transferencia-de-titularidade-imobiliaria",
-              "type": "service",
-              "role": "entry",
-              "title": "Transferência de titularidade Imobiliária",
-              "department": "SEAFI-SUCAI - Supervisão de Cadastro Imobiliário",
-              "category": "Tributos",
-              "audienceId": "cidadao",
-              "audienceIds": [
-                "cidadao"
-              ],
-              "destination": "Portal de Protocolos 1Doc",
-              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
-              "initials": "TD",
-              "sourceRow": 49
-            },
-            {
-              "id": "1doc-2-via-alvara-de-funcionamento",
-              "type": "service",
-              "role": "entry",
-              "title": "2° Via Alvará de funcionamento",
-              "department": "SEAFI-SUDIV - Supervisão de Dívida Ativa",
-              "category": "Tributos",
-              "audienceId": "empresa",
-              "audienceIds": [
-                "empresa"
-              ],
-              "destination": "Portal de Protocolos 1Doc",
-              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
-              "initials": "2V",
-              "sourceRow": 51
             },
             {
               "id": "1doc-aditivo-de-contrato",
@@ -1197,7 +479,7 @@
               "destination": "Portal de Protocolos 1Doc",
               "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
               "initials": "AD",
-              "sourceRow": 52
+              "sourceRow": 6
             },
             {
               "id": "1doc-alteracao-contratual-de-fornecedor",
@@ -1213,7 +495,7 @@
               "destination": "Portal de Protocolos 1Doc",
               "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
               "initials": "AC",
-              "sourceRow": 53
+              "sourceRow": 7
             },
             {
               "id": "1doc-alteracao-do-cadastro-economico",
@@ -1222,30 +504,252 @@
               "title": "Alteração do cadastro econômico",
               "department": "SEAFI-SUDIV - Supervisão de Dívida Ativa",
               "category": "Tributos",
-              "audienceId": "empresa",
+              "audienceId": "cidadao",
               "audienceIds": [
+                "cidadao",
                 "empresa"
               ],
               "destination": "Portal de Protocolos 1Doc",
               "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
               "initials": "AD",
-              "sourceRow": 54
+              "sourceRow": 8
+            },
+            {
+              "id": "1doc-alvara-de-funcionamento",
+              "type": "service",
+              "role": "entry",
+              "department": "Prefeitura Municipal de Amargosa",
+              "destination": "Portal de Protocolos 1Doc",
+              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
+              "initials": "AD",
+              "slug": "alvara-de-funcionamento",
+              "title": "Alvará de funcionamento",
+              "audienceId": "empresa",
+              "audienceIds": [
+                "empresa"
+              ],
+              "sourceRow": 9,
+              "category": "Empresas"
+            },
+            {
+              "id": "1doc-alvara-de-obras-construcao-ampliacao-reforma-e-demolicao",
+              "type": "service",
+              "role": "entry",
+              "department": "Prefeitura Municipal de Amargosa",
+              "destination": "Portal de Protocolos 1Doc",
+              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
+              "initials": "AD",
+              "slug": "alvara-de-obras-construcao-ampliacao-reforma-e-demolicao",
+              "title": "Alvará de Obras (Construção, Ampliação, Reforma e Demolição)",
+              "audienceId": "cidadao",
+              "audienceIds": [
+                "cidadao",
+                "empresa"
+              ],
+              "sourceRow": 10,
+              "category": "Cidadão, Empresas"
             },
             {
               "id": "1doc-alvara-sanitario",
               "type": "service",
               "role": "entry",
-              "title": "Alvará sanitário",
+              "title": "Alvará Sanitário",
               "department": "SESAU-DIVISA - Diretoria de vigil6ancia Sanitária e Ambiental",
-              "category": "Empresas",
-              "audienceId": "empresa",
+              "category": "Cidadão, Empresas",
+              "audienceId": "cidadao",
               "audienceIds": [
+                "cidadao",
                 "empresa"
               ],
               "destination": "Portal de Protocolos 1Doc",
               "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
               "initials": "AS",
-              "sourceRow": 55
+              "sourceRow": 11
+            },
+            {
+              "id": "1doc-alvara-temporario-para-parque-de-diversoes-e-circo",
+              "type": "service",
+              "role": "entry",
+              "department": "Prefeitura Municipal de Amargosa",
+              "destination": "Portal de Protocolos 1Doc",
+              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
+              "initials": "AT",
+              "slug": "alvara-temporario-para-parque-de-diversoes-e-circo",
+              "title": "Alvará Temporário para Parque de Diversões e Circo",
+              "audienceId": "cidadao",
+              "audienceIds": [
+                "cidadao",
+                "empresa"
+              ],
+              "sourceRow": 12,
+              "category": "Cidadão, Empresas"
+            },
+            {
+              "id": "1doc-ampliacao-de-carga-horaria-enquadramento",
+              "type": "service",
+              "role": "entry",
+              "department": "Prefeitura Municipal de Amargosa",
+              "destination": "Portal de Protocolos 1Doc",
+              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
+              "initials": "AD",
+              "slug": "ampliacao-de-carga-horaria-enquadramento",
+              "title": "Ampliação de carga horária (enquadramento)",
+              "audienceId": "servidor",
+              "audienceIds": [
+                "servidor"
+              ],
+              "sourceRow": 13,
+              "category": "Servidor"
+            },
+            {
+              "id": "1doc-atestado-medico-licenca-tratamento-de-saude",
+              "type": "service",
+              "role": "entry",
+              "title": "Atestado Médico - Licença Tratamento de Saúde",
+              "department": "COCAD - Cadastro",
+              "category": "Servidor",
+              "audienceId": "servidor",
+              "audienceIds": [
+                "servidor"
+              ],
+              "destination": "Portal de Protocolos 1Doc",
+              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
+              "initials": "AM",
+              "sourceRow": 15
+            },
+            {
+              "id": "1doc-atualizacao-de-cadastro-funcional",
+              "type": "service",
+              "role": "entry",
+              "department": "Prefeitura Municipal de Amargosa",
+              "destination": "Portal de Protocolos 1Doc",
+              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
+              "initials": "AD",
+              "slug": "atualizacao-de-cadastro-funcional",
+              "title": "Atualização de Cadastro Funcional",
+              "audienceId": "servidor",
+              "audienceIds": [
+                "servidor"
+              ],
+              "sourceRow": 16,
+              "category": "Servidor"
+            },
+            {
+              "id": "1doc-autorizacao-para-eventos-em-espaco-publico",
+              "type": "service",
+              "role": "entry",
+              "title": "Autorização para Eventos em Espaço Público",
+              "department": "DOP - Diretoria de Ordem Pública",
+              "category": "Cidadão",
+              "audienceId": "cidadao",
+              "audienceIds": [
+                "cidadao"
+              ],
+              "destination": "Portal de Protocolos 1Doc",
+              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
+              "initials": "AP",
+              "sourceRow": 18
+            },
+            {
+              "id": "1doc-averbacao-de-imoveis",
+              "type": "service",
+              "role": "entry",
+              "title": "Averbação de imóveis",
+              "department": "SEAFI-SUCAI - Supervisão de Cadastro Imobiliário",
+              "category": "Tributos",
+              "audienceId": "cidadao",
+              "audienceIds": [
+                "cidadao",
+                "empresa"
+              ],
+              "destination": "Portal de Protocolos 1Doc",
+              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
+              "initials": "AD",
+              "sourceRow": 19
+            },
+            {
+              "id": "1doc-baixa-do-cadastro-de-inscricao-municipal",
+              "type": "service",
+              "role": "entry",
+              "department": "Prefeitura Municipal de Amargosa",
+              "destination": "Portal de Protocolos 1Doc",
+              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
+              "initials": "BD",
+              "slug": "baixa-do-cadastro-de-inscricao-municipal",
+              "title": "Baixa do Cadastro de Inscrição Municipal",
+              "audienceId": "cidadao",
+              "audienceIds": [
+                "cidadao",
+                "empresa"
+              ],
+              "sourceRow": 20,
+              "category": "Cidadão, Empresas"
+            },
+            {
+              "id": "1doc-cadastramento-de-area-urbana-com-origem-rural",
+              "type": "service",
+              "role": "entry",
+              "title": "Cadastramento de área urbana com origem rural",
+              "department": "SEAFI-SUCAI - Supervisão de Cadastro Imobiliário",
+              "category": "Tributos",
+              "audienceId": "cidadao",
+              "audienceIds": [
+                "cidadao",
+                "empresa"
+              ],
+              "destination": "Portal de Protocolos 1Doc",
+              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
+              "initials": "CD",
+              "sourceRow": 22
+            },
+            {
+              "id": "1doc-cadastro-imobiliario",
+              "type": "service",
+              "role": "entry",
+              "title": "Cadastro Imobiliário",
+              "department": "SEAFI-SUCAI - Supervisão de Cadastro Imobiliário",
+              "category": "Tributos",
+              "audienceId": "cidadao",
+              "audienceIds": [
+                "cidadao"
+              ],
+              "destination": "Portal de Protocolos 1Doc",
+              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
+              "initials": "CI",
+              "sourceRow": 23
+            },
+            {
+              "id": "1doc-camara-de-vereadores",
+              "type": "service",
+              "role": "entry",
+              "title": "Câmara de vereadores",
+              "department": "GP-AGP - Assessoria de Gabinete do Prefeito",
+              "category": "Órgãos Públicos e ONGs",
+              "audienceId": "orgaos-publicos-ongs",
+              "audienceIds": [
+                "orgaos-publicos-ongs"
+              ],
+              "destination": "Portal de Protocolos 1Doc",
+              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
+              "initials": "CD",
+              "sourceRow": 24
+            },
+            {
+              "id": "1doc-cancelamento-ou-baixa-de-credito-tributario",
+              "type": "service",
+              "role": "entry",
+              "title": "Cancelamento ou Baixa de Crédito Tributário",
+              "department": "SEAFI-SUDIV - Supervisão de Dívida Ativa",
+              "category": "Tributos",
+              "audienceId": "cidadao",
+              "audienceIds": [
+                "cidadao",
+                "empresa"
+              ],
+              "destination": "Portal de Protocolos 1Doc",
+              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
+              "initials": "CO",
+              "sourceRow": 25
             },
             {
               "id": "1doc-cancelamento-retificacao-de-nfs-e",
@@ -1254,14 +758,100 @@
               "title": "Cancelamento/Retificação de NFS-e",
               "department": "SEAFI-SUDIV - Supervisão de Dívida Ativa",
               "category": "Tributos",
-              "audienceId": "empresa",
+              "audienceId": "cidadao",
               "audienceIds": [
+                "cidadao",
                 "empresa"
               ],
               "destination": "Portal de Protocolos 1Doc",
               "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
               "initials": "CR",
-              "sourceRow": 56
+              "sourceRow": 26
+            },
+            {
+              "id": "1doc-capacitacao-funcional",
+              "type": "service",
+              "role": "entry",
+              "title": "Capacitação Funcional",
+              "department": "SEAFI-SUGEP - Superintendência de Gestão de Pessoas",
+              "category": "Servidor",
+              "audienceId": "servidor",
+              "audienceIds": [
+                "servidor"
+              ],
+              "destination": "Portal de Protocolos 1Doc",
+              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
+              "initials": "CF",
+              "sourceRow": 27
+            },
+            {
+              "id": "1doc-certidao-de-1-lancamento-do-iptu",
+              "type": "service",
+              "role": "entry",
+              "title": "Certidão de 1° Lançamento do IPTU",
+              "department": "SEAFI-SUCAI - Supervisão de Cadastro Imobiliário",
+              "category": "Tributos",
+              "audienceId": "cidadao",
+              "audienceIds": [
+                "cidadao",
+                "empresa"
+              ],
+              "destination": "Portal de Protocolos 1Doc",
+              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
+              "initials": "CD",
+              "sourceRow": 28
+            },
+            {
+              "id": "1doc-certidao-de-comprovacao-de-endereco",
+              "type": "service",
+              "role": "entry",
+              "title": "Certidão de Comprovação de Endereço",
+              "department": "SEAFI-SUDIV - Supervisão de Dívida Ativa",
+              "category": "Tributos",
+              "audienceId": "cidadao",
+              "audienceIds": [
+                "cidadao",
+                "empresa"
+              ],
+              "destination": "Portal de Protocolos 1Doc",
+              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
+              "initials": "CD",
+              "sourceRow": 29
+            },
+            {
+              "id": "1doc-certidao-de-inexigibilidade-ci",
+              "type": "service",
+              "role": "entry",
+              "department": "Prefeitura Municipal de Amargosa",
+              "destination": "Portal de Protocolos 1Doc",
+              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
+              "initials": "CD",
+              "slug": "certidao-de-inexigibilidade-ci",
+              "title": "Certidão de Inexigibilidade - CI",
+              "audienceId": "cidadao",
+              "audienceIds": [
+                "cidadao",
+                "empresa"
+              ],
+              "sourceRow": 30,
+              "category": "Cidadão, Empresas"
+            },
+            {
+              "id": "1doc-certidao-de-inexistencia-de-inscricao",
+              "type": "service",
+              "role": "entry",
+              "title": "Certidão de Inexistência de Inscrição",
+              "department": "SEAFI-SUCAI - Supervisão de Cadastro Imobiliário",
+              "category": "Tributos",
+              "audienceId": "cidadao",
+              "audienceIds": [
+                "cidadao",
+                "empresa"
+              ],
+              "destination": "Portal de Protocolos 1Doc",
+              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
+              "initials": "CD",
+              "sourceRow": 31
             },
             {
               "id": "1doc-certidao-de-inscricao-municipal-empresa",
@@ -1270,14 +860,32 @@
               "title": "Certidão de Inscrição Municipal - Empresa",
               "department": "SEAFI-SUDIV - Supervisão de Dívida Ativa",
               "category": "Tributos",
-              "audienceId": "empresa",
+              "audienceId": "cidadao",
               "audienceIds": [
+                "cidadao",
                 "empresa"
               ],
               "destination": "Portal de Protocolos 1Doc",
               "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
               "initials": "CD",
-              "sourceRow": 57
+              "sourceRow": 32
+            },
+            {
+              "id": "1doc-certidao-de-lancamento-de-numero-de-imovel",
+              "type": "service",
+              "role": "entry",
+              "title": "Certidão de Lançamento de Número de Imóvel",
+              "department": "SEAFI-SUCAI - Supervisão de Cadastro Imobiliário",
+              "category": "Tributos",
+              "audienceId": "cidadao",
+              "audienceIds": [
+                "cidadao",
+                "empresa"
+              ],
+              "destination": "Portal de Protocolos 1Doc",
+              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
+              "initials": "CD",
+              "sourceRow": 33
             },
             {
               "id": "1doc-certidao-de-regularidade-fiscal-empresas",
@@ -1286,14 +894,383 @@
               "title": "Certidão de Regularidade Fiscal - Empresas",
               "department": "SEAFI-SUDIV - Supervisão de Dívida Ativa",
               "category": "Tributos",
-              "audienceId": "empresa",
+              "audienceId": "cidadao",
               "audienceIds": [
+                "cidadao",
                 "empresa"
               ],
               "destination": "Portal de Protocolos 1Doc",
               "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
               "initials": "CD",
-              "sourceRow": 58
+              "sourceRow": 34
+            },
+            {
+              "id": "1doc-certidao-de-regularidade-fiscal-iptu",
+              "type": "service",
+              "role": "entry",
+              "title": "Certidão de Regularidade Fiscal IPTU",
+              "department": "SEAFI-SUCAI - Supervisão de Cadastro Imobiliário",
+              "category": "Tributos",
+              "audienceId": "cidadao",
+              "audienceIds": [
+                "cidadao",
+                "empresa"
+              ],
+              "destination": "Portal de Protocolos 1Doc",
+              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
+              "initials": "CD",
+              "sourceRow": 35
+            },
+            {
+              "id": "1doc-certidao-de-valor-venal-rural",
+              "type": "service",
+              "role": "entry",
+              "title": "Certidão de Valor Venal / Rural",
+              "department": "SEAFI-SUCAI - Supervisão de Cadastro Imobiliário",
+              "category": "Tributos",
+              "audienceId": "cidadao",
+              "audienceIds": [
+                "cidadao",
+                "empresa"
+              ],
+              "destination": "Portal de Protocolos 1Doc",
+              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
+              "initials": "CD",
+              "sourceRow": 36
+            },
+            {
+              "id": "1doc-certidao-de-valor-venal-urbano",
+              "type": "service",
+              "role": "entry",
+              "title": "Certidão de Valor Venal / Urbano",
+              "department": "SEAFI-SUCAI - Supervisão de Cadastro Imobiliário",
+              "category": "Tributos",
+              "audienceId": "cidadao",
+              "audienceIds": [
+                "cidadao",
+                "empresa"
+              ],
+              "destination": "Portal de Protocolos 1Doc",
+              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
+              "initials": "CD",
+              "sourceRow": 37
+            },
+            {
+              "id": "1doc-certidao-negativa-de-pessoa-fisica",
+              "type": "service",
+              "role": "entry",
+              "title": "Certidão Negativa de Pessoa Física",
+              "department": "SEAFI-SUDIV - Supervisão de Dívida Ativa",
+              "category": "Tributos",
+              "audienceId": "cidadao",
+              "audienceIds": [
+                "cidadao",
+                "empresa"
+              ],
+              "destination": "Portal de Protocolos 1Doc",
+              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
+              "initials": "CN",
+              "sourceRow": 38
+            },
+            {
+              "id": "1doc-certidao-por-tempo-de-servico",
+              "type": "service",
+              "role": "entry",
+              "title": "Certidão por Tempo de Serviço",
+              "department": "SEAFI-SUGEP - Superintendência de Gestão de Pessoas",
+              "category": "Servidor",
+              "audienceId": "servidor",
+              "audienceIds": [
+                "servidor"
+              ],
+              "destination": "Portal de Protocolos 1Doc",
+              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
+              "initials": "CP",
+              "sourceRow": 39
+            },
+            {
+              "id": "1doc-compensacao-pessoa-fisica-e-juridica",
+              "type": "service",
+              "role": "entry",
+              "title": "Compensação - Pessoa Física e Jurídica",
+              "department": "SEAFI-SUDIV - Supervisão de Dívida Ativa",
+              "category": "Tributos",
+              "audienceId": "cidadao",
+              "audienceIds": [
+                "cidadao",
+                "empresa"
+              ],
+              "destination": "Portal de Protocolos 1Doc",
+              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
+              "initials": "CP",
+              "sourceRow": 41
+            },
+            {
+              "id": "1doc-concurso",
+              "type": "service",
+              "role": "entry",
+              "title": "Concurso",
+              "department": "SEAFI-SUGEP - Superintendência de Gestão de Pessoas",
+              "category": "Cidadão",
+              "audienceId": "cidadao",
+              "audienceIds": [
+                "cidadao"
+              ],
+              "destination": "Portal de Protocolos 1Doc",
+              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
+              "initials": "C",
+              "sourceRow": 42
+            },
+            {
+              "id": "1doc-concurso-de-remocao-de-servidor",
+              "type": "service",
+              "role": "entry",
+              "title": "Concurso de Remoção de Servidor",
+              "department": "CAPRS - Comissão de Avaliação e Acompanhamento para subsidiar a realização de futuro Processo de Remoção de Servidores",
+              "category": "Servidor",
+              "audienceId": "servidor",
+              "audienceIds": [
+                "servidor"
+              ],
+              "destination": "Portal de Protocolos 1Doc",
+              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
+              "initials": "CD",
+              "sourceRow": 43
+            },
+            {
+              "id": "1doc-consulta-de-debitos-e-informacoes-cadastrais",
+              "type": "service",
+              "role": "entry",
+              "title": "Consulta de débitos e informações cadastrais",
+              "department": "SEAFI-SUDIV - Supervisão de Dívida Ativa",
+              "category": "Tributos",
+              "audienceId": "cidadao",
+              "audienceIds": [
+                "cidadao",
+                "empresa"
+              ],
+              "destination": "Portal de Protocolos 1Doc",
+              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
+              "initials": "CD",
+              "sourceRow": 45
+            },
+            {
+              "id": "1doc-contracheque",
+              "type": "service",
+              "role": "entry",
+              "title": "Contracheque",
+              "department": "GAB-DGP - Gabinete DGP",
+              "category": "Servidor",
+              "audienceId": "servidor",
+              "audienceIds": [
+                "servidor"
+              ],
+              "destination": "Portal de Protocolos 1Doc",
+              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
+              "initials": "C",
+              "sourceRow": 46
+            },
+            {
+              "id": "1doc-convenios-diversos",
+              "type": "service",
+              "role": "entry",
+              "title": "Convênios (diversos)",
+              "department": "SEAFI-SUCONV - Superintendência de Projetos e Convênios",
+              "category": "Órgãos Públicos e ONGs",
+              "audienceId": "orgaos-publicos-ongs",
+              "audienceIds": [
+                "orgaos-publicos-ongs"
+              ],
+              "destination": "Portal de Protocolos 1Doc",
+              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
+              "initials": "CD",
+              "sourceRow": 47
+            },
+            {
+              "id": "1doc-correcao-de-valores-salariais",
+              "type": "service",
+              "role": "entry",
+              "title": "Correção de valores salariais",
+              "department": "SEAFI-SUGEP - Superintendência de Gestão de Pessoas",
+              "category": "Servidor",
+              "audienceId": "servidor",
+              "audienceIds": [
+                "servidor"
+              ],
+              "destination": "Portal de Protocolos 1Doc",
+              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
+              "initials": "CD",
+              "sourceRow": 48
+            },
+            {
+              "id": "1doc-credencial-de-estacionamento-para-idoso",
+              "type": "service",
+              "role": "entry",
+              "department": "Prefeitura Municipal de Amargosa",
+              "destination": "Portal de Protocolos 1Doc",
+              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
+              "initials": "CD",
+              "slug": "credencial-de-estacionamento-para-idoso",
+              "title": "Credencial de Estacionamento para Idoso",
+              "audienceId": "cidadao",
+              "audienceIds": [
+                "cidadao"
+              ],
+              "sourceRow": 49,
+              "category": "Cidadão"
+            },
+            {
+              "id": "1doc-credencial-de-estacionamento-para-pcd",
+              "type": "service",
+              "role": "entry",
+              "department": "Prefeitura Municipal de Amargosa",
+              "destination": "Portal de Protocolos 1Doc",
+              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
+              "initials": "CD",
+              "slug": "credencial-de-estacionamento-para-pcd",
+              "title": "Credencial de Estacionamento para PCD",
+              "audienceId": "cidadao",
+              "audienceIds": [
+                "cidadao"
+              ],
+              "sourceRow": 50,
+              "category": "Cidadão"
+            },
+            {
+              "id": "1doc-declaracao-de-perfil-profissiografico-previdenciario-ppp",
+              "type": "service",
+              "role": "entry",
+              "title": "Declaração de Perfil Profissiográfico Previdenciário - PPP",
+              "department": "SEAFI-SUGEP - Superintendência de Gestão de Pessoas",
+              "category": "Servidor",
+              "audienceId": "servidor",
+              "audienceIds": [
+                "servidor"
+              ],
+              "destination": "Portal de Protocolos 1Doc",
+              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
+              "initials": "DD",
+              "sourceRow": 51
+            },
+            {
+              "id": "1doc-defesa-de-autuacao-pessoa-juridica",
+              "type": "service",
+              "role": "entry",
+              "department": "Prefeitura Municipal de Amargosa",
+              "destination": "Portal de Protocolos 1Doc",
+              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
+              "initials": "DD",
+              "slug": "defesa-de-autuacao-pessoa-juridica",
+              "title": "Defesa de Autuação - Pessoa Jurídica",
+              "audienceId": "cidadao",
+              "audienceIds": [
+                "cidadao"
+              ],
+              "sourceRow": 52,
+              "category": "Cidadão"
+            },
+            {
+              "id": "1doc-descompatibilizacao-eleitoral",
+              "type": "service",
+              "role": "entry",
+              "title": "Descompatibilização Eleitoral",
+              "department": "SEAFI-SUGEP - Superintendência de Gestão de Pessoas",
+              "category": "Servidor",
+              "audienceId": "servidor",
+              "audienceIds": [
+                "servidor"
+              ],
+              "destination": "Portal de Protocolos 1Doc",
+              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
+              "initials": "DE",
+              "sourceRow": 53
+            },
+            {
+              "id": "1doc-desmembramento-de-area-rural",
+              "type": "service",
+              "role": "entry",
+              "title": "Desmembramento de Área - Rural",
+              "department": "SEAFI-SUCAI - Supervisão de Cadastro Imobiliário",
+              "category": "Tributos",
+              "audienceId": "cidadao",
+              "audienceIds": [
+                "cidadao",
+                "empresa"
+              ],
+              "destination": "Portal de Protocolos 1Doc",
+              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
+              "initials": "DD",
+              "sourceRow": 54
+            },
+            {
+              "id": "1doc-desmembramento-de-area-urbano",
+              "type": "service",
+              "role": "entry",
+              "title": "Desmembramento de Área - Urbano",
+              "department": "SEAFI-SUCAI - Supervisão de Cadastro Imobiliário",
+              "category": "Tributos",
+              "audienceId": "cidadao",
+              "audienceIds": [
+                "cidadao",
+                "empresa"
+              ],
+              "destination": "Portal de Protocolos 1Doc",
+              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
+              "initials": "DD",
+              "sourceRow": 55
+            },
+            {
+              "id": "1doc-desmembramento-de-lotes",
+              "type": "service",
+              "role": "entry",
+              "department": "Prefeitura Municipal de Amargosa",
+              "destination": "Portal de Protocolos 1Doc",
+              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
+              "initials": "DD",
+              "slug": "desmembramento-de-lotes",
+              "title": "Desmembramento de lotes",
+              "audienceId": "cidadao",
+              "audienceIds": [
+                "cidadao",
+                "empresa"
+              ],
+              "sourceRow": 56,
+              "category": "Cidadão, Empresas"
+            },
+            {
+              "id": "1doc-dispensa-de-licenca-dl",
+              "type": "service",
+              "role": "entry",
+              "department": "Prefeitura Municipal de Amargosa",
+              "destination": "Portal de Protocolos 1Doc",
+              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
+              "initials": "DD",
+              "slug": "dispensa-de-licenca-dl",
+              "title": "Dispensa de Licença - DL",
+              "audienceId": "cidadao",
+              "audienceIds": [
+                "cidadao",
+                "empresa"
+              ],
+              "sourceRow": 57,
+              "category": "Cidadão, Empresas"
+            },
+            {
+              "id": "1doc-duvidas-sobre-concursos-processos-seletivos",
+              "type": "service",
+              "role": "entry",
+              "department": "Prefeitura Municipal de Amargosa",
+              "destination": "Portal de Protocolos 1Doc",
+              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
+              "initials": "DS",
+              "slug": "duvidas-sobre-concursos-processos-seletivos",
+              "title": "Duvidas sobre Concursos/Processos seletivos",
+              "audienceId": "ouvidoria",
+              "audienceIds": [
+                "ouvidoria"
+              ],
+              "sourceRow": 58,
+              "category": "Ouvidoria"
             },
             {
               "id": "1doc-entrega-de-documentos-licitatorios",
@@ -1309,7 +1286,7 @@
               "destination": "Portal de Protocolos 1Doc",
               "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
               "initials": "ED",
-              "sourceRow": 59
+              "sourceRow": 60
             },
             {
               "id": "1doc-esclarecimento-em-licitacao",
@@ -1325,7 +1302,122 @@
               "destination": "Portal de Protocolos 1Doc",
               "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
               "initials": "EE",
-              "sourceRow": 60
+              "sourceRow": 61
+            },
+            {
+              "id": "1doc-estagio-probatorio",
+              "type": "service",
+              "role": "entry",
+              "title": "Estágio Probatório",
+              "department": "SEAP - Subcomissão especial de avaliação",
+              "category": "Servidor",
+              "audienceId": "servidor",
+              "audienceIds": [
+                "servidor"
+              ],
+              "destination": "Portal de Protocolos 1Doc",
+              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
+              "initials": "EP",
+              "sourceRow": 62
+            },
+            {
+              "id": "1doc-exoneracao-de-cargo",
+              "type": "service",
+              "role": "entry",
+              "title": "Exoneração de cargo",
+              "department": "SEAFI-SUGEP - Superintendência de Gestão de Pessoas",
+              "category": "Servidor",
+              "audienceId": "servidor",
+              "audienceIds": [
+                "servidor"
+              ],
+              "destination": "Portal de Protocolos 1Doc",
+              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
+              "initials": "ED",
+              "sourceRow": 63
+            },
+            {
+              "id": "1doc-extincao-ou-suspensao-de-execucao-extrajudicial-ou-judicial",
+              "type": "service",
+              "role": "entry",
+              "title": "Extinção ou Suspensão de Execução Extrajudicial ou Judicial",
+              "department": "AJU - DA - Assessoria Jurídica - Dívida Ativa",
+              "category": "Tributos",
+              "audienceId": "cidadao",
+              "audienceIds": [
+                "cidadao",
+                "empresa"
+              ],
+              "destination": "Portal de Protocolos 1Doc",
+              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
+              "initials": "EO",
+              "sourceRow": 64
+            },
+            {
+              "id": "1doc-ferias-marcacao-e-alteracao",
+              "type": "service",
+              "role": "entry",
+              "title": "Férias (Marcação e alteração)",
+              "department": "GAB-DGP - Gabinete DGP",
+              "category": "Servidor",
+              "audienceId": "servidor",
+              "audienceIds": [
+                "servidor"
+              ],
+              "destination": "Portal de Protocolos 1Doc",
+              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
+              "initials": "FM",
+              "sourceRow": 65
+            },
+            {
+              "id": "1doc-gratificacao-por-estimulo-ao-aperfeicoamento-gea-semed",
+              "type": "service",
+              "role": "entry",
+              "title": "Gratificação por estímulo ao aperfeiçoamento - GEA (SEMED)",
+              "department": "PFGEA - Progressão Funcional e GEA",
+              "category": "Servidor",
+              "audienceId": "servidor",
+              "audienceIds": [
+                "servidor"
+              ],
+              "destination": "Portal de Protocolos 1Doc",
+              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
+              "initials": "GP",
+              "sourceRow": 66
+            },
+            {
+              "id": "1doc-guia-de-sepultamento",
+              "type": "service",
+              "role": "entry",
+              "title": "Guia de sepultamento",
+              "department": "SAC - SAC Municipal",
+              "category": "Cidadão",
+              "audienceId": "cidadao",
+              "audienceIds": [
+                "cidadao"
+              ],
+              "destination": "Portal de Protocolos 1Doc",
+              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
+              "initials": "GD",
+              "sourceRow": 67
+            },
+            {
+              "id": "1doc-habite-se",
+              "type": "service",
+              "role": "entry",
+              "department": "Prefeitura Municipal de Amargosa",
+              "destination": "Portal de Protocolos 1Doc",
+              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
+              "initials": "H",
+              "slug": "habite-se",
+              "title": "Habite-se",
+              "audienceId": "cidadao",
+              "audienceIds": [
+                "cidadao",
+                "empresa"
+              ],
+              "sourceRow": 68,
+              "category": "Cidadão, Empresas"
             },
             {
               "id": "1doc-impugnacao-de-edital-de-licitacao",
@@ -1341,7 +1433,141 @@
               "destination": "Portal de Protocolos 1Doc",
               "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
               "initials": "ID",
-              "sourceRow": 61
+              "sourceRow": 69
+            },
+            {
+              "id": "1doc-indicacao-de-condutor-infrator-pessoa-fisica",
+              "type": "service",
+              "role": "entry",
+              "department": "Prefeitura Municipal de Amargosa",
+              "destination": "Portal de Protocolos 1Doc",
+              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
+              "initials": "ID",
+              "slug": "indicacao-de-condutor-infrator-pessoa-fisica",
+              "title": "Indicação de Condutor Infrator - Pessoa Física",
+              "audienceId": "cidadao",
+              "audienceIds": [
+                "cidadao"
+              ],
+              "sourceRow": 71,
+              "category": "Cidadão"
+            },
+            {
+              "id": "1doc-indicacao-de-condutor-infrator-pessoa-juridica",
+              "type": "service",
+              "role": "entry",
+              "department": "Prefeitura Municipal de Amargosa",
+              "destination": "Portal de Protocolos 1Doc",
+              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
+              "initials": "ID",
+              "slug": "indicacao-de-condutor-infrator-pessoa-juridica",
+              "title": "Indicação de Condutor Infrator - Pessoa Jurídica",
+              "audienceId": "cidadao",
+              "audienceIds": [
+                "cidadao"
+              ],
+              "sourceRow": 72,
+              "category": "Cidadão"
+            },
+            {
+              "id": "1doc-informe-de-rendimentos-para-imposto-de-renda",
+              "type": "service",
+              "role": "entry",
+              "title": "Informe de Rendimentos para Imposto de Renda",
+              "department": "GAB-DGP - Gabinete DGP",
+              "category": "Servidor",
+              "audienceId": "servidor",
+              "audienceIds": [
+                "servidor"
+              ],
+              "destination": "Portal de Protocolos 1Doc",
+              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
+              "initials": "ID",
+              "sourceRow": 73
+            },
+            {
+              "id": "1doc-inscricao-municipal-cadastro-economico",
+              "type": "service",
+              "role": "entry",
+              "title": "Inscrição Municipal cadastro Econômico",
+              "department": "SEAFI-SUDIV - Supervisão de Dívida Ativa",
+              "category": "Tributos",
+              "audienceId": "cidadao",
+              "audienceIds": [
+                "cidadao",
+                "empresa"
+              ],
+              "destination": "Portal de Protocolos 1Doc",
+              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
+              "initials": "IM",
+              "sourceRow": 74
+            },
+            {
+              "id": "1doc-interdicao-de-via",
+              "type": "service",
+              "role": "entry",
+              "title": "Interdição de Via",
+              "department": "DOP - Diretoria de Ordem Pública",
+              "category": "Cidadão",
+              "audienceId": "cidadao",
+              "audienceIds": [
+                "cidadao"
+              ],
+              "destination": "Portal de Protocolos 1Doc",
+              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
+              "initials": "ID",
+              "sourceRow": 76
+            },
+            {
+              "id": "1doc-isencao-de-iptu",
+              "type": "service",
+              "role": "entry",
+              "title": "Isenção de IPTU",
+              "department": "SEAFI-SUCAI - Supervisão de Cadastro Imobiliário",
+              "category": "Tributos",
+              "audienceId": "cidadao",
+              "audienceIds": [
+                "cidadao",
+                "empresa"
+              ],
+              "destination": "Portal de Protocolos 1Doc",
+              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
+              "initials": "ID",
+              "sourceRow": 77
+            },
+            {
+              "id": "1doc-isencao-de-itbi-itv",
+              "type": "service",
+              "role": "entry",
+              "title": "Isenção de ITBI/ITV",
+              "department": "SEAFI-SUCAI - Supervisão de Cadastro Imobiliário",
+              "category": "Tributos",
+              "audienceId": "cidadao",
+              "audienceIds": [
+                "cidadao",
+                "empresa"
+              ],
+              "destination": "Portal de Protocolos 1Doc",
+              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
+              "initials": "ID",
+              "sourceRow": 78
+            },
+            {
+              "id": "1doc-isencao-de-taxas",
+              "type": "service",
+              "role": "entry",
+              "title": "Isenção de Taxas",
+              "department": "SEAFI-SUDIV - Supervisão de Dívida Ativa",
+              "category": "Tributos",
+              "audienceId": "cidadao",
+              "audienceIds": [
+                "cidadao",
+                "empresa"
+              ],
+              "destination": "Portal de Protocolos 1Doc",
+              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
+              "initials": "ID",
+              "sourceRow": 79
             },
             {
               "id": "1doc-iss-imposto-sobre-servico",
@@ -1350,14 +1576,215 @@
               "title": "ISS (Imposto sobre serviço)",
               "department": "SEAFI-SUDIV - Supervisão de Dívida Ativa",
               "category": "Tributos",
-              "audienceId": "empresa",
+              "audienceId": "cidadao",
               "audienceIds": [
+                "cidadao",
                 "empresa"
               ],
               "destination": "Portal de Protocolos 1Doc",
               "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
               "initials": "II",
-              "sourceRow": 62
+              "sourceRow": 80
+            },
+            {
+              "id": "1doc-lancamento-de-inscricao-imobiliaria",
+              "type": "service",
+              "role": "entry",
+              "title": "Lançamento de Inscrição Imobiliária",
+              "department": "SEAFI-SUCAI - Supervisão de Cadastro Imobiliário",
+              "category": "Tributos",
+              "audienceId": "cidadao",
+              "audienceIds": [
+                "cidadao",
+                "empresa"
+              ],
+              "destination": "Portal de Protocolos 1Doc",
+              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
+              "initials": "LD",
+              "sourceRow": 81
+            },
+            {
+              "id": "1doc-lancamento-do-issqn-habite-se",
+              "type": "service",
+              "role": "entry",
+              "title": "Lançamento do ISSQN Habite-se",
+              "department": "SEAFI-SUDIV - Supervisão de Dívida Ativa",
+              "category": "Tributos",
+              "audienceId": "cidadao",
+              "audienceIds": [
+                "cidadao",
+                "empresa"
+              ],
+              "destination": "Portal de Protocolos 1Doc",
+              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
+              "initials": "LD",
+              "sourceRow": 83
+            },
+            {
+              "id": "1doc-licenca-nao-remunerada",
+              "type": "service",
+              "role": "entry",
+              "title": "Licença Não Remunerada",
+              "department": "SEAFI-SUGEP - Superintendência de Gestão de Pessoas",
+              "category": "Servidor",
+              "audienceId": "servidor",
+              "audienceIds": [
+                "servidor"
+              ],
+              "destination": "Portal de Protocolos 1Doc",
+              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
+              "initials": "LN",
+              "sourceRow": 84
+            },
+            {
+              "id": "1doc-licenca-por-motivo-de-doenca-em-pessoa-da-familia",
+              "type": "service",
+              "role": "entry",
+              "title": "Licença por motivo de doença em pessoa da família",
+              "department": "SEAFI-SUGEP - Superintendência de Gestão de Pessoas",
+              "category": "Cidadão",
+              "audienceId": "cidadao",
+              "audienceIds": [
+                "cidadao"
+              ],
+              "destination": "Portal de Protocolos 1Doc",
+              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
+              "initials": "LP",
+              "sourceRow": 85
+            },
+            {
+              "id": "1doc-licenca-premio",
+              "type": "service",
+              "role": "entry",
+              "title": "Licença Prêmio",
+              "department": "SEAFI-SUGEP - Superintendência de Gestão de Pessoas",
+              "category": "Servidor",
+              "audienceId": "servidor",
+              "audienceIds": [
+                "servidor"
+              ],
+              "destination": "Portal de Protocolos 1Doc",
+              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
+              "initials": "LP",
+              "sourceRow": 86
+            },
+            {
+              "id": "1doc-limpeza-publica",
+              "type": "service",
+              "role": "entry",
+              "title": "Limpeza Pública",
+              "department": "SEMOP-SUPESP - Superintendência de Serviços Públicos",
+              "category": "Cidadão, Empresas",
+              "audienceId": "cidadao",
+              "audienceIds": [
+                "cidadao",
+                "empresa"
+              ],
+              "destination": "Portal de Protocolos 1Doc",
+              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
+              "initials": "LP",
+              "sourceRow": 87
+            },
+            {
+              "id": "1doc-margem-para-emprestimo-consignado",
+              "type": "service",
+              "role": "entry",
+              "title": "Margem para Empréstimo Consignado",
+              "department": "SEAFI-SUGEP - Superintendência de Gestão de Pessoas",
+              "category": "Servidor",
+              "audienceId": "servidor",
+              "audienceIds": [
+                "servidor"
+              ],
+              "destination": "Portal de Protocolos 1Doc",
+              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
+              "initials": "MP",
+              "sourceRow": 88
+            },
+            {
+              "id": "1doc-nota-premiada-amargosa",
+              "type": "service",
+              "role": "entry",
+              "department": "Prefeitura Municipal de Amargosa",
+              "destination": "Portal de Protocolos 1Doc",
+              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
+              "initials": "NP",
+              "slug": "nota-premiada-amargosa",
+              "title": "Nota Premiada Amargosa",
+              "audienceId": "cidadao",
+              "audienceIds": [
+                "cidadao"
+              ],
+              "sourceRow": 90,
+              "category": "Cidadão"
+            },
+            {
+              "id": "1doc-numeracao-predial",
+              "type": "service",
+              "role": "entry",
+              "department": "Prefeitura Municipal de Amargosa",
+              "destination": "Portal de Protocolos 1Doc",
+              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
+              "initials": "NP",
+              "slug": "numeracao-predial",
+              "title": "Numeração predial",
+              "audienceId": "cidadao",
+              "audienceIds": [
+                "cidadao",
+                "empresa"
+              ],
+              "sourceRow": 91,
+              "category": "Cidadão, Empresas"
+            },
+            {
+              "id": "1doc-outros-orgaos-publicos-e-ongs",
+              "type": "service",
+              "role": "entry",
+              "title": "Outros - Orgãos públicos e ONGs",
+              "department": "Prefeitura de Amargosa",
+              "category": "Órgãos Públicos e ONGs",
+              "audienceId": "orgaos-publicos-ongs",
+              "audienceIds": [
+                "orgaos-publicos-ongs"
+              ],
+              "destination": "Portal de Protocolos 1Doc",
+              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
+              "initials": "OO",
+              "sourceRow": 94
+            },
+            {
+              "id": "1doc-ouvidoria-geral",
+              "type": "service",
+              "role": "entry",
+              "department": "Prefeitura Municipal de Amargosa",
+              "destination": "Portal de Protocolos 1Doc",
+              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
+              "initials": "OG",
+              "slug": "ouvidoria-geral",
+              "title": "Ouvidoria Geral",
+              "audienceId": "ouvidoria",
+              "audienceIds": [
+                "ouvidoria"
+              ],
+              "sourceRow": 96,
+              "category": "Ouvidoria"
+            },
+            {
+              "id": "1doc-parcelamento-de-debito-do-iptu",
+              "type": "service",
+              "role": "entry",
+              "title": "Parcelamento de Débito do IPTU",
+              "department": "SEAFI-SUCAI - Supervisão de Cadastro Imobiliário",
+              "category": "Tributos",
+              "audienceId": "cidadao",
+              "audienceIds": [
+                "cidadao",
+                "empresa"
+              ],
+              "destination": "Portal de Protocolos 1Doc",
+              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
+              "initials": "PD",
+              "sourceRow": 97
             },
             {
               "id": "1doc-pedido-de-certidao",
@@ -1373,7 +1800,7 @@
               "destination": "Portal de Protocolos 1Doc",
               "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
               "initials": "PD",
-              "sourceRow": 63
+              "sourceRow": 98
             },
             {
               "id": "1doc-pedido-de-reajuste-reequilibrio-contratual",
@@ -1389,135 +1816,23 @@
               "destination": "Portal de Protocolos 1Doc",
               "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
               "initials": "PD",
-              "sourceRow": 64
-            },
-            {
-              "id": "1doc-requerimento-gabinete-seafi",
-              "type": "service",
-              "role": "entry",
-              "title": "Requerimento Gabinete SEAFI",
-              "department": "SAC - SAC Municipal",
-              "category": "Empresas",
-              "audienceId": "empresa",
-              "audienceIds": [
-                "empresa"
-              ],
-              "destination": "Portal de Protocolos 1Doc",
-              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
-              "initials": "RG",
-              "sourceRow": 65
-            },
-            {
-              "id": "1doc-meio-ambiente",
-              "type": "service",
-              "role": "entry",
-              "title": "Meio Ambiente",
-          "department": "Prefeitura de Amargosa",
-              "category": "Empresas",
-              "audienceId": "empresa",
-              "audienceIds": [
-                "empresa"
-              ],
-              "destination": "Portal de Protocolos 1Doc",
-              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
-              "initials": "MA",
-              "sourceRow": 66
+              "sourceRow": 99
             },
             {
               "id": "1doc-poda-de-arvore",
               "type": "service",
               "role": "entry",
-              "title": "Poda de árvore",
+              "title": "Poda de arvore",
               "department": "SEAMA-SUMA-DIMA - Superintendência e Diretoria de Meio Ambiente",
-              "category": "Empresas",
-              "audienceId": "empresa",
+              "category": "Cidadão",
+              "audienceId": "cidadao",
               "audienceIds": [
-                "empresa"
+                "cidadao"
               ],
               "destination": "Portal de Protocolos 1Doc",
               "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
               "initials": "PD",
-              "sourceRow": 67
-            },
-            {
-              "id": "1doc-orgaos-publicos-e-ongs",
-              "type": "service",
-              "role": "entry",
-              "title": "Órgãos Públicos e ONGs",
-              "department": "SAC - SAC Municipal",
-              "category": "Empresas",
-              "audienceId": "empresa",
-              "audienceIds": [
-                "empresa"
-              ],
-              "destination": "Portal de Protocolos 1Doc",
-              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
-              "initials": "ÓP",
-              "sourceRow": 68
-            },
-            {
-              "id": "1doc-adesao-carona-licitatoria",
-              "type": "service",
-              "role": "entry",
-              "title": "Adesão - Carona licitatória",
-              "department": "SEAFI - Secretaria Municipal de Administração, Finanças e Desenvolvimento Institucional",
-              "category": "Empresas",
-              "audienceId": "empresa",
-              "audienceIds": [
-                "empresa"
-              ],
-              "destination": "Portal de Protocolos 1Doc",
-              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
-              "initials": "AC",
-              "sourceRow": 69
-            },
-            {
-              "id": "1doc-camara-de-vereadores",
-              "type": "service",
-              "role": "entry",
-              "title": "Câmara de vereadores",
-              "department": "GP-AGP - Assessoria de Gabinete do Prefeito",
-              "category": "Empresas",
-              "audienceId": "empresa",
-              "audienceIds": [
-                "empresa"
-              ],
-              "destination": "Portal de Protocolos 1Doc",
-              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
-              "initials": "CD",
-              "sourceRow": 70
-            },
-            {
-              "id": "1doc-convenios-diversos",
-              "type": "service",
-              "role": "entry",
-              "title": "Convênios (diversos)",
-              "department": "SEAFI-SUCONV - Superintendência de Projetos e Convênios",
-              "category": "Empresas",
-              "audienceId": "empresa",
-              "audienceIds": [
-                "empresa"
-              ],
-              "destination": "Portal de Protocolos 1Doc",
-              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
-              "initials": "CD",
-              "sourceRow": 71
-            },
-            {
-              "id": "1doc-outros-orgaos-publicos-e-ongs",
-              "type": "service",
-              "role": "entry",
-              "title": "Outros - Orgãos públicos e ONGs",
-          "department": "Prefeitura de Amargosa",
-              "category": "Empresas",
-              "audienceId": "empresa",
-              "audienceIds": [
-                "empresa"
-              ],
-              "destination": "Portal de Protocolos 1Doc",
-              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
-              "initials": "OO",
-              "sourceRow": 72
+              "sourceRow": 100
             },
             {
               "id": "1doc-precatorio-fundef",
@@ -1525,495 +1840,32 @@
               "role": "entry",
               "title": "Precatório FUNDEF",
               "department": "FUNDEF - Comissão Precatório FUNDEF",
-              "category": "Empresas",
-              "audienceId": "empresa",
+              "category": "Precatório FUNDEF",
+              "audienceId": "precatorio-fundef",
               "audienceIds": [
-                "empresa"
+                "precatorio-fundef"
               ],
               "destination": "Portal de Protocolos 1Doc",
               "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
               "initials": "PF",
-              "sourceRow": 73
-            },
-            {
-              "id": "1doc-abastecimento-de-agua",
-              "type": "service",
-              "role": "entry",
-              "title": "Abastecimento de água",
-              "department": "SEMOP-SUPESP - Superintendência de Serviços Públicos",
-              "category": "SEMOP",
-              "audienceId": "semop",
-              "audienceIds": [
-                "semop"
-              ],
-              "destination": "Portal de Protocolos 1Doc",
-              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
-              "initials": "AD",
-              "sourceRow": 75
-            },
-            {
-              "id": "1doc-interdicao-de-via",
-              "type": "service",
-              "role": "entry",
-              "title": "Interdição de Via",
-              "department": "DOP - Diretoria de Ordem Pública",
-              "category": "SEMOP",
-              "audienceId": "semop",
-              "audienceIds": [
-                "semop"
-              ],
-              "destination": "Portal de Protocolos 1Doc",
-              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
-              "initials": "ID",
-              "sourceRow": 76
-            },
-            {
-              "id": "1doc-limpeza-publica",
-              "type": "service",
-              "role": "entry",
-              "title": "Limpeza Pública",
-              "department": "SEMOP-SUPESP - Superintendência de Serviços Públicos",
-              "category": "SEMOP",
-              "audienceId": "semop",
-              "audienceIds": [
-                "semop"
-              ],
-              "destination": "Portal de Protocolos 1Doc",
-              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
-              "initials": "LP",
-              "sourceRow": 77
-            },
-            {
-              "id": "1doc-requerimento",
-              "type": "service",
-              "role": "entry",
-              "title": "Requerimento",
-              "department": "SEMOP-RECEP - Recepção",
-              "category": "SEMOP",
-              "audienceId": "semop",
-              "audienceIds": [
-                "semop"
-              ],
-              "destination": "Portal de Protocolos 1Doc",
-              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
-              "initials": "R",
-              "sourceRow": 78
-            },
-            {
-              "id": "1doc-retirada-de-entulhos",
-              "type": "service",
-              "role": "entry",
-              "title": "Retirada de Entulhos",
-              "department": "SEMOP-SUPESP - Superintendência de Serviços Públicos",
-              "category": "SEMOP",
-              "audienceId": "semop",
-              "audienceIds": [
-                "semop"
-              ],
-              "destination": "Portal de Protocolos 1Doc",
-              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
-              "initials": "RD",
-              "sourceRow": 79
-            },
-            {
-              "id": "1doc-servicos-de-manutencao-publica",
-              "type": "service",
-              "role": "entry",
-              "title": "Serviços de Manutenção Pública",
-              "department": "DIROB - Diretoria de Obras",
-              "category": "SEMOP",
-              "audienceId": "semop",
-              "audienceIds": [
-                "semop"
-              ],
-              "destination": "Portal de Protocolos 1Doc",
-              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
-              "initials": "SD",
-              "sourceRow": 80
-            },
-            {
-              "id": "1doc-solicitacao-de-reforma-de-carneira",
-              "type": "service",
-              "role": "entry",
-              "title": "Solicitação de reforma de carneira",
-              "department": "SEMOP-SUPESP - Superintendência de Serviços Públicos",
-              "category": "SEMOP",
-              "audienceId": "semop",
-              "audienceIds": [
-                "semop"
-              ],
-              "destination": "Portal de Protocolos 1Doc",
-              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
-              "initials": "SD",
-              "sourceRow": 81
-            },
-            {
-              "id": "1doc-troca-de-lampadas",
-              "type": "service",
-              "role": "entry",
-              "title": "Troca de lâmpadas",
-              "department": "SEMOP-SUPESP - Superintendência de Serviços Públicos",
-              "category": "SEMOP",
-              "audienceId": "semop",
-              "audienceIds": [
-                "semop"
-              ],
-              "destination": "Portal de Protocolos 1Doc",
-              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
-              "initials": "TD",
-              "sourceRow": 82
-            },
-            {
-              "id": "1doc-assunto-requerimento-de-ampliacao-de-carga-horaria-enquadramento",
-              "type": "service",
-              "role": "entry",
-              "title": "Assunto: Requerimento de ampliação de carga horária (enquadramento)",
-              "department": "SEAFI-SUGEP - Superintendência de Gestão de Pessoas",
-              "category": "Servidores",
-              "audienceId": "servidor",
-              "audienceIds": [
-                "servidor"
-              ],
-              "destination": "Portal de Protocolos 1Doc",
-              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
-              "initials": "AR",
-              "sourceRow": 84
-            },
-            {
-              "id": "1doc-atestado-medico-licenca-tratamento-de-saude",
-              "type": "service",
-              "role": "entry",
-              "title": "Atestado Médico - Licença Tratamento de Saúde",
-              "department": "COCAD - Cadastro",
-              "category": "Servidores",
-              "audienceId": "servidor",
-              "audienceIds": [
-                "servidor"
-              ],
-              "destination": "Portal de Protocolos 1Doc",
-              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
-              "initials": "AM",
-              "sourceRow": 85
-            },
-            {
-              "id": "1doc-atualizar-cadastro-funcional",
-              "type": "service",
-              "role": "entry",
-              "title": "Atualizar Cadastro Funcional",
-              "department": "SEAFI-SUGEP - Superintendência de Gestão de Pessoas",
-              "category": "Servidores",
-              "audienceId": "servidor",
-              "audienceIds": [
-                "servidor"
-              ],
-              "destination": "Portal de Protocolos 1Doc",
-              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
-              "initials": "AC",
-              "sourceRow": 86
-            },
-            {
-              "id": "1doc-capacitacao-funcional",
-              "type": "service",
-              "role": "entry",
-              "title": "Capacitação funcional",
-              "department": "SEAFI-SUGEP - Superintendência de Gestão de Pessoas",
-              "category": "Servidores",
-              "audienceId": "servidor",
-              "audienceIds": [
-                "servidor"
-              ],
-              "destination": "Portal de Protocolos 1Doc",
-              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
-              "initials": "CF",
-              "sourceRow": 87
-            },
-            {
-              "id": "1doc-certidao-por-tempo-de-servico",
-              "type": "service",
-              "role": "entry",
-              "title": "Certidão por Tempo de Serviço",
-              "department": "SEAFI-SUGEP - Superintendência de Gestão de Pessoas",
-              "category": "Servidores",
-              "audienceId": "servidor",
-              "audienceIds": [
-                "servidor"
-              ],
-              "destination": "Portal de Protocolos 1Doc",
-              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
-              "initials": "CP",
-              "sourceRow": 88
-            },
-            {
-              "id": "1doc-concurso-de-remocao-de-servidor",
-              "type": "service",
-              "role": "entry",
-              "title": "Concurso de Remoção de Servidor",
-              "department": "CAPRS - Comissão de Avaliação e Acompanhamento para subsidiar a realização de futuro Processo de Remoção de Servidores",
-              "category": "Servidores",
-              "audienceId": "servidor",
-              "audienceIds": [
-                "servidor"
-              ],
-              "destination": "Portal de Protocolos 1Doc",
-              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
-              "initials": "CD",
-              "sourceRow": 89
-            },
-            {
-              "id": "1doc-contracheque",
-              "type": "service",
-              "role": "entry",
-              "title": "Contracheque",
-              "department": "GAB-DGP - Gabinete DGP",
-              "category": "Servidores",
-              "audienceId": "servidor",
-              "audienceIds": [
-                "servidor"
-              ],
-              "destination": "Portal de Protocolos 1Doc",
-              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
-              "initials": "C",
-              "sourceRow": 90
-            },
-            {
-              "id": "1doc-correcao-de-valores-salariais",
-              "type": "service",
-              "role": "entry",
-              "title": "Correção de valores salariais",
-              "department": "SEAFI-SUGEP - Superintendência de Gestão de Pessoas",
-              "category": "Servidores",
-              "audienceId": "servidor",
-              "audienceIds": [
-                "servidor"
-              ],
-              "destination": "Portal de Protocolos 1Doc",
-              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
-              "initials": "CD",
-              "sourceRow": 91
-            },
-            {
-              "id": "1doc-declaracao-de-perfil-profissiografico-previdenciario-ppp",
-              "type": "service",
-              "role": "entry",
-              "title": "Declaração de Perfil Profissiográfico Previdenciário - PPP",
-              "department": "SEAFI-SUGEP - Superintendência de Gestão de Pessoas",
-              "category": "Servidores",
-              "audienceId": "servidor",
-              "audienceIds": [
-                "servidor"
-              ],
-              "destination": "Portal de Protocolos 1Doc",
-              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
-              "initials": "DD",
-              "sourceRow": 92
-            },
-            {
-              "id": "1doc-descompatibilizacao-eleitoral",
-              "type": "service",
-              "role": "entry",
-              "title": "Descompatibilização Eleitoral",
-              "department": "SEAFI-SUGEP - Superintendência de Gestão de Pessoas",
-              "category": "Servidores",
-              "audienceId": "servidor",
-              "audienceIds": [
-                "servidor"
-              ],
-              "destination": "Portal de Protocolos 1Doc",
-              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
-              "initials": "DE",
-              "sourceRow": 93
-            },
-            {
-              "id": "1doc-estagio-probatorio",
-              "type": "service",
-              "role": "entry",
-              "title": "Estágio Probatório",
-              "department": "SEAP - Subcomissão especial de avaliação",
-              "category": "Servidores",
-              "audienceId": "servidor",
-              "audienceIds": [
-                "servidor"
-              ],
-              "destination": "Portal de Protocolos 1Doc",
-              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
-              "initials": "EP",
-              "sourceRow": 94
-            },
-            {
-              "id": "1doc-exoneracao-de-cargo",
-              "type": "service",
-              "role": "entry",
-              "title": "Exoneração de cargo",
-              "department": "SEAFI-SUGEP - Superintendência de Gestão de Pessoas",
-              "category": "Servidores",
-              "audienceId": "servidor",
-              "audienceIds": [
-                "servidor"
-              ],
-              "destination": "Portal de Protocolos 1Doc",
-              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
-              "initials": "ED",
-              "sourceRow": 95
-            },
-            {
-              "id": "1doc-ferias-marcacao-e-alteracao",
-              "type": "service",
-              "role": "entry",
-              "title": "Férias (Marcação e alteração)",
-              "department": "GAB-DGP - Gabinete DGP",
-              "category": "Servidores",
-              "audienceId": "servidor",
-              "audienceIds": [
-                "servidor"
-              ],
-              "destination": "Portal de Protocolos 1Doc",
-              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
-              "initials": "FM",
-              "sourceRow": 96
-            },
-            {
-              "id": "1doc-gratificacao-por-estimulo-ao-aperfeicoamento-gea-semed",
-              "type": "service",
-              "role": "entry",
-              "title": "Gratificação por estímulo ao aperfeiçoamento - GEA (SEMED)",
-              "department": "PFGEA - Progressão Funcional e GEA",
-              "category": "Servidores",
-              "audienceId": "servidor",
-              "audienceIds": [
-                "servidor"
-              ],
-              "destination": "Portal de Protocolos 1Doc",
-              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
-              "initials": "GP",
-              "sourceRow": 97
-            },
-            {
-              "id": "1doc-informe-de-rendimentos-para-imposto-de-renda",
-              "type": "service",
-              "role": "entry",
-              "title": "Informe de Rendimentos para Imposto de Renda",
-              "department": "GAB-DGP - Gabinete DGP",
-              "category": "Servidores",
-              "audienceId": "servidor",
-              "audienceIds": [
-                "servidor"
-              ],
-              "destination": "Portal de Protocolos 1Doc",
-              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
-              "initials": "ID",
-              "sourceRow": 98
-            },
-            {
-              "id": "1doc-inscricao-processo-seletivo-para-coordenador-de-polo-uab",
-              "type": "service",
-              "role": "entry",
-              "title": "Inscrição Processo Seletivo para Coordenador de Polo UAB",
-              "department": "UAB - Eleição Polo UAB",
-              "category": "Servidores",
-              "audienceId": "servidor",
-              "audienceIds": [
-                "servidor"
-              ],
-              "destination": "Portal de Protocolos 1Doc",
-              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
-              "initials": "IP",
-              "sourceRow": 99
-            },
-            {
-              "id": "1doc-licenca-nao-remunerada",
-              "type": "service",
-              "role": "entry",
-              "title": "Licença Não Remunerada",
-              "department": "SEAFI-SUGEP - Superintendência de Gestão de Pessoas",
-              "category": "Servidores",
-              "audienceId": "servidor",
-              "audienceIds": [
-                "servidor"
-              ],
-              "destination": "Portal de Protocolos 1Doc",
-              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
-              "initials": "LN",
-              "sourceRow": 100
-            },
-            {
-              "id": "1doc-licenca-por-motivo-de-doenca-em-pessoa-da-familia",
-              "type": "service",
-              "role": "entry",
-              "title": "Licença por motivo de doença em pessoa da família",
-              "department": "SEAFI-SUGEP - Superintendência de Gestão de Pessoas",
-              "category": "Servidores",
-              "audienceId": "servidor",
-              "audienceIds": [
-                "servidor"
-              ],
-              "destination": "Portal de Protocolos 1Doc",
-              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
-              "initials": "LP",
               "sourceRow": 101
             },
             {
-              "id": "1doc-licenca-premio",
+              "id": "1doc-prescricao-de-credito-tributario-ou-de-renda-iptu-tll-tff",
               "type": "service",
               "role": "entry",
-              "title": "Licença Prêmio",
-              "department": "SEAFI-SUGEP - Superintendência de Gestão de Pessoas",
-              "category": "Servidores",
-              "audienceId": "servidor",
+              "title": "Prescrição de crédito tributário ou de renda/IPTU/TLL/TFF",
+              "department": "SEAFI-SUDIV - Supervisão de Dívida Ativa",
+              "category": "Tributos",
+              "audienceId": "cidadao",
               "audienceIds": [
-                "servidor"
+                "cidadao",
+                "empresa"
               ],
               "destination": "Portal de Protocolos 1Doc",
               "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
-              "initials": "LP",
+              "initials": "PD",
               "sourceRow": 102
-            },
-            {
-              "id": "1doc-margem-para-emprestimo-consignado",
-              "type": "service",
-              "role": "entry",
-              "title": "Margem para Empréstimo Consignado",
-              "department": "SEAFI-SUGEP - Superintendência de Gestão de Pessoas",
-              "category": "Servidores",
-              "audienceId": "servidor",
-              "audienceIds": [
-                "servidor"
-              ],
-              "destination": "Portal de Protocolos 1Doc",
-              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
-              "initials": "MP",
-              "sourceRow": 103
-            },
-            {
-              "id": "1doc-outras-licencas",
-              "type": "service",
-              "role": "entry",
-              "title": "Outras Licenças",
-              "department": "SEAFI-SUGEP - Superintendência de Gestão de Pessoas",
-              "category": "Servidores",
-              "audienceId": "servidor",
-              "audienceIds": [
-                "servidor"
-              ],
-              "destination": "Portal de Protocolos 1Doc",
-              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
-              "initials": "OL",
-              "sourceRow": 104
-            },
-            {
-              "id": "1doc-outros-servidores",
-              "type": "service",
-              "role": "entry",
-              "title": "Outros - Servidores",
-              "department": "SEAFI-SUGEP - Superintendência de Gestão de Pessoas",
-              "category": "Servidores",
-              "audienceId": "servidor",
-              "audienceIds": [
-                "servidor"
-              ],
-              "destination": "Portal de Protocolos 1Doc",
-              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
-              "initials": "OS",
-              "sourceRow": 105
             },
             {
               "id": "1doc-prestacao-de-contas-de-diarias",
@@ -2021,7 +1873,7 @@
               "role": "entry",
               "title": "Prestação de contas de Diárias",
               "department": "CGM - Controladoria Geral do Município",
-              "category": "Servidores",
+              "category": "Servidor",
               "audienceId": "servidor",
               "audienceIds": [
                 "servidor"
@@ -2029,15 +1881,15 @@
               "destination": "Portal de Protocolos 1Doc",
               "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
               "initials": "PD",
-              "sourceRow": 106
+              "sourceRow": 103
             },
             {
               "id": "1doc-progressao-funcional-semed-mudanca-de-nivel",
               "type": "service",
               "role": "entry",
-              "title": "Progressão  funcional - SEMED (Mudança de Nível)",
+              "title": "Progressão Funcional - SEMED (Mudança de Nível)",
               "department": "PFGEA - Progressão Funcional e GEA",
-              "category": "Servidores",
+              "category": "Servidor",
               "audienceId": "servidor",
               "audienceIds": [
                 "servidor"
@@ -2045,7 +1897,7 @@
               "destination": "Portal de Protocolos 1Doc",
               "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
               "initials": "PF",
-              "sourceRow": 107
+              "sourceRow": 104
             },
             {
               "id": "1doc-progressao-na-carreira",
@@ -2053,7 +1905,7 @@
               "role": "entry",
               "title": "Progressão na carreira",
               "department": "SEAFI-SUGEP - Superintendência de Gestão de Pessoas",
-              "category": "Servidores",
+              "category": "Servidor",
               "audienceId": "servidor",
               "audienceIds": [
                 "servidor"
@@ -2061,23 +1913,125 @@
               "destination": "Portal de Protocolos 1Doc",
               "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
               "initials": "PN",
-              "sourceRow": 108
+              "sourceRow": 105
             },
             {
-              "id": "1doc-recurso-progressao-funcional-semed",
+              "id": "1doc-reconhecimento-de-imunidade-isencao-ou-nao-incidencia",
               "type": "service",
               "role": "entry",
-              "title": "Recurso Progressão funcional - SEMED",
-              "department": "PFGEA - Progressão Funcional e GEA",
-              "category": "Servidores",
-              "audienceId": "servidor",
+              "title": "Reconhecimento de Imunidade, Isenção ou Não Incidência",
+              "department": "SEAFI-SUDIV - Supervisão de Dívida Ativa",
+              "category": "Tributos",
+              "audienceId": "cidadao",
               "audienceIds": [
-                "servidor"
+                "cidadao",
+                "empresa"
               ],
               "destination": "Portal de Protocolos 1Doc",
               "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
-              "initials": "RP",
-              "sourceRow": 109
+              "initials": "RD",
+              "sourceRow": 107
+            },
+            {
+              "id": "1doc-recurso-a-junta-administrativa-de-recursos-de-infracoes-cetran",
+              "type": "service",
+              "role": "entry",
+              "department": "Prefeitura Municipal de Amargosa",
+              "destination": "Portal de Protocolos 1Doc",
+              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
+              "initials": "RÀ",
+              "slug": "recurso-a-junta-administrativa-de-recursos-de-infracoes-cetran",
+              "title": "Recurso à Junta Administrativa de Recursos de Infrações - CETRAN",
+              "audienceId": "cidadao",
+              "audienceIds": [
+                "cidadao"
+              ],
+              "sourceRow": 108,
+              "category": "Cidadão"
+            },
+            {
+              "id": "1doc-recurso-a-junta-administrativa-de-recursos-de-infracoes-jari",
+              "type": "service",
+              "role": "entry",
+              "department": "Prefeitura Municipal de Amargosa",
+              "destination": "Portal de Protocolos 1Doc",
+              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
+              "initials": "RÀ",
+              "slug": "recurso-a-junta-administrativa-de-recursos-de-infracoes-jari",
+              "title": "Recurso à Junta Administrativa de Recursos de Infrações - JARI",
+              "audienceId": "cidadao",
+              "audienceIds": [
+                "cidadao"
+              ],
+              "sourceRow": 109,
+              "category": "Cidadão"
+            },
+            {
+              "id": "1doc-regularizacao-de-loteamentos",
+              "type": "service",
+              "role": "entry",
+              "department": "Prefeitura Municipal de Amargosa",
+              "destination": "Portal de Protocolos 1Doc",
+              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
+              "initials": "RD",
+              "slug": "regularizacao-de-loteamentos",
+              "title": "Regularização de Loteamentos",
+              "audienceId": "cidadao",
+              "audienceIds": [
+                "cidadao",
+                "empresa"
+              ],
+              "sourceRow": 111,
+              "category": "Cidadão, Empresas"
+            },
+            {
+              "id": "1doc-regularizacao-fundiaria",
+              "type": "service",
+              "role": "entry",
+              "title": "Regularização Fundiária",
+              "department": "SEAFI-SUCAI - Supervisão de Cadastro Imobiliário",
+              "category": "Cidadão",
+              "audienceId": "cidadao",
+              "audienceIds": [
+                "cidadao"
+              ],
+              "destination": "Portal de Protocolos 1Doc",
+              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
+              "initials": "RF",
+              "sourceRow": 112
+            },
+            {
+              "id": "1doc-requerimento-escolar",
+              "type": "service",
+              "role": "entry",
+              "title": "Requerimento escolar",
+              "department": "SEMED-GAB - Gabinete",
+              "category": "Cidadão",
+              "audienceId": "cidadao",
+              "audienceIds": [
+                "cidadao"
+              ],
+              "destination": "Portal de Protocolos 1Doc",
+              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
+              "initials": "RE",
+              "sourceRow": 114
+            },
+            {
+              "id": "1doc-requerimento-gabinete-seafi",
+              "type": "service",
+              "role": "entry",
+              "title": "Requerimento Gabinete SEAFI",
+              "department": "SAC - SAC Municipal",
+              "category": "Cidadão, Empresas",
+              "audienceId": "cidadao",
+              "audienceIds": [
+                "cidadao",
+                "empresa"
+              ],
+              "destination": "Portal de Protocolos 1Doc",
+              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
+              "initials": "RG",
+              "sourceRow": 115
             },
             {
               "id": "1doc-requerimento-gratificacao-estimulo-aperfeicoamento",
@@ -2085,7 +2039,7 @@
               "role": "entry",
               "title": "Requerimento Gratificação estímulo aperfeiçoamento",
               "department": "PFGEA - Progressão Funcional e GEA",
-              "category": "Servidores",
+              "category": "Servidor",
               "audienceId": "servidor",
               "audienceIds": [
                 "servidor"
@@ -2093,7 +2047,315 @@
               "destination": "Portal de Protocolos 1Doc",
               "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
               "initials": "RG",
-              "sourceRow": 110
+              "sourceRow": 116
+            },
+            {
+              "id": "1doc-ressarcimento-e-indenizacoes",
+              "type": "service",
+              "role": "entry",
+              "title": "Ressarcimento e indenizações",
+              "department": "SEAFI-GAB - Gabinete - SEAFI",
+              "category": "Cidadão",
+              "audienceId": "cidadao",
+              "audienceIds": [
+                "cidadao"
+              ],
+              "destination": "Portal de Protocolos 1Doc",
+              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
+              "initials": "RE",
+              "sourceRow": 117
+            },
+            {
+              "id": "1doc-restituicao-de-tributos",
+              "type": "service",
+              "role": "entry",
+              "title": "Restituição de Tributos",
+              "department": "SEAFI-SUDIV - Supervisão de Dívida Ativa",
+              "category": "Tributos",
+              "audienceId": "cidadao",
+              "audienceIds": [
+                "cidadao",
+                "empresa"
+              ],
+              "destination": "Portal de Protocolos 1Doc",
+              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
+              "initials": "RD",
+              "sourceRow": 118
+            },
+            {
+              "id": "1doc-retirada-de-entulhos",
+              "type": "service",
+              "role": "entry",
+              "title": "Retirada de Entulhos",
+              "department": "SEMOP-SUPESP - Superintendência de Serviços Públicos",
+              "category": "Cidadão, Empresas",
+              "audienceId": "cidadao",
+              "audienceIds": [
+                "cidadao",
+                "empresa"
+              ],
+              "destination": "Portal de Protocolos 1Doc",
+              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
+              "initials": "RD",
+              "sourceRow": 119
+            },
+            {
+              "id": "1doc-revisao-de-area",
+              "type": "service",
+              "role": "entry",
+              "title": "Revisão de Área",
+              "department": "SEAFI-SUCAI - Supervisão de Cadastro Imobiliário",
+              "category": "Tributos",
+              "audienceId": "cidadao",
+              "audienceIds": [
+                "cidadao",
+                "empresa"
+              ],
+              "destination": "Portal de Protocolos 1Doc",
+              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
+              "initials": "RD",
+              "sourceRow": 120
+            },
+            {
+              "id": "1doc-revisao-de-calculo-de-iptu",
+              "type": "service",
+              "role": "entry",
+              "title": "Revisão de Cálculo de IPTU",
+              "department": "SEAFI-SUCAI - Supervisão de Cadastro Imobiliário",
+              "category": "Tributos",
+              "audienceId": "cidadao",
+              "audienceIds": [
+                "cidadao",
+                "empresa"
+              ],
+              "destination": "Portal de Protocolos 1Doc",
+              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
+              "initials": "RD",
+              "sourceRow": 121
+            },
+            {
+              "id": "1doc-revisao-de-calculo-de-itiv",
+              "type": "service",
+              "role": "entry",
+              "title": "Revisão de Cálculo de ITIV",
+              "department": "SEAFI-SUCAI - Supervisão de Cadastro Imobiliário",
+              "category": "Tributos",
+              "audienceId": "cidadao",
+              "audienceIds": [
+                "cidadao",
+                "empresa"
+              ],
+              "destination": "Portal de Protocolos 1Doc",
+              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
+              "initials": "RD",
+              "sourceRow": 122
+            },
+            {
+              "id": "1doc-revisao-de-calculo-de-tff",
+              "type": "service",
+              "role": "entry",
+              "title": "Revisão de cálculo de TFF",
+              "department": "SEAFI-SUDIV - Supervisão de Dívida Ativa",
+              "category": "Tributos",
+              "audienceId": "cidadao",
+              "audienceIds": [
+                "cidadao",
+                "empresa"
+              ],
+              "destination": "Portal de Protocolos 1Doc",
+              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
+              "initials": "RD",
+              "sourceRow": 123
+            },
+            {
+              "id": "1doc-revisao-de-caracteristicas-imobiliaria",
+              "type": "service",
+              "role": "entry",
+              "title": "Revisão de características Imobiliária",
+              "department": "SEAFI-SUCAI - Supervisão de Cadastro Imobiliário",
+              "category": "Tributos",
+              "audienceId": "cidadao",
+              "audienceIds": [
+                "cidadao",
+                "empresa"
+              ],
+              "destination": "Portal de Protocolos 1Doc",
+              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
+              "initials": "RD",
+              "sourceRow": 124
+            },
+            {
+              "id": "1doc-servicos-de-manutencao-publica",
+              "type": "service",
+              "role": "entry",
+              "title": "Serviços de Manutenção Pública",
+              "department": "DIROB - Diretoria de Obras",
+              "category": "Cidadão, Empresas",
+              "audienceId": "cidadao",
+              "audienceIds": [
+                "cidadao",
+                "empresa"
+              ],
+              "destination": "Portal de Protocolos 1Doc",
+              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
+              "initials": "SD",
+              "sourceRow": 126
+            },
+            {
+              "id": "1doc-solicitacao-de-licenca-ambiental",
+              "type": "service",
+              "role": "entry",
+              "department": "Prefeitura Municipal de Amargosa",
+              "destination": "Portal de Protocolos 1Doc",
+              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
+              "initials": "SD",
+              "slug": "solicitacao-de-licenca-ambiental",
+              "title": "Solicitação de Licença Ambiental",
+              "audienceId": "cidadao",
+              "audienceIds": [
+                "cidadao",
+                "empresa"
+              ],
+              "sourceRow": 129,
+              "category": "Cidadão, Empresas"
+            },
+            {
+              "id": "1doc-solicitacao-de-reforma-de-carneira",
+              "type": "service",
+              "role": "entry",
+              "title": "Solicitação de reforma de carneira",
+              "department": "SEMOP-SUPESP - Superintendência de Serviços Públicos",
+              "category": "Cidadão",
+              "audienceId": "cidadao",
+              "audienceIds": [
+                "cidadao"
+              ],
+              "destination": "Portal de Protocolos 1Doc",
+              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
+              "initials": "SD",
+              "sourceRow": 130
+            },
+            {
+              "id": "1doc-solicitacao-renovacao-de-licenca-ambiental",
+              "type": "service",
+              "role": "entry",
+              "department": "Prefeitura Municipal de Amargosa",
+              "destination": "Portal de Protocolos 1Doc",
+              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
+              "initials": "SR",
+              "slug": "solicitacao-renovacao-de-licenca-ambiental",
+              "title": "Solicitação Renovação de Licença Ambiental",
+              "audienceId": "cidadao",
+              "audienceIds": [
+                "cidadao",
+                "empresa"
+              ],
+              "sourceRow": 131,
+              "category": "Cidadão, Empresas"
+            },
+            {
+              "id": "1doc-solicitacoes-para-eventos-esportivos-caminhadas-carreatas-e-etc",
+              "type": "service",
+              "role": "entry",
+              "department": "Prefeitura Municipal de Amargosa",
+              "destination": "Portal de Protocolos 1Doc",
+              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
+              "initials": "SP",
+              "slug": "solicitacoes-para-eventos-esportivos-caminhadas-carreatas-e-etc",
+              "title": "Solicitações para Eventos Esportivos, Caminhadas, Carreatas e etc",
+              "audienceId": "cidadao",
+              "audienceIds": [
+                "cidadao",
+                "empresa"
+              ],
+              "sourceRow": 132,
+              "category": "Cidadão, Empresas"
+            },
+            {
+              "id": "1doc-suspensao-do-cadastro-economico",
+              "type": "service",
+              "role": "entry",
+              "title": "Suspensão do cadastro econômico",
+              "department": "SEAFI-SUDIV - Supervisão de Dívida Ativa",
+              "category": "Tributos",
+              "audienceId": "cidadao",
+              "audienceIds": [
+                "cidadao",
+                "empresa"
+              ],
+              "destination": "Portal de Protocolos 1Doc",
+              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
+              "initials": "SD",
+              "sourceRow": 133
+            },
+            {
+              "id": "1doc-transferencia-de-titularidade-imobiliaria",
+              "type": "service",
+              "role": "entry",
+              "title": "Transferência de titularidade Imobiliária",
+              "department": "SEAFI-SUCAI - Supervisão de Cadastro Imobiliário",
+              "category": "Tributos",
+              "audienceId": "cidadao",
+              "audienceIds": [
+                "cidadao",
+                "empresa"
+              ],
+              "destination": "Portal de Protocolos 1Doc",
+              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
+              "initials": "TD",
+              "sourceRow": 134
+            },
+            {
+              "id": "1doc-transito-defesa-de-autuacao-pessoa-fisica",
+              "type": "service",
+              "role": "entry",
+              "department": "Prefeitura Municipal de Amargosa",
+              "destination": "Portal de Protocolos 1Doc",
+              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
+              "initials": "TD",
+              "slug": "transito-defesa-de-autuacao-pessoa-fisica",
+              "title": "Trânsito - Defesa de Autuação - Pessoa Física",
+              "audienceId": "cidadao",
+              "audienceIds": [
+                "cidadao"
+              ],
+              "sourceRow": 135,
+              "category": "Cidadão"
+            },
+            {
+              "id": "1doc-troca-de-lampadas",
+              "type": "service",
+              "role": "entry",
+              "title": "Troca de lâmpadas",
+              "department": "SEMOP-SUPESP - Superintendência de Serviços Públicos",
+              "category": "Cidadão, Empresas",
+              "audienceId": "cidadao",
+              "audienceIds": [
+                "cidadao",
+                "empresa"
+              ],
+              "destination": "Portal de Protocolos 1Doc",
+              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
+              "initials": "TD",
+              "sourceRow": 137
+            },
+            {
+              "id": "1doc-unificacao-de-lotes",
+              "type": "service",
+              "role": "entry",
+              "department": "Prefeitura Municipal de Amargosa",
+              "destination": "Portal de Protocolos 1Doc",
+              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
+              "initials": "UD",
+              "slug": "unificacao-de-lotes",
+              "title": "Unificação de lotes",
+              "audienceId": "cidadao",
+              "audienceIds": [
+                "cidadao",
+                "empresa"
+              ],
+              "sourceRow": 138,
+              "category": "Cidadão, Empresas"
             },
             {
               "id": "1doc-verbas-rescisorias",
@@ -2101,7 +2363,7 @@
               "role": "entry",
               "title": "Verbas rescisórias",
               "department": "SEAFI-SUGEP - Superintendência de Gestão de Pessoas",
-              "category": "Servidores",
+              "category": "Servidor",
               "audienceId": "servidor",
               "audienceIds": [
                 "servidor"
@@ -2109,7 +2371,7 @@
               "destination": "Portal de Protocolos 1Doc",
               "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
               "initials": "VR",
-              "sourceRow": 111
+              "sourceRow": 139
             }
           ]
         },

@@ -32,6 +32,7 @@
 .service-reference-notice span{font-weight:700}
 .service-reference-notice small{font-size:15px;letter-spacing:.02em;text-transform:uppercase}
 .service-reference-notice:hover{border-color:#0759a5;background:linear-gradient(90deg,#d8eff9 0%,#c4e7f5 100%);box-shadow:0 12px 28px rgba(7,89,165,.22)}
+.service-reference-notice-centered{justify-content:center;padding-inline:24px;color:#0759a5;text-align:center;text-transform:uppercase}.service-reference-notice-centered span{font-size:15px;font-weight:900;letter-spacing:.02em}.service-reference-notice-centered:hover span{text-decoration:underline;text-underline-offset:3px}
 .service-detail-rich .service-facts{gap:0;border-top:1px solid #cdd9d4;border-bottom:1px solid #cdd9d4}
 .service-detail-rich .service-facts div{min-height:150px;justify-content:center;padding:28px 30px;border:0;background:transparent}
 .service-detail-rich .service-facts div+div{border-left:1px solid #cdd9d4}
@@ -45,3 +46,6 @@
 
 /* Ordenação do catálogo */
 .context-results-tools{display:flex;align-items:center;gap:22px}.context-results-tools p{margin:0}.context-sort{display:flex;align-items:center;gap:4px;padding-left:20px;border-left:1px solid #d5dedb}.context-sort button{min-height:36px;display:flex;align-items:center;gap:7px;padding:0 13px;border:1px solid transparent;background:transparent;color:var(--segment-accent);font:inherit;font-size:13px;font-weight:750;cursor:pointer;transition:background .16s ease,border-color .16s ease,color .16s ease,box-shadow .16s ease}.context-sort button b{padding:0;background:transparent;color:inherit;font-family:Arial,sans-serif;font-size:16px}.context-sort button:hover{border-color:#c5d3cd;background:#fff;color:var(--segment-accent);box-shadow:0 4px 11px rgba(10,69,51,.08)}.context-sort button.active{border-color:transparent;background:transparent;color:var(--segment-accent);font-weight:900}.context-sort button:focus-visible{outline:3px solid #f2c94c;outline-offset:2px}@media(max-width:620px){.context-results-tools{width:100%;align-items:flex-start;flex-direction:column;gap:12px}.context-sort{width:100%;padding:10px 0 0;border-top:1px solid #d5dedb;border-left:0}.context-results>header>b{align-self:flex-start}}
+
+/* Aviso de manifestação nas páginas explicativas de serviços. */
+.service-detail-content .service-manifestation-notice{margin-top:8px;padding:28px 30px;border-left:4px solid var(--segment-accent,var(--green));background:#fff}.service-manifestation-notice h2{margin-bottom:10px}.service-manifestation-notice p{margin:0}.service-manifestation-notice p+p{margin-top:14px}.service-manifestation-notice a{color:var(--green);font-weight:900;text-decoration:underline;text-underline-offset:3px}.service-manifestation-notice a:hover,.service-manifestation-notice a:active,.service-manifestation-notice a:visited{color:var(--green)}@media(max-width:620px){.service-detail-content .service-manifestation-notice{padding:22px 20px}}
