@@ -1,5 +1,11 @@
 type Channel = { label: string; value: string; url?: string };
 type Legislation = { label: string; url: string };
+type WhereWhenItem = {
+  label: string;
+  schedule?: string;
+  description: string;
+  wide?: boolean;
+};
 
 type ApprovedServiceDetail = {
   slug: string;
@@ -10,6 +16,7 @@ type ApprovedServiceDetail = {
   documents: string[];
   steps: string[];
   whereWhen: string;
+  whereWhenItems?: WhereWhenItem[];
   cost: string;
   duration: string;
   channels: Channel[];
@@ -308,7 +315,37 @@ export const approvedServiceDetails: Record<string, ApprovedServiceDetail> = {
       "Se houver falha recorrente na rota, registre a ocorrência no atendimento municipal.",
     ],
     whereWhen:
-      "07h20, seg/qua/sex: Urbis 1, São José, Cajueiro e Eline Passos. 11h30, seg/qua/sex: Loteamento Muniz, Tropical Center, Loteamento Santo Antônio e Rodão. 17h, seg a sáb: Centro, Malmequer, Rua do Buraco, Bosque e Comércio. 07h, ter/qui/sáb: Boa Esperança, Loteamento São Jorge, Idalina Figueredo, Parque dos Pássaros, Avenida São Cristóvão, Casas Populares, Santa Rita, Alto da Bela Vista e Mansão do Forró; também João Bonfim, Travessa Luís Sandes, Gamboa, São Roque, João do Fórum, Minguara e Urbis 2. 13h, ter/qui/sáb: Gravatá, Sucupira e Campo Belo.",
+      "Consulte o horário da sua localidade e disponibilize os resíduos pouco antes da passagem da equipe.",
+    whereWhenItems: [
+      {
+        label: "07h20",
+        schedule: "Segunda, quarta e sexta",
+        description: "Urbis 1, São José, Cajueiro e Eline Passos.",
+      },
+      {
+        label: "11h30",
+        schedule: "Segunda, quarta e sexta",
+        description:
+          "Loteamento Muniz, Tropical Center, Loteamento Santo Antônio e Rodão.",
+      },
+      {
+        label: "17h",
+        schedule: "Segunda a sábado",
+        description: "Centro, Malmequer, Rua do Buraco, Bosque e Comércio.",
+      },
+      {
+        label: "07h",
+        schedule: "Terça, quinta e sábado",
+        description:
+          "Boa Esperança, Loteamento São Jorge, Idalina Figueredo, Parque dos Pássaros, Avenida São Cristóvão, Casas Populares, Santa Rita, Alto da Bela Vista, Mansão do Forró, João Bonfim, Travessa Luís Sandes, Gamboa, São Roque, João do Fórum, Minguara e Urbis 2.",
+        wide: true,
+      },
+      {
+        label: "13h",
+        schedule: "Terça, quinta e sábado",
+        description: "Gravatá, Sucupira e Campo Belo.",
+      },
+    ],
     cost: "Sem cobrança específica informada para a coleta regular.",
     duration: "Atendimento conforme os dias e horários publicados para cada rota.",
     channels: [
@@ -351,7 +388,20 @@ export const approvedServiceDetails: Record<string, ApprovedServiceDetail> = {
       "Envie a manifestação e guarde o número de protocolo para acompanhar a resposta.",
     ],
     whereWhen:
-      "O canal online pode ser acessado a qualquer momento. O atendimento presencial funciona na Avenida Dr. Luís Sandes, Valle Shopping, Amargosa — BA, de segunda a sexta-feira, das 08h às 12h e das 14h às 17h.",
+      "Escolha o canal mais conveniente para registrar ou acompanhar a manifestação.",
+    whereWhenItems: [
+      {
+        label: "Online",
+        schedule: "A qualquer momento",
+        description: "Ouvidoria Municipal no 1Doc.",
+      },
+      {
+        label: "Presencial",
+        schedule: "Segunda a sexta, 08h às 12h e 14h às 17h",
+        description:
+          "Avenida Dr. Luís Sandes, Valle Shopping, Amargosa — BA.",
+      },
+    ],
     cost: "Gratuito.",
     duration:
       "Resposta em até 30 dias, prorrogáveis uma vez por igual período mediante justificativa.",

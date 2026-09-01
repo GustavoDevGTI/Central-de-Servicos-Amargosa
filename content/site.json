@@ -407,7 +407,19 @@
                 "Descreva a informação desejada com clareza e envie o pedido.",
                 "Guarde o número do protocolo para consultar o andamento e receber a resposta."
               ],
-              "whereWhen": "O pedido pode ser registrado pela internet a qualquer momento. O atendimento presencial da Ouvidoria Municipal funciona de segunda a sexta-feira, das 08h às 12h e das 14h às 17h, na Avenida Dr. Luís Sandes, Valle Shopping, Amargosa – BA.",
+                "whereWhen": "O pedido pode ser registrado online ou presencialmente, conforme a preferência do solicitante.",
+                "whereWhenItems": [
+                  {
+                    "label": "Online",
+                    "schedule": "A qualquer momento",
+                    "description": "E-SIC oficial da Prefeitura de Amargosa no 1Doc."
+                  },
+                  {
+                    "label": "Presencial",
+                    "schedule": "Segunda a sexta, 08h às 12h e 14h às 17h",
+                    "description": "Ouvidoria Municipal — Avenida Dr. Luís Sandes, Valle Shopping, Amargosa – BA."
+                  }
+                ],
               "cost": "Gratuito. Poderá haver cobrança apenas do custo de reprodução de documentos, quando aplicável.",
               "duration": "Acesso imediato quando a informação estiver disponível ou resposta em até 20 dias, prorrogáveis por mais 10 dias mediante justificativa.",
               "channels": [

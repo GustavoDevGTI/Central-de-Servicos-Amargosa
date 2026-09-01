@@ -8,6 +8,13 @@ export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://central-servicos-amargosa.gustavoborges132.chatgpt.site'),
   title: 'Central de Serviços | Prefeitura de Amargosa',
   description: 'Encontre serviços públicos de Amargosa e acesse diretamente o canal oficial responsável.',
+  icons: {
+    icon: [
+      { url: '/favicon.ico', sizes: 'any' },
+      { url: '/favicon.png', type: 'image/png', sizes: '512x512' },
+    ],
+    apple: [{ url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' }],
+  },
   openGraph: {
     title: 'Central de Serviços de Amargosa',
     description: 'O caminho certo para cada serviço público.',

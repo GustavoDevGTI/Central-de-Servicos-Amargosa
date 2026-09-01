@@ -17,6 +17,12 @@ export type Service = {
   documents?: string[];
   steps?: string[];
   whereWhen?: string;
+  whereWhenItems?: {
+    label: string;
+    schedule?: string;
+    description: string;
+    wide?: boolean;
+  }[];
   cost?: string;
   duration?: string;
   channels?: { label: string; value: string; url?: string }[];
