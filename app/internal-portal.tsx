@@ -11,6 +11,7 @@ import {
   type ReactNode,
 } from "react";
 import siteContent from "../content/site.json";
+import { approvedServiceDetails } from "./approved-service-details";
 import HeaderMenu from "./header-menu";
 import SharedPortalFooter from "./portal-footer";
 import { searchServices } from "./search-engine";
@@ -61,6 +62,7 @@ type Service = {
   legislation?: { label: string; url: string }[];
   relatedServiceIds?: string[];
   notice?: string;
+  noticeAction?: string;
   requestLabel?: string;
   updatedAt?: string;
 };
@@ -115,9 +117,12 @@ const searchCategories = categories.map((entry) => ({
   label: entry.label,
 }));
 const officialCategoryLabels = new Set(categories.map((entry) => entry.label));
-const services = (segment("catalog")?.items.filter(
+const services = ((segment("catalog")?.items.filter(
   (item) => item.type === "service",
-) || []) as unknown as Service[];
+) || []) as unknown as Service[]).map((service) => ({
+  ...service,
+  ...approvedServiceDetails[service.id],
+}));
 const header = segment("header");
 const directoryPage = siteContent.pages.find(
   (entry) => entry.id === "directory",
@@ -1133,7 +1138,7 @@ function RichServiceDetail({ service }: { service: Service }) {
       >
         <header>
           <div>
-            <small>Cidadão</small>
+            <small>{serviceAudienceLabel(service) || service.category}</small>
             <h1>{service.title}</h1>
             <p>{service.summary}</p>
           </div>
@@ -1147,7 +1152,9 @@ function RichServiceDetail({ service }: { service: Service }) {
             rel="noreferrer"
           >
             <span>{service.notice}</span>
-            <small>Acessar o processo no E-SIC oficial ↗</small>
+            <small>
+              {service.noticeAction || "Acessar o processo no E-SIC oficial ↗"}
+            </small>
           </a>
         )}
 
@@ -1311,7 +1318,7 @@ export function ServiceDetail({ slug }: { slug: string }) {
         <PortalFooter />
       </main>
     );
-  if (service.id === "acesso-informacao")
+  if (service.notice && service.documents?.length && service.steps?.length)
     return <RichServiceDetail service={service} />;
   return (
     <main {...rootProps()}>
