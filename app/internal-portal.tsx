@@ -1182,6 +1182,22 @@ function RichServiceDetail({ service }: { service: Service }) {
               <section id="onde-quando">
                 <h2>Onde e quando solicitar</h2>
                 <p>{service.whereWhen}</p>
+                {service.whereWhenItems?.length ? (
+                  <div className="service-schedule-grid">
+                    {service.whereWhenItems.map((item) => (
+                      <article
+                        className={`service-schedule-item${item.wide ? " service-schedule-item-wide" : ""}`}
+                        key={`${item.label}-${item.schedule || item.description}`}
+                      >
+                        <div className="service-schedule-heading">
+                          <strong>{item.label}</strong>
+                          {item.schedule && <span>{item.schedule}</span>}
+                        </div>
+                        <p>{item.description}</p>
+                      </article>
+                    ))}
+                  </div>
+                ) : null}
               </section>
             )}
             <section id="informacoes" className="service-facts">
