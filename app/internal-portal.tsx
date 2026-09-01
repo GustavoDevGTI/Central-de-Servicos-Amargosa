@@ -11,11 +11,11 @@ import {
   type ReactNode,
 } from "react";
 import siteContent from "../content/site.json";
-import { approvedServiceDetails } from "./approved-service-details";
 import HeaderMenu from "./header-menu";
 import SharedPortalFooter from "./portal-footer";
 import { searchServices } from "./search-engine";
 import SearchSuggestions from "./search-suggestions";
+import { services, type Service } from "./service-catalog";
 import {
   loadServicePopularity,
   recordServiceSearch,
@@ -40,32 +40,6 @@ function Link({
 
 type Audience = { id: string; label: string; description?: string };
 type Category = { id: string; label: string; description?: string };
-type Service = {
-  id: string;
-  slug?: string;
-  title: string;
-  category: string;
-  subject?: string;
-  audienceId?: string;
-  audienceIds?: string[];
-  department: string;
-  destination: string;
-  url: string;
-  summary?: string;
-  eligibility?: string;
-  documents?: string[];
-  steps?: string[];
-  whereWhen?: string;
-  cost?: string;
-  duration?: string;
-  channels?: { label: string; value: string; url?: string }[];
-  legislation?: { label: string; url: string }[];
-  relatedServiceIds?: string[];
-  notice?: string;
-  noticeAction?: string;
-  requestLabel?: string;
-  updatedAt?: string;
-};
 type InternalItem = {
   id: string;
   type: string;
@@ -117,12 +91,6 @@ const searchCategories = categories.map((entry) => ({
   label: entry.label,
 }));
 const officialCategoryLabels = new Set(categories.map((entry) => entry.label));
-const services = ((segment("catalog")?.items.filter(
-  (item) => item.type === "service",
-) || []) as unknown as Service[]).map((service) => ({
-  ...service,
-  ...approvedServiceDetails[service.id],
-}));
 const header = segment("header");
 const directoryPage = siteContent.pages.find(
   (entry) => entry.id === "directory",
@@ -1474,4 +1442,4 @@ export function ServiceDetail({ slug }: { slug: string }) {
   );
 }
 
-export { audiences, categories, services, slugify };
+export { audiences, categories, slugify };
