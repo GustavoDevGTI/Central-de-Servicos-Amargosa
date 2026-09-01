@@ -1,4 +1,5 @@
-import { ServiceDetail, services } from "../../internal-portal";
+import { ServiceDetail } from "../../internal-portal";
+import { services } from "../../service-catalog";
 
 const siteOrigin = "https://maisdigital.amargosa.ba.gov.br";
 
