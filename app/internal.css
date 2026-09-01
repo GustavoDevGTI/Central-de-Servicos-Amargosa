@@ -33,6 +33,7 @@
 .service-reference-notice small{font-size:15px;letter-spacing:.02em;text-transform:uppercase}
 .service-reference-notice:hover{border-color:#0759a5;background:linear-gradient(90deg,#d8eff9 0%,#c4e7f5 100%);box-shadow:0 12px 28px rgba(7,89,165,.22)}
 .service-reference-notice-centered{justify-content:center;padding-inline:24px;color:#0759a5;text-align:center;text-transform:uppercase}.service-reference-notice-centered span{font-size:15px;font-weight:900;letter-spacing:.02em}.service-reference-notice-centered:hover span{text-decoration:underline;text-underline-offset:3px}
+.service-detail-content .service-reference-notice-repeat{margin:0 0 42px}
 .service-detail-rich .service-facts{gap:0;border-top:1px solid #cdd9d4;border-bottom:1px solid #cdd9d4}
 .service-detail-rich .service-facts div{min-height:150px;justify-content:center;padding:28px 30px;border:0;background:transparent}
 .service-detail-rich .service-facts div+div{border-left:1px solid #cdd9d4}

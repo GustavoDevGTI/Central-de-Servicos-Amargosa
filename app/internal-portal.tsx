@@ -1086,6 +1086,30 @@ export function ServiceDirectory({
   );
 }
 
+function ServiceRequestNotice({
+  service,
+  repeated = false,
+}: {
+  service: Service;
+  repeated?: boolean;
+}) {
+  if (!service.notice) return null;
+
+  return (
+    <a
+      className={`service-reference-notice${repeated ? " service-reference-notice-repeat" : ""}`}
+      href={service.url}
+      target="_blank"
+      rel="noreferrer"
+    >
+      <span>{service.notice}</span>
+      <small>
+        {service.noticeAction || "Acessar o processo no E-SIC oficial ↗"}
+      </small>
+    </a>
+  );
+}
+
 function RichServiceDetail({ service }: { service: Service }) {
   const heroSegment = internalSegment(detailPage, "serviceHero");
   const contentSegment = internalSegment(detailPage, "serviceContent");
@@ -1112,19 +1136,7 @@ function RichServiceDetail({ service }: { service: Service }) {
           </div>
         </header>
 
-        {service.notice && (
-          <a
-            className="service-reference-notice"
-            href={service.url}
-            target="_blank"
-            rel="noreferrer"
-          >
-            <span>{service.notice}</span>
-            <small>
-              {service.noticeAction || "Acessar o processo no E-SIC oficial ↗"}
-            </small>
-          </a>
-        )}
+        <ServiceRequestNotice service={service} />
 
         <div
           className={internalClasses(contentSegment, "service-detail-layout")}
@@ -1210,6 +1222,7 @@ function RichServiceDetail({ service }: { service: Service }) {
                 <strong>{service.duration}</strong>
               </div>
             </section>
+            <ServiceRequestNotice service={service} repeated />
             {service.channels?.length && (
               <section id="canais">
                 <h2>Canais de atendimento</h2>
