@@ -5,6 +5,7 @@ import { useEffect, useState, type CSSProperties, type ReactNode } from "react";
 import siteContent from "../content/site.json";
 import HeaderMenu from "./header-menu";
 import PortalFooter from "./portal-footer";
+import { trackSearchResults, trackServiceClick, trackServiceStart } from "./analytics";
 
 type Size = { width?: number; height?: number };
 type Position = { x?: number; y?: number };
@@ -55,6 +56,11 @@ export default function Home() {
 
   function showResults(term = query) {
     const normalizedTerm = term.trim();
+    if (normalizedTerm) {
+      const normalizedQuery = normalizedTerm.toLocaleLowerCase("pt-BR");
+      const resultsCount = services.filter((service) => `${service.title} ${service.category} ${service.department}`.toLocaleLowerCase("pt-BR").includes(normalizedQuery)).length;
+      trackSearchResults(normalizedTerm, resultsCount);
+    }
     window.location.assign(normalizedTerm ? `/servicos?busca=${encodeURIComponent(normalizedTerm)}` : "/servicos");
   }
   function segmentStyle(segment: Segment) { return { "--segment-bg": segment.style.background || siteContent.site.surfaceColor, "--segment-color": segment.style.color || siteContent.site.textColor, "--segment-accent": segment.style.accent || siteContent.site.primaryColor, "--segment-heading-font": fontStacks[segment.style.headingFont || siteDesign.headingFont || "lora"], "--segment-body-font": fontStacks[segment.style.bodyFont || siteDesign.bodyFont || "source"], backgroundImage: segment.style.backgroundImage ? `linear-gradient(rgba(3,45,35,.68),rgba(3,45,35,.68)),url(${JSON.stringify(segment.style.backgroundImage)})` : undefined, ...sizeStyle(segment, true) } as CSSProperties; }
@@ -63,7 +69,7 @@ export default function Home() {
   function classes(segment: Segment, base: string) { return `${base} editable-segment segment-${segment.type} variant-${segment.style.variant || siteDesign.theme || "institutional"} width-${segment.style.width || "contained"} spacing-${segment.style.spacing || "comfortable"} radius-${segment.style.radius || "soft"} text-size-${segment.style.fontSize || siteDesign.fontSize || "normal"} ${interactionClasses(segment)}${segment.size ? " user-sized-segment" : ""}${mergeClasses(segment)}`; }
   function serviceCard(service: Service, index: number, featured = false, editorItem: Item = service) {
     const href = service.slug ? `/servicos/${service.slug}` : service.url;
-    return <a key={`${service.id}-${index}`} {...itemSizeProps(editorItem)} className={featured ? "featured-card" : "service-card"} href={href} {...external(href)}>{featured && <span className="rank">{String(index + 1).padStart(2, "0")}</span>}<span><small className="service-public-tag">{serviceAudienceLabel(service)}</small><strong>{service.title}</strong><em>{service.department}</em>{officialCategoryLabels.has(service.category) && <small className="service-category-tag">{service.category}</small>}</span><b>{featured ? "→" : <>Ver serviço →</>}</b></a>;
+    return <a key={`${service.id}-${index}`} {...itemSizeProps(editorItem)} className={featured ? "featured-card" : "service-card"} href={href} {...external(href)} onClick={() => { trackServiceClick(service.id, service.title); if (/^https?:\/\//i.test(href)) trackServiceStart(service.id, service.title); }}>{featured && <span className="rank">{String(index + 1).padStart(2, "0")}</span>}<span><small className="service-public-tag">{serviceAudienceLabel(service)}</small><strong>{service.title}</strong><em>{service.department}</em>{officialCategoryLabels.has(service.category) && <small className="service-category-tag">{service.category}</small>}</span><b>{featured ? "→" : <>Ver serviço →</>}</b></a>;
   }
 
   function renderSegment(segment: Segment): ReactNode {

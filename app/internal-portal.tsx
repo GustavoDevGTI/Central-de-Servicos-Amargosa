@@ -5,11 +5,19 @@ import { useEffect, useMemo, useRef, useState, type AnchorHTMLAttributes, type C
 import siteContent from "../content/site.json";
 import HeaderMenu from "./header-menu";
 import SharedPortalFooter from "./portal-footer";
+import { trackSearchResults, trackServiceClick, trackServiceStart } from "./analytics";
 
 // O roteador cliente do Vinext pode cancelar a navegação ao preparar o RSC.
 // Links internos simples preservam a URL e funcionam também sem JavaScript.
-function Link({ href, children, ...props }: AnchorHTMLAttributes<HTMLAnchorElement> & { href: string; children?: ReactNode }) {
-  return <a href={href} {...props}>{children}</a>;
+function Link({ href, children, onClick, ...props }: AnchorHTMLAttributes<HTMLAnchorElement> & { href: string; children?: ReactNode }) {
+  return <a href={href} {...props} onClick={(event) => {
+    const service = services.find((entry) => serviceHref(entry) === href);
+    if (service) {
+      trackServiceClick(service.id, service.title);
+      if (/^https?:\/\//i.test(href)) trackServiceStart(service.id, service.title);
+    }
+    onClick?.(event);
+  }}>{children}</a>;
 }
 
 type Audience = { id: string; label: string; description?: string };
@@ -94,6 +102,14 @@ export function LegacyServiceDirectory({ mode, value }: { mode: Mode; value: str
     return matchesAudience && matchesCategory && (!normalized || `${service.title} ${service.category} ${service.department}`.toLocaleLowerCase("pt-BR").includes(normalized));
   }).sort((a, b) => sortOrder === "department" ? a.department.localeCompare(b.department, "pt-BR") : a.title.localeCompare(b.title, "pt-BR")), [audienceFilter, categoryFilter, query, sortOrder]);
   const availableCategories = categories.filter((entry) => services.some((service) => service.category === entry.label && (mode !== "audience" || serviceAudiences(service).includes(audience?.id || ""))));
+  useEffect(() => {
+    const handleSearchSubmit = (event: KeyboardEvent) => {
+      if (event.key !== "Enter" || !(event.target instanceof HTMLInputElement) || !event.target.closest(".context-query")) return;
+      trackSearchResults(query, scoped.length);
+    };
+    document.addEventListener("keydown", handleSearchSubmit);
+    return () => document.removeEventListener("keydown", handleSearchSubmit);
+  }, [query, scoped.length]);
   const title = internalText(introSegment, "title", "Central de serviços");
   const selectionTitle = audience?.label || category?.label || "Todos os serviços";
   const description = audience?.description || category?.description || internalText(introSegment, "description", "Encontre o serviço e acesse o canal oficial responsável.");
@@ -176,6 +192,14 @@ export function ServiceDirectory({ mode, value, initialQuery = "", initialCatego
     if (!container || !step) return;
     setCarouselColumn(Math.min(carouselMaxColumn, Math.max(0, Math.round(container.scrollLeft / step))));
   };
+  useEffect(() => {
+    const handleSearchSubmit = (event: KeyboardEvent) => {
+      if (event.key !== "Enter" || !(event.target instanceof HTMLInputElement) || !event.target.closest(".context-query")) return;
+      trackSearchResults(query, scoped.length);
+    };
+    document.addEventListener("keydown", handleSearchSubmit);
+    return () => document.removeEventListener("keydown", handleSearchSubmit);
+  }, [query, scoped.length]);
   const selectedAudience = audienceFilter === "todos" ? undefined : audiences.find((entry) => entry.id === audienceFilter);
   const selectionTitle = mode === "audience" ? selectedAudience?.label || "Todos os serviços" : categoryFilter === "todos" ? "Todos os serviços" : categoryFilter;
   const selectionOptions = mode === "audience"
@@ -227,7 +251,7 @@ function RichServiceDetail({ service }: { service: Service }) {
         </div>
       </header>
 
-      {service.notice && <a className="service-reference-notice" href={service.url} target="_blank" rel="noreferrer"><span>{service.notice}</span><small>Acessar o processo no E-SIC oficial ↗</small></a>}
+      {service.notice && <a className="service-reference-notice" href={service.url} target="_blank" rel="noreferrer" onClick={() => trackServiceStart(service.id, service.title)}><span>{service.notice}</span><small>Acessar o processo no E-SIC oficial ↗</small></a>}
 
       <div className={internalClasses(contentSegment, "service-detail-layout")} style={internalStyle(contentSegment)}>
         <nav aria-label="Nesta página">
@@ -279,7 +303,7 @@ export function ServiceDetail({ slug }: { slug: string }) {
         </div>
       </header>
 
-      <a className="service-reference-notice service-reference-notice-centered" href={service.url} target="_blank" rel="noreferrer"><span>Acessar {service.destination || internalText(heroSegment, "action", "canal oficial")} ↗</span></a>
+      <a className="service-reference-notice service-reference-notice-centered" href={service.url} target="_blank" rel="noreferrer" onClick={() => trackServiceStart(service.id, service.title)}><span>Acessar {service.destination || internalText(heroSegment, "action", "canal oficial")} ↗</span></a>
 
       <div className={internalClasses(contentSegment, "service-detail-layout")} style={internalStyle(contentSegment)}>
         <nav aria-label="Nesta página"><strong>Nesta página</strong><a href="#o-que-e">{internalText(contentSegment, "aboutTitle", "O que é")}</a><a href="#quem-pode">{internalText(contentSegment, "eligibilityTitle", "Quem pode solicitar")}</a><a href="#documentos">{internalText(contentSegment, "documentsTitle", "Documentos")}</a><a href="#como-fazer">{internalText(contentSegment, "stepsTitle", "Como fazer")}</a><a href="#informacoes">Custo e prazo</a></nav>
