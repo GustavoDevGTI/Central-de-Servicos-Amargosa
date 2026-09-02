@@ -8,6 +8,31 @@ export type OrganogramEntry = {
 
 type TreeNode = OrganogramEntry & { children: TreeNode[] };
 
+const featuredRootOrder = new Map([
+  ["GP", 0],
+  ["GVP", 1],
+  ["PJM", 2],
+  ["SEAFI", 3],
+  ["CGM", 4],
+]);
+const alphabeticalCollator = new Intl.Collator("pt-BR", { sensitivity: "base", numeric: true });
+
+function rootPriority(node: TreeNode) {
+  const featuredPriority = featuredRootOrder.get(node.code.trim().toUpperCase());
+  if (featuredPriority !== undefined) return featuredPriority;
+  if (node.name.trim().toLocaleLowerCase("pt-BR").startsWith("secretaria")) return 5;
+  return 6;
+}
+
+function sortDescendants(nodes: TreeNode[]) {
+  for (const node of nodes) {
+    node.children.sort((a, b) =>
+      alphabeticalCollator.compare(a.name, b.name) || alphabeticalCollator.compare(a.code, b.code)
+    );
+    sortDescendants(node.children);
+  }
+}
+
 function buildTree(entries: OrganogramEntry[]) {
   const roots: TreeNode[] = [];
   const stack: TreeNode[] = [];
@@ -23,20 +48,28 @@ function buildTree(entries: OrganogramEntry[]) {
     stack[entry.level] = node;
     stack.length = entry.level + 1;
   }
-  return roots;
+  sortDescendants(roots);
+  return roots.sort((a, b) => rootPriority(a) - rootPriority(b));
 }
 
 function Branch({ node }: { node: TreeNode }) {
   const hasChildren = node.children.length > 0;
+  const isDrawer = node.level === 0 && hasChildren;
+  const nodeContent = <>
+    {node.isWorkgroup && <span className="organogram-workgroup-icon" aria-hidden="true">👥</span>}
+    <span className="organogram-node-text"><strong>{node.code}</strong><small>{node.name}</small></span>
+    {hasChildren && <span className="organogram-child-count">{node.children.length} {node.children.length === 1 ? "unidade" : "unidades"}</span>}
+  </>;
 
   return (
     <li className={`organogram-branch level-${node.level}${node.isWorkgroup ? " is-workgroup" : ""}`}>
-      <div className="organogram-node">
-        {node.isWorkgroup && <span className="organogram-workgroup-icon" aria-hidden="true">👥</span>}
-        <span className="organogram-node-text"><strong>{node.code}</strong><small>{node.name}</small></span>
-        {hasChildren && <span className="organogram-child-count">{node.children.length} {node.children.length === 1 ? "unidade" : "unidades"}</span>}
-      </div>
-      {hasChildren && <ul>{node.children.map((child) => <Branch key={child.id} node={child} />)}</ul>}
+      {isDrawer ? <details className="organogram-drawer">
+        <summary className="organogram-node organogram-drawer-toggle">{nodeContent}<span className="organogram-drawer-chevron" aria-hidden="true" /></summary>
+        <ul>{node.children.map((child) => <Branch key={child.id} node={child} />)}</ul>
+      </details> : <>
+        <div className="organogram-node">{nodeContent}</div>
+        {hasChildren && <ul>{node.children.map((child) => <Branch key={child.id} node={child} />)}</ul>}
+      </>}
     </li>
   );
 }
