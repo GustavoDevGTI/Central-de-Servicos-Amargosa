@@ -12,6 +12,7 @@ import {
   loadServicePopularity,
   recordServiceSearch,
 } from "./search-popularity-client";
+import { trackSearchResults, trackServiceClick, trackServiceStart } from "./analytics";
 
 type Size = { width?: number; height?: number };
 type Position = { x?: number; y?: number };
@@ -252,6 +253,9 @@ export default function Home() {
         )[0]?.service
       : undefined;
     if (topMatch) recordServiceSearch(topMatch.id);
+    if (normalizedTerm) {
+      trackSearchResults(normalizedTerm, searchServices(services, normalizedTerm, searchAudiences, searchCategories).length);
+    }
     window.location.assign(
       normalizedTerm
         ? `/servicos?busca=${encodeURIComponent(normalizedTerm)}`
@@ -301,6 +305,10 @@ export default function Home() {
         className={featured ? "featured-card" : "service-card"}
         href={href}
         {...external(href)}
+        onClick={() => {
+          trackServiceClick(service.id, service.title);
+          if (/^https?:\/\//i.test(href)) trackServiceStart(service.id, service.title);
+        }}
       >
         {featured && (
           <span className="rank">{String(index + 1).padStart(2, "0")}</span>

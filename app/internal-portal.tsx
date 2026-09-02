@@ -20,19 +20,28 @@ import {
   loadServicePopularity,
   recordServiceSearch,
 } from "./search-popularity-client";
+import { trackServiceClick, trackServiceStart } from "./analytics";
 
 // O roteador cliente do Vinext pode cancelar a navegação ao preparar o RSC.
 // Links internos simples preservam a URL e funcionam também sem JavaScript.
 function Link({
   href,
   children,
+  onClick,
   ...props
 }: AnchorHTMLAttributes<HTMLAnchorElement> & {
   href: string;
   children?: ReactNode;
 }) {
   return (
-    <a href={href} {...props}>
+    <a href={href} {...props} onClick={(event) => {
+      const service = services.find((entry) => serviceHref(entry) === href);
+      if (service) {
+        trackServiceClick(service.id, service.title);
+        if (/^https?:\/\//i.test(href)) trackServiceStart(service.id, service.title);
+      }
+      onClick?.(event);
+    }}>
       {children}
     </a>
   );
@@ -1101,6 +1110,7 @@ function ServiceRequestNotice({
       href={service.url}
       target="_blank"
       rel="noreferrer"
+      onClick={() => trackServiceStart(service.id, service.title)}
     >
       <span>{service.notice}</span>
       <small>
@@ -1344,6 +1354,7 @@ export function ServiceDetail({ slug }: { slug: string }) {
           href={service.url}
           target="_blank"
           rel="noreferrer"
+          onClick={() => trackServiceStart(service.id, service.title)}
         >
           <span>
             Acessar{" "}
