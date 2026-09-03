@@ -2,7 +2,7 @@
   "schemaVersion": 3,
   "site": {
     "title": "Central de Serviços de Amargosa",
-    "description": "Encontre serviços públicos e acesse o canal oficial responsável.",
+    "description": "Central oficial de informações e acesso aos serviços públicos da Prefeitura de Amargosa.",
     "primaryColor": "#146b3a",
     "accentColor": "#2f8a57",
     "deepColor": "#0b4f2c",
@@ -402,7 +402,7 @@
               "url": "https://amargosa.1doc.com.br/b.php?is=920&itd=12&pg=wp/wp&s=amargosa",
               "initials": "AI",
               "requestLabel": "Solicitar serviço",
-              "summary": "Canal oficial para solicitar informações públicas produzidas ou mantidas pela Prefeitura de Amargosa e acompanhar a resposta pelo número de protocolo.",
+              "summary": "Serviço para solicitar informações públicas produzidas ou mantidas pela Prefeitura de Amargosa e acompanhar a resposta pelo número de protocolo.",
               "eligibility": "Qualquer pessoa física ou jurídica pode apresentar um pedido de acesso à informação. Não é necessário justificar o motivo da solicitação.",
               "documents": [
                 "Não há documento específico obrigatório para formular o pedido.",
@@ -411,7 +411,7 @@
               ],
               "steps": [
                 "Acesse o e-SIC pelo botão “Solicitar serviço”.",
-                "Identifique-se ou escolha a opção disponibilizada pelo canal oficial.",
+                "Identifique-se ou escolha a opção disponibilizada pelo canal de atendimento.",
                 "Descreva a informação desejada com clareza e envie o pedido.",
                 "Guarde o número do protocolo para consultar o andamento e receber a resposta."
               ],
@@ -420,7 +420,7 @@
                   {
                     "label": "Online",
                     "schedule": "A qualquer momento",
-                    "description": "e-SIC oficial da Prefeitura de Amargosa no 1Doc."
+                    "description": "e-SIC da Prefeitura de Amargosa no 1Doc."
                   },
                   {
                     "label": "Presencial",
@@ -2548,7 +2548,7 @@
               "type": "text",
               "role": "description",
               "label": "Apresentação",
-              "value": "Posso ajudar você a encontrar o serviço certo e chegar ao canal oficial responsável."
+              "value": "Posso ajudar você a encontrar as informações do serviço e o canal de solicitação adequado."
             },
             {
               "id": "amanda-prompt-1",
@@ -2694,7 +2694,7 @@
               "type": "text",
               "role": "description",
               "label": "Descrição padrão",
-              "value": "Encontre o serviço e acesse o canal oficial responsável."
+              "value": "Consulte as informações oficiais dos serviços públicos de Amargosa e acesse o canal de solicitação quando necessário."
             }
           ]
         },
@@ -2905,7 +2905,7 @@
               "type": "text",
               "role": "action",
               "label": "Texto do acesso externo",
-              "value": "Acessar canal oficial"
+              "value": "Acessar canal de solicitação"
             }
           ]
         },
