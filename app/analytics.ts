@@ -1,5 +1,6 @@
 type DataLayerEntry = {
   event?: string;
+  "gtm.start"?: number;
   search_term?: string;
   results_count?: number;
   service_id?: string;
