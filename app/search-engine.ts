@@ -151,6 +151,40 @@ const PHRASE_EXPANSIONS: Array<{ phrases: string[]; terms: string[] }> = [
   },
 ];
 
+// Correções explícitas para siglas curtas do catálogo. Elas evitam que uma
+// regra genérica de anagramas associe palavras diferentes por coincidência.
+const CONTROLLED_TERM_CORRECTIONS: Record<string, string> = {
+  ail: "lai",
+  certan: "cetran",
+  cetarn: "cetran",
+  cetrna: "cetran",
+  fft: "tff",
+  ftf: "tff",
+  ibti: "itbi",
+  ial: "lai",
+  iitv: "itiv",
+  iput: "iptu",
+  isqn: "issqn",
+  isqsn: "issqn",
+  isnq: "issqn",
+  issnq: "issqn",
+  itib: "itbi",
+  itpu: "iptu",
+  itvi: "itiv",
+  iupt: "iptu",
+  ivt: "itv",
+  ivti: "itiv",
+  jrai: "jari",
+  jria: "jari",
+  llt: "tll",
+  ltl: "tll",
+  nfse: "nfs",
+  nsf: "nfs",
+  pdc: "pcd",
+  sis: "iss",
+  ssi: "iss",
+};
+
 export function normalizeSearchText(value = "") {
   return value
     .normalize("NFD")
@@ -217,7 +251,8 @@ export function analyzeSearchQuery(
 
   const terms = remaining
     .split(" ")
-    .filter((term) => term.length > 1 && !STOP_WORDS.has(term));
+    .filter((term) => term.length > 1 && !STOP_WORDS.has(term))
+    .map((term) => CONTROLLED_TERM_CORRECTIONS[term] || term);
   for (const expansion of PHRASE_EXPANSIONS) {
     if (
       expansion.phrases.some((phrase) =>
