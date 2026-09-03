@@ -121,7 +121,7 @@ export default function PortalFooter() {
           <p><strong>CEP:</strong> 45300-000</p>
           <p><strong>Telefone:</strong> <a href="tel:+557535127811">(75) 3512-7811</a></p>
           <p><strong>E-mail:</strong> <a href="mailto:contato@amargosa.ba.gov.br">contato@amargosa.ba.gov.br</a></p>
-          <p><strong>Atendimento:</strong> segunda a sexta, das 8h às 16h30</p>
+          <p><strong>Atendimento:</strong> de segunda a sexta-feira, das 8h às 16h30</p>
         </section>
 
       </div>

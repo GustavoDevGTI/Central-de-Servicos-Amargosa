@@ -256,7 +256,7 @@ function ServiceManifestationNotice({ service }: { service: Service }) {
     <section id="manifestar-se" className="service-manifestation-notice">
       <h2>Manifestar-se</h2>
       <p>
-        Para orientações, dúvidas, reclamações, sugestões ou elogios, faça
+        Para orientações, dúvidas, reclamações, sugestões ou elogios, entre em
         contato com a{" "}
         <a href={falabrManifestationUrl} target="_blank" rel="noreferrer">
           nossa Ouvidoria
@@ -264,7 +264,7 @@ function ServiceManifestationNotice({ service }: { service: Service }) {
         .
       </p>
       <p>
-        Para pedido de informação segundo a Lei nº 12.527/2011, utilize{" "}
+        Para pedidos de informação com base na Lei nº 12.527/2011, utilize{" "}
         <Link href="/servicos/acesso-informacao">este serviço</Link>.
       </p>
     </section>
@@ -334,7 +334,7 @@ export function LegacyServiceDirectory({
           serviceAudiences(service).includes(audience?.id || "")),
     ),
   );
-  const title = internalText(introSegment, "title", "Central de serviços");
+  const title = internalText(introSegment, "title", "Central de Serviços");
   const selectionTitle =
     audience?.label || category?.label || "Todos os serviços";
   const description =
@@ -372,7 +372,7 @@ export function LegacyServiceDirectory({
             className={mode === "audience" ? "active" : ""}
             href="/#publicos"
           >
-            Por públicos
+            Por público
           </Link>
           <span>Por órgãos responsáveis</span>
           <span>Por iniciais (A–Z)</span>
@@ -809,7 +809,7 @@ export function ServiceDirectory({
           <span>›</span>
           <strong>{selectionTitle}</strong>
         </nav>
-        <h1>{internalText(introSegment, "title", "Central de serviços")}</h1>
+        <h1>{internalText(introSegment, "title", "Central de Serviços")}</h1>
       </section>
       <section
         className={internalClasses(searchSegment, "context-search")}
@@ -1018,8 +1018,8 @@ export function ServiceDirectory({
                 aria-pressed={sortMode === "newest" || sortMode === "oldest"}
                 aria-label={
                   sortMode === "oldest"
-                    ? "Ordenar dos serviços mais antigos para os mais novos"
-                    : "Ordenar dos serviços mais novos para os mais antigos"
+                    ? "Ordenar dos serviços mais antigos aos mais novos"
+                    : "Ordenar dos serviços mais novos aos mais antigos"
                 }
                 onClick={() => {
                   setSortMode((current) =>
@@ -1122,7 +1122,7 @@ function ServiceRequestNotice({
     >
       <span>{service.notice}</span>
       <small>
-        {service.noticeAction || "Acessar o processo no E-SIC oficial ↗"}
+        {service.noticeAction || "Acessar o processo no e-SIC oficial ↗"}
       </small>
     </a>
   );

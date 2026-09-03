@@ -51,8 +51,8 @@ const municipalTrafficChannels: Channel[] = [
 ];
 const trafficLegislation: Legislation[] = [
   { label: "Lei Federal nº 9.503/1997 — Código de Trânsito Brasileiro", url: trafficCode },
-  { label: "Resolução CONTRAN nº 900/2022 — defesa e recursos", url: contran900 },
-  { label: "Resolução CONTRAN nº 918/2022 — processo de multas", url: contran918 },
+  { label: "Resolução CONTRAN nº 900/2022 — Defesa e recursos", url: contran900 },
+  { label: "Resolução CONTRAN nº 918/2022 — Processo de multas", url: contran918 },
 ];
 
 export const approvedServiceDetails: Record<string, ApprovedServiceDetail> = {
@@ -79,7 +79,7 @@ export const approvedServiceDetails: Record<string, ApprovedServiceDetail> = {
     whereWhen:
       "O pedido pode ser iniciado pela Central de Atendimento 1Doc. Para orientação presencial ou confirmação do setor, contate a Prefeitura pelo telefone (75) 3512-7811, de segunda a sexta-feira.",
     cost:
-      "A página oficial consultada não informa cobrança. Confirme eventuais condições no momento do protocolo.",
+      "A página oficial consultada não informa se há cobrança. Confirme eventuais condições no momento do protocolo.",
     duration:
       "O atendimento é agendado após a abertura da ordem de serviço, conforme a programação municipal.",
     channels: [
@@ -92,7 +92,7 @@ export const approvedServiceDetails: Record<string, ApprovedServiceDetail> = {
       { label: "Presencial", value: "Atendimento da Prefeitura de Amargosa" },
     ],
     legislation: [
-      { label: "Lei Federal nº 13.460/2017 — direitos do usuário de serviços públicos", url: userRightsLaw },
+      { label: "Lei Federal nº 13.460/2017 — Direitos do usuário de serviços públicos", url: userRightsLaw },
     ],
     notice:
       "A solicitação gera uma ordem de serviço para avaliação e agendamento do abastecimento.",
@@ -115,12 +115,12 @@ export const approvedServiceDetails: Record<string, ApprovedServiceDetail> = {
     ],
     steps: [
       "Reúna a identificação, o comprovante de residência e, se necessário, a representação legal.",
-      "Solicite a credencial pelo atendimento municipal da SEMOP/SUPET ou verifique a emissão digital no Portal de Serviços Senatran.",
+      "Solicite a credencial pelo atendimento municipal da SEMOP/SUPET ou verifique a emissão digital no Portal de Serviços da Senatran.",
       "Acompanhe a análise pelo canal utilizado e obtenha a credencial.",
       "Ao estacionar em vaga reservada, mantenha a credencial válida em posição visível no veículo ou use a versão digital conforme a regulamentação.",
     ],
     whereWhen:
-      "A Prefeitura de Amargosa informa atendimento presencial na SEMOP/SUPET. Pessoas elegíveis também podem consultar a emissão digital no aplicativo Carteira Digital de Trânsito ou no Portal de Serviços Senatran.",
+      "A Prefeitura de Amargosa informa atendimento presencial na SEMOP/SUPET. Pessoas elegíveis também podem consultar a emissão digital no aplicativo Carteira Digital de Trânsito ou no Portal de Serviços da Senatran.",
     cost: "Gratuito.",
     duration:
       "A emissão digital federal é imediata quando o cadastro está elegível. O prazo do atendimento municipal deve ser confirmado no protocolo.",
@@ -128,10 +128,10 @@ export const approvedServiceDetails: Record<string, ApprovedServiceDetail> = {
       { label: "Municipal", value: "Central de Atendimento 1Doc", url: oneDocCentral },
       { label: "Presencial", value: "SEMOP/SUPET — atendimento municipal de trânsito" },
       { label: "Telefone", value: amargosaPhone },
-      { label: "Digital", value: "Portal de Serviços Senatran", url: senatranCredential },
+      { label: "Digital", value: "Portal de Serviços da Senatran", url: senatranCredential },
     ],
     legislation: [
-      { label: "Resolução CONTRAN nº 1.012/2024 — credencial de estacionamento", url: contran1012 },
+      { label: "Resolução CONTRAN nº 1.012/2024 — Credencial de estacionamento", url: contran1012 },
       { label: "Lei Federal nº 9.503/1997 — Código de Trânsito Brasileiro", url: trafficCode },
       { label: "Lei Federal nº 10.741/2003 — Estatuto da Pessoa Idosa", url: "https://www.planalto.gov.br/ccivil_03/leis/2003/l10.741.htm" },
     ],
@@ -147,7 +147,7 @@ export const approvedServiceDetails: Record<string, ApprovedServiceDetail> = {
     destination: "Central de Atendimento 1Doc",
     url: oneDocCentral,
     summary:
-      "Credencial para pessoa com deficiência e comprometimento de mobilidade, permanente ou temporário, utilizar vagas de estacionamento reservadas em todo o território nacional.",
+      "Credencial que permite à pessoa com deficiência e comprometimento de mobilidade, permanente ou temporário, utilizar vagas de estacionamento reservadas em todo o território nacional.",
     eligibility:
       "Pessoa com deficiência que tenha comprometimento de mobilidade, permanente ou temporário, ou seu representante legal.",
     documents: [
@@ -158,12 +158,12 @@ export const approvedServiceDetails: Record<string, ApprovedServiceDetail> = {
     ],
     steps: [
       "Reúna a identificação, o comprovante de residência e o laudo médico.",
-      "Solicite a credencial pelo atendimento municipal da SEMOP/SUPET ou verifique a emissão digital no Portal de Serviços Senatran.",
+      "Solicite a credencial pelo atendimento municipal da SEMOP/SUPET ou verifique a emissão digital no Portal de Serviços da Senatran.",
       "Acompanhe a análise pelo canal utilizado e obtenha a credencial.",
       "Ao estacionar em vaga reservada, mantenha a credencial válida em posição visível no veículo ou use a versão digital conforme a regulamentação.",
     ],
     whereWhen:
-      "A Prefeitura de Amargosa informa atendimento presencial na SEMOP/SUPET. Pessoas elegíveis também podem consultar a emissão digital no aplicativo Carteira Digital de Trânsito ou no Portal de Serviços Senatran.",
+      "A Prefeitura de Amargosa informa atendimento presencial na SEMOP/SUPET. Pessoas elegíveis também podem consultar a emissão digital no aplicativo Carteira Digital de Trânsito ou no Portal de Serviços da Senatran.",
     cost: "Gratuito.",
     duration:
       "A emissão digital federal é imediata quando o cadastro está elegível. O prazo do atendimento municipal deve ser confirmado no protocolo.",
@@ -171,10 +171,10 @@ export const approvedServiceDetails: Record<string, ApprovedServiceDetail> = {
       { label: "Municipal", value: "Central de Atendimento 1Doc", url: oneDocCentral },
       { label: "Presencial", value: "SEMOP/SUPET — atendimento municipal de trânsito" },
       { label: "Telefone", value: amargosaPhone },
-      { label: "Digital", value: "Portal de Serviços Senatran", url: senatranCredential },
+      { label: "Digital", value: "Portal de Serviços da Senatran", url: senatranCredential },
     ],
     legislation: [
-      { label: "Resolução CONTRAN nº 1.012/2024 — credencial de estacionamento", url: contran1012 },
+      { label: "Resolução CONTRAN nº 1.012/2024 — Credencial de estacionamento", url: contran1012 },
       { label: "Lei Federal nº 13.146/2015 — Estatuto da Pessoa com Deficiência", url: "https://www.planalto.gov.br/ccivil_03/_ato2015-2018/2015/lei/l13146.htm" },
       { label: "Lei Federal nº 9.503/1997 — Código de Trânsito Brasileiro", url: trafficCode },
     ],
@@ -359,7 +359,7 @@ export const approvedServiceDetails: Record<string, ApprovedServiceDetail> = {
     ],
     legislation: [
       { label: "Lei Federal nº 12.305/2010 — Política Nacional de Resíduos Sólidos", url: "https://www.planalto.gov.br/ccivil_03/_ato2007-2010/2010/lei/l12305.htm" },
-      { label: "Lei Federal nº 13.460/2017 — direitos do usuário de serviços públicos", url: userRightsLaw },
+      { label: "Lei Federal nº 13.460/2017 — Direitos do usuário de serviços públicos", url: userRightsLaw },
     ],
     relatedServiceIds: ["1doc-retirada-de-entulhos"],
     notice:
@@ -397,9 +397,9 @@ export const approvedServiceDetails: Record<string, ApprovedServiceDetail> = {
       },
       {
         label: "Presencial",
-        schedule: "Segunda a sexta, 08h às 12h e 14h às 17h",
+        schedule: "De segunda a sexta-feira, das 8h às 12h e das 14h às 17h",
         description:
-          "Avenida Dr. Luís Sandes, Valle Shopping, Amargosa — BA.",
+          "Avenida Dr. Luís Sandes, Valle Shopping, Amargosa – BA.",
       },
     ],
     cost: "Gratuito.",
@@ -417,10 +417,10 @@ export const approvedServiceDetails: Record<string, ApprovedServiceDetail> = {
         value: "cgm.ouvim@amargosa.ba.gov.br",
         url: "mailto:cgm.ouvim@amargosa.ba.gov.br",
       },
-      { label: "Presencial", value: "Avenida Dr. Luís Sandes, Valle Shopping, Amargosa — BA" },
+      { label: "Presencial", value: "Avenida Dr. Luís Sandes, Valle Shopping, Amargosa – BA" },
     ],
     legislation: [
-      { label: "Lei Federal nº 13.460/2017 — defesa dos usuários de serviços públicos", url: userRightsLaw },
+      { label: "Lei Federal nº 13.460/2017 — Defesa dos usuários de serviços públicos", url: userRightsLaw },
     ],
     notice:
       "A manifestação é registrada no canal oficial da Ouvidoria e pode ser acompanhada pelo número de protocolo.",
@@ -518,7 +518,7 @@ export const approvedServiceDetails: Record<string, ApprovedServiceDetail> = {
       "Avise previamente a SEMOP/SUPESP pelo canal online ou presencial.",
       "Informe a localização e as características do material.",
       "Aguarde o agendamento da medição e as orientações para o descarte.",
-      "Disponibilize o material somente no local e no período orientados pelo setor.",
+      "Disponibilize o material somente no local e durante o período indicados pelo setor.",
     ],
     whereWhen:
       "A solicitação deve ser feita antes de colocar o entulho para coleta. A SEMOP/SUPESP agenda a medição e orienta o descarte conforme a programação do serviço.",
@@ -533,7 +533,7 @@ export const approvedServiceDetails: Record<string, ApprovedServiceDetail> = {
     ],
     legislation: [
       { label: "Lei Federal nº 12.305/2010 — Política Nacional de Resíduos Sólidos", url: "https://www.planalto.gov.br/ccivil_03/_ato2007-2010/2010/lei/l12305.htm" },
-      { label: "Lei Federal nº 13.460/2017 — direitos do usuário de serviços públicos", url: userRightsLaw },
+      { label: "Lei Federal nº 13.460/2017 — Direitos do usuário de serviços públicos", url: userRightsLaw },
     ],
     relatedServiceIds: ["1doc-limpeza-publica"],
     notice:
@@ -611,7 +611,7 @@ export const approvedServiceDetails: Record<string, ApprovedServiceDetail> = {
       { label: "Telefone", value: amargosaPhone },
     ],
     legislation: [
-      { label: "Lei Federal nº 13.460/2017 — direitos do usuário de serviços públicos", url: userRightsLaw },
+      { label: "Lei Federal nº 13.460/2017 — Direitos do usuário de serviços públicos", url: userRightsLaw },
     ],
     notice:
       "Informe o número da plaqueta do poste para que a equipe localize o ponto de iluminação com precisão.",
