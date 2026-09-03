@@ -8,6 +8,7 @@ import HeaderMenu from "./header-menu";
 import PortalFooter from "./portal-footer";
 import SearchSuggestions from "./search-suggestions";
 import { searchServices } from "./search-engine";
+import { searchPath } from "./search-url";
 import {
   loadServicePopularity,
   recordServiceSearch,
@@ -257,9 +258,7 @@ export default function Home() {
       trackSearchResults(normalizedTerm, searchServices(services, normalizedTerm, searchAudiences, searchCategories).length);
     }
     window.location.assign(
-      normalizedTerm
-        ? `/servicos?busca=${encodeURIComponent(normalizedTerm)}`
-        : "/servicos",
+      searchPath(normalizedTerm),
     );
   }
   function segmentStyle(segment: Segment) {

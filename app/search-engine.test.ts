@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
+import { searchPath, searchTermFromSlug } from "./search-url.ts";
 import siteContent from "../content/site.json" with { type: "json" };
 import { analyzeSearchQuery, rankSearchSuggestions, searchServices, type SearchableService } from "./search-engine.ts";
 import { serviceSearchTags } from "./service-search-tags.ts";
@@ -107,4 +108,15 @@ test("normaliza o conjunto controlado de siglas do catálogo", () => {
 
 test("não trata qualquer anagrama como correção válida", () => {
   assert.equal(searchServices(services, "pitu", audiences, categories).length, 0);
+});
+
+test("gera endereços de busca legíveis e recupera seus termos", () => {
+  assert.equal(
+    searchPath("Serviços de Manutenção Pública"),
+    "/servicos/busca/servicos-de-manutencao-publica",
+  );
+  assert.equal(
+    searchTermFromSlug("servicos-de-manutencao-publica"),
+    "servicos de manutencao publica",
+  );
 });
