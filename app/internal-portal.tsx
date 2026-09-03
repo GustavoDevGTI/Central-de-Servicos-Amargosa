@@ -1006,6 +1006,11 @@ export function ServiceDirectory({
                     : ""
                 }
                 aria-pressed={sortMode === "nameAsc" || sortMode === "nameDesc"}
+                aria-label={
+                  sortMode === "nameDesc"
+                    ? "Nomes ordenados de Z a A. Pressione para ordenar de A a Z"
+                    : "Nomes ordenados de A a Z. Pressione para ordenar de Z a A"
+                }
                 onClick={() => {
                   setSortMode((current) =>
                     current === "nameAsc" ? "nameDesc" : "nameAsc",
@@ -1014,7 +1019,7 @@ export function ServiceDirectory({
                 }}
               >
                 Nome{" "}
-                <b aria-hidden="true">{sortMode === "nameDesc" ? "↓" : "↑"}</b>
+                <b aria-hidden="true">{sortMode === "nameDesc" ? "↑" : "↓"}</b>
               </button>
               <button
                 type="button"
