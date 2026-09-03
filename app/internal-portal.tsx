@@ -693,7 +693,7 @@ export function ServiceDirectory({
     const ranked = query.trim()
       ? searchMatches.map((match) => match.service)
       : [...explicitlyFiltered];
-    if (query.trim()) return ranked;
+    if (query.trim() && sortMode === "relevance") return ranked;
     return ranked.sort((a, b) => {
       if (sortMode === "newest")
         return (
