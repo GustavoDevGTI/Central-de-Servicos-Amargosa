@@ -29,7 +29,7 @@
 .about-org-gti>.about-unit-card::after{content:"";position:absolute;bottom:-26px;left:50%;width:1px;height:26px;background:#8eafa1}
 .about-org-developers{position:relative;width:calc(200% + 36px);display:grid;grid-template-columns:1fr 1fr;gap:36px;margin-top:52px}
 .about-org-developers::before{content:"";position:absolute;top:-26px;left:25%;right:25%;height:1px;background:#8eafa1}
-.about-person-card{min-height:138px;display:flex;flex-direction:column;padding:19px 23px;border:0;background:linear-gradient(135deg,#fff 0%,#f1f8f4 100%);box-shadow:0 12px 28px rgba(12,73,54,.1)}
+.about-person-card{min-height:138px;display:flex;flex-direction:column;padding:19px 23px;background:linear-gradient(135deg,#fff 0%,#f1f8f4 100%);box-shadow:0 12px 28px rgba(12,73,54,.1)}
 .about-person-card::before{content:"";position:absolute;top:-26px;left:50%;width:1px;height:26px;background:#8eafa1}
 .about-person-card>strong{margin-top:16px}
 .about-person-card>span{display:block;margin-top:5px;padding:0;border:0}
