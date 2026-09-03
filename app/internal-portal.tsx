@@ -3,6 +3,7 @@
 
 import {
   useEffect,
+  useLayoutEffect,
   useMemo,
   useRef,
   useState,
@@ -610,6 +611,39 @@ export function ServiceDirectory({
       wide.removeEventListener("change", updateLayout);
     };
   }, []);
+  useLayoutEffect(() => {
+    const container = carouselRef.current;
+    if (!container) return;
+
+    // Ao reordenar cartões com scroll-snap, alguns navegadores acompanham o
+    // cartão que estava visível até a nova posição dele. Forçamos o início
+    // novamente após a atualização do DOM para manter a primeira coluna à vista.
+    const previousSnapType = container.style.scrollSnapType;
+    container.style.scrollSnapType = "none";
+    container.scrollTo({ left: 0, behavior: "auto" });
+    setCarouselColumn(0);
+
+    const frame = window.requestAnimationFrame(() => {
+      if (!container.isConnected) return;
+      container.scrollTo({ left: 0, behavior: "auto" });
+      container.style.scrollSnapType = previousSnapType;
+    });
+
+    return () => {
+      window.cancelAnimationFrame(frame);
+      if (container.isConnected) {
+        container.style.scrollSnapType = previousSnapType;
+      }
+    };
+  }, [
+    audienceFilter,
+    carouselLayout.rows,
+    carouselLayout.visibleColumns,
+    categoryFilter,
+    departmentFilter,
+    query,
+    sortMode,
+  ]);
   useEffect(() => {
     if (!query.trim()) return;
     const recordSelection = (event: MouseEvent) => {
