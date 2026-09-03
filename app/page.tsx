@@ -493,18 +493,18 @@ export default function Home() {
           </div>
           <div className="popular" aria-label="Serviços mais buscados">
             <span>Mais buscados:</span>
-            {shortcuts.map((service) => (
-              <button
-                key={service.id}
-                type="button"
-                onClick={() => {
-                  setQuery(service.title);
-                  showResults(service.title);
-                }}
-              >
-                {service.title}
-              </button>
-            ))}
+            {shortcuts.map((service) => {
+              const href = `/servicos/${service.slug || service.id}`;
+              return (
+                <a
+                  key={service.id}
+                  href={href}
+                  onClick={() => trackServiceClick(service.id, service.title)}
+                >
+                  {service.title}
+                </a>
+              );
+            })}
           </div>
           {notice?.value && (
             <small {...itemSizeProps(notice)}>{notice.value}</small>
