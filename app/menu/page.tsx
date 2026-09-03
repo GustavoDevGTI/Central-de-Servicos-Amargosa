@@ -4,7 +4,7 @@ import siteContent from "../../content/site.json";
 import PortalFooter from "../portal-footer";
 
 export const metadata: Metadata = {
-  title: "Menu Acessibilidade | Central de Serviços de Amargosa",
+  title: "Menu de acessibilidade | Central de Serviços de Amargosa",
   description: "Todos os serviços organizados por público e categoria em uma estrutura simples e aberta.",
 };
 
@@ -42,7 +42,7 @@ export default function AccessibilityMenu() {
     <header className="accessibility-menu-header">
       <a className="accessibility-menu-back" href="/">← Voltar à Central de Serviços</a>
       <p>Prefeitura de Amargosa</p>
-      <h1>Menu Acessibilidade</h1>
+      <h1>Menu de acessibilidade</h1>
       <span>Todos os serviços em uma estrutura direta, aberta e navegável por teclado.</span>
     </header>
     <nav className="accessibility-menu-index" aria-label="Públicos disponíveis">
