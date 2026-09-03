@@ -15,7 +15,6 @@ import siteContent from "../content/site.json";
 import HeaderMenu from "./header-menu";
 import SharedPortalFooter from "./portal-footer";
 import { searchServices } from "./search-engine";
-import { searchPath } from "./search-url";
 import SearchSuggestions from "./search-suggestions";
 import { services, type Service } from "./service-catalog";
 import {
@@ -586,11 +585,6 @@ export function ServiceDirectory({
       active = false;
     };
   }, []);
-  useEffect(() => {
-    if (initialQuery.trim()) {
-      window.history.replaceState(null, "", searchPath(initialQuery));
-    }
-  }, [initialQuery]);
   useEffect(() => {
     const mobile = window.matchMedia("(max-width: 760px)");
     const wide = window.matchMedia("(min-width: 1500px)");
