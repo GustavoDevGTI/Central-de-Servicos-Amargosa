@@ -20,19 +20,28 @@ import {
   loadServicePopularity,
   recordServiceSearch,
 } from "./search-popularity-client";
+import { trackServiceClick, trackServiceStart } from "./analytics";
 
 // O roteador cliente do Vinext pode cancelar a navegação ao preparar o RSC.
 // Links internos simples preservam a URL e funcionam também sem JavaScript.
 function Link({
   href,
   children,
+  onClick,
   ...props
 }: AnchorHTMLAttributes<HTMLAnchorElement> & {
   href: string;
   children?: ReactNode;
 }) {
   return (
-    <a href={href} {...props}>
+    <a href={href} {...props} onClick={(event) => {
+      const service = services.find((entry) => serviceHref(entry) === href);
+      if (service) {
+        trackServiceClick(service.id, service.title);
+        if (/^https?:\/\//i.test(href)) trackServiceStart(service.id, service.title);
+      }
+      onClick?.(event);
+    }}>
       {children}
     </a>
   );
@@ -114,6 +123,10 @@ const slugify = (value = "") =>
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/(^-|-$)/g, "");
+const external = (url = "") =>
+  /^https?:\/\//i.test(url)
+    ? { target: "_blank", rel: "noreferrer" }
+    : {};
 const serviceAudiences = (service: Service) =>
   service.audienceIds?.length
     ? service.audienceIds
@@ -218,7 +231,11 @@ export function PortalHeader({
         {links
           .filter((item) => item.role !== "menu")
           .map((item) => (
-            <Link key={item.id} href={item.url || "/"}>
+            <Link
+              key={item.id}
+              href={item.url || "/"}
+              {...external(item.url)}
+            >
               {item.text}
             </Link>
           ))}
@@ -1101,6 +1118,7 @@ function ServiceRequestNotice({
       href={service.url}
       target="_blank"
       rel="noreferrer"
+      onClick={() => trackServiceStart(service.id, service.title)}
     >
       <span>{service.notice}</span>
       <small>
@@ -1344,6 +1362,7 @@ export function ServiceDetail({ slug }: { slug: string }) {
           href={service.url}
           target="_blank"
           rel="noreferrer"
+          onClick={() => trackServiceStart(service.id, service.title)}
         >
           <span>
             Acessar{" "}

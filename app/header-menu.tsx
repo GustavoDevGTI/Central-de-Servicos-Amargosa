@@ -6,9 +6,18 @@ const menuItems = [
   { label: "Página inicial", href: "/" },
   { label: "Serviços públicos", href: "/servicos" },
   { label: "Sobre", href: "/sobre" },
+  {
+    label: "Transparência",
+    href: "https://amargosa.ba.gov.br/portal-da-transparencia",
+  },
   { label: "Organograma", href: "/organograma" },
   { label: "Acessibilidade", href: "/menu" },
 ];
+
+const external = (href: string) =>
+  /^https?:\/\//i.test(href)
+    ? { target: "_blank", rel: "noreferrer" }
+    : {};
 
 export default function HeaderMenu() {
   const [open, setOpen] = useState(false);
@@ -58,7 +67,12 @@ export default function HeaderMenu() {
       {open && (
         <nav id="header-menu-panel" className="header-menu-panel" aria-label="Menu principal">
           {menuItems.map((item) => (
-            <a key={item.label} href={item.href} onClick={() => setOpen(false)}>
+            <a
+              key={item.label}
+              href={item.href}
+              {...external(item.href)}
+              onClick={() => setOpen(false)}
+            >
               <span>{item.label}</span>
               <b aria-hidden="true">→</b>
             </a>
