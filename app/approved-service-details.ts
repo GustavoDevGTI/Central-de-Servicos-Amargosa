@@ -71,15 +71,14 @@ export const approvedServiceDetails: Record<string, ApprovedServiceDetail> = {
       "Quantidade de pessoas atendidas pela residência.",
     ],
     steps: [
-      "Acesse o canal oficial ou procure o atendimento municipal.",
+      "Acesse o canal de solicitação indicado nesta Central ou procure o atendimento municipal.",
       "Informe os dados pessoais, a localidade, a capacidade do reservatório e o número de moradores.",
       "Confirme o registro da ordem de serviço e guarde o protocolo.",
       "Aguarde o agendamento do abastecimento e mantenha o acesso ao reservatório disponível.",
     ],
     whereWhen:
       "O pedido pode ser iniciado pela Central de Atendimento 1Doc. Para orientação presencial ou confirmação do setor, contate a Prefeitura pelo telefone (75) 3512-7811, de segunda a sexta-feira.",
-    cost:
-      "A página oficial consultada não informa se há cobrança. Confirme eventuais condições no momento do protocolo.",
+    cost: "O valor deste serviço ainda não foi definido.",
     duration:
       "O atendimento é agendado após a abertura da ordem de serviço, conforme a programação municipal.",
     channels: [
@@ -96,7 +95,7 @@ export const approvedServiceDetails: Record<string, ApprovedServiceDetail> = {
     ],
     notice:
       "A solicitação gera uma ordem de serviço para avaliação e agendamento do abastecimento.",
-    noticeAction: "Acessar a solicitação oficial no 1Doc ↗",
+    noticeAction: "Iniciar solicitação no 1Doc ↗",
     updatedAt: "01/09/2026",
   },
 
@@ -138,7 +137,7 @@ export const approvedServiceDetails: Record<string, ApprovedServiceDetail> = {
     relatedServiceIds: ["1doc-credencial-de-estacionamento-para-pcd"],
     notice:
       "A credencial é pessoal, tem validade nacional e deve ser utilizada somente quando a pessoa idosa estiver no veículo.",
-    noticeAction: "Acessar o canal oficial de solicitação ↗",
+    noticeAction: "Acessar o canal de solicitação ↗",
     updatedAt: "01/09/2026",
   },
 
@@ -181,7 +180,7 @@ export const approvedServiceDetails: Record<string, ApprovedServiceDetail> = {
     relatedServiceIds: ["1doc-credencial-de-estacionamento-para-idoso"],
     notice:
       "A credencial é pessoal e só pode ser usada quando a pessoa com deficiência estiver no veículo.",
-    noticeAction: "Acessar o canal oficial de solicitação ↗",
+    noticeAction: "Acessar o canal de solicitação ↗",
     updatedAt: "01/09/2026",
   },
 
@@ -210,7 +209,7 @@ export const approvedServiceDetails: Record<string, ApprovedServiceDetail> = {
     whereWhen: municipalTrafficWhere,
     cost: "Sem cobrança para protocolar a defesa administrativa.",
     duration:
-      "O prazo de análise não está publicado no canal municipal. A defesa deve ser apresentada até a data indicada na notificação.",
+      "O prazo estimado de análise ainda não foi definido. A defesa deve ser apresentada até a data indicada na notificação.",
     channels: municipalTrafficChannels,
     legislation: trafficLegislation,
     relatedServiceIds: [
@@ -219,7 +218,7 @@ export const approvedServiceDetails: Record<string, ApprovedServiceDetail> = {
     ],
     notice:
       "A defesa deve ser encaminhada ao órgão que lavrou a autuação e respeitar a data-limite da notificação.",
-    noticeAction: "Acessar o canal oficial de protocolo ↗",
+    noticeAction: "Abrir o canal de protocolo ↗",
     updatedAt: "01/09/2026",
   },
 
@@ -246,7 +245,7 @@ export const approvedServiceDetails: Record<string, ApprovedServiceDetail> = {
     whereWhen: municipalTrafficWhere,
     cost: "Gratuito.",
     duration:
-      "A indicação deve ser apresentada até a data-limite da notificação. O prazo de processamento não está publicado no canal municipal.",
+      "A indicação deve ser apresentada até a data-limite da notificação. O prazo estimado de processamento ainda não foi definido.",
     channels: municipalTrafficChannels,
     legislation: trafficLegislation,
     relatedServiceIds: [
@@ -255,7 +254,7 @@ export const approvedServiceDetails: Record<string, ApprovedServiceDetail> = {
     ],
     notice:
       "A indicação do condutor não substitui a defesa da autuação e deve respeitar o prazo indicado na notificação.",
-    noticeAction: "Acessar o canal oficial de protocolo ↗",
+    noticeAction: "Abrir o canal de protocolo ↗",
     updatedAt: "01/09/2026",
   },
 
@@ -283,7 +282,7 @@ export const approvedServiceDetails: Record<string, ApprovedServiceDetail> = {
     whereWhen: municipalTrafficWhere,
     cost: "Gratuito.",
     duration:
-      "A indicação deve ser apresentada até a data-limite da notificação. O prazo de processamento não está publicado no canal municipal.",
+      "A indicação deve ser apresentada até a data-limite da notificação. O prazo estimado de processamento ainda não foi definido.",
     channels: municipalTrafficChannels,
     legislation: trafficLegislation,
     relatedServiceIds: [
@@ -292,7 +291,7 @@ export const approvedServiceDetails: Record<string, ApprovedServiceDetail> = {
     ],
     notice:
       "A pessoa jurídica deve comprovar a representação e observar rigorosamente o prazo da notificação.",
-    noticeAction: "Acessar o canal oficial de protocolo ↗",
+    noticeAction: "Abrir o canal de protocolo ↗",
     updatedAt: "01/09/2026",
   },
 
@@ -346,12 +345,12 @@ export const approvedServiceDetails: Record<string, ApprovedServiceDetail> = {
         description: "Gravatá, Sucupira e Campo Belo.",
       },
     ],
-    cost: "Sem cobrança específica informada para a coleta regular.",
+    cost: "O valor deste serviço ainda não foi definido.",
     duration: "Atendimento conforme os dias e horários publicados para cada rota.",
     channels: [
       {
         label: "Cronograma",
-        value: "FAQ oficial da Prefeitura",
+        value: "Cronograma da Prefeitura",
         url: "https://www.amargosa.ba.gov.br/faq-%E2%80%93-perguntas-frequentes",
       },
       { label: "Telefone", value: amargosaPhone },
@@ -364,7 +363,7 @@ export const approvedServiceDetails: Record<string, ApprovedServiceDetail> = {
     relatedServiceIds: ["1doc-retirada-de-entulhos"],
     notice:
       "Consulte o cronograma antes de colocar os resíduos na rua; entulho de obra exige solicitação e agendamento próprios.",
-    noticeAction: "Consultar o cronograma oficial ↗",
+    noticeAction: "Consultar o cronograma da coleta ↗",
     updatedAt: "01/09/2026",
   },
 
@@ -373,7 +372,7 @@ export const approvedServiceDetails: Record<string, ApprovedServiceDetail> = {
     destination: "Ouvidoria Municipal no 1Doc",
     url: "https://amargosa.1doc.com.br/b.php?itd=4&pg=wp/wp",
     summary:
-      "Canal oficial para registrar reclamações, denúncias, sugestões, elogios e solicitações sobre os serviços públicos municipais de Amargosa.",
+      "Serviço para registrar reclamações, denúncias, sugestões, elogios e solicitações sobre os serviços públicos municipais de Amargosa.",
     eligibility:
       "Qualquer pessoa pode registrar uma manifestação, de forma identificada, sigilosa ou anônima. No registro anônimo, não é possível solicitar complementação de informações ao manifestante.",
     documents: [
@@ -423,7 +422,7 @@ export const approvedServiceDetails: Record<string, ApprovedServiceDetail> = {
       { label: "Lei Federal nº 13.460/2017 — Defesa dos usuários de serviços públicos", url: userRightsLaw },
     ],
     notice:
-      "A manifestação é registrada no canal oficial da Ouvidoria e pode ser acompanhada pelo número de protocolo.",
+      "A manifestação é registrada na Ouvidoria Municipal e pode ser acompanhada pelo número de protocolo.",
     noticeAction: "Registrar manifestação na Ouvidoria ↗",
     updatedAt: "01/09/2026",
   },
@@ -453,13 +452,13 @@ export const approvedServiceDetails: Record<string, ApprovedServiceDetail> = {
     whereWhen: municipalTrafficWhere,
     cost: "Sem cobrança para protocolar o recurso administrativo.",
     duration:
-      "O prazo de julgamento não está publicado no canal municipal. Respeite a data-limite informada na decisão ou notificação.",
+      "O prazo estimado de julgamento ainda não foi definido. Respeite a data-limite informada na decisão ou notificação.",
     channels: municipalTrafficChannels,
     legislation: trafficLegislation,
     relatedServiceIds: ["1doc-recurso-a-junta-administrativa-de-recursos-de-infracoes-jari"],
     notice:
       "O recurso ao CETRAN é a segunda instância administrativa e pressupõe decisão anterior da JARI.",
-    noticeAction: "Acessar o canal oficial de protocolo ↗",
+    noticeAction: "Abrir o canal de protocolo ↗",
     updatedAt: "01/09/2026",
   },
 
@@ -487,7 +486,7 @@ export const approvedServiceDetails: Record<string, ApprovedServiceDetail> = {
     whereWhen: municipalTrafficWhere,
     cost: "Sem cobrança para protocolar o recurso administrativo.",
     duration:
-      "O prazo de julgamento não está publicado no canal municipal. Respeite a data-limite indicada na notificação.",
+      "O prazo estimado de julgamento ainda não foi definido. Respeite a data-limite indicada na notificação.",
     channels: municipalTrafficChannels,
     legislation: trafficLegislation,
     relatedServiceIds: [
@@ -496,7 +495,7 @@ export const approvedServiceDetails: Record<string, ApprovedServiceDetail> = {
     ],
     notice:
       "O recurso à JARI é apresentado depois da penalidade; antes dela, o procedimento correspondente é a defesa da autuação.",
-    noticeAction: "Acessar o canal oficial de protocolo ↗",
+    noticeAction: "Abrir o canal de protocolo ↗",
     updatedAt: "01/09/2026",
   },
 
@@ -522,10 +521,9 @@ export const approvedServiceDetails: Record<string, ApprovedServiceDetail> = {
     ],
     whereWhen:
       "A solicitação deve ser feita antes de colocar o entulho para coleta. A SEMOP/SUPESP agenda a medição e orienta o descarte conforme a programação do serviço.",
-    cost:
-      "A fonte oficial consultada não publica valor. Eventual cobrança ou condição será informada após a medição.",
+    cost: "O valor deste serviço ainda não foi definido.",
     duration:
-      "Prazo conforme avaliação, medição e agenda da SEMOP/SUPESP; guarde o protocolo para acompanhamento.",
+      "O prazo estimado ainda não foi definido. O atendimento depende da avaliação, da medição e da agenda da SEMOP/SUPESP.",
     channels: [
       { label: "Online", value: "Central de Atendimento 1Doc", url: oneDocCentral },
       { label: "Telefone", value: amargosaPhone },
@@ -538,7 +536,7 @@ export const approvedServiceDetails: Record<string, ApprovedServiceDetail> = {
     relatedServiceIds: ["1doc-limpeza-publica"],
     notice:
       "A Prefeitura orienta que a SEMOP/SUPESP seja avisada antes do descarte para agendar a medição e a retirada.",
-    noticeAction: "Acessar o canal oficial de solicitação ↗",
+    noticeAction: "Acessar o canal de solicitação ↗",
     updatedAt: "01/09/2026",
   },
 
@@ -567,7 +565,7 @@ export const approvedServiceDetails: Record<string, ApprovedServiceDetail> = {
     whereWhen: municipalTrafficWhere,
     cost: "Sem cobrança para protocolar a defesa administrativa.",
     duration:
-      "O prazo de análise não está publicado no canal municipal. A defesa deve ser apresentada até a data indicada na notificação.",
+      "O prazo estimado de análise ainda não foi definido. A defesa deve ser apresentada até a data indicada na notificação.",
     channels: municipalTrafficChannels,
     legislation: trafficLegislation,
     relatedServiceIds: [
@@ -577,7 +575,7 @@ export const approvedServiceDetails: Record<string, ApprovedServiceDetail> = {
     ],
     notice:
       "A defesa deve ser encaminhada ao órgão que lavrou a autuação e respeitar a data-limite da notificação.",
-    noticeAction: "Acessar o canal oficial de protocolo ↗",
+    noticeAction: "Abrir o canal de protocolo ↗",
     updatedAt: "01/09/2026",
   },
 
@@ -605,7 +603,7 @@ export const approvedServiceDetails: Record<string, ApprovedServiceDetail> = {
       "A solicitação pode ser registrada online ou pelo telefone (75) 3512-7811. O ponto deve estar em área pública e ser identificado pelo número da plaqueta ou por endereço e referência precisos.",
     cost: "Gratuito para registrar a solicitação de manutenção da iluminação pública.",
     duration:
-      "O prazo varia conforme vistoria, disponibilidade da equipe e material. A fonte oficial não publica prazo fixo; acompanhe pelo protocolo.",
+      "O prazo estimado ainda não foi definido. O atendimento depende da vistoria, da disponibilidade da equipe e do material necessário.",
     channels: [
       { label: "Online", value: "Central de Atendimento 1Doc", url: oneDocCentral },
       { label: "Telefone", value: amargosaPhone },
@@ -615,7 +613,7 @@ export const approvedServiceDetails: Record<string, ApprovedServiceDetail> = {
     ],
     notice:
       "Informe o número da plaqueta do poste para que a equipe localize o ponto de iluminação com precisão.",
-    noticeAction: "Acessar o canal oficial de solicitação ↗",
+    noticeAction: "Acessar o canal de solicitação ↗",
     updatedAt: "01/09/2026",
   },
 };

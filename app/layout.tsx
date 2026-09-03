@@ -8,7 +8,7 @@ const GOOGLE_TAG_MANAGER_ID = 'GTM-MRBCP7K8';
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://central-servicos-amargosa.gustavoborges132.chatgpt.site'),
   title: 'Central de Serviços | Prefeitura de Amargosa',
-  description: 'Encontre serviços públicos de Amargosa e acesse diretamente o canal oficial responsável.',
+  description: 'Central oficial de informações e acesso aos serviços públicos da Prefeitura de Amargosa.',
   icons: {
     icon: [
       { url: '/favicon.ico', sizes: 'any' },

@@ -343,7 +343,7 @@ export function LegacyServiceDirectory({
     internalText(
       introSegment,
       "description",
-      "Encontre o serviço e acesse o canal oficial responsável.",
+      "Consulte as informações oficiais dos serviços públicos de Amargosa e acesse o canal de solicitação quando necessário.",
     );
   return (
     <main {...rootProps()}>
@@ -1122,7 +1122,7 @@ function ServiceRequestNotice({
     >
       <span>{service.notice}</span>
       <small>
-        {service.noticeAction || "Acessar o processo no e-SIC oficial ↗"}
+        {service.noticeAction || "Acessar o processo no e-SIC ↗"}
       </small>
     </a>
   );
@@ -1352,7 +1352,7 @@ export function ServiceDetail({ slug }: { slug: string }) {
             <h1>{service.title}</h1>
             <p>
               {service.summary ||
-                `Consulte as orientações para ${service.title.toLocaleLowerCase("pt-BR")} e siga para o canal oficial responsável.`}
+                `Consulte nesta Central as informações sobre ${service.title.toLocaleLowerCase("pt-BR")} e, quando necessário, acesse o canal de solicitação indicado.`}
             </p>
           </div>
         </header>
@@ -1367,7 +1367,7 @@ export function ServiceDetail({ slug }: { slug: string }) {
           <span>
             Acessar{" "}
             {service.destination ||
-              internalText(heroSegment, "action", "canal oficial")}{" "}
+              internalText(heroSegment, "action", "canal de solicitação")}{" "}
             ↗
           </span>
         </a>
@@ -1451,7 +1451,7 @@ export function ServiceDetail({ slug }: { slug: string }) {
               ) : (
                 <ol>
                   <li>Confira os critérios e documentos.</li>
-                  <li>Acesse o canal oficial indicado nesta página.</li>
+                  <li>Acesse o canal de solicitação indicado nesta página.</li>
                   <li>
                     Acompanhe a solicitação diretamente no sistema responsável.
                   </li>
@@ -1463,7 +1463,9 @@ export function ServiceDetail({ slug }: { slug: string }) {
                 <span>
                   {internalText(contentSegment, "costLabel", "Quanto custa")}
                 </span>
-                <strong>{service.cost || "A confirmar"}</strong>
+                <strong>
+                  {service.cost || "O valor deste serviço ainda não foi definido."}
+                </strong>
               </div>
               <div>
                 <span>
@@ -1473,7 +1475,10 @@ export function ServiceDetail({ slug }: { slug: string }) {
                     "Quanto tempo leva",
                   )}
                 </span>
-                <strong>{service.duration || "A confirmar"}</strong>
+                <strong>
+                  {service.duration ||
+                    "O prazo estimado deste serviço ainda não foi definido."}
+                </strong>
               </div>
             </section>
             <ServiceManifestationNotice service={service} />

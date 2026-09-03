@@ -122,7 +122,7 @@ export default function AmandaWidget() {
       { author: "user", text: value },
       {
         author: "amanda",
-        text: "Minha inteligência ainda está sendo preparada. Em breve vou responder e indicar o canal oficial mais adequado para você.",
+        text: "Minha inteligência ainda está sendo preparada. Em breve vou responder e indicar as informações e o canal de solicitação mais adequados para você.",
       },
     ]);
     setDraft("");
