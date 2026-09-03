@@ -1047,7 +1047,9 @@ export function ServiceDirectory({
             disabled={carouselColumn === 0}
             aria-label="Mostrar coluna anterior"
           >
-            ←
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <path d="M5 12h14m-6-6 6 6-6 6" />
+            </svg>
           </button>
           <div
             ref={carouselRef}
@@ -1085,7 +1087,9 @@ export function ServiceDirectory({
             disabled={carouselColumn >= carouselMaxColumn}
             aria-label="Mostrar próxima coluna"
           >
-            →
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <path d="M5 12h14m-6-6 6 6-6 6" />
+            </svg>
           </button>
         </div>
         {scoped.length === 0 && (

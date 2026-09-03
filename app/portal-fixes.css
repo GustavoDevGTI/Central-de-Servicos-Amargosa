@@ -37,8 +37,13 @@
 .service-carousel-track{display:grid;grid-auto-flow:column;grid-template-columns:none;grid-template-rows:repeat(3,minmax(148px,auto));grid-auto-columns:calc((100% - 48px)/4);gap:16px;margin-top:0;overflow-x:auto;overscroll-behavior-x:contain;scroll-behavior:smooth;scroll-snap-type:x mandatory;scrollbar-width:none;touch-action:pan-x pan-y}
 .service-carousel-track::-webkit-scrollbar{display:none}
 .service-carousel-track .context-service-card{min-width:0;scroll-snap-align:start}
+.service-carousel-track .context-service-card{overflow:hidden}
+.service-carousel-track .context-service-card>span{width:100%;min-width:0;max-width:100%}
+.service-carousel-track .context-service-card :is(strong,em,small){max-width:100%;overflow-wrap:anywhere}
 .service-carousel-track{grid-column:2;grid-row:1;width:100%;margin-block:-12px -18px;padding-block:12px 18px}
 .service-carousel-arrow{position:static;z-index:4;grid-row:1;width:36px;height:52px;display:grid;place-items:center;border:1px solid var(--green);border-radius:4px;background:var(--green);color:#fff;box-shadow:0 8px 22px rgba(6,62,45,.18);font:700 21px/1 var(--sans);cursor:pointer}
+.service-carousel-arrow svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.service-carousel-arrow.previous svg{transform:rotate(180deg)}
 .service-carousel-arrow.previous{grid-column:1;justify-self:start}
 .service-carousel-arrow.next{grid-column:3;justify-self:end}
 .service-carousel-arrow:disabled{opacity:.3;cursor:default;box-shadow:none}
