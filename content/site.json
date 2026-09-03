@@ -105,6 +105,14 @@
               "label": "Menu: sobre",
               "text": "Sobre",
               "url": "/sobre"
+            },
+            {
+              "id": "nav-transparency",
+              "type": "link",
+              "role": "navigation",
+              "label": "Menu: transparência",
+              "text": "Transparência",
+              "url": "https://amargosa.ba.gov.br/portal-da-transparencia"
             }
           ]
         },

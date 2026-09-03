@@ -368,7 +368,12 @@ export default function Home() {
           </a>
           <nav aria-label="Navegação principal">
             {items(segment, "link").map((item) => (
-              <a key={item.id} {...itemSizeProps(item)} href={item.url}>
+              <a
+                key={item.id}
+                {...itemSizeProps(item)}
+                href={item.url}
+                {...external(item.url)}
+              >
                 {item.text}
               </a>
             ))}

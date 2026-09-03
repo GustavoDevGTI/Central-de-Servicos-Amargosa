@@ -123,6 +123,10 @@ const slugify = (value = "") =>
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/(^-|-$)/g, "");
+const external = (url = "") =>
+  /^https?:\/\//i.test(url)
+    ? { target: "_blank", rel: "noreferrer" }
+    : {};
 const serviceAudiences = (service: Service) =>
   service.audienceIds?.length
     ? service.audienceIds
@@ -227,7 +231,11 @@ export function PortalHeader({
         {links
           .filter((item) => item.role !== "menu")
           .map((item) => (
-            <Link key={item.id} href={item.url || "/"}>
+            <Link
+              key={item.id}
+              href={item.url || "/"}
+              {...external(item.url)}
+            >
               {item.text}
             </Link>
           ))}
