@@ -37,8 +37,8 @@ function Link({
     <a href={href} {...props} onClick={(event) => {
       const service = services.find((entry) => serviceHref(entry) === href);
       if (service) {
-        trackServiceClick(service.id, service.title);
-        if (/^https?:\/\//i.test(href)) trackServiceStart(service.id, service.title);
+        trackServiceClick(service);
+        if (/^https?:\/\//i.test(href)) trackServiceStart(service);
       }
       onClick?.(event);
     }}>
@@ -1110,7 +1110,7 @@ function ServiceRequestNotice({
       href={service.url}
       target="_blank"
       rel="noreferrer"
-      onClick={() => trackServiceStart(service.id, service.title)}
+      onClick={() => trackServiceStart(service)}
     >
       <span>{service.notice}</span>
       <small>
@@ -1354,7 +1354,7 @@ export function ServiceDetail({ slug }: { slug: string }) {
           href={service.url}
           target="_blank"
           rel="noreferrer"
-          onClick={() => trackServiceStart(service.id, service.title)}
+          onClick={() => trackServiceStart(service)}
         >
           <span>
             Acessar{" "}

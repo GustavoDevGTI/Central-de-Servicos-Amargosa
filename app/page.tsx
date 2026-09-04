@@ -306,8 +306,8 @@ export default function Home() {
         href={href}
         {...external(href)}
         onClick={() => {
-          trackServiceClick(service.id, service.title);
-          if (/^https?:\/\//i.test(href)) trackServiceStart(service.id, service.title);
+          trackServiceClick(service);
+          if (/^https?:\/\//i.test(href)) trackServiceStart(service);
         }}
       >
         {featured && (
