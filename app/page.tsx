@@ -5,7 +5,6 @@ import { useEffect, useState, type CSSProperties, type ReactNode } from "react";
 import siteContent from "../content/site.json";
 import { approvedServiceDetails } from "./approved-service-details";
 import HeaderMenu from "./header-menu";
-import HeaderMunicipalLogo from "./header-municipal-logo";
 import PortalFooter from "./portal-footer";
 import SearchSuggestions from "./search-suggestions";
 import { searchServices } from "./search-engine";
@@ -151,10 +150,32 @@ const serviceAudienceLabel = (service: Service) =>
     .map((id) => audienceLabels.get(id) || id)
     .join(" · ");
 
-function Brand() {
+function Brand({ segment }: { segment: Segment }) {
+  const logo = items(segment, "image").find((item) => item.role === "logo");
+  const title = segment.items.find((item) => item.role === "title");
+  const subtitle = segment.items.find((item) => item.role === "subtitle");
   return (
     <span className="brand home-brand">
-      <HeaderMunicipalLogo />
+      {logo?.src ? (
+        <img
+          {...itemSizeProps(logo)}
+          className="brand-image"
+          src={logo.src}
+          alt={logo.alt || "Bandeira de Amargosa"}
+        />
+      ) : (
+        <span {...itemSizeProps(logo)} className="mark">
+          AM
+        </span>
+      )}
+      <span>
+        <strong {...itemSizeProps(subtitle)}>
+          {subtitle?.value || "Central de Serviços"}
+        </strong>
+        <small {...itemSizeProps(title)}>
+          {title?.value || "Município de Amargosa"}
+        </small>
+      </span>
     </span>
   );
 }
@@ -342,7 +363,7 @@ export default function Home() {
             href="#conteudo"
             aria-label="Página inicial da Central de Serviços"
           >
-            <Brand />
+            <Brand segment={segment} />
           </a>
           <nav aria-label="Navegação principal">
             {items(segment, "link").map((item) => (
