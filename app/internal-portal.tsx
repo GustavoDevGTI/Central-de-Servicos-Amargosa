@@ -1,6 +1,4 @@
 "use client";
-/* eslint-disable @next/next/no-img-element -- a identidade municipal pode usar imagens incorporadas */
-
 import {
   useEffect,
   useLayoutEffect,
@@ -13,6 +11,7 @@ import {
 } from "react";
 import siteContent from "../content/site.json";
 import HeaderMenu from "./header-menu";
+import HeaderMunicipalLogo from "./header-municipal-logo";
 import SharedPortalFooter from "./portal-footer";
 import { searchServices } from "./search-engine";
 import SearchSuggestions from "./search-suggestions";
@@ -101,7 +100,6 @@ const searchCategories = categories.map((entry) => ({
   label: entry.label,
 }));
 const officialCategoryLabels = new Set(categories.map((entry) => entry.label));
-const header = segment("header");
 const directoryPage = siteContent.pages.find(
   (entry) => entry.id === "directory",
 );
@@ -199,13 +197,6 @@ export function PortalHeader({
   pageEntry = detailPage,
 }: { pageEntry?: typeof directoryPage } = {}) {
   const entry = internalSegment(pageEntry, "internalHeader");
-  const localLogo = entry?.items.find(
-    (item) => item.type === "image" && item.role === "logo",
-  ) as (InternalItem & { src?: string; alt?: string }) | undefined;
-  const homeLogo = header?.items.find(
-    (item) => item.type === "image" && item.role === "logo",
-  );
-  const logo = localLogo?.src ? localLogo : homeLogo;
   const links = (entry?.items.filter((item) => item.type === "link") ||
     []) as (InternalItem & { text?: string; url?: string })[];
   return (
@@ -214,19 +205,7 @@ export function PortalHeader({
       style={internalStyle(entry)}
     >
       <Link className="internal-brand" href="/">
-        {logo?.src ? (
-          <img src={logo.src} alt={logo.alt || "Prefeitura de Amargosa"} />
-        ) : (
-          <span className="internal-mark">AM</span>
-        )}
-        <span>
-          <strong>
-            {internalText(entry, "subtitle", "Central de Serviços")}
-          </strong>
-          <small>
-            {internalText(entry, "title", "Município de Amargosa")}
-          </small>
-        </span>
+        <HeaderMunicipalLogo />
       </Link>
       <nav aria-label="Navegação interna">
         {links

@@ -5,6 +5,7 @@ import { useEffect, useState, type CSSProperties, type ReactNode } from "react";
 import siteContent from "../content/site.json";
 import { approvedServiceDetails } from "./approved-service-details";
 import HeaderMenu from "./header-menu";
+import HeaderMunicipalLogo from "./header-municipal-logo";
 import PortalFooter from "./portal-footer";
 import SearchSuggestions from "./search-suggestions";
 import { searchServices } from "./search-engine";
@@ -150,32 +151,10 @@ const serviceAudienceLabel = (service: Service) =>
     .map((id) => audienceLabels.get(id) || id)
     .join(" · ");
 
-function Brand({ segment }: { segment: Segment }) {
-  const logo = items(segment, "image").find((item) => item.role === "logo");
-  const title = segment.items.find((item) => item.role === "title");
-  const subtitle = segment.items.find((item) => item.role === "subtitle");
+function Brand() {
   return (
     <span className="brand home-brand">
-      {logo?.src ? (
-        <img
-          {...itemSizeProps(logo)}
-          className="brand-image"
-          src={logo.src}
-          alt={logo.alt || "Bandeira de Amargosa"}
-        />
-      ) : (
-        <span {...itemSizeProps(logo)} className="mark">
-          AM
-        </span>
-      )}
-      <span>
-        <strong {...itemSizeProps(subtitle)}>
-          {subtitle?.value || "Central de Serviços"}
-        </strong>
-        <small {...itemSizeProps(title)}>
-          {title?.value || "Município de Amargosa"}
-        </small>
-      </span>
+      <HeaderMunicipalLogo />
     </span>
   );
 }
@@ -363,7 +342,7 @@ export default function Home() {
             href="#conteudo"
             aria-label="Página inicial da Central de Serviços"
           >
-            <Brand segment={segment} />
+            <Brand />
           </a>
           <nav aria-label="Navegação principal">
             {items(segment, "link").map((item) => (
@@ -393,6 +372,7 @@ export default function Home() {
       );
       const notice = segment.items.find((item) => item.role === "notice");
       const search = items(segment, "search")[0];
+      /* Bloco "Mais buscados" preservado para possível reativação.
       const featured = segments.find((entry) => entry.type === "featured");
       const fallbackShortcuts = items(featured, "serviceRef")
         .slice(0, 4)
@@ -408,6 +388,7 @@ export default function Home() {
             list.findIndex((entry) => entry.id === service.id) === index,
         )
         .slice(0, 4);
+      */
       const carousel =
         (segment.style.variant || siteDesign.theme) === "contrast"
           ? heroImages
@@ -490,6 +471,7 @@ export default function Home() {
               />
             )}
           </div>
+          {/* Bloco "Mais buscados" preservado para possível reativação.
           <div className="popular" aria-label="Serviços mais buscados">
             <span>Mais buscados:</span>
             {shortcuts.map((service) => {
@@ -505,6 +487,7 @@ export default function Home() {
               );
             })}
           </div>
+          */}
           {notice?.value && (
             <small {...itemSizeProps(notice)}>{notice.value}</small>
           )}

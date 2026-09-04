@@ -11,6 +11,7 @@ const menuItems = [
     href: "https://amargosa.ba.gov.br/portal-da-transparencia",
   },
   { label: "Organograma", href: "/organograma" },
+  { label: "Telefones úteis", href: "/telefones-uteis" },
   { label: "Acessibilidade", href: "/menu" },
 ];
 
