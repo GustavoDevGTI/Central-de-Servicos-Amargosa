@@ -232,7 +232,7 @@
         },
         {
           "id": "featured",
-          "name": "Acesso rápido",
+          "name": "Serviços mais Usados",
           "type": "featured",
           "enabled": true,
           "style": {
@@ -258,7 +258,7 @@
               "type": "text",
               "role": "title",
               "label": "Título",
-              "value": "Acesso rápido"
+              "value": "Serviços mais Usados"
             },
             {
               "id": "featured-1",

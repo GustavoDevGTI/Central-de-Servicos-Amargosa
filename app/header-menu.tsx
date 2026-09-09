@@ -4,6 +4,10 @@ import { useEffect, useRef, useState } from "react";
 
 const menuItems = [
   { label: "Página inicial", href: "/" },
+  {
+    label: "Site oficial de Amargosa",
+    href: "https://www.amargosa.ba.gov.br/",
+  },
   { label: "Serviços públicos", href: "/servicos" },
   { label: "Sobre", href: "/sobre" },
   {
