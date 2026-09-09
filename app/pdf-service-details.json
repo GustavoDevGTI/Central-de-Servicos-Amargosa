@@ -1,0 +1,1035 @@
+{
+  "1doc-alteracao-do-cadastro-economico": {
+    "slug": "alteracao-do-cadastro-economico",
+    "summary": "O serviço permite atualizar informações cadastrais de empresas junto à prefeitura, como atividade econômica, endereço, razão social e titularidade.",
+    "eligibility": "Responsável legal por empresa ou estabelecimento que precise atualizar dados no cadastro econômico municipal.",
+    "documents": [
+      "Requerimento de alteração cadastral devidamente preenchido e assinado pelo responsável legal.",
+      "Cópia dos documentos pessoais do responsável (RG e CPF) e do CNPJ da empresa.",
+      "Comprovante de endereço atualizado do estabelecimento.",
+      "Documentos que comprovem as mudanças solicitadas (ex.: contrato social, alteração contratual, novo ramo de atividade, etc.)."
+    ],
+    "steps": [
+      "O serviço permite atualizar informações cadastrais de empresas junto à prefeitura, como atividade econômica, endereço, razão social e titularidade.",
+      "A solicitação deve ser feita na Secretaria da Fazenda ou setor de Cadastro Econômico, presencialmente ou via protocolo digital.",
+      "A atualização garante a conformidade do registro com a legislação e evita pendências fiscais."
+    ],
+    "whereWhen": "Atendimento presencial: SAC MUNICIPAL. Telefone: (75) 3512-7811. E-mail: sacdigital@amargosa.ba.gov.br. Atendimento virtual: SAC MUNICIPAL. Whatsapp: (75) 3512-7811. Endereço: Av. Dr. Luis Sandes, 120 Valle Shopping. E-mail: sac@amargosa.ba.gov.br. Site: amargosa.ba.gov.br. Horários de atendimento ainda não informados.",
+    "cost": "Não se aplica (R$ 0,00)",
+    "duration": "O prazo estimado deste serviço ainda não foi definido.",
+    "channels": [
+      {
+        "label": "Referência 1",
+        "value": "Solicitar alteração no cadastro econômico no município - AMARGOSA",
+        "url": "https://servicos.ba.gov.br/detalhe/servico/2553"
+      }
+    ],
+    "legislation": [
+      {
+        "label": "Lei nº 5.172/1966 - Código Tributário Nacional",
+        "url": "https://www.planalto.gov.br/ccivil_03/leis/l5172compilado.htm"
+      }
+    ],
+    "notice": "Consulte as orientações desta página e utilize o canal de atendimento para solicitar o serviço.",
+    "noticeAction": "Acessar o canal de atendimento ↗"
+  },
+  "1doc-alvara-de-funcionamento": {
+    "slug": "alvara-de-funcionamento",
+    "summary": "Processo formal pelo qual empresas ou estabelecimentos solicitam autorização para operar legalmente no município.",
+    "eligibility": "Empresas e estabelecimentos que precisam de autorização municipal para funcionar.",
+    "documents": [
+      "Apresentar o comprovante de inscrição no CNPJ.",
+      "Apresentar cópia do Contrato Social da empresa ou registro de empresário individual.",
+      "Apresentar cópia do RG e CPF dos sócios.",
+      "Apresentar o resultado da Consulta Prévia de Viabilidade de Localização, se aplicável no município.",
+      "Apresentar cópia do carnê de IPTU do imóvel onde a empresa será instalada."
+    ],
+    "steps": [
+      "O processo geralmente começa com uma consulta de viabilidade para verificar se a atividade é permitida no local desejado.",
+      "Com a documentação em mãos, o cidadão deve protocolar o pedido na secretaria responsável (Fazenda, Desenvolvimento Econômico ou similar).",
+      "Dependendo da atividade, poderão ser necessárias vistorias do Corpo de Bombeiros (AVCB) e da Vigilância Sanitária antes da liberação final do alvará."
+    ],
+    "whereWhen": "Atendimento presencial: SAC MUNICIPAL. Telefone: (75) 3512-7811. E-mail: sacdigital@amargosa.ba.gov.br. Atendimento virtual: SAC MUNICIPAL. Whatsapp: (75) 3512-7811. Endereço: Av. Dr. Luis Sandes, 120 Valle Shopping. Site: amargosa.ba.gov.br. Horários de atendimento ainda não informados.",
+    "cost": "Não se aplica (R$ 0,00)",
+    "duration": "O prazo estimado deste serviço ainda não foi definido.",
+    "channels": [
+      {
+        "label": "Referência 1",
+        "value": "Solicitar de Alvará de Funcionamento - AMARGOSA",
+        "url": "https://servicos.ba.gov.br/detalhe/servico/2508"
+      }
+    ],
+    "legislation": [],
+    "notice": "Consulte as orientações desta página e utilize o canal de atendimento para solicitar o serviço.",
+    "noticeAction": "Acessar o canal de atendimento ↗"
+  },
+  "1doc-autorizacao-para-eventos-em-espaco-publico": {
+    "slug": "autorizacao-para-eventos-em-espaco-publico",
+    "summary": "Serviço destinado a pessoas físicas, jurídicas, associações e entidades que desejam realizar eventos em espaços públicos do município, como praças, ruas, parques e equipamentos públicos. A autorização garante que o evento ocorra em conformidade com as normas municipais de segurança, ordem pública e uso do espaço urbano.",
+    "eligibility": "Pessoas físicas, pessoas jurídicas, associações e entidades responsáveis por evento em espaço público municipal.",
+    "documents": [
+      "Requerimento de autorização preenchido com descrição detalhada do evento (tipo, data, horário, local e público estimado).",
+      "Documento de identificação do responsável pelo evento (RG e CPF/CNPJ).",
+      "Plano de segurança e controle de público, quando aplicável.",
+      "Comprovante de contratação do Corpo de Bombeiros e equipe médica, para eventos de grande porte.",
+      "Alvará sanitário e autorização de uso de som, se necessário."
+    ],
+    "steps": [
+      "O pedido deve ser protocolado com antecedência mínima recomendada de 15 dias na Secretaria de Ordem Pública ou órgão competente do município. A autorização está condicionada à análise técnica quanto ao impacto no tráfego, segurança pública e normas de uso do espaço público. O não cumprimento das condições estabelecidas na autorização pode resultar na suspensão do evento e aplicação de penalidades ao responsável."
+    ],
+    "whereWhen": "Atendimento presencial: SAC MUNICIPAL. Telefone: (75) 3512-7811. E-mail: sacdigital@amargosa.ba.gov.br. Whatsapp: (75) 3512-7811. Endereço: Av. Dr. Luis Sandes, 120 Valle Shopping. Site: amargosa.ba.gov.br. Horários de atendimento ainda não informados.",
+    "cost": "Isento de Taxas (R$ 0,00)",
+    "duration": "O prazo estimado deste serviço ainda não foi definido.",
+    "channels": [
+      {
+        "label": "Referência 1",
+        "value": "Solicitar autorização para Eventos em Espaço Público - AMARGOSA",
+        "url": "https://servicos.ba.gov.br/detalhe/servico/10042"
+      }
+    ],
+    "legislation": [],
+    "notice": "Consulte as orientações desta página e utilize o canal de atendimento para solicitar o serviço.",
+    "noticeAction": "Acessar o canal de atendimento ↗"
+  },
+  "1doc-baixa-do-cadastro-de-inscricao-municipal": {
+    "slug": "baixa-do-cadastro-de-inscricao-municipal",
+    "summary": "Processo de cancelamento ou encerramento do registro de uma empresa perante a administração municipal.",
+    "eligibility": "Proprietário, sócio ou representante legal de empresa com inscrição municipal ativa que tenha encerrado as atividades ou mudado para outro município.",
+    "documents": [
+      "Requisitos: Possuir Inscrição Municipal ativa no município em questão.",
+      "A empresa deve ter encerrado suas atividades ou alterado seu endereço para outro município.",
+      "Quitar todos os débitos e pendências financeiras (impostos e taxas) com a prefeitura antes de solicitar a baixa.",
+      "Documentos necessários: Formulário de solicitação de baixa preenchido e assinado.",
+      "Documento de identificação oficial do proprietário/sócios (RG e CPF).",
+      "Contrato Social da empresa e suas alterações.",
+      "Comprovante de baixa do CNPJ ou ato de extinção registrado na Junta Comercial (Distrato Social).",
+      "Alvará de Funcionamento original ou declaração de extravio.",
+      "Documentos que comprovem o encerramento da atividade no local, como um contrato de rescisão de aluguel."
+    ],
+    "steps": [
+      "Após a solicitação, é fundamental acompanhar o andamento do processo para garantir que a baixa seja efetivamente concluída. Obs.: O cancelamento da inscrição municipal não extingue débitos já existentes. A responsabilidade por eventuais obrigações tributárias pode ser transferida para o titular, sócios ou administradores da empresa."
+    ],
+    "whereWhen": "Atendimento presencial: SAC MUNICIPAL. Telefone: (75) 3512-7811. E-mail: sacdigital@amargosa.ba.gov.br. Atendimento virtual: SAC MUNICIPAL. Whatsapp: (75) 3512-7811. Endereço: Av. Dr. Luis Sandes, 120 Valle Shopping. E-mail: sac@amargosa.ba.gov.br. Site: amargosa.ba.gov.br. Horários de atendimento ainda não informados.",
+    "cost": "Não se aplica (R$ 0,00)",
+    "duration": "O prazo estimado deste serviço ainda não foi definido.",
+    "channels": [
+      {
+        "label": "Referência 1",
+        "value": "Solicitar baixa de inscrição municipal - AMARGOSA",
+        "url": "https://servicos.ba.gov.br/detalhe/servico/2504"
+      }
+    ],
+    "legislation": [],
+    "notice": "Consulte as orientações desta página e utilize o canal de atendimento para solicitar o serviço.",
+    "noticeAction": "Acessar o canal de atendimento ↗"
+  },
+  "1doc-cadastramento-de-area-urbana-com-origem-rural": {
+    "slug": "cadastramento-de-area-urbana-com-origem-rural",
+    "summary": "Processo de oficializar a transformação de uma área rural em área urbana perante as autoridades competentes.",
+    "eligibility": "Proprietário de imóvel rural situado em área incorporada ao perímetro urbano.",
+    "documents": [
+      "Apresentar o título de propriedade do imóvel (matrícula atualizada).",
+      "Apresentar os documentos pessoais do proprietário (RG e CPF/CNPJ).",
+      "Apresentar o levantamento planialtimétrico georreferenciado da área, elaborado por profissional habilitado com ART/RRT.",
+      "Apresentar Certidão de Baixa do imóvel no INCRA, comprovando o cancelamento do cadastro rural."
+    ],
+    "steps": [
+      "O proprietário deve protocolar um pedido no SAC municipal, solicitando a inclusão do imóvel no cadastro imobiliário urbano.",
+      "É necessário que a área já esteja compreendida no perímetro urbano definido pelo Plano Diretor do município.",
+      "Após a aprovação da prefeitura, o proprietário deve levar o processo ao Cartório de Registro de Imóveis para averbar a alteração na matrícula, oficializando a conversão de rural para urbano. A partir disso, o imposto devido passa a ser o IPTU, e não mais o ITR."
+    ],
+    "whereWhen": "Atendimento presencial: SAC MUNICIPAL. Telefone: (75) 3512-7811. E-mail: sacdigital@amargosa.ba.gov.br. Atendimento virtual: SAC MUNICIPAL. Whatsapp: (75) 3512-7811. Endereço: Av. Dr. Luis Sandes, 120 Valle Shopping. E-mail: sac@amargosa.ba.gov.br. Site: amargosa.ba.gov.br. Horários de atendimento ainda não informados.",
+    "cost": "Não se aplica (R$ 0,00)",
+    "duration": "O prazo estimado deste serviço ainda não foi definido.",
+    "channels": [
+      {
+        "label": "Referência 1",
+        "value": "Cadastrar área urbana com origem rural - AMARGOSA",
+        "url": "https://servicos.ba.gov.br/detalhe/servico/2513"
+      }
+    ],
+    "legislation": [
+      {
+        "label": "Lei nº 5.172/1966 - Código Tributário Nacional",
+        "url": "https://www.planalto.gov.br/ccivil_03/leis/l5172compilado.htm"
+      }
+    ],
+    "notice": "Consulte as orientações desta página e utilize o canal de atendimento para solicitar o serviço.",
+    "noticeAction": "Acessar o canal de atendimento ↗"
+  },
+  "1doc-cadastro-imobiliario": {
+    "slug": "cadastro-imobiliario",
+    "summary": "Registro oficial com informações detalhadas sobre propriedades – localização, características físicas e fiscais – para fins de tributação e gestão urbana.",
+    "eligibility": "Proprietário ou possuidor de imóvel que precise realizar ou atualizar o cadastro imobiliário municipal.",
+    "documents": [
+      "Documento de propriedade do imóvel (matrícula atualizada ou escritura pública).",
+      "Documento de identificação do proprietário (RG e CPF/CNPJ).",
+      "Planta do imóvel ou croqui de localização.",
+      "Comprovante de endereço atualizado."
+    ],
+    "steps": [
+      "O cadastro imobiliário contém informações sobre dimensões, localização, valor venal, uso e ocupação do solo.",
+      "O serviço é realizado na Secretaria de Fazenda ou Urbanismo, responsável pela atualização e manutenção do cadastro municipal.",
+      "É fundamental para fins de cálculo do IPTU, regularização fundiária e controle urbano."
+    ],
+    "whereWhen": "Atendimento presencial: SAC MUNICIPAL. Telefone: (75) 3512-7811. E-mail: sacdigital@amargosa.ba.gov.br. Atendimento virtual: SAC MUNICIPAL. Whatsapp: (75) 3512-7811. Endereço: Av. Dr. Luis Sandes, 120 Valle Shopping. E-mail: sac@amargosa.ba.gov.br. Site: amargosa.ba.gov.br. Horários de atendimento ainda não informados.",
+    "cost": "Não se aplica (R$ 0,00)",
+    "duration": "O prazo estimado deste serviço ainda não foi definido.",
+    "channels": [
+      {
+        "label": "Referência 1",
+        "value": "Solicitar Cadastro Imobiliário - AMARGOSA",
+        "url": "https://servicos.ba.gov.br/detalhe/servico/2542"
+      }
+    ],
+    "legislation": [
+      {
+        "label": "Lei nº 5.172/1966 - Código Tributário Nacional",
+        "url": "https://www.planalto.gov.br/ccivil_03/leis/l5172compilado.htm"
+      }
+    ],
+    "notice": "Consulte as orientações desta página e utilize o canal de atendimento para solicitar o serviço.",
+    "noticeAction": "Acessar o canal de atendimento ↗"
+  },
+  "1doc-capacitacao-funcional": {
+    "slug": "capacitacao-funcional",
+    "summary": "Serviço destinado a servidores municipais que desejam participar de treinamentos, cursos e formações voltados ao desenvolvimento profissional. A solicitação pode ser feita pelo próprio servidor ou por indicação do gestor imediato, contribuindo para a melhoria da qualidade dos serviços públicos prestados à população.",
+    "eligibility": "Servidor municipal, por iniciativa própria ou por indicação do gestor imediato.",
+    "documents": [
+      "Documento de identificação do servidor (RG e CPF).",
+      "Matrícula funcional e lotação atual.",
+      "Requerimento de participação ou indicação pelo gestor imediato.",
+      "Justificativa da relevância da capacitação para o exercício do cargo."
+    ],
+    "steps": [
+      "O serviço oferece treinamentos, cursos e formações voltados ao desenvolvimento profissional dos servidores municipais. A solicitação deve ser feita junto ao setor de Gestão de Pessoas, que avaliará a disponibilidade de vagas e a pertinência da capacitação. Após a conclusão, o servidor deverá apresentar certificado de participação para registro no assentamento funcional."
+    ],
+    "whereWhen": "Atendimento presencial: SAC MUNICIPAL. Telefone: (75) 3512-7811. E-mail: sacdigital@amargosa.ba.gov.br. Atendimento virtual: SAC MUNICIPAL. Whatsapp: (75) 3512-7811. Endereço: Av. Dr. Luis Sandes, 120 Valle Shopping. Site: amargosa.ba.gov.br. Horários de atendimento ainda não informados.",
+    "cost": "Isento de Taxas (R$ 0,00)",
+    "duration": "O prazo estimado deste serviço ainda não foi definido.",
+    "channels": [
+      {
+        "label": "Referência 1",
+        "value": "Solicitar Capacitação de Servidores - AMARGOSA",
+        "url": "https://servicos.ba.gov.br/detalhe/servico/10040"
+      }
+    ],
+    "legislation": [],
+    "notice": "Consulte as orientações desta página e utilize o canal de atendimento para solicitar o serviço.",
+    "noticeAction": "Acessar o canal de atendimento ↗"
+  },
+  "1doc-certidao-de-comprovacao-de-endereco": {
+    "slug": "certidao-de-comprovacao-de-endereco",
+    "summary": "Serviço destinado a cidadãos, empresas e instituições que necessitam comprovar oficialmente o endereço de um imóvel perante órgãos públicos, instituições financeiras, cartórios ou em processos administrativos e judiciais. A certidão é emitida pela prefeitura com base nos dados do cadastro imobiliário municipal e tem validade legal como documento oficial de comprovação de endereço.",
+    "eligibility": "Cidadãos, empresas e instituições que precisem comprovar oficialmente o endereço de um imóvel cadastrado no município.",
+    "documents": [
+      "Documento de identificação do solicitante (RG e CPF).",
+      "Número de inscrição imobiliária ou dados do imóvel.",
+      "Comprovante de propriedade ou posse do imóvel."
+    ],
+    "steps": [
+      "A certidão atesta o endereço oficial do imóvel conforme registro no cadastro municipal. É emitida pela Secretaria da Fazenda ou setor de cadastro imobiliário, presencialmente ou via portal digital. Utilizada para comprovação de residência em órgãos públicos, instituições financeiras e processos administrativos."
+    ],
+    "whereWhen": "Atendimento presencial: SAC MUNICIPAL. E-mail: sacdigital@amargosa.ba.gov.br. Whatsapp: (75) 3512-7811. Endereço: Av. Dr. Luis Sandes, 120 Valle Shopping. Site: amargosa.ba.gov.br. Horários de atendimento ainda não informados.",
+    "cost": "Não se aplica (R$ 0,00)",
+    "duration": "O prazo estimado deste serviço ainda não foi definido.",
+    "channels": [
+      {
+        "label": "Referência 1",
+        "value": "Emitir Certidão de Comprovação de Endereço - AMARGOSA",
+        "url": "https://servicos.ba.gov.br/detalhe/servico/10028"
+      }
+    ],
+    "legislation": [
+      {
+        "label": "Lei nº 5.172/1966 - Código Tributário Nacional",
+        "url": "https://www.planalto.gov.br/ccivil_03/leis/l5172compilado.htm"
+      }
+    ],
+    "notice": "Consulte as orientações desta página e utilize o canal de atendimento para solicitar o serviço.",
+    "noticeAction": "Acessar o canal de atendimento ↗"
+  },
+  "1doc-certidao-de-inexistencia-de-inscricao": {
+    "slug": "certidao-de-inexistencia-de-inscricao",
+    "summary": "Serviço destinado a cidadãos, empresas ou instituições que necessitam comprovar que determinado imóvel ou empresa não possui inscrição cadastral no município. A certidão é emitida após pesquisa nos registros municipais e é utilizada para regularização de áreas não cadastradas, registro em cartório ou abertura de processos administrativos.",
+    "eligibility": "Cidadãos, empresas ou instituições que precisem comprovar a inexistência de inscrição cadastral de imóvel ou empresa no município.",
+    "documents": [
+      "Documento de identificação do solicitante (RG e CPF/CNPJ).",
+      "Dados do imóvel ou da empresa (endereço, área, descrição).",
+      "Requerimento de solicitação preenchido."
+    ],
+    "steps": [
+      "Comprova que o imóvel ou empresa não possui inscrição cadastral no município. Emitida pela Secretaria da Fazenda ou cadastro imobiliário, após pesquisa nos registros municipais. Necessária para regularização de áreas não cadastradas, registro em cartório ou abertura de processos administrativos."
+    ],
+    "whereWhen": "Atendimento presencial: SAC MUNICIPAL. Telefone: (75) 3512-7811. E-mail: sacdigital@amargosa.ba.gov.br. Whatsapp: (75) 3512-7811. Endereço: Av. Dr. Luis Sandes, 120 Valle Shopping. Site: amargosa.ba.gov.br. Horários de atendimento ainda não informados.",
+    "cost": "Isento de Taxas (R$ 0,00)",
+    "duration": "O prazo estimado deste serviço ainda não foi definido.",
+    "channels": [
+      {
+        "label": "Referência 1",
+        "value": "Emitir Certidão Inexistência Inscrição - AMARGOSA",
+        "url": "https://servicos.ba.gov.br/detalhe/servico/10033"
+      }
+    ],
+    "legislation": [
+      {
+        "label": "Lei nº 5.172/1966 - Código Tributário Nacional",
+        "url": "https://www.planalto.gov.br/ccivil_03/leis/l5172compilado.htm"
+      }
+    ],
+    "notice": "Consulte as orientações desta página e utilize o canal de atendimento para solicitar o serviço.",
+    "noticeAction": "Acessar o canal de atendimento ↗"
+  },
+  "1doc-certidao-de-inscricao-municipal-empresa": {
+    "slug": "certidao-de-inscricao-municipal-empresa",
+    "summary": "Serviço destinado a proprietários de imóveis ou empresas que precisam comprovar a existência e regularidade de sua inscrição cadastral junto ao município. O documento é amplamente utilizado em processos de compra e venda, financiamentos, licitações e regularizações diversas.",
+    "eligibility": "Empresa ou seu representante legal que precise comprovar a inscrição municipal.",
+    "documents": [
+      "Documento de identificação do solicitante (RG e CPF/CNPJ).",
+      "Número de inscrição imobiliária ou municipal.",
+      "Requerimento de solicitação preenchido."
+    ],
+    "steps": [
+      "Comprova a existência e regularidade da inscrição cadastral de um imóvel ou empresa junto ao município. É emitida pela Secretaria da Fazenda ou setor de cadastro, presencialmente ou via portal digital. Utilizada em processos de compra e venda, financiamentos, licitações e regularizações diversas."
+    ],
+    "whereWhen": "Atendimento presencial: SAC MUNICIPAL. Telefone: (75) 3512-7811. E-mail: sacdigital@amargosa.ba.gov.br. Whatsapp: (75) 3512-7811. Endereço: Av. Dr. Luis Sandes, 120 Valle Shopping. Site: amargosa.ba.gov.br. Horários de atendimento ainda não informados.",
+    "cost": "Isento de Taxas (R$ 0,00)",
+    "duration": "O prazo estimado deste serviço ainda não foi definido.",
+    "channels": [
+      {
+        "label": "Referência 1",
+        "value": "Emitir Certidão de Inscrição - AMARGOSA",
+        "url": "https://servicos.ba.gov.br/detalhe/servico/10034"
+      }
+    ],
+    "legislation": [
+      {
+        "label": "Lei nº 5.172/1966 - Código Tributário Nacional",
+        "url": "https://www.planalto.gov.br/ccivil_03/leis/l5172compilado.htm"
+      }
+    ],
+    "notice": "Consulte as orientações desta página e utilize o canal de atendimento para solicitar o serviço.",
+    "noticeAction": "Acessar o canal de atendimento ↗"
+  },
+  "1doc-certidao-de-regularidade-fiscal-empresas": {
+    "slug": "certidao-de-regularidade-fiscal-empresas",
+    "summary": "Serviço destinado a contribuintes (pessoas físicas ou jurídicas) que necessitam comprovar que estão em dia com suas obrigações fiscais junto ao município. A certidão é exigida em licitações, financiamentos, transferências de imóveis e processos administrativos em geral.",
+    "eligibility": "Contribuinte pessoa jurídica que precise comprovar regularidade fiscal perante o município.",
+    "documents": [
+      "Documento de identificação do solicitante (RG e CPF/CNPJ).",
+      "Inscrição imobiliária ou inscrição municipal da empresa.",
+      "Requerimento de solicitação preenchido."
+    ],
+    "steps": [
+      "Atesta que o contribuinte está em dia com suas obrigações fiscais junto ao município. Pode ser emitida pela Secretaria da Fazenda ou pelo portal digital da prefeitura. É exigida em licitações, financiamentos, transferências de imóveis e processos administrativos."
+    ],
+    "whereWhen": "Atendimento presencial: SAC MUNICIPAL. Telefone: (75) 3512-7811. E-mail: sacdigital@amargosa.ba.gov.br. Canal on-line: Ba.Gov — https://www.ba.gov.br/. Whatsapp: (75) 3512-7811. Endereço: Av. Dr. Luis Sandes, 120 Valle Shopping. E-mail: sac@amargosa.ba.gov.br. Site: amargosa.ba.gov.br. Horários de atendimento ainda não informados.",
+    "cost": "Isento de Taxas (R$ 0,00)",
+    "duration": "O prazo estimado deste serviço ainda não foi definido.",
+    "channels": [
+      {
+        "label": "Referência 1",
+        "value": "Emitir Certidão Regularidade Fiscal - AMARGOSA",
+        "url": "https://servicos.ba.gov.br/detalhe/servico/10032"
+      }
+    ],
+    "legislation": [
+      {
+        "label": "Lei nº 5.172/1966 - Código Tributário Nacional",
+        "url": "https://www.planalto.gov.br/ccivil_03/leis/l5172compilado.htm"
+      }
+    ],
+    "notice": "Consulte as orientações desta página e utilize o canal de atendimento para solicitar o serviço.",
+    "noticeAction": "Acessar o canal de atendimento ↗"
+  },
+  "1doc-certidao-de-regularidade-fiscal-iptu": {
+    "slug": "certidao-de-regularidade-fiscal-iptu",
+    "summary": "Serviço destinado a contribuintes (pessoas físicas ou jurídicas) que necessitam comprovar que estão em dia com suas obrigações fiscais junto ao município. A certidão é exigida em licitações, financiamentos, transferências de imóveis e processos administrativos em geral.",
+    "eligibility": "Proprietário, possuidor ou responsável tributário por imóvel que precise comprovar regularidade fiscal do IPTU.",
+    "documents": [
+      "Documento de identificação do solicitante (RG e CPF/CNPJ).",
+      "Inscrição imobiliária ou inscrição municipal da empresa.",
+      "Requerimento de solicitação preenchido."
+    ],
+    "steps": [
+      "Atesta que o contribuinte está em dia com suas obrigações fiscais junto ao município. Pode ser emitida pela Secretaria da Fazenda ou pelo portal digital da prefeitura. É exigida em licitações, financiamentos, transferências de imóveis e processos administrativos."
+    ],
+    "whereWhen": "Atendimento presencial: SAC MUNICIPAL. Telefone: (75) 3512-7811. E-mail: sacdigital@amargosa.ba.gov.br. Canal on-line: Ba.Gov — https://www.ba.gov.br/. Whatsapp: (75) 3512-7811. Endereço: Av. Dr. Luis Sandes, 120 Valle Shopping. E-mail: sac@amargosa.ba.gov.br. Site: amargosa.ba.gov.br. Horários de atendimento ainda não informados.",
+    "cost": "Isento de Taxas (R$ 0,00)",
+    "duration": "O prazo estimado deste serviço ainda não foi definido.",
+    "channels": [
+      {
+        "label": "Referência 1",
+        "value": "Emitir Certidão Regularidade Fiscal - AMARGOSA",
+        "url": "https://servicos.ba.gov.br/detalhe/servico/10032"
+      }
+    ],
+    "legislation": [
+      {
+        "label": "Lei nº 5.172/1966 - Código Tributário Nacional",
+        "url": "https://www.planalto.gov.br/ccivil_03/leis/l5172compilado.htm"
+      }
+    ],
+    "notice": "Consulte as orientações desta página e utilize o canal de atendimento para solicitar o serviço.",
+    "noticeAction": "Acessar o canal de atendimento ↗"
+  },
+  "1doc-correcao-de-valores-salariais": {
+    "slug": "correcao-de-valores-salariais",
+    "summary": "Serviço destinado a servidores municipais que identificaram divergências ou inconsistências nos valores de sua remuneração. O pedido é analisado pelo setor de Gestão de Pessoas, que verificará o histórico funcional e financeiro do servidor para promover as correções necessárias, podendo gerar restituição retroativa de valores pagos a menor.",
+    "eligibility": "Servidor municipal que identificou divergência ou inconsistência em sua remuneração.",
+    "documents": [
+      "Documento de identificação do servidor (RG e CPF).",
+      "Matrícula funcional e contracheques que evidenciem a divergência.",
+      "Requerimento de correção salarial preenchido, com descrição detalhada da inconsistência identificada.",
+      "Documentos comprobatórios, como portarias, atos de nomeação ou promoção."
+    ],
+    "steps": [
+      "O pedido de correção deve ser protocolado no setor de Gestão de Pessoas, que analisará o histórico funcional e financeiro do servidor. Identificada a inconsistência, será emitido parecer técnico para correção na folha de pagamento. Valores pagos a menor poderão ser restituídos retroativamente, conforme legislação municipal e disponibilidade orçamentária."
+    ],
+    "whereWhen": "Atendimento presencial: SAC MUNICIPAL. Telefone: (75) 3512-7811. E-mail: sacdigital@amargosa.ba.gov.br. Whatsapp: (75) 3512-7811. Endereço: Av. Dr. Luis Sandes, 120 Valle Shopping. Site: amargosa.ba.gov.br. Horários de atendimento ainda não informados.",
+    "cost": "Isento de Taxas (R$ 0,00)",
+    "duration": "O prazo estimado deste serviço ainda não foi definido.",
+    "channels": [
+      {
+        "label": "Referência 1",
+        "value": "Solicitar Correção de Valores Salariais - AMARGOSA",
+        "url": "https://servicos.ba.gov.br/detalhe/servico/10041"
+      }
+    ],
+    "legislation": [],
+    "notice": "Consulte as orientações desta página e utilize o canal de atendimento para solicitar o serviço.",
+    "noticeAction": "Acessar o canal de atendimento ↗"
+  },
+  "1doc-declaracao-de-perfil-profissiografico-previdenciario-ppp": {
+    "slug": "declaracao-de-perfil-profissiografico-previdenciario-ppp",
+    "summary": "Serviço destinado a servidores municipais que necessitam do Perfil Profissiográfico Previdenciário (PPP) para fins de aposentadoria, especialmente aposentadoria especial. O documento registra as atividades desenvolvidas, as condições de trabalho e a exposição a agentes nocivos à saúde ao longo da vida funcional do servidor.",
+    "eligibility": "Servidor municipal que precisa do Perfil Profissiográfico Previdenciário para fins previdenciários.",
+    "documents": [
+      "Documento de identificação do servidor (RG e CPF).",
+      "Matrícula funcional do requerente.",
+      "Requerimento formal de solicitação do PPP preenchido e assinado."
+    ],
+    "steps": [
+      "O Perfil Profissiográfico Previdenciário (PPP) é um documento que registra as atividades desenvolvidas pelo servidor, condições de trabalho e exposição a agentes nocivos à saúde. A solicitação deve ser feita junto ao setor de Gestão de Pessoas da prefeitura, que reunirá as informações junto ao setor de saúde e segurança do trabalho. O documento é essencial para requerimentos de aposentadoria especial junto ao INSS ou RPPS municipal."
+    ],
+    "whereWhen": "Atendimento presencial: SAC MUNICIPAL. Telefone: (75) 3512-7811. E-mail: sacdigital@amargosa.ba.gov.br. Whatsapp: (75) 3512-7811. Endereço: Av. Dr. Luis Sandes, 120 Valle Shopping. Site: amargosa.ba.gov.br. Horários de atendimento ainda não informados.",
+    "cost": "Isento de Taxas (R$ 0,00)",
+    "duration": "O prazo estimado deste serviço ainda não foi definido.",
+    "channels": [
+      {
+        "label": "Referência 1",
+        "value": "Emitir Declaração de Perfil Profissiográfico Previdenciário - AMARGOSA",
+        "url": "https://servicos.ba.gov.br/detalhe/servico/10038"
+      }
+    ],
+    "legislation": [],
+    "notice": "Consulte as orientações desta página e utilize o canal de atendimento para solicitar o serviço.",
+    "noticeAction": "Acessar o canal de atendimento ↗"
+  },
+  "1doc-desmembramento-de-area-rural": {
+    "slug": "desmembramento-de-area-rural",
+    "summary": "Processo de dividir uma propriedade maior em partes menores para fins de desenvolvimento ou venda.",
+    "eligibility": "Proprietário do imóvel, com participação de profissional habilitado responsável pelo projeto.",
+    "documents": [
+      "Apresentar requerimento formal assinado pelo proprietário do imóvel e pelo responsável técnico.",
+      "Apresentar Certidão de Matrícula atualizada do imóvel.",
+      "Apresentar o projeto de desmembramento, contendo a planta do imóvel e o memorial descritivo, assinados por profissional habilitado (com ART/RRT).",
+      "Apresentar certidão de quitação de débitos municipais (IPTU)."
+    ],
+    "steps": [
+      "O interessado deve primeiro protocolar o projeto na Secretaria de Urbanismo da prefeitura para análise e aprovação. O projeto deve respeitar as dimensões mínimas de lote e outras regras da lei de zoneamento local.",
+      "Com a aprovação da prefeitura em mãos, o proprietário deve levar a documentação ao Cartório de Registro de Imóveis.",
+      "O cartório fará o registro do desmembramento, encerrando a matrícula original e abrindo novas matrículas individualizadas para cada um dos lotes resultantes."
+    ],
+    "whereWhen": "Atendimento presencial: SAC MUNICIPAL. Telefone: (75) 3512-7811. E-mail: sacdigital@amargosa.ba.gov.br. Atendimento virtual: SAC MUNICIPAL. Whatsapp: (75) 3512-7811. Endereço: Av. Dr. Luis Sandes, 120 Valle Shopping. E-mail: sac@amargosa.ba.gov.br. Site: amargosa.ba.gov.br. Horários de atendimento ainda não informados.",
+    "cost": "Não se aplica (R$ 0,00)",
+    "duration": "O prazo estimado deste serviço ainda não foi definido.",
+    "channels": [
+      {
+        "label": "Referência 1",
+        "value": "Solicitar desmembramento de área - AMARGOSA",
+        "url": "https://servicos.ba.gov.br/detalhe/servico/2514"
+      }
+    ],
+    "legislation": [
+      {
+        "label": "Lei nº 5.172/1966 - Código Tributário Nacional",
+        "url": "https://www.planalto.gov.br/ccivil_03/leis/l5172compilado.htm"
+      }
+    ],
+    "notice": "Consulte as orientações desta página e utilize o canal de atendimento para solicitar o serviço.",
+    "noticeAction": "Acessar o canal de atendimento ↗"
+  },
+  "1doc-desmembramento-de-area-urbano": {
+    "slug": "desmembramento-de-area-urbano",
+    "summary": "Processo de dividir uma propriedade maior em partes menores para fins de desenvolvimento ou venda.",
+    "eligibility": "Proprietário do imóvel, com participação de profissional habilitado responsável pelo projeto.",
+    "documents": [
+      "Apresentar requerimento formal assinado pelo proprietário do imóvel e pelo responsável técnico.",
+      "Apresentar Certidão de Matrícula atualizada do imóvel.",
+      "Apresentar o projeto de desmembramento, contendo a planta do imóvel e o memorial descritivo, assinados por profissional habilitado (com ART/RRT).",
+      "Apresentar certidão de quitação de débitos municipais (IPTU)."
+    ],
+    "steps": [
+      "O interessado deve primeiro protocolar o projeto na Secretaria de Urbanismo da prefeitura para análise e aprovação. O projeto deve respeitar as dimensões mínimas de lote e outras regras da lei de zoneamento local.",
+      "Com a aprovação da prefeitura em mãos, o proprietário deve levar a documentação ao Cartório de Registro de Imóveis.",
+      "O cartório fará o registro do desmembramento, encerrando a matrícula original e abrindo novas matrículas individualizadas para cada um dos lotes resultantes."
+    ],
+    "whereWhen": "Atendimento presencial: SAC MUNICIPAL. Telefone: (75) 3512-7811. E-mail: sacdigital@amargosa.ba.gov.br. Atendimento virtual: SAC MUNICIPAL. Whatsapp: (75) 3512-7811. Endereço: Av. Dr. Luis Sandes, 120 Valle Shopping. E-mail: sac@amargosa.ba.gov.br. Site: amargosa.ba.gov.br. Horários de atendimento ainda não informados.",
+    "cost": "Não se aplica (R$ 0,00)",
+    "duration": "O prazo estimado deste serviço ainda não foi definido.",
+    "channels": [
+      {
+        "label": "Referência 1",
+        "value": "Solicitar desmembramento de área - AMARGOSA",
+        "url": "https://servicos.ba.gov.br/detalhe/servico/2514"
+      }
+    ],
+    "legislation": [
+      {
+        "label": "Lei nº 5.172/1966 - Código Tributário Nacional",
+        "url": "https://www.planalto.gov.br/ccivil_03/leis/l5172compilado.htm"
+      }
+    ],
+    "notice": "Consulte as orientações desta página e utilize o canal de atendimento para solicitar o serviço.",
+    "noticeAction": "Acessar o canal de atendimento ↗"
+  },
+  "1doc-extincao-ou-suspensao-de-execucao-extrajudicial-ou-judicial": {
+    "slug": "extincao-ou-suspensao-de-execucao-extrajudicial-ou-judicial",
+    "summary": "Serviço destinado a contribuintes que possuem execuções judiciais ou extrajudiciais em curso e que, por motivo de pagamento, prescrição, parcelamento ou outro fundamento legal, necessitam solicitar a suspensão temporária ou extinção definitiva do processo executivo junto ao município.",
+    "eligibility": "Contribuinte com execução judicial ou extrajudicial em curso que possua fundamento para pedir suspensão ou extinção.",
+    "documents": [
+      "Documento de identificação do solicitante (RG e CPF/CNPJ).",
+      "Número do processo de execução fiscal.",
+      "Comprovante do motivo que fundamenta o pedido (quitação, prescrição, duplicidade, parcelamento ativo).",
+      "Requerimento formal dirigido à Procuradoria Fiscal do Município."
+    ],
+    "steps": [
+      "O pedido deve ser protocolado na Procuradoria Geral do Município ou setor jurídico competente. Após análise, será emitido parecer jurídico deferindo ou indeferindo a suspensão ou extinção. Em caso de deferimento, o processo é encaminhado ao juízo competente para homologação, quando se tratar de execução judicial."
+    ],
+    "whereWhen": "Atendimento presencial: SAC MUNICIPAL. Telefone: (75) 3512-7811. E-mail: sacdigital@amargosa.ba.gov.br. Canal on-line: Ba.gov — https://www.ba.gov.br/. Whatsapp: (75) 3512-7811. Endereço: Av. Dr. Luis Sandes, 120 Valle Shopping. E-mail: sac@amargosa.ba.gov.br. Site: amargosa.ba.gov.br. Horários de atendimento ainda não informados.",
+    "cost": "Isento de Taxas (R$ 0,00)",
+    "duration": "O prazo estimado deste serviço ainda não foi definido.",
+    "channels": [
+      {
+        "label": "Referência 1",
+        "value": "Solicitar Extinção/Suspensão de Execução - AMARGOSA",
+        "url": "https://servicos.ba.gov.br/detalhe/servico/10092"
+      }
+    ],
+    "legislation": [
+      {
+        "label": "Lei nº 5.172/1966 - Código Tributário Nacional",
+        "url": "https://www.planalto.gov.br/ccivil_03/leis/l5172compilado.htm"
+      }
+    ],
+    "notice": "Consulte as orientações desta página e utilize o canal de atendimento para solicitar o serviço.",
+    "noticeAction": "Acessar o canal de atendimento ↗"
+  },
+  "1doc-ferias-marcacao-e-alteracao": {
+    "slug": "ferias-marcacao-e-alteracao",
+    "summary": "Serviço destinado a servidores municipais que desejam agendar, remarcar ou alterar o período de gozo de férias. O procedimento garante o planejamento adequado da escala de trabalho e o exercício regular do direito ao descanso anual previsto em lei.",
+    "eligibility": "Servidor municipal que precise marcar ou alterar o período de férias, com anuência do gestor imediato.",
+    "documents": [
+      "Documento de identificação do servidor (RG e CPF).",
+      "Matrícula funcional.",
+      "Requerimento de marcação ou alteração de férias preenchido e assinado pelo servidor e pelo gestor imediato."
+    ],
+    "steps": [
+      "Protocole a solicitação no setor de Gestão de Pessoas com antecedência mínima de 30 dias do período pretendido.",
+      "Aguarde a análise conforme a conveniência administrativa e a escala da unidade de lotação.",
+      "Confirme o período autorizado antes de iniciar o afastamento."
+    ],
+    "whereWhen": "Atendimento presencial: SAC MUNICIPAL. Telefone: (75) 3512-7811. E-mail: sacdigital@amargosa.ba.gov.br. Whatsapp: (75) 3512-7811. Endereço: Av. Dr. Luis Sandes, 120 Valle Shopping. E-mail: sac@amargosa.ba.gov.br. Site: amargosa.ba.gov.br. Horários de atendimento ainda não informados.",
+    "cost": "Isento de Taxas (R$ 0,00)",
+    "duration": "O prazo estimado deste serviço ainda não foi definido.",
+    "channels": [
+      {
+        "label": "Referência 1",
+        "value": "Solicitar Marcação/Alteração Férias - AMARGOSA",
+        "url": "https://servicos.ba.gov.br/detalhe/servico/10093"
+      }
+    ],
+    "legislation": [],
+    "notice": "Consulte as orientações desta página e utilize o canal de atendimento para solicitar o serviço.",
+    "noticeAction": "Acessar o canal de atendimento ↗"
+  },
+  "1doc-guia-de-sepultamento": {
+    "slug": "guia-de-sepultamento",
+    "summary": "Documento emitido pelas autoridades funerárias ou cemitérios, autorizando o enterro de um falecido em local regulamentado.",
+    "eligibility": "Responsável pelo sepultamento que possua a documentação do falecido e a autorização de uso da sepultura.",
+    "documents": [
+      "Certidão de óbito emitida pelo cartório competente.",
+      "Documento de identificação do responsável pelo sepultamento (RG e CPF).",
+      "Comprovante do direito de uso da sepultura ou autorização do cemitério.",
+      "Solicitação junto à administração do cemitério municipal."
+    ],
+    "steps": [
+      "A guia de sepultamento é obrigatória para autorizar o enterro em cemitérios públicos e privados.",
+      "Emitida pela administração do cemitério ou setor de serviços funerários da prefeitura.",
+      "Deve ser apresentada no momento da execução do sepultamento, garantindo que o ato está em conformidade com as normas sanitárias e legais."
+    ],
+    "whereWhen": "Atendimento presencial: SAC MUNICIPAL. Telefone: (75) 3512-7811. E-mail: sacdigital@amargosa.ba.gov.br. Atendimento virtual: SAC MUNICIPAL. Whatsapp: (75) 3512-7811. Endereço: Av. Dr. Luis Sandes, 120 Valle Shopping. Site: amargosa.ba.gov.br. Horários de atendimento ainda não informados.",
+    "cost": "Não se aplica (R$ 0,00)",
+    "duration": "O prazo estimado deste serviço ainda não foi definido.",
+    "channels": [
+      {
+        "label": "Referência 1",
+        "value": "Solicitar Guia de Sepultamento - AMARGOSA",
+        "url": "https://servicos.ba.gov.br/detalhe/servico/2541"
+      }
+    ],
+    "legislation": [],
+    "notice": "Consulte as orientações desta página e utilize o canal de atendimento para solicitar o serviço.",
+    "noticeAction": "Acessar o canal de atendimento ↗"
+  },
+  "1doc-interdicao-de-via": {
+    "slug": "interdicao-de-via",
+    "summary": "Este serviço permite que cidadãos solicitem a interdição temporária de vias públicas para a realização de eventos, obras ou outras necessidades específicas, garantindo a organização e a segurança no trânsito durante o período de interdição.",
+    "eligibility": "Pessoa física ou jurídica responsável por evento, obra ou outra atividade que exija interdição temporária de via pública.",
+    "documents": [
+      "Requisitos: Ofício de Solicitação: Documento formal dirigido à SEMOP/SUPET, detalhando o motivo da interdição, data, horário e local exato da via a ser interditada.",
+      "Documentação do Solicitante: Cópia do RG e CPF do responsável pela solicitação ou, no caso de pessoa jurídica, cópia do CNPJ e documentos do representante legal.",
+      "Comprovante de Residência: Comprovante atualizado do solicitante.",
+      "Plano de Sinalização: Quando aplicável, apresentação de um plano de sinalização viária durante o período de interdição, visando à segurança dos usuários da via."
+    ],
+    "steps": [
+      "O solicitante deve entrar em contato com a Secretaria de Serviços Públicos, Obras e planejamento pelo e-mail, protocolo digital ou presencialmente, fornecendo as informações necessárias sobre a interdição desejada.",
+      "A SEMOP/SUPET analisa a viabilidade da interdição, considerando aspectos como impacto no trânsito, segurança e conformidade com a legislação vigente.",
+      "Após a análise, se aprovada, a interdição é agendada, e o solicitante é informado sobre as condições e responsabilidades relacionadas.",
+      "No período estabelecido, a SEMOP/SUPET realiza a interdição da via conforme acordado, monitorando e garantindo a segurança durante o evento ou obra."
+    ],
+    "whereWhen": "Atendimento presencial: Secretaria Municipal de Serviços Públicos, Obras e Planejamento da Cidade (SEMOP). Telefone: (75) 98104-9490. E-mail: smt@amargosa.ba.gov.br. Whatsapp: (75) 9 8104-9490. E-mail: supesp@amagosa.ba.gov.br. Protocolo Digital: https://amargosa.1doc.com.br/b.php?pg=o/wp&s=amargosa. Horários de atendimento ainda não informados.",
+    "cost": "Não se aplica (R$ 0,00)",
+    "duration": "Previsão de espera: 48 horas Prazo máximo estimado: 5 dias úteis",
+    "channels": [
+      {
+        "label": "Referência 1",
+        "value": "Solicitar interdição de via",
+        "url": "https://servicos.ba.gov.br/detalhe/servico/2341"
+      }
+    ],
+    "legislation": [],
+    "notice": "Consulte as orientações desta página e utilize o canal de atendimento para solicitar o serviço.",
+    "noticeAction": "Acessar o canal de atendimento ↗"
+  },
+  "1doc-isencao-de-iptu": {
+    "slug": "isencao-de-iptu",
+    "summary": "Serviço para solicitar isenção de tributos vinculados ao cadastro imobiliário de imóveis, quando prevista em lei.",
+    "eligibility": "Proprietário ou responsável por imóvel que se enquadre em hipótese de isenção prevista na legislação municipal.",
+    "documents": [
+      "Requerimento de isenção preenchido e assinado pelo proprietário ou responsável.",
+      "Inscrição imobiliária do imóvel.",
+      "Documento de identificação do solicitante.",
+      "Comprovantes que demonstrem o direito à isenção, conforme a legislação municipal."
+    ],
+    "steps": [
+      "O serviço permite solicitar isenção de tributos vinculados ao imóvel, como IPTU, quando prevista em lei. O pedido deve ser analisado pelo setor de tributos do município com base na documentação apresentada. A concessão depende do enquadramento nas regras legais e da validação dos documentos."
+    ],
+    "whereWhen": "Atendimento presencial: SAC MUNICIPAL. Telefone: (75) 3512-7811. E-mail: sacdigital@amargosa.ba.gov.br. Atendimento virtual: SAC MUNICIPAL. Canal on-line: Ba.gov — https://www.ba.gov.br/. Whatsapp: (75) 3512-7811. Endereço: Av. Dr. Luis Sandes, 120 Valle Shopping. E-mail: sac@amargosa.ba.gov.br. Site: amargosa.ba.gov.br. Horários de atendimento ainda não informados.",
+    "cost": "Isento de Taxas (R$ 0,00)",
+    "duration": "O prazo estimado deste serviço ainda não foi definido.",
+    "channels": [
+      {
+        "label": "Referência 1",
+        "value": "Solicitar Isenção Tributária de Cadastro Imobiliário - AMARGOSA",
+        "url": "https://servicos.ba.gov.br/detalhe/servico/10110"
+      }
+    ],
+    "legislation": [
+      {
+        "label": "Lei nº 5.172/1966 - Código Tributário Nacional",
+        "url": "https://www.planalto.gov.br/ccivil_03/leis/l5172compilado.htm"
+      }
+    ],
+    "notice": "Consulte as orientações desta página e utilize o canal de atendimento para solicitar o serviço.",
+    "noticeAction": "Acessar o canal de atendimento ↗"
+  },
+  "1doc-lancamento-de-inscricao-imobiliaria": {
+    "slug": "lancamento-de-inscricao-imobiliaria",
+    "summary": "Serviço destinado a proprietários de imóveis que ainda não possuem registro cadastral junto à prefeitura. A inscrição imobiliária é o número de identificação único atribuído a cada imóvel no cadastro municipal, sendo indispensável para a emissão do carnê de IPTU, emissão de certidões, licenciamento de obras e demais procedimentos administrativos relacionados ao imóvel. O serviço abrange imóveis novos, imóveis resultantes de desmembramento, unificação ou regularização fundiária, e propriedades que nunca foram cadastradas no município.",
+    "eligibility": "Proprietário de imóvel ainda não cadastrado no município.",
+    "documents": [
+      "Documento de identificação do solicitante (RG e CPF/CNPJ).",
+      "Número de inscrição imobiliária ou municipal.",
+      "Requerimento de solicitação preenchido."
+    ],
+    "steps": [
+      "Etapas ainda não informadas."
+    ],
+    "whereWhen": "Atendimento presencial: SAC MUNICIPAL. Telefone: (75) 3512-7811. E-mail: sacdigital@amargosa.ba.gov.br. Atendimento virtual: SAC MUNICIPAL. Whatsapp: (75) 3512-7811. Endereço: Av. Dr. Luis Sandes, 120 Valle Shopping. Site: amargosa.ba.gov.br. Horários de atendimento ainda não informados.",
+    "cost": "Não se aplica (R$ 0,00)",
+    "duration": "O prazo estimado deste serviço ainda não foi definido.",
+    "channels": [
+      {
+        "label": "Referência 1",
+        "value": "Solicitar Criação de Inscrição Imobiliária - AMARGOSA",
+        "url": "https://servicos.ba.gov.br/detalhe/servico/10029"
+      }
+    ],
+    "legislation": [
+      {
+        "label": "Lei nº 5.172/1966 - Código Tributário Nacional",
+        "url": "https://www.planalto.gov.br/ccivil_03/leis/l5172compilado.htm"
+      }
+    ],
+    "notice": "Consulte as orientações desta página e utilize o canal de atendimento para solicitar o serviço.",
+    "noticeAction": "Acessar o canal de atendimento ↗"
+  },
+  "1doc-licenca-premio": {
+    "slug": "licenca-premio",
+    "summary": "Serviço destinado a servidores municipais que adquiriram o direito à licença prêmio por assiduidade, conforme previsto no Estatuto dos Servidores do Município. A licença prêmio consiste em um período de afastamento remunerado concedido ao servidor que cumprir determinado tempo de serviço sem faltas ou infrações disciplinares.",
+    "eligibility": "Servidor municipal que tenha adquirido o direito à licença-prêmio conforme o Estatuto dos Servidores.",
+    "documents": [
+      "Documento de identificação do servidor (RG e CPF).",
+      "Matrícula funcional.",
+      "Requerimento de solicitação de licença prêmio preenchido e assinado.",
+      "Comprovação do período aquisitivo cumprido, emitida pelo setor de Gestão de Pessoas."
+    ],
+    "steps": [
+      "Verifique no setor de Gestão de Pessoas se o período aquisitivo exigido pela legislação municipal foi completado.",
+      "Solicite a análise do período pretendido para a licença.",
+      "Aguarde a aprovação, conforme a conveniência administrativa da unidade de lotação."
+    ],
+    "whereWhen": "Atendimento presencial: SAC MUNICIPAL. Telefone: (75) 3512-7811. E-mail: sacdigital@amargosa.ba.gov.br. Whatsapp: (75) 3512-7811. Endereço: Av. Dr. Luis Sandes, 120 Valle Shopping. E-mail: sac@amargosa.ba.gov.br. Site: amargosa.ba.gov.br. Horários de atendimento ainda não informados.",
+    "cost": "Isento de Taxas (R$ 0,00)",
+    "duration": "O prazo estimado deste serviço ainda não foi definido.",
+    "channels": [
+      {
+        "label": "Referência 1",
+        "value": "Solicitar Licença Prêmio - AMARGOSA",
+        "url": "https://servicos.ba.gov.br/detalhe/servico/10094"
+      }
+    ],
+    "legislation": [],
+    "notice": "Consulte as orientações desta página e utilize o canal de atendimento para solicitar o serviço.",
+    "noticeAction": "Acessar o canal de atendimento ↗"
+  },
+  "1doc-margem-para-emprestimo-consignado": {
+    "slug": "margem-para-emprestimo-consignado",
+    "summary": "Serviço destinado a servidores municipais que necessitam revisar ou corrigir o percentual da margem consignável disponível em sua folha de pagamento. O ajuste pode ser necessário em casos de inclusão, exclusão ou alteração de contratos de consignação junto a instituições financeiras conveniadas.",
+    "eligibility": "Servidor municipal que precise revisar ou corrigir a margem consignável disponível na folha de pagamento.",
+    "documents": [
+      "Documento de identificação do servidor (RG e CPF).",
+      "Matrícula funcional e contracheque atualizado.",
+      "Requerimento de ajuste de margem devidamente preenchido.",
+      "Documentos que comprovem a necessidade do ajuste (contratos de consignação, extratos bancários)."
+    ],
+    "steps": [
+      "A margem consignável corresponde ao percentual do salário disponível para desconto em folha, conforme legislação vigente. O pedido deve ser protocolado no setor de Gestão de Pessoas, que analisará os descontos vigentes e realizará o ajuste necessário. Após o processamento, o servidor será comunicado sobre a nova margem disponível para consignações."
+    ],
+    "whereWhen": "Atendimento presencial: SAC MUNICIPAL. Telefone: (75) 3512-7811. E-mail: sacdigital@amargosa.ba.gov.br. Atendimento virtual: SAC MUNICIPAL. Whatsapp: (75) 3512-7811. Endereço: Av. Dr. Luis Sandes, 120 Valle Shopping. Site: amargosa.ba.gov.br. Horários de atendimento ainda não informados.",
+    "cost": "Não se aplica (R$ 0,00)",
+    "duration": "O prazo estimado deste serviço ainda não foi definido.",
+    "channels": [
+      {
+        "label": "Referência 1",
+        "value": "Solicitar Ajuste de Margem Consignável - AMARGOSA",
+        "url": "https://servicos.ba.gov.br/detalhe/servico/10039"
+      }
+    ],
+    "legislation": [],
+    "notice": "Consulte as orientações desta página e utilize o canal de atendimento para solicitar o serviço.",
+    "noticeAction": "Acessar o canal de atendimento ↗"
+  },
+  "1doc-parcelamento-de-debito-do-iptu": {
+    "slug": "parcelamento-de-debito-do-iptu",
+    "summary": "O parcelamento permite regularizar débitos de IPTU, evitando cobrança judicial.",
+    "eligibility": "Contribuinte responsável por imóvel com débito de IPTU passível de parcelamento.",
+    "documents": [
+      "Documento de identificação do contribuinte (RG e CPF/CNPJ).",
+      "Número de inscrição imobiliária ou carnê do IPTU.",
+      "Solicitação formal de parcelamento, presencial ou via sistema digital.",
+      "Comprovante de residência atualizado."
+    ],
+    "steps": [
+      "O parcelamento permite regularizar débitos de IPTU, evitando cobrança judicial.",
+      "O pedido pode ser feito no SAC Municipal ou no portal de serviços online do município.",
+      "O contribuinte escolhe o número de parcelas disponíveis conforme as regras municipais, gerando as guias (DAMs) correspondentes para pagamento."
+    ],
+    "whereWhen": "Atendimento presencial: SAC MUNICIPAL. Telefone: (75) 3512-7811. E-mail: sacdigital@amargosa.ba.gov.br. Atendimento virtual: SAC MUNICIPAL. Whatsapp: (75) 3512-7811. Endereço: Av. Dr. Luis Sandes, 120 Valle Shopping. E-mail: sac@amargosa.ba.gov.br. Site: amargosa.ba.gov.br. Horários de atendimento ainda não informados.",
+    "cost": "Não se aplica (R$ 0,00)",
+    "duration": "O prazo estimado deste serviço ainda não foi definido.",
+    "channels": [
+      {
+        "label": "Referência 1",
+        "value": "Solicitar Parcelamento de IPTU - AMARGOSA",
+        "url": "https://servicos.ba.gov.br/detalhe/servico/2564"
+      }
+    ],
+    "legislation": [
+      {
+        "label": "Lei nº 5.172/1966 - Código Tributário Nacional",
+        "url": "https://www.planalto.gov.br/ccivil_03/leis/l5172compilado.htm"
+      }
+    ],
+    "notice": "Consulte as orientações desta página e utilize o canal de atendimento para solicitar o serviço.",
+    "noticeAction": "Acessar o canal de atendimento ↗"
+  },
+  "1doc-poda-de-arvore": {
+    "slug": "poda-de-arvore",
+    "summary": "Este serviço permite que cidadãos solicitem à SEAMA a avaliação técnica para a necessidade de poda, remoção ou plantio de árvores em áreas públicas ou privadas, garantindo que tais ações sejam realizadas de acordo com as normas ambientais vigentes e de forma sustentável.",
+    "eligibility": "Responsável por imóvel ou área que precise de avaliação municipal para poda, remoção ou plantio de árvore.",
+    "documents": [
+      "Requerimento formal solicitando a avaliação, contendo a justificativa para a poda, remoção ou plantio da árvore.",
+      "Documento de identificação pessoal (RG, CPF).",
+      "Comprovante de propriedade ou posse do imóvel, ou autorização do proprietário, se for o caso.",
+      "Em casos de condomínios, ata de reunião com aprovação da maioria dos moradores para a intervenção solicitada."
+    ],
+    "steps": [
+      "Solicitação da Avaliação: O solicitante deve entrar em contato com a SEAMA por telefone ou presencialmente para formalizar o pedido de avaliação, apresentando a documentação necessária.",
+      "Agendamento da Vistoria: A SEAMA agendará uma data para que técnicos especializados realizem a vistoria no local indicado, a fim de avaliar a necessidade e viabilidade da intervenção solicitada.",
+      "Emissão do Parecer Técnico: Após a vistoria, a SEAMA emitirá um parecer técnico autorizando ou não a poda, remoção ou plantio da árvore, com as devidas orientações e condicionantes. Obs.: A remoção de árvores, quando autorizada, deverá ser compensada com o plantio de novas mudas, conforme orientação da SEAMA."
+    ],
+    "whereWhen": "Atendimento presencial: Secretaria de Agricultura e Meio Ambiente (SEAMA). Telefone: (75) 98104-9490. E-mail: seama@amargosa.ba.gov.br. Whatsapp: (75) 9 8104-9490. Protocolo digital: https://amargosa.1doc.com.br/b.php?pg=o/wp&s=amargosa. Horários de atendimento ainda não informados.",
+    "cost": "Não se aplica (R$ 0,00)",
+    "duration": "Previsão de espera: 03 dias. Prazo máximo estimado: 45 dias.",
+    "channels": [
+      {
+        "label": "Referência 1",
+        "value": "Solicitar avaliação para poda, remoção e plantio de árvores",
+        "url": "https://servicos.ba.gov.br/detalhe/servico/2346"
+      }
+    ],
+    "legislation": [
+      {
+        "label": "Legislação relacionada ao serviço",
+        "url": "https://www.planalto.gov.br/ccivil_03/leis/lcp/lcp140.htm"
+      }
+    ],
+    "notice": "Consulte as orientações desta página e utilize o canal de atendimento para solicitar o serviço.",
+    "noticeAction": "Acessar o canal de atendimento ↗"
+  },
+  "1doc-prescricao-de-credito-tributario-ou-de-renda-iptu-tll-tff": {
+    "slug": "prescricao-de-credito-tributario-ou-de-renda-iptu-tll-tff",
+    "summary": "Solicitação de análise e reconhecimento da prescrição de débitos tributários municipais, como IPTU, ISS e taxas, para regularização dos registros fiscais quando atendidos os requisitos legais.",
+    "eligibility": "Contribuinte com débito tributário municipal cujo prazo legal de cobrança possa ter expirado.",
+    "documents": [
+      "Documento de identificação do solicitante (RG e CPF/CNPJ).",
+      "Número de inscrição imobiliária ou municipal do contribuinte.",
+      "Requerimento formal de reconhecimento de prescrição devidamente preenchido e assinado.",
+      "Documentos que comprovem a data de constituição do débito (carnês, notificações, extratos de dívida ativa)."
+    ],
+    "steps": [
+      "Preencha e assine o requerimento de reconhecimento de prescrição e reúna os documentos do débito.",
+      "Protocole o pedido no atendimento municipal responsável pelos tributos.",
+      "Aguarde a análise da constituição do crédito e das condições legais de prescrição pelo setor competente.",
+      "Acompanhe a decisão e, se o pedido for deferido, a atualização dos registros da dívida ativa."
+    ],
+    "whereWhen": "Atendimento presencial: SAC MUNICIPAL. Telefone: (75) 3512-7811. E-mail: sacdigital@amargosa.ba.gov.br. Whatsapp: (75) 3512-7811. Endereço: Av. Dr. Luis Sandes, 120 Valle Shopping. Site: amargosa.ba.gov.br. Horários de atendimento ainda não informados.",
+    "cost": "Isento de Taxas (R$ 0,00)",
+    "duration": "O prazo estimado deste serviço ainda não foi definido.",
+    "channels": [
+      {
+        "label": "Referência 1",
+        "value": "Solicitar Prescrição de Débitos Tributários Municipais - AMARGOSA",
+        "url": "https://servicos.ba.gov.br/detalhe/servico/10035"
+      }
+    ],
+    "legislation": [
+      {
+        "label": "Lei nº 5.172/1966 - Código Tributário Nacional",
+        "url": "https://www.planalto.gov.br/ccivil_03/leis/l5172compilado.htm"
+      }
+    ],
+    "notice": "Consulte as orientações desta página e utilize o canal de atendimento para solicitar o serviço.",
+    "noticeAction": "Acessar o canal de atendimento ↗"
+  },
+  "1doc-regularizacao-fundiaria": {
+    "slug": "regularizacao-fundiaria",
+    "summary": "Processo legal de formalização de áreas ocupadas irregularmente, concedendo direitos de propriedade aos ocupantes.",
+    "eligibility": "Ocupante de imóvel ou área que pretenda formalizar a posse ou a propriedade por meio de regularização fundiária.",
+    "documents": [
+      "Declaração ou requerimento de interesse na regularização assinado pelo ocupante.",
+      "Comprovante de posse ou ocupação do imóvel (declarações, contas de luz/água, IPTU, etc.).",
+      "Documento de identificação do requerente (RG e CPF).",
+      "Levantamento topográfico/georreferenciado da área ocupada, elaborado por profissional habilitado com ART/RRT."
+    ],
+    "steps": [
+      "O processo é conduzido pela Secretaria de Habitação, Urbanismo ou órgão municipal designado.",
+      "A prefeitura realiza estudos técnicos e jurídicos para verificar a possibilidade legal de regularização conforme a Lei Federal 13.465/2017.",
+      "Se atendidos os requisitos, o ocupante pode receber o título de propriedade ou de concessão de uso da área.",
+      "A regularização garante segurança jurídica à família e direito ao registro do imóvel no cartório competente."
+    ],
+    "whereWhen": "Atendimento presencial: SAC MUNICIPAL. Telefone: (75) 3512-7811. E-mail: sacdigital@amargosa.ba.gov.br. Atendimento virtual: SAC MUNICIPAL. Whatsapp: (75) 3512-7811. Endereço: Av. Dr. Luis Sandes, 120 Valle Shopping. E-mail: sac@amargosa.ba.gov.br. Site: amargosa.ba.gov.br. Horários de atendimento ainda não informados.",
+    "cost": "Não se aplica (R$ 0,00)",
+    "duration": "O prazo estimado deste serviço ainda não foi definido.",
+    "channels": [
+      {
+        "label": "Referência 1",
+        "value": "Solicitar Regularização Fundiária - AMARGOSA",
+        "url": "https://servicos.ba.gov.br/detalhe/servico/2537"
+      }
+    ],
+    "legislation": [],
+    "notice": "Consulte as orientações desta página e utilize o canal de atendimento para solicitar o serviço.",
+    "noticeAction": "Acessar o canal de atendimento ↗"
+  },
+  "1doc-requerimento-escolar": {
+    "slug": "requerimento-escolar",
+    "summary": "Reúne solicitações de boletim escolar, com o desempenho acadêmico de um período letivo, e de histórico escolar, documento oficial da trajetória do estudante.",
+    "eligibility": "Aluno, ex-aluno, pai, mãe, responsável legal ou terceiro autorizado, conforme o documento escolar solicitado.",
+    "documents": [
+      "Para acesso online: CPF do responsável e senha de acesso ao portal do aluno/educação do município.",
+      "Para solicitação presencial: Documento de identificação do pai, mãe ou responsável legal.",
+      "Informar o nome completo do aluno e a escola em que estuda.",
+      "Documento de identificação do aluno ou ex-aluno (RG/CPF ou certidão de nascimento).",
+      "Preencher o formulário de solicitação na unidade escolar ou via portal da Secretaria de Educação (quando disponível).",
+      "Em caso de solicitação por terceiros, apresentar procuração assinada juntamente com cópia do documento do requerente."
+    ],
+    "steps": [
+      "Para consultar o boletim on-line, acessar o site ou aplicativo da Secretaria de Educação com as credenciais fornecidas pela escola.",
+      "Sem acesso on-line, solicitar uma via impressa na secretaria da unidade escolar em que o aluno está matriculado.",
+      "Para o histórico escolar, preencher o formulário na unidade escolar ou pelo portal da Secretaria de Educação, quando disponível.",
+      "Se a solicitação for feita por terceiro, apresentar procuração assinada e cópia do documento do requerente."
+    ],
+    "whereWhen": "Atendimento presencial: Secretaria Municipal de Educação (SEMED). Telefone: (75) 3512-7811. E-mail: sacdigital@amargosa.ba.gov.br. Atendimento virtual: Secretaria Municipal de Educação (SEMED). Whatsapp: (75) 3512-7811. Endereço: Av. Dr. Luis Sandes, 120 Valle Shopping. E-mail: sac@amargosa.ba.gov.br. Site: amargosa.ba.gov.br. E-mail: semed.gab@amargosa.ba.gov.br. Horários de atendimento ainda não informados.",
+    "cost": "Não se aplica (R$ 0,00)",
+    "duration": "Para histórico escolar, a ficha informa prazo variável conforme a unidade, geralmente de até 15 dias úteis; para boletim escolar, não há prazo específico informado.",
+    "channels": [
+      {
+        "label": "Referência 1",
+        "value": "Acessar ou Solicitar Boletim Escolar - AMARGOSA",
+        "url": "https://servicos.ba.gov.br/detalhe/servico/2520"
+      },
+      {
+        "label": "Referência 2",
+        "value": "Solicitar Histórico Escolar - AMARGOSA",
+        "url": "https://servicos.ba.gov.br/detalhe/servico/2523"
+      }
+    ],
+    "legislation": [],
+    "notice": "Consulte as orientações desta página e utilize o canal de atendimento para solicitar o serviço.",
+    "noticeAction": "Acessar o canal de atendimento ↗"
+  },
+  "1doc-ressarcimento-e-indenizacoes": {
+    "slug": "ressarcimento-e-indenizacoes",
+    "summary": "Solicitação de compensação financeira por danos ou prejuízos sofridos.",
+    "eligibility": "Pessoa que alegue dano ou prejuízo e possua documentos para fundamentar o pedido de ressarcimento ou indenização.",
+    "documents": [
+      "Documento de identificação do requerente (RG e CPF).",
+      "Protocolo ou comprovante da ocorrência do dano/prejuízo (ex.: boletim de ocorrência, fotos, notas fiscais).",
+      "Preencher requerimento padrão de solicitação de indenização.",
+      "Informar dados bancários do requerente para eventual ressarcimento."
+    ],
+    "steps": [
+      "O pedido deve ser protocolado na ouvidoria ou no setor responsável da prefeitura ou órgão público ligado ao serviço.",
+      "O processo será analisado administrativamente, podendo haver perícia ou parecer jurídico.",
+      "O pagamento/ressarcimento só ocorrerá em caso de reconhecimento do dano por responsabilidade do ente público."
+    ],
+    "whereWhen": "Atendimento presencial: SAC MUNICIPAL. Telefone: (75) 3512-7811. E-mail: sacdigital@amargosa.ba.gov.br. Atendimento virtual: SAC MUNICIPAL. Whatsapp: (75) 3512-7811. Endereço: Av. Dr. Luis Sandes, 120 Valle Shopping. E-mail: sac@amargosa.ba.gov.br. Site: amargosa.ba.gov.br. Horários de atendimento ainda não informados.",
+    "cost": "Não se aplica (R$ 0,00)",
+    "duration": "O prazo estimado deste serviço ainda não foi definido.",
+    "channels": [
+      {
+        "label": "Referência 1",
+        "value": "Solicitar Ressarcimento e indenizações - AMARGOSA",
+        "url": "https://servicos.ba.gov.br/detalhe/servico/2530"
+      }
+    ],
+    "legislation": [],
+    "notice": "Consulte as orientações desta página e utilize o canal de atendimento para solicitar o serviço.",
+    "noticeAction": "Acessar o canal de atendimento ↗"
+  },
+  "1doc-revisao-de-caracteristicas-imobiliaria": {
+    "slug": "revisao-de-caracteristicas-imobiliaria",
+    "summary": "Análise e correção de dados cadastrais do imóvel no banco de dados municipal, como área construída, uso do solo e informações que afetem a tributação.",
+    "eligibility": "Proprietário do imóvel ou interessado com legitimidade para solicitar a revisão cadastral.",
+    "documents": [
+      "Solicitação formal assinada pelo proprietário ou interessado.",
+      "Documento de identificação do solicitante (RG e CPF).",
+      "Certidão de matrícula do imóvel e documentos relacionados (contratos, escrituras, registros).",
+      "Planta ou croqui atual do imóvel, se necessário."
+    ],
+    "steps": [
+      "O serviço consiste na análise e correção de dados cadastrais do imóvel no banco de dados municipal.",
+      "Pode envolver verificação de área construída, uso do solo, valores de IPTU e outras informações que afetem a tributação.",
+      "Se identificada divergência, será emitida decisão administrativa com atualização do cadastro e possíveis ajustes tributários."
+    ],
+    "whereWhen": "Atendimento presencial: SAC MUNICIPAL. Telefone: (75) 3512-7811. E-mail: sacdigital@amargosa.ba.gov.br. Atendimento virtual: SAC MUNICIPAL. Whatsapp: (75) 3512-7811. Endereço: Av. Dr. Luis Sandes, 120 Valle Shopping. E-mail: sac@amargosa.ba.gov.br. Site: amargosa.ba.gov.br. Horários de atendimento ainda não informados.",
+    "cost": "Não se aplica (R$ 0,00)",
+    "duration": "O prazo estimado deste serviço ainda não foi definido.",
+    "channels": [
+      {
+        "label": "Referência 1",
+        "value": "Solicitar Revisão Imobiliária - AMARGOSA",
+        "url": "https://servicos.ba.gov.br/detalhe/servico/2539"
+      }
+    ],
+    "legislation": [
+      {
+        "label": "Lei nº 5.172/1966 - Código Tributário Nacional",
+        "url": "https://www.planalto.gov.br/ccivil_03/leis/l5172compilado.htm"
+      }
+    ],
+    "notice": "Consulte as orientações desta página e utilize o canal de atendimento para solicitar o serviço.",
+    "noticeAction": "Acessar o canal de atendimento ↗"
+  },
+  "1doc-solicitacao-de-reforma-de-carneira": {
+    "slug": "solicitacao-de-reforma-de-carneira",
+    "summary": "Este serviço permite que os cidadãos solicitem a construção ou reforma de carneiras (jazigos) nos cemitérios municipais de Amargosa, visando à manutenção e adequação dos espaços destinados a sepultamentos.",
+    "eligibility": "Responsável ou titular de concessão de sepultura que pretenda construir ou reformar a carneira.",
+    "documents": [
+      "Requerimento específico fornecido pela administração do cemitério ou pela SEMOP, devidamente preenchido.",
+      "Certidão de óbito da pessoa sepultada ou a ser sepultada na carneira.",
+      "RG e CPF do responsável pela construção ou reforma.",
+      "Documento de titularidade ou concessão da sepultura, ou autorização do titular.",
+      "Projeto ou memorial descritivo com dimensões e materiais da obra.",
+      "Identificação e comprovante de endereço do profissional ou empresa executora (RG, CPF ou CNPJ)."
+    ],
+    "steps": [
+      "O cidadão deve comparecer ao SAC Municipal ou acessar o protocolo digital para formalizar o pedido de construção ou reforma, apresentando toda a documentação necessária.",
+      "A SEMOP analisa os documentos apresentados para verificar a conformidade com as normas municipais e a viabilidade da obra solicitada.",
+      "Após aprovação, é emitida uma autorização formal para a realização da construção ou reforma da carneira.",
+      "Com a autorização em mãos, o solicitante pode proceder com a obra, respeitando as especificações aprovadas e as normas do cemitério.",
+      "A SEMOP ou a administração do cemitério realiza a fiscalização da obra para assegurar o cumprimento das normas e da autorização concedida."
+    ],
+    "whereWhen": "Atendimento presencial: Secretaria Municipal de Serviços Públicos, Obras e Planejamento da Cidade (SEMOP). Telefone: (75) 98104-9490. E-mail: supesp@amargosa.ba.gov.br. Horários de atendimento ainda não informados.",
+    "cost": "Não se aplica (R$ 0,00)",
+    "duration": "Previsão de espera: 5 dias. Prazo máximo estimado: 15 dias.",
+    "channels": [
+      {
+        "label": "Referência 1",
+        "value": "Solicitar construção ou reforma de carneiras",
+        "url": "https://servicos.ba.gov.br/detalhe/servico/2338"
+      }
+    ],
+    "legislation": [],
+    "notice": "Consulte as orientações desta página e utilize o canal de atendimento para solicitar o serviço.",
+    "noticeAction": "Acessar o canal de atendimento ↗"
+  },
+  "1doc-transferencia-de-titularidade-imobiliaria": {
+    "slug": "transferencia-de-titularidade-imobiliaria",
+    "summary": "Atualização do titular do imóvel no cadastro imobiliário municipal após a transferência da propriedade.",
+    "eligibility": "Novo proprietário do imóvel ou seu representante legal.",
+    "documents": [
+      "Apresentar a guia de recolhimento do ITBI (Imposto sobre Transmissão de Bens Imóveis) paga.",
+      "Apresentar cópia da Escritura Pública de Compra e Venda registrada no Cartório de Registro de Imóveis ou documento equivalente.",
+      "Apresentar cópia do CPF e RG do novo proprietário.",
+      "Preencher o formulário de atualização cadastral da prefeitura."
+    ],
+    "steps": [
+      "Após a compra de um imóvel e o registro no cartório, o novo proprietário deve comunicar a prefeitura para atualizar o cadastro do IPTU.",
+      "O pedido é formalizado na Secretaria da Fazenda ou no setor de cadastro imobiliário do município.",
+      "A atualização garante que as cobranças futuras de IPTU e outras taxas relacionadas ao imóvel sejam emitidas em nome do proprietário correto."
+    ],
+    "whereWhen": "Atendimento presencial: SAC MUNICIPAL. Telefone: (75) 3512-7811. E-mail: sacdigital@amargosa.ba.gov.br. Atendimento virtual: SAC MUNICIPAL. Whatsapp: (75) 3512-7811. Endereço: Av. Dr. Luis Sandes, 120 Valle Shopping. E-mail: sac@amargosa.ba.gov.br. Site: amargosa.ba.gov.br. Horários de atendimento ainda não informados.",
+    "cost": "Não se aplica (R$ 0,00)",
+    "duration": "O prazo estimado deste serviço ainda não foi definido.",
+    "channels": [
+      {
+        "label": "Referência 1",
+        "value": "Transferir titularidade Imobiliária - AMARGOSA",
+        "url": "https://servicos.ba.gov.br/detalhe/servico/2512"
+      }
+    ],
+    "legislation": [
+      {
+        "label": "Lei nº 5.172/1966 - Código Tributário Nacional",
+        "url": "https://www.planalto.gov.br/ccivil_03/leis/l5172compilado.htm"
+      }
+    ],
+    "notice": "Consulte as orientações desta página e utilize o canal de atendimento para solicitar o serviço.",
+    "noticeAction": "Acessar o canal de atendimento ↗"
+  }
+}

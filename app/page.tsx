@@ -8,6 +8,7 @@ import HeaderMenu from "./header-menu";
 import PortalFooter from "./portal-footer";
 import SearchSuggestions from "./search-suggestions";
 import { searchServices } from "./search-engine";
+import { searchPath } from "./search-url";
 import {
   loadServicePopularity,
   recordServiceSearch,
@@ -151,30 +152,14 @@ const serviceAudienceLabel = (service: Service) =>
 
 function Brand({ segment }: { segment: Segment }) {
   const logo = items(segment, "image").find((item) => item.role === "logo");
-  const title = segment.items.find((item) => item.role === "title");
-  const subtitle = segment.items.find((item) => item.role === "subtitle");
   return (
-    <span className="brand home-brand">
-      {logo?.src ? (
-        <img
-          {...itemSizeProps(logo)}
-          className="brand-image"
-          src={logo.src}
-          alt={logo.alt || "Bandeira de Amargosa"}
-        />
-      ) : (
-        <span {...itemSizeProps(logo)} className="mark">
-          AM
-        </span>
-      )}
-      <span>
-        <strong {...itemSizeProps(subtitle)}>
-          {subtitle?.value || "Central de Serviços"}
-        </strong>
-        <small {...itemSizeProps(title)}>
-          {title?.value || "Município de Amargosa"}
-        </small>
-      </span>
+    <span className="brand home-brand municipal-brand">
+      <img
+        {...itemSizeProps(logo)}
+        className="brand-image"
+        src="/prefeitura-amargosa-logo-preta-otimizada.png"
+        alt="Prefeitura de Amargosa"
+      />
     </span>
   );
 }
@@ -257,9 +242,7 @@ export default function Home() {
       trackSearchResults(normalizedTerm, searchServices(services, normalizedTerm, searchAudiences, searchCategories).length);
     }
     window.location.assign(
-      normalizedTerm
-        ? `/servicos?busca=${encodeURIComponent(normalizedTerm)}`
-        : "/servicos",
+      searchPath(normalizedTerm),
     );
   }
   function segmentStyle(segment: Segment) {
@@ -306,8 +289,8 @@ export default function Home() {
         href={href}
         {...external(href)}
         onClick={() => {
-          trackServiceClick(service.id, service.title);
-          if (/^https?:\/\//i.test(href)) trackServiceStart(service.id, service.title);
+          trackServiceClick(service);
+          if (/^https?:\/\//i.test(href)) trackServiceStart(service);
         }}
       >
         {featured && (
@@ -394,6 +377,7 @@ export default function Home() {
       );
       const notice = segment.items.find((item) => item.role === "notice");
       const search = items(segment, "search")[0];
+      /* Bloco "Mais buscados" preservado para possível reativação.
       const featured = segments.find((entry) => entry.type === "featured");
       const fallbackShortcuts = items(featured, "serviceRef")
         .slice(0, 4)
@@ -409,6 +393,7 @@ export default function Home() {
             list.findIndex((entry) => entry.id === service.id) === index,
         )
         .slice(0, 4);
+      */
       const carousel =
         (segment.style.variant || siteDesign.theme) === "contrast"
           ? heroImages
@@ -491,21 +476,23 @@ export default function Home() {
               />
             )}
           </div>
+          {/* Bloco "Mais buscados" preservado para possível reativação.
           <div className="popular" aria-label="Serviços mais buscados">
             <span>Mais buscados:</span>
-            {shortcuts.map((service) => (
-              <button
-                key={service.id}
-                type="button"
-                onClick={() => {
-                  setQuery(service.title);
-                  showResults(service.title);
-                }}
-              >
-                {service.title}
-              </button>
-            ))}
+            {shortcuts.map((service) => {
+              const href = `/servicos/${service.slug || service.id}`;
+              return (
+                <a
+                  key={service.id}
+                  href={href}
+                  onClick={() => trackServiceClick(service.id, service.title)}
+                >
+                  {service.title}
+                </a>
+              );
+            })}
           </div>
+          */}
           {notice?.value && (
             <small {...itemSizeProps(notice)}>{notice.value}</small>
           )}

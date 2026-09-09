@@ -3,6 +3,7 @@
 
 import {
   useEffect,
+  useLayoutEffect,
   useMemo,
   useRef,
   useState,
@@ -37,8 +38,8 @@ function Link({
     <a href={href} {...props} onClick={(event) => {
       const service = services.find((entry) => serviceHref(entry) === href);
       if (service) {
-        trackServiceClick(service.id, service.title);
-        if (/^https?:\/\//i.test(href)) trackServiceStart(service.id, service.title);
+        trackServiceClick(service);
+        if (/^https?:\/\//i.test(href)) trackServiceStart(service);
       }
       onClick?.(event);
     }}>
@@ -100,7 +101,6 @@ const searchCategories = categories.map((entry) => ({
   label: entry.label,
 }));
 const officialCategoryLabels = new Set(categories.map((entry) => entry.label));
-const header = segment("header");
 const directoryPage = siteContent.pages.find(
   (entry) => entry.id === "directory",
 );
@@ -198,13 +198,6 @@ export function PortalHeader({
   pageEntry = detailPage,
 }: { pageEntry?: typeof directoryPage } = {}) {
   const entry = internalSegment(pageEntry, "internalHeader");
-  const localLogo = entry?.items.find(
-    (item) => item.type === "image" && item.role === "logo",
-  ) as (InternalItem & { src?: string; alt?: string }) | undefined;
-  const homeLogo = header?.items.find(
-    (item) => item.type === "image" && item.role === "logo",
-  );
-  const logo = localLogo?.src ? localLogo : homeLogo;
   const links = (entry?.items.filter((item) => item.type === "link") ||
     []) as (InternalItem & { text?: string; url?: string })[];
   return (
@@ -212,20 +205,11 @@ export function PortalHeader({
       className={internalClasses(entry, "internal-header")}
       style={internalStyle(entry)}
     >
-      <Link className="internal-brand" href="/">
-        {logo?.src ? (
-          <img src={logo.src} alt={logo.alt || "Prefeitura de Amargosa"} />
-        ) : (
-          <span className="internal-mark">AM</span>
-        )}
-        <span>
-          <strong>
-            {internalText(entry, "subtitle", "Central de Serviços")}
-          </strong>
-          <small>
-            {internalText(entry, "title", "Município de Amargosa")}
-          </small>
-        </span>
+      <Link className="internal-brand municipal-brand" href="/">
+        <img
+          src="/prefeitura-amargosa-logo-preta-otimizada.png"
+          alt="Prefeitura de Amargosa"
+        />
       </Link>
       <nav aria-label="Navegação interna">
         {links
@@ -604,6 +588,39 @@ export function ServiceDirectory({
       wide.removeEventListener("change", updateLayout);
     };
   }, []);
+  useLayoutEffect(() => {
+    const container = carouselRef.current;
+    if (!container) return;
+
+    // Ao reordenar cartões com scroll-snap, alguns navegadores acompanham o
+    // cartão que estava visível até a nova posição dele. Forçamos o início
+    // novamente após a atualização do DOM para manter a primeira coluna à vista.
+    const previousSnapType = container.style.scrollSnapType;
+    container.style.scrollSnapType = "none";
+    container.scrollTo({ left: 0, behavior: "auto" });
+    setCarouselColumn(0);
+
+    const frame = window.requestAnimationFrame(() => {
+      if (!container.isConnected) return;
+      container.scrollTo({ left: 0, behavior: "auto" });
+      container.style.scrollSnapType = previousSnapType;
+    });
+
+    return () => {
+      window.cancelAnimationFrame(frame);
+      if (container.isConnected) {
+        container.style.scrollSnapType = previousSnapType;
+      }
+    };
+  }, [
+    audienceFilter,
+    carouselLayout.rows,
+    carouselLayout.visibleColumns,
+    categoryFilter,
+    departmentFilter,
+    query,
+    sortMode,
+  ]);
   useEffect(() => {
     if (!query.trim()) return;
     const recordSelection = (event: MouseEvent) => {
@@ -659,7 +676,7 @@ export function ServiceDirectory({
     const ranked = query.trim()
       ? searchMatches.map((match) => match.service)
       : [...explicitlyFiltered];
-    if (query.trim()) return ranked;
+    if (query.trim() && sortMode === "relevance") return ranked;
     return ranked.sort((a, b) => {
       if (sortMode === "newest")
         return (
@@ -1000,6 +1017,11 @@ export function ServiceDirectory({
                     : ""
                 }
                 aria-pressed={sortMode === "nameAsc" || sortMode === "nameDesc"}
+                aria-label={
+                  sortMode === "nameDesc"
+                    ? "Nomes ordenados de Z a A. Pressione para ordenar de A a Z"
+                    : "Nomes ordenados de A a Z. Pressione para ordenar de Z a A"
+                }
                 onClick={() => {
                   setSortMode((current) =>
                     current === "nameAsc" ? "nameDesc" : "nameAsc",
@@ -1008,7 +1030,7 @@ export function ServiceDirectory({
                 }}
               >
                 Nome{" "}
-                <b aria-hidden="true">{sortMode === "nameDesc" ? "↓" : "↑"}</b>
+                <b aria-hidden="true">{sortMode === "nameDesc" ? "↑" : "↓"}</b>
               </button>
               <button
                 type="button"
@@ -1047,7 +1069,9 @@ export function ServiceDirectory({
             disabled={carouselColumn === 0}
             aria-label="Mostrar coluna anterior"
           >
-            ←
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <path d="M5 12h14m-6-6 6 6-6 6" />
+            </svg>
           </button>
           <div
             ref={carouselRef}
@@ -1085,7 +1109,9 @@ export function ServiceDirectory({
             disabled={carouselColumn >= carouselMaxColumn}
             aria-label="Mostrar próxima coluna"
           >
-            →
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <path d="M5 12h14m-6-6 6 6-6 6" />
+            </svg>
           </button>
         </div>
         {scoped.length === 0 && (
@@ -1118,7 +1144,7 @@ function ServiceRequestNotice({
       href={service.url}
       target="_blank"
       rel="noreferrer"
-      onClick={() => trackServiceStart(service.id, service.title)}
+      onClick={() => trackServiceStart(service)}
     >
       <span>{service.notice}</span>
       <small>
@@ -1362,7 +1388,7 @@ export function ServiceDetail({ slug }: { slug: string }) {
           href={service.url}
           target="_blank"
           rel="noreferrer"
-          onClick={() => trackServiceStart(service.id, service.title)}
+          onClick={() => trackServiceStart(service)}
         >
           <span>
             Acessar{" "}

@@ -1,3 +1,5 @@
+import pdfServiceDetails from './pdf-service-details.json' with { type: 'json' };
+
 type Channel = { label: string; value: string; url?: string };
 type Legislation = { label: string; url: string };
 type WhereWhenItem = {
@@ -24,7 +26,7 @@ type ApprovedServiceDetail = {
   relatedServiceIds?: string[];
   notice: string;
   noticeAction: string;
-  updatedAt: string;
+  updatedAt?: string;
 };
 
 const oneDocCentral = "https://amargosa.1doc.com.br/b.php?pg=wp/wp";
@@ -56,6 +58,7 @@ const trafficLegislation: Legislation[] = [
 ];
 
 export const approvedServiceDetails: Record<string, ApprovedServiceDetail> = {
+  ...pdfServiceDetails as Record<string, ApprovedServiceDetail>,
   "1doc-abastecimento-de-agua": {
     slug: "abastecimento-de-agua",
     destination: "Central de Atendimento 1Doc",
@@ -293,6 +296,90 @@ export const approvedServiceDetails: Record<string, ApprovedServiceDetail> = {
       "A pessoa jurídica deve comprovar a representação e observar rigorosamente o prazo da notificação.",
     noticeAction: "Abrir o canal de protocolo ↗",
     updatedAt: "01/09/2026",
+  },
+
+  "1doc-isencao-tributaria-cadastro-economico": {
+    slug: "isencao-tributaria-cadastro-economico",
+    destination: "Central de Atendimento 1Doc",
+    url: oneDocCentral,
+    summary:
+      "Serviço para solicitar isenção de tributos vinculados ao cadastro econômico de empresas, quando houver previsão legal.",
+    eligibility:
+      "Cidadãos, empresas e seus representantes legais que atendam aos requisitos de isenção previstos na legislação tributária municipal.",
+    documents: [
+      "Requerimento de isenção preenchido e assinado pelo responsável legal.",
+      "CNPJ e inscrição municipal da empresa.",
+      "Documentos que comprovem o enquadramento na hipótese legal de isenção.",
+      "Documento de identificação do solicitante.",
+    ],
+    steps: [
+      "Preencha e assine o requerimento de isenção.",
+      "Reúna os documentos da empresa, a identificação do solicitante e os comprovantes do direito à isenção.",
+      "Protocole o pedido pelo canal indicado nesta Central ou no atendimento do SAC Municipal.",
+      "Aguarde a análise do setor municipal de tributos e acompanhe o protocolo pelo canal utilizado.",
+    ],
+    whereWhen:
+      "O pedido pode ser protocolado pela Central de Atendimento 1Doc ou no SAC Municipal, na Avenida Dr. Luís Sandes, 120, Valle Shopping. Para orientação, utilize o telefone ou WhatsApp (75) 3512-7811.",
+    cost: "Gratuito.",
+    duration: "O prazo estimado ainda não foi definido.",
+    channels: [
+      { label: "Online", value: "Central de Atendimento 1Doc", url: oneDocCentral },
+      { label: "Telefone e WhatsApp", value: amargosaPhone },
+      { label: "E-mail", value: "sacdigital@amargosa.ba.gov.br", url: "mailto:sacdigital@amargosa.ba.gov.br" },
+      { label: "Presencial", value: "SAC Municipal — Avenida Dr. Luís Sandes, 120, Valle Shopping" },
+      { label: "Referência", value: "Ficha do serviço no BA.gov", url: "https://cpu001550.ba.gov.br/detalhe/servico/10109" },
+    ],
+    legislation: [],
+    relatedServiceIds: [
+      "1doc-isencao-de-taxas",
+      "1doc-reconhecimento-de-imunidade-isencao-ou-nao-incidencia",
+    ],
+    notice:
+      "A concessão depende do enquadramento nas regras tributárias municipais e da validação dos documentos apresentados.",
+    noticeAction: "Iniciar solicitação no 1Doc ↗",
+    updatedAt: "08/09/2026",
+  },
+
+  "1doc-isencao-tributaria-cadastro-imobiliario": {
+    slug: "isencao-tributaria-cadastro-imobiliario",
+    destination: "Central de Atendimento 1Doc",
+    url: oneDocCentral,
+    summary:
+      "Serviço para solicitar isenção de tributos vinculados ao cadastro imobiliário, como o IPTU, quando houver previsão legal.",
+    eligibility:
+      "Cidadãos, empresas, proprietários de imóveis e seus representantes que atendam aos requisitos de isenção previstos na legislação tributária municipal.",
+    documents: [
+      "Requerimento de isenção preenchido e assinado pelo proprietário ou responsável.",
+      "Inscrição imobiliária do imóvel.",
+      "Documento de identificação do solicitante.",
+      "Comprovantes que demonstrem o direito à isenção, conforme a legislação municipal.",
+    ],
+    steps: [
+      "Preencha e assine o requerimento de isenção.",
+      "Reúna a inscrição do imóvel, a identificação do solicitante e os comprovantes do direito à isenção.",
+      "Protocole o pedido pelo canal indicado nesta Central ou no atendimento do SAC Municipal.",
+      "Aguarde a análise do setor municipal de tributos e acompanhe o protocolo pelo canal utilizado.",
+    ],
+    whereWhen:
+      "O pedido pode ser protocolado pela Central de Atendimento 1Doc ou no SAC Municipal, na Avenida Dr. Luís Sandes, 120, Valle Shopping. Para orientação, utilize o telefone ou WhatsApp (75) 3512-7811.",
+    cost: "Gratuito.",
+    duration: "O prazo estimado ainda não foi definido.",
+    channels: [
+      { label: "Online", value: "Central de Atendimento 1Doc", url: oneDocCentral },
+      { label: "Telefone e WhatsApp", value: amargosaPhone },
+      { label: "E-mail", value: "sacdigital@amargosa.ba.gov.br", url: "mailto:sacdigital@amargosa.ba.gov.br" },
+      { label: "Presencial", value: "SAC Municipal — Avenida Dr. Luís Sandes, 120, Valle Shopping" },
+      { label: "Referência", value: "Ficha do serviço no BA.gov", url: "https://cpu001550.ba.gov.br/detalhe/servico/10110" },
+    ],
+    legislation: [],
+    relatedServiceIds: [
+      "1doc-isencao-de-iptu",
+      "1doc-isencao-de-itbi-itv",
+    ],
+    notice:
+      "A concessão depende do enquadramento nas regras tributárias municipais e da validação dos documentos apresentados.",
+    noticeAction: "Iniciar solicitação no 1Doc ↗",
+    updatedAt: "08/09/2026",
   },
 
   "1doc-limpeza-publica": {

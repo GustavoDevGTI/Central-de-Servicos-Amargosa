@@ -37,6 +37,17 @@
 .organogram-branch ul .organogram-branch ul>.organogram-branch::before{left:-17px;width:17px}
 .organogram-branch.level-2>.organogram-node{background:#fbfdfc}.organogram-branch.level-3>.organogram-node,.organogram-branch.level-4>.organogram-node{background:#f7faf8}
 
+@media(min-width:901px){
+  .organogram-drawer[open]{display:grid;grid-template-columns:minmax(250px,320px) minmax(0,1fr);align-items:stretch}
+  .organogram-drawer[open]>.organogram-drawer-toggle{grid-column:1;min-height:100%;align-items:flex-start;padding:22px 19px;border-right:1px solid #b9cec5;border-bottom:0}
+  .organogram-drawer[open]>.organogram-drawer-toggle .organogram-node-text{padding-top:2px}
+  .organogram-drawer[open]>.organogram-drawer-toggle .organogram-child-count{margin-left:auto;padding-top:4px}
+  .organogram-drawer[open]>.organogram-drawer-toggle .organogram-drawer-chevron{margin-top:5px}
+  .organogram-drawer[open]>ul{grid-column:2;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));align-content:start;gap:10px;margin:14px 14px 14px 28px;padding-left:22px}
+  .organogram-drawer[open]>ul>.organogram-branch{min-width:0}
+  .organogram-drawer[open]>ul>.organogram-branch::before{top:29px}
+}
+
 .organogram-unavailable a{color:var(--green);font-weight:800;text-decoration:underline}
 .organogram-unavailable{margin-top:28px;padding:30px;border:1px dashed #aebfb8;background:#fff;text-align:center}.organogram-unavailable p{margin-bottom:0}
 

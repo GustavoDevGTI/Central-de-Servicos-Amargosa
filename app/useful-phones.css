@@ -1,0 +1,20 @@
+.useful-phones-page{background:#f5f8f6}
+.useful-phones-content{width:min(1060px,calc(100% - 40px));margin:auto;padding:68px 0 88px}
+.useful-phones-heading{text-align:center}
+.useful-phones-heading>span{display:block;color:var(--green);font-size:11px;font-weight:900;letter-spacing:.15em}
+.useful-phones-heading h1{margin:10px 0 0;font-family:var(--site-heading-font);font-size:clamp(38px,5vw,56px);line-height:1.08;letter-spacing:-.035em}
+.useful-phones-groups{display:grid;gap:30px;margin-top:42px}
+.useful-phones-group h2{margin:0 0 14px;padding-bottom:10px;border-bottom:2px solid var(--green);font-family:var(--site-heading-font);font-size:24px}
+.useful-phones-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.useful-phone-card{min-height:136px;display:flex;align-items:flex-start;justify-content:space-between;gap:20px;padding:19px 20px;border:1px solid #bfd0c8;background:#fff;box-shadow:0 6px 16px rgba(12,73,54,.05)}
+.useful-phone-card h3{margin:0;color:var(--ink);font-size:18px;line-height:1.25}
+.useful-phone-card p,.useful-phone-card address{margin:6px 0 0;color:#596d65;font-size:14px;line-height:1.45;font-style:normal}
+.useful-phone-links{display:flex;flex:0 0 auto;flex-direction:column;gap:8px}
+.useful-phone-links a{min-width:138px;display:grid;grid-template-columns:19px 1fr;grid-template-rows:auto auto;align-items:center;column-gap:9px;padding:9px 12px;border:1px solid var(--green);border-radius:5px;background:var(--green);color:#fff;box-shadow:0 5px 12px rgba(9,93,65,.16);transition:transform .18s ease,background-color .18s ease,box-shadow .18s ease}
+.useful-phone-links a:hover,.useful-phone-links a:focus-visible{background:#075d45;box-shadow:0 8px 18px rgba(9,93,65,.22);transform:translateY(-1px)}
+.useful-phone-links a:focus-visible{outline:3px solid #f2c94c;outline-offset:2px}
+.useful-phone-links svg{grid-row:1/3;width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.useful-phone-links span{font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
+.useful-phone-links strong{font-size:17px;line-height:1.15;white-space:nowrap}
+@media(max-width:760px){.useful-phones-content{width:calc(100% - 28px);padding:48px 0 64px}.useful-phones-groups{gap:30px;margin-top:36px}.useful-phones-list{grid-template-columns:1fr}.useful-phone-card{min-height:0}.useful-phones-heading h1{font-size:40px}}
+@media(max-width:480px){.useful-phone-card{flex-direction:column;padding:20px}.useful-phone-links{width:100%}.useful-phone-links a{width:100%}}

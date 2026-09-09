@@ -7,6 +7,11 @@ type DataLayerEntry = {
   service_name?: string;
 };
 
+export type AnalyticsService = {
+  id: string;
+  title: string;
+};
+
 declare global {
   interface Window {
     dataLayer?: DataLayerEntry[];
@@ -20,14 +25,21 @@ export function trackSearchResults(term: string, resultsCount: number) {
   window.dataLayer.push({ event: "view_search_results", search_term: searchTerm, results_count: resultsCount });
 }
 
-export function trackServiceClick(serviceId: string, serviceName: string) {
-  if (typeof window === "undefined") return;
-  window.dataLayer ||= [];
-  window.dataLayer.push({ event: "service_click", service_id: serviceId, service_name: serviceName });
+function getAnalyticsService(service: AnalyticsService) {
+  return {
+    service_id: String(service.id),
+    service_name: String(service.title).trim(),
+  };
 }
 
-export function trackServiceStart(serviceId: string, serviceName: string) {
+export function trackServiceClick(service: AnalyticsService) {
   if (typeof window === "undefined") return;
   window.dataLayer ||= [];
-  window.dataLayer.push({ event: "service_start", service_id: serviceId, service_name: serviceName });
+  window.dataLayer.push({ event: "service_click", ...getAnalyticsService(service) });
+}
+
+export function trackServiceStart(service: AnalyticsService) {
+  if (typeof window === "undefined") return;
+  window.dataLayer ||= [];
+  window.dataLayer.push({ event: "service_start", ...getAnalyticsService(service) });
 }
