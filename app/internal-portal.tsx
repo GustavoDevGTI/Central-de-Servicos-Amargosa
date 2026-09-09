@@ -207,7 +207,7 @@ export function PortalHeader({
     >
       <Link className="internal-brand municipal-brand" href="/">
         <img
-          src="/prefeitura-amargosa-logo-preta-otimizada.png"
+          src="/prefeitura-amargosa-logo-preta.png"
           alt="Prefeitura de Amargosa"
         />
       </Link>

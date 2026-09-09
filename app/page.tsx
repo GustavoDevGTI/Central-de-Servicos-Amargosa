@@ -157,7 +157,7 @@ function Brand({ segment }: { segment: Segment }) {
       <img
         {...itemSizeProps(logo)}
         className="brand-image"
-        src="/prefeitura-amargosa-logo-preta-otimizada.png"
+        src="/prefeitura-amargosa-logo-preta.png"
         alt="Prefeitura de Amargosa"
       />
     </span>
