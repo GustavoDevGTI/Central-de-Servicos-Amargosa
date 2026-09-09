@@ -101,7 +101,6 @@ const searchCategories = categories.map((entry) => ({
   label: entry.label,
 }));
 const officialCategoryLabels = new Set(categories.map((entry) => entry.label));
-const header = segment("header");
 const directoryPage = siteContent.pages.find(
   (entry) => entry.id === "directory",
 );
@@ -199,13 +198,6 @@ export function PortalHeader({
   pageEntry = detailPage,
 }: { pageEntry?: typeof directoryPage } = {}) {
   const entry = internalSegment(pageEntry, "internalHeader");
-  const localLogo = entry?.items.find(
-    (item) => item.type === "image" && item.role === "logo",
-  ) as (InternalItem & { src?: string; alt?: string }) | undefined;
-  const homeLogo = header?.items.find(
-    (item) => item.type === "image" && item.role === "logo",
-  );
-  const logo = localLogo?.src ? localLogo : homeLogo;
   const links = (entry?.items.filter((item) => item.type === "link") ||
     []) as (InternalItem & { text?: string; url?: string })[];
   return (
@@ -213,20 +205,11 @@ export function PortalHeader({
       className={internalClasses(entry, "internal-header")}
       style={internalStyle(entry)}
     >
-      <Link className="internal-brand" href="/">
-        {logo?.src ? (
-          <img src={logo.src} alt={logo.alt || "Prefeitura de Amargosa"} />
-        ) : (
-          <span className="internal-mark">AM</span>
-        )}
-        <span>
-          <strong>
-            {internalText(entry, "subtitle", "Central de Serviços")}
-          </strong>
-          <small>
-            {internalText(entry, "title", "Município de Amargosa")}
-          </small>
-        </span>
+      <Link className="internal-brand municipal-brand" href="/">
+        <img
+          src="/prefeitura-amargosa-logo-preta-otimizada.png"
+          alt="Prefeitura de Amargosa"
+        />
       </Link>
       <nav aria-label="Navegação interna">
         {links

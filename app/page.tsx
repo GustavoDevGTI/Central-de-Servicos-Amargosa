@@ -152,30 +152,14 @@ const serviceAudienceLabel = (service: Service) =>
 
 function Brand({ segment }: { segment: Segment }) {
   const logo = items(segment, "image").find((item) => item.role === "logo");
-  const title = segment.items.find((item) => item.role === "title");
-  const subtitle = segment.items.find((item) => item.role === "subtitle");
   return (
-    <span className="brand home-brand">
-      {logo?.src ? (
-        <img
-          {...itemSizeProps(logo)}
-          className="brand-image"
-          src={logo.src}
-          alt={logo.alt || "Bandeira de Amargosa"}
-        />
-      ) : (
-        <span {...itemSizeProps(logo)} className="mark">
-          AM
-        </span>
-      )}
-      <span>
-        <strong {...itemSizeProps(subtitle)}>
-          {subtitle?.value || "Central de Serviços"}
-        </strong>
-        <small {...itemSizeProps(title)}>
-          {title?.value || "Município de Amargosa"}
-        </small>
-      </span>
+    <span className="brand home-brand municipal-brand">
+      <img
+        {...itemSizeProps(logo)}
+        className="brand-image"
+        src="/prefeitura-amargosa-logo-preta-otimizada.png"
+        alt="Prefeitura de Amargosa"
+      />
     </span>
   );
 }
