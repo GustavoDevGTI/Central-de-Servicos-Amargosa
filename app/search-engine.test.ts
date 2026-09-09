@@ -52,6 +52,32 @@ test("gera tags invisíveis para todos os serviços do catálogo", () => {
   assert.ok(catalogServices.every((service) => serviceSearchTags(service).length >= 3));
 });
 
+test("localiza os serviços tributários incorporados do BA.gov", () => {
+  const catalog = siteContent.pages[0].segments.find((segment) => segment.type === "catalog");
+  const catalogServices = (catalog?.items.filter(
+    (item) => item.type === "service",
+  ) || []) as SearchableService[];
+  const cases = [
+    ["extinção ou suspensão de execução extrajudicial ou judicial", "1doc-extincao-ou-suspensao-de-execucao-extrajudicial-ou-judicial"],
+    ["prescrição de débitos tributários municipais", "1doc-prescricao-de-credito-tributario-ou-de-renda-iptu-tll-tff"],
+    ["certidão de valor venal urbano", "1doc-certidao-de-valor-venal-urbano"],
+    ["criação de inscrição imobiliária", "1doc-lancamento-de-inscricao-imobiliaria"],
+    ["certidão de valor venal rural", "1doc-certidao-de-valor-venal-rural"],
+    ["certidão de regularidade fiscal", "1doc-certidao-de-regularidade-fiscal-empresas"],
+    ["certidão de comprovação de endereço", "1doc-certidao-de-comprovacao-de-endereco"],
+    ["isenção tributária cadastro imobiliário", "1doc-isencao-tributaria-cadastro-imobiliario"],
+    ["isenção tributária cadastro econômico", "1doc-isencao-tributaria-cadastro-economico"],
+  ];
+
+  for (const [query, expectedId] of cases) {
+    assert.equal(
+      searchServices(catalogServices, query, audiences, categories)[0]?.service.id,
+      expectedId,
+      `esperava que ${query} localizasse ${expectedId}`,
+    );
+  }
+});
+
 test("combina semelhança e popularidade nas sugestões", () => {
   const ranked = rankSearchSuggestions(services, "luz poste", audiences, categories, { luz: 64, alvara: 1000 });
   assert.equal(ranked[0]?.service.id, "luz");
