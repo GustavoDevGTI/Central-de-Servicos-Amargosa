@@ -4,6 +4,10 @@ import { searchPath, searchTermFromSlug } from "./search-url.ts";
 import siteContent from "../content/site.json" with { type: "json" };
 import { analyzeSearchQuery, rankSearchSuggestions, searchServices, type SearchableService } from "./search-engine.ts";
 import { serviceSearchTags } from "./service-search-tags.ts";
+import {
+  cartaOnlyServices,
+  cartaServiceLinks,
+} from "./carta-service-catalog.ts";
 
 const audiences = [
   { id: "cidadao", label: "Cidadãos" },
@@ -50,6 +54,61 @@ test("gera tags invisíveis para todos os serviços do catálogo", () => {
   const catalogServices = catalog?.items.filter((item) => item.type === "service") || [];
   assert.ok(catalogServices.length > 0);
   assert.ok(catalogServices.every((service) => serviceSearchTags(service).length >= 3));
+});
+
+test("mantém os vínculos da Carta restritos a serviços existentes", () => {
+  const catalog = siteContent.pages[0].segments.find(
+    (segment) => segment.type === "catalog",
+  );
+  const catalogIds = new Set(
+    catalog?.items
+      .filter((item) => item.type === "service")
+      .map((item) => item.id) || [],
+  );
+
+  assert.equal(Object.keys(cartaServiceLinks).length, 79);
+  assert.ok(Object.keys(cartaServiceLinks).every((id) => catalogIds.has(id)));
+  assert.ok(
+    Object.values(cartaServiceLinks).every((url) =>
+      url.startsWith("https://acesso.amargosa.ba.gov.br/"),
+    ),
+  );
+});
+
+test("inclui e localiza os seis serviços exclusivos da Carta", () => {
+  assert.equal(cartaOnlyServices.length, 6);
+  assert.equal(new Set(cartaOnlyServices.map((service) => service.id)).size, 6);
+  assert.ok(
+    cartaOnlyServices.every(
+      (service) =>
+        service.url.startsWith("https://acesso.amargosa.ba.gov.br/") &&
+        serviceSearchTags(service).length >= 3,
+    ),
+  );
+
+  const queries = [
+    ["segunda via IPTU", "carta-segunda-via-iptu"],
+    ["declaração de matrícula", "carta-declaracao-de-matricula"],
+    ["emissão de boletim escolar", "carta-emissao-de-boletim-escolar"],
+    ["matrícula escolar", "carta-matricula-escolar"],
+    [
+      "segunda via de documentos escolares",
+      "carta-segunda-via-de-documentos-escolares",
+    ],
+    [
+      "solicitação de histórico escolar",
+      "carta-solicitacao-de-historico-escolar",
+    ],
+  ];
+
+  for (const [query, expectedId] of queries) {
+    assert.equal(
+      searchServices(cartaOnlyServices, query, audiences, categories)[0]?.service
+        .id,
+      expectedId,
+      `esperava que ${query} localizasse ${expectedId}`,
+    );
+  }
 });
 
 test("localiza os serviços tributários incorporados do BA.gov", () => {

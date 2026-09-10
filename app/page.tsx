@@ -3,11 +3,11 @@
 
 import { useEffect, useState, type CSSProperties, type ReactNode } from "react";
 import siteContent from "../content/site.json";
-import { approvedServiceDetails } from "./approved-service-details";
 import HeaderMenu from "./header-menu";
 import PortalFooter from "./portal-footer";
 import SearchSuggestions from "./search-suggestions";
 import { searchServices } from "./search-engine";
+import { services as catalogServices } from "./service-catalog";
 import { searchPath } from "./search-url";
 import {
   loadServicePopularity,
@@ -199,11 +199,7 @@ export default function Home() {
     (heroSegment?.style.backgroundImage
       ? [heroSegment.style.backgroundImage]
       : []);
-  const catalog = page.segments.find((segment) => segment.type === "catalog");
-  const services = (items(catalog, "service") as Service[]).map((service) => ({
-    ...service,
-    ...approvedServiceDetails[service.id],
-  }));
+  const services = catalogServices as Service[];
 
   useEffect(() => {
     if (

@@ -2,6 +2,7 @@
 import type { Metadata } from "next";
 import siteContent from "../../content/site.json";
 import PortalFooter from "../portal-footer";
+import { services } from "../service-catalog";
 
 export const metadata: Metadata = {
   title: "Menu de acessibilidade | Central de Serviços de Amargosa",
@@ -17,7 +18,6 @@ const page = siteContent.pages[0] as unknown as { segments: Segment[] };
 const segments = page.segments;
 const audiences = segments.find((segment) => segment.type === "audiences")?.items.filter((item) => item.type === "audience") || [];
 const categoryOrder = (segments.find((segment) => segment.type === "categories")?.items.filter((item) => item.type === "category") || []).map((item) => item.label || "");
-const services = segments.find((segment) => segment.type === "catalog")?.items.filter((item) => item.type === "service") || [];
 const safeId = (value = "grupo") => value.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-zA-Z0-9_-]+/g, "-").replace(/^-|-$/g, "").toLowerCase();
 
 function categoriesFor(audienceId: string) {

@@ -1,18 +1,13 @@
-import siteContent from "../../../content/site.json";
 import {
   ensurePopularitySchema,
   popularityDatabase,
 } from "../../search-popularity-db";
+import { services } from "../../service-catalog";
 
 export const dynamic = "force-dynamic";
 
-const catalog = siteContent.pages[0]?.segments.find(
-  (segment) => segment.type === "catalog",
-);
 const knownServiceIds = new Set(
-  catalog?.items
-    .filter((item) => item.type === "service")
-    .map((item) => item.id) || [],
+  services.map((service) => service.id),
 );
 const requestWindows = new Map<string, { count: number; resetAt: number }>();
 
