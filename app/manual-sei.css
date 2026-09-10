@@ -8,8 +8,8 @@
 .manual-sei-hero p{max-width:710px;margin:0 auto;color:#50635b;font-size:17px;line-height:1.6}
 .manual-sei-govbr{display:grid;grid-template-columns:38px minmax(0,1fr) auto;align-items:center;gap:14px;margin:22px 0;padding:11px 14px;border:1px solid #d6c989;border-left:5px solid #be9d12;background:#fffcef;color:inherit;cursor:pointer;box-shadow:0 5px 14px rgba(9,93,65,.06);transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease,background-color .18s ease}
 .manual-sei-govbr>div{width:32px;height:32px;display:grid;place-items:center;border-radius:50%;background:#be9d12;color:#fff;font-size:18px;font-weight:900}
-.manual-sei-govbr p{display:flex;flex-direction:column;margin:0;color:#4f5145;font-size:13px;line-height:1.35;white-space:nowrap}
-.manual-sei-govbr p strong{margin-bottom:1px;color:var(--ink);font-size:15px}
+.manual-sei-govbr p{display:block;margin:0;color:#4f5145;font-size:13px;line-height:1.35;white-space:nowrap}
+.manual-sei-govbr p strong{display:block;margin-bottom:1px;color:var(--ink);font-size:15px}
 .manual-sei-card-action{display:flex;align-items:center;justify-content:center;gap:8px;min-height:40px;padding:8px 12px;border-radius:4px;background:var(--green);color:#fff;font-size:12px;font-weight:900;text-align:center;box-shadow:0 6px 14px rgba(7,93,69,.16);transition:background-color .18s ease,box-shadow .18s ease}
 .manual-sei-govbr:hover,.manual-sei-public-search:hover{border-color:#80ad9b;background:#f2f8f5;box-shadow:0 11px 25px rgba(9,93,69,.16);transform:translateY(-3px)}
 .manual-sei-govbr:hover .manual-sei-card-action,.manual-sei-public-search:hover .manual-sei-card-action{background:#075d45;box-shadow:0 9px 20px rgba(7,93,69,.22)}
