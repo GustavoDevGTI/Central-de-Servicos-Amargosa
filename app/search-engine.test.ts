@@ -8,6 +8,10 @@ import {
   cartaOnlyServices,
   cartaServiceLinks,
 } from "./carta-service-catalog.ts";
+import {
+  nonSeiServiceIds,
+  requestSystemForService,
+} from "./service-request-system.ts";
 
 const audiences = [
   { id: "cidadao", label: "Cidadãos" },
@@ -27,6 +31,27 @@ const services: SearchableService[] = [
   { id: "jari", title: "Recurso de infração — JARI", category: "Trânsito", department: "SEMOP", audienceIds: ["cidadao"] },
   { id: "pcd", title: "Credencial de estacionamento para PCD", category: "Trânsito", department: "SEMOP", audienceIds: ["cidadao"] },
 ];
+
+test("vincula o manual do SEI a todos os serviços, exceto os que usam outro canal", () => {
+  const catalog = siteContent.pages[0].segments.find(
+    (segment) => segment.type === "catalog",
+  );
+  const catalogIds = new Set(
+    catalog?.items
+      .filter((item) => item.type === "service")
+      .map((item) => item.id) || [],
+  );
+
+  assert.equal(nonSeiServiceIds.size, 10);
+  assert.ok([...nonSeiServiceIds].every((serviceId) => catalogIds.has(serviceId)));
+  assert.ok(
+    [...nonSeiServiceIds].every(
+      (serviceId) => requestSystemForService(serviceId) === "other",
+    ),
+  );
+  assert.equal(requestSystemForService("1doc-abastecimento-de-agua"), "sei");
+  assert.equal(requestSystemForService("1doc-ouvidoria-geral"), "other");
+});
 
 test("normaliza erro de português e usa sinônimos", () => {
   assert.equal(searchServices(services, "iluminasao", audiences, categories)[0]?.service.id, "luz");

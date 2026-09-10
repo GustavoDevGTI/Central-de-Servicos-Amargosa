@@ -12,6 +12,7 @@ import {
   type ReactNode,
 } from "react";
 import siteContent from "../content/site.json";
+import HeaderHelp from "./header-help";
 import HeaderMenu from "./header-menu";
 import SharedPortalFooter from "./portal-footer";
 import { searchServices } from "./search-engine";
@@ -223,6 +224,7 @@ export function PortalHeader({
               {item.text}
             </Link>
           ))}
+        <HeaderHelp />
         <HeaderMenu />
       </nav>
     </header>
@@ -1154,6 +1156,26 @@ function ServiceRequestNotice({
   );
 }
 
+function SeiManualNotice({ service }: { service: Service }) {
+  if (service.requestSystem !== "sei") return null;
+
+  return (
+    <Link className="service-sei-guide" href="/manual-sei">
+      <span className="service-sei-guide-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24">
+          <path d="M6 3h8l4 4v14H6zM14 3v5h4" />
+          <path d="M9 12h6M9 16h5" />
+        </svg>
+      </span>
+      <span className="service-sei-guide-copy">
+        <strong>Dúvidas para realizar o processo?</strong>{" "}
+        Acesse o Manual de Peticionamento do SEI
+      </span>
+      <b aria-hidden="true">→</b>
+    </Link>
+  );
+}
+
 function RichServiceDetail({ service }: { service: Service }) {
   const heroSegment = internalSegment(detailPage, "serviceHero");
   const contentSegment = internalSegment(detailPage, "serviceContent");
@@ -1181,6 +1203,7 @@ function RichServiceDetail({ service }: { service: Service }) {
         </header>
 
         <ServiceRequestNotice service={service} />
+        <SeiManualNotice service={service} />
 
         <div
           className={internalClasses(contentSegment, "service-detail-layout")}
@@ -1397,6 +1420,8 @@ export function ServiceDetail({ slug }: { slug: string }) {
             ↗
           </span>
         </a>
+
+        <SeiManualNotice service={service} />
 
         <div
           className={internalClasses(contentSegment, "service-detail-layout")}

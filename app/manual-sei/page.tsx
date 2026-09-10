@@ -12,6 +12,7 @@ export const metadata: Metadata = {
 };
 
 const sections = [
+  { id: "antes-de-comecar", label: "Antes de começar" },
   { id: "acessar", label: "Acessar a página principal" },
   { id: "escolher", label: "Escolher o tipo de processo" },
   { id: "formulario", label: "Preencher o formulário" },
@@ -63,61 +64,96 @@ export default function ManualSeiPage() {
         </nav>
 
         <header className="manual-sei-hero">
-          <div>
-            <span className="manual-sei-kicker">SEI AMARGOSA · GUIA PARA USUÁRIOS EXTERNOS</span>
-            <h1>Manual prático de Peticionamento Eletrônico</h1>
-            <p>
-              Siga as etapas para abrir um processo, enviar documentos e acompanhar
-              sua solicitação no Protocolo Digital de Amargosa.
-            </p>
-          </div>
-          <div className="manual-sei-version" aria-label="Versão 1.0 do manual">
-            <small>VERSÃO DO MANUAL</small>
-            <strong>V.1.0</strong>
-          </div>
+          <span className="manual-sei-kicker">SEI AMARGOSA · GUIA PARA USUÁRIOS EXTERNOS</span>
+          <h1>Manual prático de Peticionamento Eletrônico</h1>
+          <p>
+            Siga as etapas para abrir um processo, enviar documentos e acompanhar
+            sua solicitação no Protocolo Digital de Amargosa.
+          </p>
         </header>
 
-        <aside className="manual-sei-govbr" aria-labelledby="manual-sei-govbr-title">
+        <a
+          className="manual-sei-govbr"
+          href="https://acesso.amargosa.ba.gov.br/protocolodigital"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
           <div aria-hidden="true">!</div>
           <p>
             <strong id="manual-sei-govbr-title">Acesso exclusivo com GOV.BR</strong>
-            Utilize somente a opção <b>“Entrar com gov.br”</b>. Desconsidere os campos
-            de e-mail e senha exibidos na página.
+            Use apenas <b>“Entrar com gov.br”</b> e ignore os campos de e-mail e senha.
           </p>
-          <a
-            href="https://acesso.amargosa.ba.gov.br/protocolodigital"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
+          <span className="manual-sei-card-action">
             Acessar o Protocolo Digital <span aria-hidden="true">↗</span>
-          </a>
-        </aside>
-
-        <section className="manual-sei-before" aria-labelledby="antes-de-comecar">
-          <div>
-            <span>PREPARAÇÃO</span>
-            <h2 id="antes-de-comecar">Antes de começar</h2>
-          </div>
-          <ul>
-            <li>Conta GOV.BR</li>
-            <li>Informações do pedido</li>
-            <li>Arquivos legíveis</li>
-            <li>Documentos exigidos para o serviço</li>
-          </ul>
-        </section>
+          </span>
+        </a>
 
         <div className="manual-sei-layout">
           <nav className="manual-sei-index" aria-label="Etapas do manual">
-            <strong>Neste manual</strong>
-            {sections.map((section, index) => (
+            <strong>Nesta página</strong>
+            {sections.map((section) => (
               <a key={section.id} href={`#${section.id}`}>
-                <span>{index + 1}</span>
                 {section.label}
               </a>
             ))}
           </nav>
 
           <div className="manual-sei-steps">
+            <section className="manual-sei-before" aria-labelledby="antes-de-comecar">
+              <h2 id="antes-de-comecar">Antes de começar</h2>
+              <p>Separe estes itens antes de iniciar o peticionamento.</p>
+              <ol>
+                <li>
+                  <span className="manual-sei-prep-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24">
+                      <circle cx="12" cy="8" r="3.25" />
+                      <path d="M5.5 19c.7-3.3 3-5 6.5-5s5.8 1.7 6.5 5" />
+                    </svg>
+                  </span>
+                  <span className="manual-sei-prep-copy">
+                    <small>Passo 1</small>
+                    <strong>Conta GOV.BR</strong>
+                  </span>
+                </li>
+                <li>
+                  <span className="manual-sei-prep-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24">
+                      <rect x="5" y="4" width="14" height="17" rx="2" />
+                      <path d="M9 4.5V3h6v1.5M9 9h6M9 13h6M9 17h4" />
+                    </svg>
+                  </span>
+                  <span className="manual-sei-prep-copy">
+                    <small>Passo 2</small>
+                    <strong>Informações do pedido</strong>
+                  </span>
+                </li>
+                <li>
+                  <span className="manual-sei-prep-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24">
+                      <path d="M6 3h8l4 4v14H6zM14 3v5h4" />
+                      <path d="m9 15 2 2 4-5" />
+                    </svg>
+                  </span>
+                  <span className="manual-sei-prep-copy">
+                    <small>Passo 3</small>
+                    <strong>Arquivos legíveis</strong>
+                  </span>
+                </li>
+                <li>
+                  <span className="manual-sei-prep-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24">
+                      <path d="M3 7h7l2 2h9v10H3z" />
+                      <path d="m9 14 2 2 4-4" />
+                    </svg>
+                  </span>
+                  <span className="manual-sei-prep-copy">
+                    <small>Passo 4</small>
+                    <strong>Documentos exigidos para o serviço</strong>
+                  </span>
+                </li>
+              </ol>
+            </section>
+
             <section id="acessar" className="manual-sei-step">
               <header>
                 <span>1</span>
@@ -207,15 +243,13 @@ export default function ManualSeiPage() {
                 <li>Confirme se o arquivo apareceu na lista.</li>
               </ol>
               <dl className="manual-sei-definitions">
-                <div>
+                <div className="manual-sei-definition-formats">
                   <dt>Nato-digital</dt>
                   <dd>Arquivo criado originalmente em meio eletrônico.</dd>
-                </div>
-                <div>
                   <dt>Digitalizado</dt>
                   <dd>Arquivo gerado pela digitalização de documento em papel.</dd>
                 </div>
-                <div>
+                <div className="manual-sei-definition-limit">
                   <dt>Limite</dt>
                   <dd>A tela apresentada informa tamanho máximo de 10 MB por arquivo.</dd>
                 </div>
@@ -262,21 +296,22 @@ export default function ManualSeiPage() {
                 O recibo também permanece disponível na plataforma, no menu
                 <strong> Recibos Eletrônicos de Protocolo</strong>.
               </p>
-              <aside className="manual-sei-public-search">
+              <a
+                className="manual-sei-public-search"
+                href="https://acesso.amargosa.ba.gov.br/consultaprocessos"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 <p>
                   <strong>Consulta sem login</strong>
                   Com o número do processo recebido por e-mail, qualquer pessoa pode
                   consultar publicamente o andamento.
                 </p>
-                <a
-                  href="https://acesso.amargosa.ba.gov.br/consultaprocessos"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
+                <span className="manual-sei-card-action">
                   Consultar processo na Pesquisa Pública
                   <span aria-hidden="true">↗</span>
-                </a>
-              </aside>
+                </span>
+              </a>
             </section>
 
             <section id="acompanhar" className="manual-sei-step">
@@ -295,14 +330,6 @@ export default function ManualSeiPage() {
               </p>
             </section>
 
-            <section className="manual-sei-control" aria-labelledby="controle-versao">
-              <span>DOCUMENTO</span>
-              <h2 id="controle-versao">Controle de versão</h2>
-              <p>
-                <strong>V.1.0:</strong> versão inicial do Manual Prático de Peticionamento
-                Eletrônico do SEI Amargosa.
-              </p>
-            </section>
           </div>
         </div>
       </article>

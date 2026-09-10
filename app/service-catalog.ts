@@ -5,6 +5,10 @@ import {
   cartaServiceDestination,
   cartaServiceLinks,
 } from "./carta-service-catalog";
+import {
+  requestSystemForService,
+  type ServiceRequestSystem,
+} from "./service-request-system";
 
 export type Service = {
   id: string;
@@ -39,6 +43,7 @@ export type Service = {
   notice?: string;
   noticeAction?: string;
   requestLabel?: string;
+  requestSystem?: ServiceRequestSystem;
   updatedAt?: string;
   initials?: string;
   sourceRow?: number;
@@ -52,7 +57,7 @@ const baseServices = (catalog?.items.filter(
   (item) => item.type === "service",
 ) || []) as unknown as Service[];
 
-export const services = [
+const mergedServices = [
   ...baseServices.map((service) => {
     const merged = {
       ...service,
@@ -69,3 +74,8 @@ export const services = [
   }),
   ...cartaOnlyServices,
 ];
+
+export const services = mergedServices.map((service) => ({
+  ...service,
+  requestSystem: requestSystemForService(service.id),
+}));

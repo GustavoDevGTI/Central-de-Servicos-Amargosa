@@ -3,6 +3,7 @@
 
 import { useEffect, useState, type CSSProperties, type ReactNode } from "react";
 import siteContent from "../content/site.json";
+import HeaderHelp from "./header-help";
 import HeaderMenu from "./header-menu";
 import PortalFooter from "./portal-footer";
 import SearchSuggestions from "./search-suggestions";
@@ -361,6 +362,7 @@ export default function Home() {
             </a>
           </nav>
           <div className="header-actions">
+            <HeaderHelp />
             <HeaderMenu />
           </div>
         </header>
@@ -508,7 +510,19 @@ export default function Home() {
           (audienceOrder.get(first.id) ?? Number.MAX_SAFE_INTEGER) -
           (audienceOrder.get(second.id) ?? Number.MAX_SAFE_INTEGER),
       );
-      const hasMore = audienceItems.length + 1 > 4;
+      const serviceAccessItems = [...audienceItems];
+      const ombudsmanIndex = serviceAccessItems.findIndex(
+        (item) => item.id === "ouvidoria",
+      );
+      serviceAccessItems.splice(ombudsmanIndex + 1, 0, {
+        id: "manual-sei",
+        type: "manual",
+        label: "Manual do SEI",
+        description:
+          "Passo a passo para abrir processos e enviar documentos pelo Protocolo Digital.",
+        url: "/manual-sei",
+      });
+      const hasMore = serviceAccessItems.length + 1 > 4;
       return (
         <section
           key={segment.id}
@@ -526,16 +540,18 @@ export default function Home() {
               role="group"
               aria-label="Acessar serviços por público"
             >
-            {audienceItems.map((item) => (
+            {serviceAccessItems.map((item) => (
               <button
                 key={item.id}
                 {...itemSizeProps(item)}
                 type="button"
-                onClick={() => window.location.assign(`/publicos/${item.id}`)}
+                onClick={() =>
+                  window.location.assign(item.url || `/publicos/${item.id}`)
+                }
               >
                 <strong>{item.label}</strong>
                 <small>{item.description}</small>
-                <b>Ver serviços →</b>
+                <b>{item.type === "manual" ? "Acessar manual →" : "Ver serviços →"}</b>
               </button>
             ))}
             <button
