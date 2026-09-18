@@ -1,5 +1,6 @@
 import siteContent from "../content/site.json";
 import { approvedServiceDetails } from "./approved-service-details";
+import pendingServiceDetails from "./pending-service-details.json" with { type: "json" };
 import {
   cartaOnlyServices,
   cartaServiceDestination,
@@ -38,6 +39,7 @@ export type Service = {
   duration?: string;
   channels?: { label: string; value: string; url?: string }[];
   legislation?: { label: string; url: string }[];
+  legislationNotice?: string;
   relatedServiceIds?: string[];
   searchTerms?: string[];
   notice?: string;
@@ -57,10 +59,16 @@ const baseServices = (catalog?.items.filter(
   (item) => item.type === "service",
 ) || []) as unknown as Service[];
 
-const mergedServices = [
-  ...baseServices.map((service) => {
+const generatedDetails = pendingServiceDetails as Record<
+  string,
+  Partial<Service>
+>;
+
+const mergedServices = [...baseServices, ...cartaOnlyServices].map(
+  (service) => {
     const merged = {
       ...service,
+      ...generatedDetails[service.id],
       ...approvedServiceDetails[service.id],
     };
     const cartaUrl = cartaServiceLinks[service.id];
@@ -71,9 +79,8 @@ const mergedServices = [
           url: cartaUrl,
         }
       : merged;
-  }),
-  ...cartaOnlyServices,
-];
+  },
+);
 
 export const services = mergedServices.map((service) => ({
   ...service,

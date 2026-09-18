@@ -14,6 +14,7 @@ import {
 import siteContent from "../content/site.json";
 import HeaderHelp from "./header-help";
 import HeaderMenu from "./header-menu";
+import HeaderAccessibility from "./header-accessibility";
 import SharedPortalFooter from "./portal-footer";
 import { searchServices } from "./search-engine";
 import SearchSuggestions from "./search-suggestions";
@@ -214,7 +215,7 @@ export function PortalHeader({
       </Link>
       <nav aria-label="Navegação interna">
         {links
-          .filter((item) => item.role !== "menu")
+          .filter((item) => item.role !== "menu" && item.role !== "accessibility")
           .map((item) => (
             <Link
               key={item.id}
@@ -224,6 +225,7 @@ export function PortalHeader({
               {item.text}
             </Link>
           ))}
+        <HeaderAccessibility />
         <HeaderHelp />
         <HeaderMenu />
       </nav>
@@ -922,7 +924,6 @@ export function ServiceDirectory({
                 }}
                 placeholder={searchItem?.placeholder || "Digite para buscar"}
                 aria-controls="directory-search-suggestions"
-                aria-autocomplete="list"
               />
             </label>
             {suggestionsOpen && (
@@ -1198,7 +1199,7 @@ function RichServiceDetail({ service }: { service: Service }) {
           <div>
             <small>{serviceAudienceLabel(service) || service.category}</small>
             <h1>{service.title}</h1>
-            <p>{service.summary}</p>
+            <p className={service.summary?.startsWith("*") ? "service-pending-information" : undefined}>{service.summary}</p>
           </div>
         </header>
 
@@ -1221,7 +1222,7 @@ function RichServiceDetail({ service }: { service: Service }) {
             {service.channels?.length && (
               <a href="#canais">Canais de atendimento</a>
             )}
-            {service.legislation?.length && (
+            {(service.legislation?.length || service.legislationNotice) && (
               <a href="#legislacao">Legislação</a>
             )}
             {relatedServices.length > 0 && (
@@ -1232,17 +1233,17 @@ function RichServiceDetail({ service }: { service: Service }) {
           <div className="service-detail-content">
             <section id="o-que-e">
               <h2>O que é</h2>
-              <p>{service.summary}</p>
+              <p className={service.summary?.startsWith("*") ? "service-pending-information" : undefined}>{service.summary}</p>
             </section>
             <section id="quem-pode">
               <h2>Quem pode solicitar</h2>
-              <p>{service.eligibility}</p>
+              <p className={service.eligibility?.startsWith("*") ? "service-pending-information" : undefined}>{service.eligibility}</p>
             </section>
             <section id="documentos">
               <h2>Documentos necessários</h2>
               <ul>
                 {service.documents?.map((entry) => (
-                  <li key={entry}>{entry}</li>
+                  <li className={entry.startsWith("*") ? "service-pending-information" : undefined} key={entry}>{entry}</li>
                 ))}
               </ul>
             </section>
@@ -1252,7 +1253,7 @@ function RichServiceDetail({ service }: { service: Service }) {
                 {service.steps?.map((entry, index) => (
                   <li key={entry}>
                     <b>{index + 1}</b>
-                    <span>{entry}</span>
+                    <span className={entry.startsWith("*") ? "service-pending-information" : undefined}>{entry}</span>
                   </li>
                 ))}
               </ol>
@@ -1260,7 +1261,7 @@ function RichServiceDetail({ service }: { service: Service }) {
             {service.whereWhen && (
               <section id="onde-quando">
                 <h2>Onde e quando solicitar</h2>
-                <p>{service.whereWhen}</p>
+                <p className={service.whereWhen?.startsWith("*") ? "service-pending-information" : undefined}>{service.whereWhen}</p>
                 {service.whereWhenItems?.length ? (
                   <div className="service-schedule-grid">
                     {service.whereWhenItems.map((item) => (
@@ -1282,11 +1283,11 @@ function RichServiceDetail({ service }: { service: Service }) {
             <section id="informacoes" className="service-facts">
               <div>
                 <span>Custo</span>
-                <strong>{service.cost}</strong>
+                <strong className={service.cost?.startsWith("*") ? "service-pending-information" : undefined}>{service.cost}</strong>
               </div>
               <div>
                 <span>Prazo estimado</span>
-                <strong>{service.duration}</strong>
+                <strong className={service.duration?.startsWith("*") ? "service-pending-information" : undefined}>{service.duration}</strong>
               </div>
             </section>
             <ServiceRequestNotice service={service} repeated />
@@ -1314,17 +1315,17 @@ function RichServiceDetail({ service }: { service: Service }) {
                           {channel.value}
                         </a>
                       ) : (
-                        <strong>{channel.value}</strong>
+                        <strong className={channel.value.startsWith("*") ? "service-pending-information" : undefined}>{channel.value}</strong>
                       )}
                     </div>
                   ))}
                 </div>
               </section>
             )}
-            {service.legislation?.length && (
+            {(service.legislation?.length || service.legislationNotice) && (
               <section id="legislacao">
                 <h2>Legislação relacionada</h2>
-                <div className="service-legislation">
+                {service.legislation?.length ? <div className="service-legislation">
                   {service.legislation.map((law) => (
                     <a
                       key={law.label}
@@ -1336,7 +1337,10 @@ function RichServiceDetail({ service }: { service: Service }) {
                       <span aria-hidden="true">↗</span>
                     </a>
                   ))}
-                </div>
+                </div> : null}
+                {service.legislationNotice && (
+                  <p className="service-pending-information">{service.legislationNotice}</p>
+                )}
               </section>
             )}
             {relatedServices.length > 0 && (
@@ -1374,8 +1378,11 @@ export function ServiceDetail({ slug }: { slug: string }) {
   if (!service)
     return (
       <main {...rootProps()}>
+        <a className="skip" href="#servico-nao-encontrado">
+          Ir para o conteúdo
+        </a>
         <PortalHeader />
-        <section className="service-not-found">
+        <section id="servico-nao-encontrado" className="service-not-found">
           <h1>Serviço não encontrado</h1>
           <Link href="/">Voltar para a Central</Link>
         </section>

@@ -16,7 +16,7 @@ export default function AboutPage() {
       <section id="sobre-conteudo" className="about-project" aria-labelledby="about-project-title">
         <div className="about-section-heading">
           <span>O PROJETO</span>
-          <h2 id="about-project-title">Serviço público integrado</h2>
+          <h1 id="about-project-title">Serviço público integrado</h1>
         </div>
         <div className="about-project-copy">
           <p>A Central de Serviços de Amargosa é a plataforma oficial de informações sobre os serviços oferecidos pela Prefeitura. O portal apresenta as orientações de forma padronizada e, quando necessário, encaminha a solicitação ao sistema responsável pelo atendimento.</p>

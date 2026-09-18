@@ -13,8 +13,8 @@ const helpItems = [
     href: "https://falabr.cgu.gov.br/web/manifestacao/criar/selecionar-assunto",
   },
   {
-    label: "Reportar um bug",
-    href: "mailto:seafi.gti@amargosa.ba.gov.br?subject=Relato%20de%20erro%20na%20Central%20de%20Servi%C3%A7os",
+    label: "Reportar um bug ou problema",
+    href: "/reportar-problema",
   },
 ];
 

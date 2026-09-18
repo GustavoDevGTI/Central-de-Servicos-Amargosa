@@ -1,9 +1,9 @@
 /* eslint-disable @next/next/no-img-element -- imagens instrutivas extraídas do manual oficial fornecido */
 
 import type { Metadata } from "next";
-import Link from "next/link";
 import { PortalHeader } from "../internal-portal";
 import PortalFooter from "../portal-footer";
+import ManualSeiIndex from "./manual-sei-index";
 
 export const metadata: Metadata = {
   title: "Manual de Peticionamento Eletrônico | Central de Serviços de Amargosa",
@@ -57,12 +57,6 @@ export default function ManualSeiPage() {
       <PortalHeader />
 
       <article id="manual-sei-conteudo" className="manual-sei-shell">
-        <nav className="manual-sei-breadcrumb" aria-label="Navegação estrutural">
-          <Link href="/">Página inicial</Link>
-          <span aria-hidden="true">/</span>
-          <span>Manual do SEI</span>
-        </nav>
-
         <header className="manual-sei-hero">
           <span className="manual-sei-kicker">SEI AMARGOSA · GUIA PARA USUÁRIOS EXTERNOS</span>
           <h1>Manual prático de Peticionamento Eletrônico</h1>
@@ -89,14 +83,7 @@ export default function ManualSeiPage() {
         </a>
 
         <div className="manual-sei-layout">
-          <nav className="manual-sei-index" aria-label="Etapas do manual">
-            <strong>Nesta página</strong>
-            {sections.map((section) => (
-              <a key={section.id} href={`#${section.id}`}>
-                {section.label}
-              </a>
-            ))}
-          </nav>
+          <ManualSeiIndex sections={sections} />
 
           <div className="manual-sei-steps">
             <section className="manual-sei-before" aria-labelledby="antes-de-comecar">

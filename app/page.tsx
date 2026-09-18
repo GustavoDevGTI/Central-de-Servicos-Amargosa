@@ -5,6 +5,7 @@ import { useEffect, useState, type CSSProperties, type ReactNode } from "react";
 import siteContent from "../content/site.json";
 import HeaderHelp from "./header-help";
 import HeaderMenu from "./header-menu";
+import HeaderAccessibility from "./header-accessibility";
 import PortalFooter from "./portal-footer";
 import SearchSuggestions from "./search-suggestions";
 import { searchServices } from "./search-engine";
@@ -357,9 +358,7 @@ export default function Home() {
                 {item.text}
               </a>
             ))}
-            <a className="accessibility-entry" href="/menu">
-              Acessibilidade
-            </a>
+            <HeaderAccessibility />
           </nav>
           <div className="header-actions">
             <HeaderHelp />
@@ -454,7 +453,6 @@ export default function Home() {
                 }}
                 placeholder={search?.placeholder}
                 aria-controls="home-search-suggestions"
-                aria-autocomplete="list"
               />
               <button type="submit">{search?.buttonText || "Buscar"}</button>
             </form>
