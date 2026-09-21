@@ -18,7 +18,11 @@ import HeaderAccessibility from "./header-accessibility";
 import SharedPortalFooter from "./portal-footer";
 import { searchServices } from "./search-engine";
 import SearchSuggestions from "./search-suggestions";
-import { services, type Service } from "./service-catalog";
+import {
+  PENDING_SERVICE_INFORMATION,
+  services,
+  type Service,
+} from "./service-catalog";
 import {
   loadServicePopularity,
   recordServiceSearch,
@@ -1139,6 +1143,16 @@ function ServiceRequestNotice({
   service: Service;
   repeated?: boolean;
 }) {
+  if (!service.url) {
+    return (
+      <div
+        className={`service-reference-notice service-reference-notice-pending${repeated ? " service-reference-notice-repeat" : ""}`}
+        role="note"
+      >
+        <span>{PENDING_SERVICE_INFORMATION}</span>
+      </div>
+    );
+  }
   if (!service.notice) return null;
 
   return (
@@ -1413,20 +1427,29 @@ export function ServiceDetail({ slug }: { slug: string }) {
           </div>
         </header>
 
-        <a
-          className="service-reference-notice service-reference-notice-centered"
-          href={service.url}
-          target="_blank"
-          rel="noreferrer"
-          onClick={() => trackServiceStart(service)}
-        >
-          <span>
-            Acessar{" "}
-            {service.destination ||
-              internalText(heroSegment, "action", "canal de solicitação")}{" "}
-            ↗
-          </span>
-        </a>
+        {service.url ? (
+          <a
+            className="service-reference-notice service-reference-notice-centered"
+            href={service.url}
+            target="_blank"
+            rel="noreferrer"
+            onClick={() => trackServiceStart(service)}
+          >
+            <span>
+              Acessar{" "}
+              {service.destination ||
+                internalText(heroSegment, "action", "canal de solicitação")}{" "}
+              ↗
+            </span>
+          </a>
+        ) : (
+          <div
+            className="service-reference-notice service-reference-notice-centered service-reference-notice-pending"
+            role="note"
+          >
+            <span>{PENDING_SERVICE_INFORMATION}</span>
+          </div>
+        )}
 
         <SeiManualNotice service={service} />
 
