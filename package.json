@@ -11,6 +11,7 @@
     "start": "vinext start",
     "lint": "eslint . --ignore-pattern dist --ignore-pattern .next",
     "db:generate": "drizzle-kit generate",
+    "test:agent": "tsx --test app/agent/agent.test.ts",
     "test:search": "node --experimental-strip-types --test app/search-engine.test.ts"
   },
   "dependencies": {

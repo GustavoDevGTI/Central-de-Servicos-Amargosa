@@ -10,6 +10,16 @@ services:
       NODE_ENV: production
       HOST: 0.0.0.0
       PORT: 3000
+      AI_PROVIDER: ${AI_PROVIDER:-deepseek}
+      AI_MODEL: ${AI_MODEL:-deepseek-flash}
+      DEEPSEEK_API_KEY: ${DEEPSEEK_API_KEY:-}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      AI_MAX_OUTPUT_TOKENS: ${AI_MAX_OUTPUT_TOKENS:-400}
+      AI_TIMEOUT_MS: ${AI_TIMEOUT_MS:-25000}
+      AI_RATE_LIMIT_MESSAGES: ${AI_RATE_LIMIT_MESSAGES:-10}
+      AI_DAILY_SESSION_LIMIT: ${AI_DAILY_SESSION_LIMIT:-30}
+      AI_MONTHLY_BUDGET_BRL: ${AI_MONTHLY_BUDGET_BRL:-100}
+      AI_USD_TO_BRL: ${AI_USD_TO_BRL:-6}
     security_opt:
       - no-new-privileges:true
     healthcheck:

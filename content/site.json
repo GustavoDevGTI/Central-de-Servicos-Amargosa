@@ -2627,7 +2627,7 @@
               "type": "text",
               "role": "notice",
               "label": "Aviso",
-              "value": "Não envie dados pessoais. Esta demonstração não armazena mensagens."
+              "value": "Não envie dados pessoais. A conversa é curta e usada somente para orientar sua busca por serviços."
             }
           ]
         }
