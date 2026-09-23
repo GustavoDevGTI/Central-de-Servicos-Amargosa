@@ -151,15 +151,6 @@ export default function AmandaWidget() {
     return { id: crypto.randomUUID(), author, text, ...options };
   }
 
-  function startNewConversation() {
-    sessionIdRef.current = crypto.randomUUID();
-    reopenAfterResponseRef.current = false;
-    sendingRef.current = false;
-    setMessages([]);
-    setDraft("");
-    setSending(false);
-  }
-
   function closeConversation() {
     if (sendingRef.current) reopenAfterResponseRef.current = true;
     setOpen(false);
@@ -285,17 +276,6 @@ export default function AmandaWidget() {
               </div>
             </div>
             <div className="amanda-header-actions">
-              {messages.length > 0 && (
-                <button
-                  type="button"
-                  onClick={startNewConversation}
-                  disabled={sending}
-                  aria-label="Iniciar nova conversa"
-                  title="Nova conversa"
-                >
-                  ↻
-                </button>
-              )}
               <button type="button" onClick={closeConversation} aria-label="Fechar conversa com Amanda">
                 ×
               </button>
@@ -334,7 +314,14 @@ export default function AmandaWidget() {
                     key={message.id}
                     className={`${message.author}${message.isError ? " error" : ""}`}
                   >
-                    <small>{message.author === "user" ? "Você" : "Amanda"}</small>
+                    <div className={`amanda-message-author ${message.author}`}>
+                      {message.author === "amanda" && (
+                        <span className="amanda-message-avatar" aria-hidden="true">
+                          {avatar?.src ? <img src={avatar.src} alt="" /> : "A"}
+                        </span>
+                      )}
+                      <small>{message.author === "user" ? "Você" : "Amanda"}</small>
+                    </div>
                     <p>{message.text}</p>
                     {message.services?.length ? (
                       <div className="amanda-service-results" aria-label="Serviços encontrados">
@@ -359,7 +346,12 @@ export default function AmandaWidget() {
                 ))}
                 {sending && (
                   <article className="amanda amanda-thinking" role="status">
-                    <small>Amanda</small>
+                    <div className="amanda-message-author amanda">
+                      <span className="amanda-message-avatar" aria-hidden="true">
+                        {avatar?.src ? <img src={avatar.src} alt="" /> : "A"}
+                      </span>
+                      <small>Amanda</small>
+                    </div>
                     <p>Consultando os serviços oficiais…</p>
                   </article>
                 )}
@@ -380,6 +372,16 @@ export default function AmandaWidget() {
                 rows={2}
                 value={draft}
                 onChange={(event) => setDraft(event.target.value)}
+                onKeyDown={(event) => {
+                  if (
+                    event.key === "Enter" &&
+                    !event.shiftKey &&
+                    !event.nativeEvent.isComposing
+                  ) {
+                    event.preventDefault();
+                    event.currentTarget.form?.requestSubmit();
+                  }
+                }}
                 placeholder={conversation?.placeholder}
                 maxLength={1000}
                 disabled={sending}

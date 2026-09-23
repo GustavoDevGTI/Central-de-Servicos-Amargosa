@@ -90,7 +90,8 @@
 
 /* Amanda: conversa mais legível, responsiva e com movimento discreto. */
 .amanda-widget{z-index:120}
-.amanda-panel{right:58px;width:min(450px,calc(100vw - 88px));max-height:min(760px,calc(100vh - 92px));animation:amanda-panel-in .24s ease-out}
+.amanda-launcher.open{visibility:hidden}
+.amanda-panel{right:0;width:min(450px,calc(100vw - 88px));max-height:min(760px,calc(100vh - 92px));transform-origin:bottom right;animation:amanda-panel-in .24s ease-out}
 .amanda-header{padding:16px 19px}
 .amanda-launcher small,.amanda-header small{font-size:9px;line-height:1.25}
 .amanda-identity strong{font-size:21px}
@@ -104,6 +105,9 @@
 .amanda-transcript article.user{border-left-color:var(--segment-accent);background:#f8fbfa}
 .amanda-transcript article.amanda{background:#f3f8f6}
 .amanda-transcript article.error{background:#fff7f6}
+.amanda-message-author{display:flex;align-items:center;gap:8px}
+.amanda-message-avatar{width:28px;height:28px;flex:0 0 auto;display:grid;place-items:center;overflow:hidden;border-radius:4px 8px 4px 8px;background:var(--segment-accent);color:#fff;font-family:Georgia,serif;font-size:12px;font-weight:900}
+.amanda-message-avatar img{width:100%;height:100%;object-fit:cover}
 .amanda-transcript small{font-size:10px;line-height:1.25}
 .amanda-transcript p{margin-top:7px;font-size:15px;line-height:1.58}
 .amanda-thinking{position:relative;overflow:hidden}
