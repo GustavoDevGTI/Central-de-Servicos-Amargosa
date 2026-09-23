@@ -67,7 +67,10 @@ export default function AmandaWidget() {
   const [sending, setSending] = useState(false);
   const launcherRef = useRef<HTMLButtonElement>(null);
   const panelRef = useRef<HTMLElement>(null);
+  const bodyRef = useRef<HTMLDivElement>(null);
   const sessionIdRef = useRef(crypto.randomUUID());
+  const sendingRef = useRef(false);
+  const reopenAfterResponseRef = useRef(false);
 
   useEffect(() => {
     if (!open) return;
@@ -83,7 +86,7 @@ export default function AmandaWidget() {
     const containFocus = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         event.preventDefault();
-        setOpen(false);
+        closeConversation();
         return;
       }
       if (event.key !== "Tab") return;
@@ -107,6 +110,19 @@ export default function AmandaWidget() {
       requestAnimationFrame(() => launcher?.focus());
     };
   }, [open]);
+
+  useEffect(() => {
+    if (!open) return;
+    const body = bodyRef.current;
+    if (!body) return;
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    requestAnimationFrame(() => {
+      body.scrollTo({
+        top: body.scrollHeight,
+        behavior: reducedMotion ? "auto" : "smooth",
+      });
+    });
+  }, [messages, open, sending]);
 
   if (!segment) return null;
 
@@ -137,9 +153,26 @@ export default function AmandaWidget() {
 
   function startNewConversation() {
     sessionIdRef.current = crypto.randomUUID();
+    reopenAfterResponseRef.current = false;
+    sendingRef.current = false;
     setMessages([]);
     setDraft("");
     setSending(false);
+  }
+
+  function closeConversation() {
+    if (sendingRef.current) reopenAfterResponseRef.current = true;
+    setOpen(false);
+  }
+
+  function openConversation() {
+    reopenAfterResponseRef.current = false;
+    setOpen(true);
+  }
+
+  function toggleConversation() {
+    if (open) closeConversation();
+    else openConversation();
   }
 
   async function askAmanda(question: string) {
@@ -151,6 +184,8 @@ export default function AmandaWidget() {
     }));
     setMessages((current) => [...current, newMessage("user", value)]);
     setDraft("");
+    sendingRef.current = true;
+    reopenAfterResponseRef.current = false;
     setSending(true);
 
     try {
@@ -196,7 +231,12 @@ export default function AmandaWidget() {
         ),
       ]);
     } finally {
+      sendingRef.current = false;
       setSending(false);
+      if (reopenAfterResponseRef.current) {
+        reopenAfterResponseRef.current = false;
+        setOpen(true);
+      }
     }
   }
 
@@ -207,19 +247,23 @@ export default function AmandaWidget() {
     >
       <button
         ref={launcherRef}
-        className={`amanda-launcher ${open ? "open" : ""}`}
+        className={`amanda-launcher ${open ? "open" : ""}${sending && !open ? " waiting" : ""}`}
         type="button"
-        onClick={() => setOpen((current) => !current)}
+        onClick={toggleConversation}
         aria-expanded={open}
         aria-controls="amanda-panel"
         aria-haspopup="dialog"
       >
         {symbol}
         <span>
-          <small>{getText("eyebrow", "Assistente virtual")}</small>
-          <strong>Amanda</strong>
+          <small>
+            {sending && !open
+              ? "Preparando resposta"
+              : getText("eyebrow", "Assistente virtual")}
+          </small>
+          <strong>{sending && !open ? "Só um momento…" : "Amanda"}</strong>
         </span>
-        <b aria-hidden="true">{open ? "×" : "✦"}</b>
+        <b aria-hidden="true">{open ? "×" : sending ? "•••" : "✦"}</b>
       </button>
 
       {open && (
@@ -245,19 +289,20 @@ export default function AmandaWidget() {
                 <button
                   type="button"
                   onClick={startNewConversation}
+                  disabled={sending}
                   aria-label="Iniciar nova conversa"
                   title="Nova conversa"
                 >
                   ↻
                 </button>
               )}
-              <button type="button" onClick={() => setOpen(false)} aria-label="Fechar conversa com Amanda">
+              <button type="button" onClick={closeConversation} aria-label="Fechar conversa com Amanda">
                 ×
               </button>
             </div>
           </header>
 
-          <div className="amanda-body">
+          <div ref={bodyRef} className="amanda-body">
             <p id="amanda-description" className="amanda-intro">
               {getText("description")}
             </p>
