@@ -143,15 +143,43 @@ export async function POST(request: Request) {
       sanitizedHistory.history,
       createAiProvider(),
     );
-    await recordAgentUsage(answer.provider, answer.usage);
-    return json({
-      message: answer.message,
-      services: answer.services,
-      sessionId,
-      requestId,
-      personalDataRemoved:
-        sanitizedMessage.removed || sanitizedHistory.personalDataRemoved || undefined,
-    });
+    const estimatedCostBrl = await recordAgentUsage(answer.provider, answer.usage);
+    console.info(
+      "[amanda-usage]",
+      JSON.stringify({
+        requestId,
+        provider: answer.provider,
+        providerCalls: answer.providerCalls,
+        toolCalls: answer.toolCalls,
+        inputTokens: answer.usage.inputTokens,
+        cachedInputTokens: answer.usage.cachedInputTokens,
+        outputTokens: answer.usage.outputTokens,
+        estimatedCostBrl: Number(estimatedCostBrl.toFixed(6)),
+        serviceIds: answer.services.map((service) => service.id),
+        detailStatuses: answer.services.map((service) => service.detailsStatus),
+        personalDataRemoved:
+          sanitizedMessage.removed || sanitizedHistory.personalDataRemoved,
+      }),
+    );
+    return json(
+      {
+        message: answer.message,
+        services: answer.services,
+        sessionId,
+        requestId,
+        personalDataRemoved:
+          sanitizedMessage.removed || sanitizedHistory.personalDataRemoved || undefined,
+      },
+      200,
+      {
+        "X-Amanda-Provider-Calls": String(answer.providerCalls),
+        "X-Amanda-Tool-Calls": String(answer.toolCalls),
+        "X-Amanda-Input-Tokens": String(answer.usage.inputTokens),
+        "X-Amanda-Cached-Input-Tokens": String(answer.usage.cachedInputTokens),
+        "X-Amanda-Output-Tokens": String(answer.usage.outputTokens),
+        "X-Amanda-Estimated-Cost-BRL": estimatedCostBrl.toFixed(6),
+      },
+    );
   } catch (error) {
     if (error instanceof AiProviderConfigurationError) {
       return json(

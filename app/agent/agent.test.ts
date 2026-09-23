@@ -75,6 +75,61 @@ class FakeProvider implements AiProvider {
   }
 }
 
+class PendingHallucinationProvider implements AiProvider {
+  readonly name = "deepseek";
+  private turn = 0;
+
+  async complete(): Promise<AiCompletion> {
+    this.turn += 1;
+    if (this.turn === 1) {
+      return {
+        message: {
+          role: "assistant",
+          content: null,
+          tool_calls: [
+            {
+              id: "call-search-pending",
+              type: "function",
+              function: {
+                name: "buscar_servicos",
+                arguments: JSON.stringify({ termo: "alvará sanitário" }),
+              },
+            },
+          ],
+        },
+        usage: emptyUsage,
+      };
+    }
+    if (this.turn === 2) {
+      return {
+        message: {
+          role: "assistant",
+          content: null,
+          tool_calls: [
+            {
+              id: "call-detail-pending",
+              type: "function",
+              function: {
+                name: "obter_servico",
+                arguments: JSON.stringify({ id: "1doc-alvara-sanitario" }),
+              },
+            },
+          ],
+        },
+        usage: emptyUsage,
+      };
+    }
+    return {
+      message: {
+        role: "assistant",
+        content:
+          "Leve CPF, comprovante de endereço e pague uma taxa de R$ 100,00.",
+      },
+      usage: emptyUsage,
+    };
+  }
+}
+
 test("remove CPF, telefone e e-mail antes de enviar ao provedor", () => {
   const result = removePersonalData(
     "Meu CPF é 123.456.789-10, telefone (75) 99999-1234 e e-mail teste@exemplo.com.",
@@ -156,4 +211,17 @@ test("executa o ciclo de busca e detalhe sem entregar o catálogo inteiro", asyn
   assert.equal(answer.services.length, 1);
   assert.match(answer.services[0].title, /IPTU/i);
   assert.equal(answer.usage.inputTokens, 30);
+});
+
+test("substitui por resposta segura qualquer detalhe inventado de serviço pendente", async () => {
+  const answer = await answerWithAgent(
+    "Quais documentos preciso para obter alvará sanitário?",
+    [],
+    new PendingHallucinationProvider(),
+  );
+  assert.match(answer.message, /não possui informações detalhadas aprovadas/i);
+  assert.doesNotMatch(answer.message, /CPF|R\$ 100/i);
+  assert.equal(answer.services[0]?.detailsStatus, "pending");
+  assert.equal(answer.providerCalls, 3);
+  assert.equal(answer.toolCalls, 2);
 });

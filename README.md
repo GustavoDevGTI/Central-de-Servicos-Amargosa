@@ -106,6 +106,8 @@ OPENAI_API_KEY=sua-chave
 
 As ferramentas `buscar_servicos` e `obter_servico` consultam o mesmo catálogo utilizado pelo portal. Serviços ainda não aprovados podem ser localizados, mas seus campos pendentes não são apresentados como fatos oficiais. Sem uma chave válida ou quando o orçamento é atingido, a busca tradicional continua disponível.
 
+Cada resposta bem-sucedida gera no log do servidor um registro `[amanda-usage]` com quantidade de chamadas, tokens de entrada, tokens em cache, tokens de saída, custo estimado e identificadores dos serviços consultados. O registro não contém a pergunta, a resposta nem dados pessoais. Os mesmos totais de tokens e custo também são enviados em cabeçalhos `X-Amanda-*` da resposta HTTP para diagnóstico.
+
 Os limites podem ser ajustados com as variáveis documentadas em `.env.example`. Em Cloudflare, limites e uso mensal são persistidos no D1. No Docker sem banco compartilhado, o fallback é mantido em memória e deve ser substituído por Redis quando houver múltiplas réplicas.
 
 ## Acessibilidade

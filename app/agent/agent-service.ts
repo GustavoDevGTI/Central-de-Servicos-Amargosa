@@ -10,6 +10,8 @@ export type AgentAnswer = {
   services: AgentServiceCard[];
   usage: AgentUsage;
   provider: AiProvider["name"];
+  providerCalls: number;
+  toolCalls: number;
 };
 
 function mergeUsage(total: AgentUsage, addition: AgentUsage) {
@@ -26,6 +28,29 @@ function preferredServices(
   return [...source.values()].slice(0, 5);
 }
 
+function serviceNames(services: AgentServiceCard[]) {
+  return services.map((service) => `“${service.title}”`).join(", ");
+}
+
+function groundedMessage(
+  detailed: Map<string, AgentServiceCard>,
+  candidates: Map<string, AgentServiceCard>,
+) {
+  const pending = [...detailed.values()].filter(
+    (service) => service.detailsStatus === "pending",
+  );
+  if (pending.length) {
+    return `Encontrei ${serviceNames(pending)}, mas a ficha oficial ainda não possui informações detalhadas aprovadas. Por isso, não posso informar documentos, requisitos, etapas, custo, prazo ou canais desse serviço. Abra a página indicada abaixo para acompanhar futuras atualizações.`;
+  }
+
+  if (!detailed.size && candidates.size) {
+    const found = [...candidates.values()].slice(0, 5);
+    return `Encontrei estes serviços relacionados: ${serviceNames(found)}. Abra uma das opções abaixo ou detalhe um pouco mais o que você precisa.`;
+  }
+
+  return null;
+}
+
 export async function answerWithAgent(
   message: string,
   history: AgentHistoryMessage[],
@@ -40,8 +65,10 @@ export async function answerWithAgent(
   const candidates = new Map<string, AgentServiceCard>();
   const detailed = new Map<string, AgentServiceCard>();
   let toolCallCount = 0;
+  let providerCallCount = 0;
 
   while (toolCallCount <= MAX_TOOL_CALLS) {
+    providerCallCount += 1;
     const completion = await provider.complete(messages, agentTools);
     mergeUsage(usage, completion.usage);
     messages.push(completion.message);
@@ -49,13 +76,17 @@ export async function answerWithAgent(
     const calls = completion.message.tool_calls || [];
     if (!calls.length) {
       const text = completion.message.content?.trim();
+      const guardedText = groundedMessage(detailed, candidates);
       return {
         message:
+          guardedText ||
           text ||
           "Não consegui formular uma resposta segura agora. Você pode tentar escrever sua necessidade de outra forma.",
         services: preferredServices(detailed, candidates),
         usage,
         provider: provider.name,
+        providerCalls: providerCallCount,
+        toolCalls: toolCallCount,
       };
     }
 
@@ -68,6 +99,8 @@ export async function answerWithAgent(
           services: preferredServices(detailed, candidates),
           usage,
           provider: provider.name,
+          providerCalls: providerCallCount,
+          toolCalls: toolCallCount,
         };
       }
 
@@ -89,5 +122,7 @@ export async function answerWithAgent(
     services: preferredServices(detailed, candidates),
     usage,
     provider: provider.name,
+    providerCalls: providerCallCount,
+    toolCalls: toolCallCount,
   };
 }

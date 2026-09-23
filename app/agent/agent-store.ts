@@ -187,7 +187,8 @@ export async function recordAgentUsage(
         new Date().toISOString(),
       )
       .run();
-    return;
+    return cost;
   }
   memoryUsage.set(month, (memoryUsage.get(month) || 0) + cost);
+  return cost;
 }
