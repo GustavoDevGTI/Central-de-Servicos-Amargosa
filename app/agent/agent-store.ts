@@ -1,4 +1,3 @@
-import { env } from "cloudflare:workers";
 import { runtimeNumber } from "./runtime-env";
 import type { AgentUsage } from "./types";
 
@@ -7,8 +6,12 @@ const memoryLimits = new Map<string, MemoryWindow>();
 const memoryUsage = new Map<string, number>();
 let schemaReady: Promise<void> | undefined;
 
-function optionalDatabase() {
+async function optionalDatabase() {
   try {
+    // O nome em variável impede o bundler Docker de transformar este binding
+    // opcional em um import obrigatório do runtime Cloudflare.
+    const cloudflareModule = "cloudflare:workers";
+    const { env } = await import(/* @vite-ignore */ cloudflareModule);
     const database = (env as Cloudflare.Env & { DB?: D1Database }).DB;
     return database || null;
   } catch {
@@ -84,7 +87,7 @@ export async function checkAgentRateLimit(clientKey: string) {
   const dailyLimit = runtimeNumber("AI_DAILY_SESSION_LIMIT", 30);
   const shortBucket = `5m:${windowBucket(now, fiveMinutesMs)}`;
   const dailyBucket = `day:${now.toISOString().slice(0, 10)}`;
-  const database = optionalDatabase();
+  const database = await optionalDatabase();
 
   let shortCount: number;
   let dailyCount: number;
@@ -140,7 +143,7 @@ export async function isAgentBudgetAvailable() {
   const budget = runtimeNumber("AI_MONTHLY_BUDGET_BRL", 100);
   if (budget <= 0) return true;
   const month = new Date().toISOString().slice(0, 7);
-  const database = optionalDatabase();
+  const database = await optionalDatabase();
   if (database) {
     await ensureSchema(database);
     const row = await database
@@ -160,7 +163,7 @@ export async function recordAgentUsage(
 ) {
   const month = new Date().toISOString().slice(0, 7);
   const cost = estimateCostBrl(provider, usage);
-  const database = optionalDatabase();
+  const database = await optionalDatabase();
   if (database) {
     await ensureSchema(database);
     await database
