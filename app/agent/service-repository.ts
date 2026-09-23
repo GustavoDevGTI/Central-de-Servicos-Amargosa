@@ -51,7 +51,8 @@ export function expandServiceSearchTerms(term: string) {
   if (
     normalized.includes("iptu") ||
     (hasEvery(normalized, ["boleto", "casa"]) ||
-      hasEvery(normalized, ["carne", "imovel"]))
+      hasEvery(normalized, ["carne", "imovel"]) ||
+      hasEvery(normalized, ["carne", "casa"]))
   ) {
     add("2ª via do IPTU", "IPTU imposto imóvel");
   }

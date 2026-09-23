@@ -130,6 +130,72 @@ class PendingHallucinationProvider implements AiProvider {
   }
 }
 
+class OutOfScopeHallucinationProvider implements AiProvider {
+  readonly name = "deepseek";
+
+  async complete(): Promise<AiCompletion> {
+    return {
+      message: {
+        role: "assistant",
+        content:
+          "Claro! Para fazer um bolo, misture farinha, ovos, açúcar e leite.",
+      },
+      usage: emptyUsage,
+    };
+  }
+}
+
+class MissingServiceHallucinationProvider implements AiProvider {
+  readonly name = "deepseek";
+  private turn = 0;
+
+  async complete(): Promise<AiCompletion> {
+    this.turn += 1;
+    if (this.turn === 1) {
+      return {
+        message: {
+          role: "assistant",
+          content: null,
+          tool_calls: [
+            {
+              id: "call-search-missing",
+              type: "function",
+              function: {
+                name: "buscar_servicos",
+                arguments: JSON.stringify({ termo: "carteira municipal de pescador" }),
+              },
+            },
+          ],
+        },
+        usage: emptyUsage,
+      };
+    }
+    return {
+      message: {
+        role: "assistant",
+        content:
+          "A carteira municipal de pescador pode ser emitida levando RG e CPF à Secretaria de Agricultura.",
+      },
+      usage: emptyUsage,
+    };
+  }
+}
+
+class ExistingServiceWithoutToolProvider implements AiProvider {
+  readonly name = "deepseek";
+
+  async complete(): Promise<AiCompletion> {
+    return {
+      message: {
+        role: "assistant",
+        content:
+          "Para obter a segunda via do IPTU, leve seus documentos ao setor responsável.",
+      },
+      usage: emptyUsage,
+    };
+  }
+}
+
 test("remove CPF, telefone e e-mail antes de enviar ao provedor", () => {
   const result = removePersonalData(
     "Meu CPF é 123.456.789-10, telefone (75) 99999-1234 e e-mail teste@exemplo.com.",
@@ -224,4 +290,43 @@ test("substitui por resposta segura qualquer detalhe inventado de serviço pende
   assert.equal(answer.services[0]?.detailsStatus, "pending");
   assert.equal(answer.providerCalls, 3);
   assert.equal(answer.toolCalls, 2);
+});
+
+test("descarta resposta fora do escopo quando nenhum serviço foi consultado", async () => {
+  const answer = await answerWithAgent(
+    "Preciso de uma receita de bolo.",
+    [],
+    new OutOfScopeHallucinationProvider(),
+  );
+  assert.match(answer.message, /não encontrei um serviço relacionado/i);
+  assert.doesNotMatch(answer.message, /farinha|ovos|açúcar|leite/i);
+  assert.deepEqual(answer.services, []);
+  assert.equal(answer.providerCalls, 1);
+  assert.equal(answer.toolCalls, 1);
+});
+
+test("descarta detalhes inventados para serviço inexistente no catálogo", async () => {
+  const answer = await answerWithAgent(
+    "Como faço uma carteira municipal de pescador?",
+    [],
+    new MissingServiceHallucinationProvider(),
+  );
+  assert.match(answer.message, /não encontrei um serviço relacionado/i);
+  assert.doesNotMatch(answer.message, /RG|CPF|Secretaria de Agricultura/i);
+  assert.deepEqual(answer.services, []);
+  assert.equal(answer.providerCalls, 2);
+  assert.equal(answer.toolCalls, 1);
+});
+
+test("faz busca local segura quando o modelo responde sem consultar um serviço existente", async () => {
+  const answer = await answerWithAgent(
+    "Perdi o carnê da minha casa e preciso de outra via.",
+    [],
+    new ExistingServiceWithoutToolProvider(),
+  );
+  assert.match(answer.message, /encontrei estes serviços relacionados/i);
+  assert.doesNotMatch(answer.message, /leve seus documentos/i);
+  assert.match(answer.services[0]?.title || "", /IPTU/i);
+  assert.equal(answer.providerCalls, 1);
+  assert.equal(answer.toolCalls, 1);
 });

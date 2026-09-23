@@ -4,6 +4,8 @@ import type { AgentHistoryMessage, AgentServiceCard, AgentUsage } from "./types"
 import type { AiMessage, AiProvider } from "./providers/ai-provider";
 
 const MAX_TOOL_CALLS = 4;
+const NO_SERVICE_MATCH_MESSAGE =
+  "Não encontrei um serviço relacionado na Central de Serviços com as informações fornecidas. Isso não significa necessariamente que a Prefeitura não ofereça esse atendimento. Descreva um pouco melhor o que você precisa ou utilize a busca tradicional da Central.";
 
 export type AgentAnswer = {
   message: string;
@@ -48,6 +50,10 @@ function groundedMessage(
     return `Encontrei estes serviços relacionados: ${serviceNames(found)}. Abra uma das opções abaixo ou detalhe um pouco mais o que você precisa.`;
   }
 
+  if (!detailed.size && !candidates.size) {
+    return NO_SERVICE_MATCH_MESSAGE;
+  }
+
   return null;
 }
 
@@ -66,6 +72,7 @@ export async function answerWithAgent(
   const detailed = new Map<string, AgentServiceCard>();
   let toolCallCount = 0;
   let providerCallCount = 0;
+  let searchedCatalog = false;
 
   while (toolCallCount <= MAX_TOOL_CALLS) {
     providerCallCount += 1;
@@ -76,6 +83,17 @@ export async function answerWithAgent(
     const calls = completion.message.tool_calls || [];
     if (!calls.length) {
       const text = completion.message.content?.trim();
+      if (!searchedCatalog && !detailed.size && !candidates.size) {
+        searchedCatalog = true;
+        toolCallCount += 1;
+        const fallbackSearch = executeAgentTool(
+          "buscar_servicos",
+          JSON.stringify({ termo: message }),
+        );
+        for (const service of fallbackSearch.services) {
+          candidates.set(service.id, service);
+        }
+      }
       const guardedText = groundedMessage(detailed, candidates);
       return {
         message:
@@ -105,6 +123,7 @@ export async function answerWithAgent(
       }
 
       const result = executeAgentTool(call.function.name, call.function.arguments);
+      if (call.function.name === "buscar_servicos") searchedCatalog = true;
       const destination =
         call.function.name === "obter_servico" ? detailed : candidates;
       for (const service of result.services) destination.set(service.id, service);
