@@ -39,9 +39,29 @@ function json(
   });
 }
 
-function isSameOrigin(request: Request) {
+function firstForwardedValue(value: string | null) {
+  return value?.split(",")[0]?.trim().toLocaleLowerCase("en-US") || "";
+}
+
+export function isSameOrigin(request: Request) {
   const origin = request.headers.get("Origin");
-  return !origin || origin === new URL(request.url).origin;
+  if (!origin) return true;
+
+  let originHost: string;
+  try {
+    originHost = new URL(origin).host.toLocaleLowerCase("en-US");
+  } catch {
+    return false;
+  }
+
+  const requestUrl = new URL(request.url);
+  const allowedHosts = new Set([
+    requestUrl.host.toLocaleLowerCase("en-US"),
+    firstForwardedValue(request.headers.get("Host")),
+    firstForwardedValue(request.headers.get("X-Forwarded-Host")),
+  ]);
+  allowedHosts.delete("");
+  return allowedHosts.has(originHost);
 }
 
 async function clientKey(request: Request, sessionId: string) {

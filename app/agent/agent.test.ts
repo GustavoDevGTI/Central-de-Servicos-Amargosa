@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { approvedServiceDetails } from "../approved-service-details";
+import { isSameOrigin } from "../api/agent/chat/route";
 import { services } from "../service-catalog";
 import { answerWithAgent } from "./agent-service";
 import { removePersonalData, sanitizeAgentHistory } from "./privacy";
@@ -83,6 +84,29 @@ test("remove CPF, telefone e e-mail antes de enviar ao provedor", () => {
   assert.match(result.text, /\[CPF removido\]/);
   assert.match(result.text, /\[telefone removido\]/);
   assert.match(result.text, /\[e-mail removido\]/);
+});
+
+test("aceita a origem pública encaminhada pelo proxy reverso", () => {
+  const request = new Request("http://portal:3000/api/agent/chat", {
+    headers: {
+      Origin: "https://maisdigital.amargosa.ba.gov.br",
+      Host: "portal:3000",
+      "X-Forwarded-Host": "maisdigital.amargosa.ba.gov.br",
+      "X-Forwarded-Proto": "https",
+    },
+  });
+  assert.equal(isSameOrigin(request), true);
+});
+
+test("recusa uma origem externa mesmo atrás do proxy", () => {
+  const request = new Request("http://portal:3000/api/agent/chat", {
+    headers: {
+      Origin: "https://exemplo-malicioso.invalid",
+      Host: "portal:3000",
+      "X-Forwarded-Host": "maisdigital.amargosa.ba.gov.br",
+    },
+  });
+  assert.equal(isSameOrigin(request), false);
 });
 
 test("limita e valida o histórico curto", () => {
