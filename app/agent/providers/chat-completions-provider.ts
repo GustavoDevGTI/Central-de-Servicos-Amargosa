@@ -95,7 +95,7 @@ export class ChatCompletionsProvider implements AiProvider {
         },
       })),
       tool_choice: "auto",
-      max_tokens: runtimeNumber("AI_MAX_OUTPUT_TOKENS", 400),
+      max_tokens: runtimeNumber("AI_MAX_OUTPUT_TOKENS", 800),
       stream: false,
     };
 
