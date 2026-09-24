@@ -1,5 +1,11 @@
 export type ServiceRequestSystem = "sei" | "other";
 
+export const isBaGovUrl = (value?: string) =>
+  Boolean(
+    value &&
+      /^https?:\/\/(?:ba\.gov\.br|(?:(?:www\.)?servicos|cpu\d+|www)\.ba\.gov\.br)(?:[/?#]|$)/i.test(value),
+  );
+
 export const nonSeiServiceIds = new Set([
   "1doc-ouvidoria-geral",
   "1doc-extincao-ou-suspensao-de-execucao-extrajudicial-ou-judicial",

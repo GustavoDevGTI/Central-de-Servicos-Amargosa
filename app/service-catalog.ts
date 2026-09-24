@@ -9,6 +9,7 @@ import {
   cartaServiceLinks,
 } from "./carta-service-catalog";
 import {
+  isBaGovUrl,
   requestSystemForService,
   type ServiceRequestSystem,
 } from "./service-request-system";
@@ -48,6 +49,7 @@ export type Service = {
   noticeAction?: string;
   requestLabel?: string;
   requestSystem?: ServiceRequestSystem;
+  accessMode?: "digital" | "presencial" | "a-confirmar";
   updatedAt?: string;
   initials?: string;
   sourceRow?: number;
@@ -74,15 +76,6 @@ const hasLegacyOneDocReference = (value?: string) =>
 
 const isLegacyOneDocUrl = (value?: string) =>
   Boolean(value && legacyOneDocUrlPattern.test(value));
-
-const isBaGovUrl = (value?: string) =>
-  Boolean(
-    value &&
-      !isLegacyOneDocUrl(value) &&
-      /^https?:\/\/(?:(?:www\.)?servicos|cpu\d+|www)\.ba\.gov\.br(?:\/|$)/i.test(
-        value,
-      ),
-  );
 
 function replaceKnownCartaReference(value: string, cartaUrl: string) {
   return value
@@ -204,6 +197,16 @@ const spreadsheetDetails = spreadsheetServiceData.existing as Record<
   Partial<Service>
 >;
 
+const spreadsheetAccessModes = spreadsheetServiceData.accessModes as Record<
+  string,
+  NonNullable<Service["accessMode"]>
+>;
+const digitalProtocolUrl = "https://acesso.amargosa.ba.gov.br/protocolodigital";
+const genericPresentialWhereWhen =
+  "Atendimento presencial. Consulte o endereço do órgão responsável nos canais abaixo e confirme o horário por telefone.";
+const genericPresentialStep =
+  "Procure o órgão responsável no endereço indicado em Canais de atendimento ou ligue para confirmar o atendimento.";
+
 const hasInformation = (value: unknown): boolean => {
   if (Array.isArray(value)) return value.some(hasInformation);
   if (typeof value !== "string") return value != null;
@@ -230,6 +233,35 @@ function addMissingSpreadsheetInformation(
     enriched.whereWhen = incoming.whereWhen;
   }
   return enriched;
+}
+
+function applySpreadsheetAccessMode(service: Service): Service {
+  const accessMode = spreadsheetAccessModes[service.id];
+  if (!accessMode) return service;
+
+  const needsDigitalLink = accessMode === "digital" && !hasInformation(service.url);
+  let whereWhen = service.whereWhen;
+  if (whereWhen === genericPresentialWhereWhen || !hasInformation(whereWhen)) {
+    whereWhen = accessMode === "digital"
+      ? "Atendimento digital. Inicie a solicitação pelo link desta página."
+      : accessMode === "a-confirmar"
+        ? "Confirme com o órgão responsável se o atendimento é digital ou presencial."
+        : genericPresentialWhereWhen;
+  } else if (accessMode === "digital" && whereWhen?.startsWith("Em caso de emergência, ligue 153. Para atendimento presencial")) {
+    whereWhen = "Em caso de emergência, ligue 153. Para iniciar uma solicitação digital, use o link desta página.";
+  }
+
+  return {
+    ...service,
+    accessMode,
+    url: needsDigitalLink ? digitalProtocolUrl : service.url,
+    whereWhen,
+    steps: accessMode === "digital"
+      ? service.steps?.map((step) => step === genericPresentialStep
+        ? "Acesse o link desta página para iniciar a solicitação digital."
+        : step)
+      : service.steps,
+  };
 }
 
 const documentTopicSplits: Record<string, string[]> = {
@@ -290,7 +322,7 @@ const mergedServices = [...baseServices, ...cartaOnlyServices].map(
 );
 
 export const services = [...mergedServices, ...(spreadsheetServiceData.created as Service[])].map((service) =>
-  documentTopics({
+  documentTopics(applySpreadsheetAccessMode({
     ...service,
     requestSystem:
       service.requestSystem ||
@@ -298,5 +330,5 @@ export const services = [...mergedServices, ...(spreadsheetServiceData.created a
       servicesWithoutSeiGuide.has(service.id)
         ? "other"
         : requestSystemForService(service.id)),
-  }),
+  })),
 );

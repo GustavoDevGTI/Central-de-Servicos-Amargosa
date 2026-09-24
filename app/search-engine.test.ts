@@ -9,6 +9,7 @@ import {
   cartaServiceLinks,
 } from "./carta-service-catalog.ts";
 import {
+  isBaGovUrl,
   nonSeiServiceIds,
   requestSystemForService,
 } from "./service-request-system.ts";
@@ -32,7 +33,7 @@ const services: SearchableService[] = [
   { id: "pcd", title: "Credencial de estacionamento para PCD", category: "Trânsito", department: "SEMOP", audienceIds: ["cidadao"] },
 ];
 
-test("vincula o manual do SEI a todos os serviços, exceto os que usam outro canal", () => {
+test("classifica os sistemas de solicitação cadastrados", () => {
   const catalog = siteContent.pages[0].segments.find(
     (segment) => segment.type === "catalog",
   );
@@ -51,6 +52,13 @@ test("vincula o manual do SEI a todos os serviços, exceto os que usam outro can
   );
   assert.equal(requestSystemForService("1doc-abastecimento-de-agua"), "sei");
   assert.equal(requestSystemForService("1doc-ouvidoria-geral"), "other");
+});
+
+test("distingue links do BA.GOV dos links do protocolo municipal", () => {
+  assert.equal(isBaGovUrl("https://servicos.ba.gov.br/detalhe/servico/2553"), true);
+  assert.equal(isBaGovUrl("https://cpu001550.ba.gov.br/detalhe/servico/10109"), true);
+  assert.equal(isBaGovUrl("https://acesso.amargosa.ba.gov.br/protocolodigital"), false);
+  assert.equal(isBaGovUrl(undefined), false);
 });
 
 test("normaliza erro de português e usa sinônimos", () => {

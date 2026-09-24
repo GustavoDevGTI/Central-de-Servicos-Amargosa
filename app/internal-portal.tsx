@@ -29,6 +29,7 @@ import {
 } from "./search-popularity-client";
 import { trackServiceClick, trackServiceStart } from "./analytics";
 import { contactForService, organizationForService } from "./service-contacts";
+import { isBaGovUrl } from "./service-request-system";
 
 // O roteador cliente do Vinext pode cancelar a navegação ao preparar o RSC.
 // Links internos simples preservam a URL e funcionam também sem JavaScript.
@@ -1189,7 +1190,9 @@ function ServiceContactSection({ service }: { service: Service }) {
           ))}
         </div>
         <div>
-          <span>{contact.officeName ? "Atendimento presencial — endereço da secretaria" : service.url ? "Endereço" : "Atendimento presencial — endereço"}</span>
+          <span>{service.accessMode === "presencial"
+            ? contact.officeName ? "Atendimento presencial — endereço da secretaria" : "Atendimento presencial — endereço"
+            : "Endereço"}</span>
           <address>{contact.address}</address>
         </div>
         {contact.email && (
@@ -1217,10 +1220,9 @@ function ServiceRequestNotice({
   repeated?: boolean;
 }) {
   if (!service.url) return null;
-  if (!service.notice) return null;
   const isGenericNotice =
-    service.notice.startsWith("Consulte as informações disponíveis nesta página") ||
-    service.notice.startsWith("Consulte as orientações desta página");
+    service.notice?.startsWith("Consulte as informações disponíveis nesta página") ||
+    service.notice?.startsWith("Consulte as orientações desta página");
 
   return (
     <a
@@ -1230,14 +1232,14 @@ function ServiceRequestNotice({
       rel="noreferrer"
       onClick={() => trackServiceStart(service)}
     >
-      <span>{isGenericNotice ? "Clique aqui para iniciar a solicitação deste serviço." : service.notice}</span>
+      <span>{!service.notice || isGenericNotice ? "Clique aqui para iniciar a solicitação deste serviço." : service.notice}</span>
       <ServiceStartCta />
     </a>
   );
 }
 
-function SeiManualNotice({ service }: { service: Service }) {
-  if (!service.url || service.requestSystem !== "sei") return null;
+function ServiceManualNotice({ service }: { service: Service }) {
+  if (!service.url || isBaGovUrl(service.url)) return null;
 
   return (
     <Link className="service-sei-guide" href="/manual-sei">
@@ -1283,7 +1285,7 @@ function RichServiceDetail({ service }: { service: Service }) {
         </header>
 
         <ServiceRequestNotice service={service} />
-        <SeiManualNotice service={service} />
+        <ServiceManualNotice service={service} />
 
         <div
           className={internalClasses(contentSegment, "service-detail-layout")}
@@ -1472,7 +1474,7 @@ export function ServiceDetail({ slug }: { slug: string }) {
           </a>
         )}
 
-        <SeiManualNotice service={service} />
+        <ServiceManualNotice service={service} />
 
         <div
           className={internalClasses(contentSegment, "service-detail-layout")}
