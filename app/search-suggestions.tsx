@@ -47,7 +47,7 @@ export default function SearchSuggestions({
     <div
       id={id}
       className="search-suggestions"
-      role="listbox"
+      role="region"
       aria-label="Buscas relacionadas"
     >
       <div className="search-suggestions-header">
@@ -77,8 +77,6 @@ export default function SearchSuggestions({
         return (
           <a
             key={service.id}
-            role="option"
-            aria-selected="false"
             href={href}
             target={service.slug ? undefined : "_blank"}
             rel={service.slug ? undefined : "noreferrer"}

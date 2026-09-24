@@ -99,7 +99,6 @@ const AUDIENCE_ALIASES: Record<string, string[]> = {
   ],
   "orgaos-publicos-ongs": ["orgao publico", "orgaos publicos", "ong", "ongs"],
   ouvidoria: ["ouvidoria", "reclamacao", "denuncia", "elogio", "sugestao"],
-  "precatorio-fundef": ["precatorio fundef", "fundef"],
 };
 
 const TERM_SYNONYMS: Record<string, string[]> = {

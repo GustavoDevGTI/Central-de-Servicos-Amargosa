@@ -119,14 +119,12 @@ export default function PortalFooter() {
           <div className="portal-footer-contact-group">
             <p><strong>CNPJ:</strong> 13.825.484/0001-50</p>
             <p><strong>CEP:</strong> 45300-000</p>
-          </div>
-          <div className="portal-footer-contact-group">
-            <p><strong>Endereço:</strong> Praça Lourival Monte, nº 001, Centro, Amargosa – BA</p>
-            <p><strong>Atendimento:</strong> de segunda a sexta-feira, das 8h às 16h30</p>
-          </div>
-          <div className="portal-footer-contact-group">
             <p><strong>Telefone:</strong> <a href="tel:+557535127811">(75) 3512-7811</a></p>
             <p><strong>E-mail:</strong> <a href="mailto:contato@amargosa.ba.gov.br">contato@amargosa.ba.gov.br</a></p>
+          </div>
+          <div className="portal-footer-contact-group">
+            <p><strong>Endereço:</strong> Praça Lourival Monte, nº 001, Centro,<br className="portal-footer-desktop-break" />{" "}Amargosa – BA</p>
+            <p><strong>Atendimento:</strong> de segunda a sexta-feira, das 8h às<br className="portal-footer-desktop-break" />{" "}16h30</p>
           </div>
         </section>
 

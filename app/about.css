@@ -1,7 +1,7 @@
 .about-page{background:#f5f8f6}
 .about-project{width:min(1180px,calc(100% - 40px));display:flex;align-items:center;flex-direction:column;gap:42px;margin:auto;padding:72px 0 70px}
 .about-section-heading>span,.about-team>header>span{display:block;color:var(--green);font-size:10px;font-weight:900;letter-spacing:.16em}
-.about-section-heading h2,.about-team>header h2{margin:12px 0 0;font-size:clamp(35px,4vw,50px);line-height:1.08;letter-spacing:-.035em}
+.about-section-heading :is(h1,h2),.about-team>header h2{margin:12px 0 0;font-size:clamp(35px,4vw,50px);line-height:1.08;letter-spacing:-.035em}
 .about-project .about-section-heading{text-align:center}
 .about-project-copy{width:min(850px,100%);padding-left:0;border-left:0}
 .about-project-copy p{margin:0;color:#4e625a;font-size:17px;line-height:1.75}
@@ -26,14 +26,16 @@
 .about-org-branches::before{content:"";position:absolute;top:-26px;left:25%;right:25%;height:1px;background:#8eafa1}
 .about-org-branch{position:relative}
 .about-org-branch::before{content:"";position:absolute;top:-26px;left:50%;width:1px;height:26px;background:#8eafa1}
-.about-org-gti>.about-unit-card::after{content:"";position:absolute;bottom:-26px;left:50%;width:1px;height:26px;background:#8eafa1}
-.about-org-developers{position:relative;width:calc(200% + 36px);display:grid;grid-template-columns:1fr 1fr;gap:36px;margin-top:52px}
-.about-org-developers::before{content:"";position:absolute;top:-26px;left:25%;right:25%;height:1px;background:#8eafa1}
+.about-org-branch>.about-unit-card::after{content:"";position:absolute;bottom:-26px;left:50%;width:1px;height:26px;background:#8eafa1}
+.about-org-developers{position:relative;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px;margin-top:52px}
+.about-org-developers::before,.about-org-developers::after{content:"";position:absolute;top:-26px;height:1px;background:#8eafa1}
+.about-org-developers::before{left:calc(16.666% - 8px);right:50%}
+.about-org-developers::after{left:calc(75% + 9px);right:calc(16.666% - 8px)}
 .about-person-card{min-height:138px;display:flex;flex-direction:column;padding:19px 23px;background:linear-gradient(135deg,#fff 0%,#f1f8f4 100%);box-shadow:0 12px 28px rgba(12,73,54,.1)}
 .about-person-card::before{content:"";position:absolute;top:-26px;left:50%;width:1px;height:26px;background:#8eafa1}
 .about-person-card>strong{margin-top:16px}
 .about-person-card>span{display:block;margin-top:5px;padding:0;border:0}
 
-@media(max-width:900px){.about-project{gap:35px}.about-org-branches{gap:28px}.about-unit-card{padding:23px}.about-org-developers{width:calc(200% + 28px);gap:28px}}
-@media(max-width:760px){.about-project{width:calc(100% - 32px);padding:54px 0 50px}.about-team{padding:58px 16px 72px}.about-org{margin-top:34px}.about-org-branches{grid-template-columns:1fr;gap:18px;margin-top:28px}.about-unit-card-root::after,.about-org-branches::before,.about-org-branch::before,.about-org-gti>.about-unit-card::after,.about-org-developers::before,.about-person-card::before{display:none}.about-unit-card{min-height:0}.about-unit-card h3{min-height:0}.about-org-developers{width:100%;grid-template-columns:1fr;gap:10px;margin-top:12px}.about-person-card{min-height:0}}
-@media(max-width:520px){.about-section-heading h2,.about-team>header h2{font-size:34px}.about-project-copy p{font-size:16px}.about-unit-card,.about-person-card{padding:21px 18px}}
+@media(max-width:900px){.about-project{gap:35px}.about-org-branches{gap:28px}.about-unit-card{padding:23px}.about-org-developers{gap:16px}}
+@media(max-width:760px){.about-project{width:calc(100% - 32px);padding:54px 0 50px}.about-team{padding:58px 16px 72px}.about-org{margin-top:34px}.about-org-branches{grid-template-columns:1fr;gap:18px;margin-top:28px}.about-unit-card-root::after,.about-org-branches::before,.about-org-branch::before,.about-org-branch>.about-unit-card::after,.about-org-developers::before,.about-org-developers::after,.about-person-card::before{display:none}.about-unit-card{min-height:0}.about-unit-card h3{min-height:0}.about-org-developers{grid-template-columns:1fr;gap:10px;margin-top:12px}.about-person-card{min-height:0}}
+@media(max-width:520px){.about-section-heading :is(h1,h2),.about-team>header h2{font-size:34px}.about-project-copy p{font-size:16px}.about-unit-card,.about-person-card{padding:21px 18px}}

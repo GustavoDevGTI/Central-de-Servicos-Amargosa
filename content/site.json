@@ -138,7 +138,7 @@
               "type": "text",
               "role": "eyebrow",
               "label": "Identificador",
-              "value": "Central de Serviços"
+              "value": ""
             },
             {
               "id": "hero-title",
@@ -159,7 +159,7 @@
         },
         {
           "id": "audiences",
-          "name": "Serviços por público",
+          "name": "Serviços mais Solicitados",
           "type": "audiences",
           "enabled": true,
           "style": {
@@ -178,7 +178,7 @@
               "type": "text",
               "role": "title",
               "label": "Título",
-              "value": "Serviços"
+              "value": "Serviços mais Solicitados"
             },
             {
               "id": "cidadao",
@@ -219,20 +219,12 @@
               "label": "Ouvidoria",
               "description": "Manifestações, dúvidas e atendimento da Ouvidoria Municipal.",
               "url": "/publicos/ouvidoria"
-            },
-            {
-              "id": "precatorio-fundef",
-              "type": "audience",
-              "role": "entry",
-              "label": "Precatório FUNDEF",
-              "description": "Solicitações relacionadas ao Precatório FUNDEF.",
-              "url": "/publicos/precatorio-fundef"
             }
           ]
         },
         {
           "id": "featured",
-          "name": "Serviços mais Usados",
+          "name": "Público",
           "type": "featured",
           "enabled": true,
           "style": {
@@ -258,7 +250,7 @@
               "type": "text",
               "role": "title",
               "label": "Título",
-              "value": "Serviços mais Usados"
+              "value": "Público"
             },
             {
               "id": "featured-1",
@@ -1895,22 +1887,6 @@
               "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
               "initials": "PD",
               "sourceRow": 100
-            },
-            {
-              "id": "1doc-precatorio-fundef",
-              "type": "service",
-              "role": "entry",
-              "title": "Precatório FUNDEF",
-              "department": "FUNDEF - Comissão Precatório FUNDEF",
-              "category": "Precatório FUNDEF",
-              "audienceId": "precatorio-fundef",
-              "audienceIds": [
-                "precatorio-fundef"
-              ],
-              "destination": "Portal de Protocolos 1Doc",
-              "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
-              "initials": "PF",
-              "sourceRow": 101
             },
             {
               "id": "1doc-prescricao-de-credito-tributario-ou-de-renda-iptu-tll-tff",

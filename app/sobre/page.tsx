@@ -16,7 +16,7 @@ export default function AboutPage() {
       <section id="sobre-conteudo" className="about-project" aria-labelledby="about-project-title">
         <div className="about-section-heading">
           <span>O PROJETO</span>
-          <h2 id="about-project-title">Serviço público integrado</h2>
+          <h1 id="about-project-title">Serviço público integrado</h1>
         </div>
         <div className="about-project-copy">
           <p>A Central de Serviços de Amargosa é a plataforma oficial de informações sobre os serviços oferecidos pela Prefeitura. O portal apresenta as orientações de forma padronizada e, quando necessário, encaminha a solicitação ao sistema responsável pelo atendimento.</p>
@@ -43,19 +43,6 @@ export default function AboutPage() {
                 <h3 id="about-gti-title">Gestão de Tecnologia da Informação <span className="about-unit-acronym">— GTI</span></h3>
                 <p><strong>Jurandy Silva dos Santos Júnior</strong><span>Gestor</span></p>
               </article>
-
-              <div className="about-org-developers" aria-label="Corpo técnico subordinado à GTI">
-                <article className="about-person-card">
-                  <small>CORPO TÉCNICO · GTI</small>
-                  <strong>Gustavo Almeida Borges</strong>
-                  <span>Desenvolvedor Full Stack</span>
-                </article>
-                <article className="about-person-card">
-                  <small>CORPO TÉCNICO · GTI</small>
-                  <strong>Immanuel da Rocha Barbosa Vicente</strong>
-                  <span>Desenvolvedor Full Stack</span>
-                </article>
-              </div>
             </section>
 
             <section className="about-org-branch" aria-labelledby="about-simp-title">
@@ -64,6 +51,24 @@ export default function AboutPage() {
                 <p><strong>Danilo Regis</strong><span>Superintendente</span></p>
               </article>
             </section>
+          </div>
+
+          <div className="about-org-developers" aria-label="Corpo técnico da GTI e da SIMP">
+            <article className="about-person-card">
+              <small>CORPO TÉCNICO · GTI</small>
+              <strong>Gustavo Almeida Borges</strong>
+              <span>Desenvolvedor Full Stack</span>
+            </article>
+            <article className="about-person-card">
+              <small>CORPO TÉCNICO · GTI</small>
+              <strong>Immanuel da Rocha Barbosa Vicente</strong>
+              <span>Desenvolvedor Full Stack</span>
+            </article>
+            <article className="about-person-card">
+              <small>CORPO TÉCNICO · SIMP</small>
+              <strong>Alan Brito</strong>
+              <span>Desenvolvedor</span>
+            </article>
           </div>
         </div>
       </section>
