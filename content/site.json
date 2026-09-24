@@ -2594,27 +2594,6 @@
               "value": "Posso ajudar com serviços, documentos, taxas e canais da Prefeitura. O que você precisa?"
             },
             {
-              "id": "amanda-prompt-1",
-              "type": "text",
-              "role": "prompt",
-              "label": "Sugestão 1",
-              "value": "Quero consultar meu IPTU"
-            },
-            {
-              "id": "amanda-prompt-2",
-              "type": "text",
-              "role": "prompt",
-              "label": "Sugestão 2",
-              "value": "Preciso emitir uma nota fiscal"
-            },
-            {
-              "id": "amanda-prompt-3",
-              "type": "text",
-              "role": "prompt",
-              "label": "Sugestão 3",
-              "value": "Como solicito iluminação pública?"
-            },
-            {
               "id": "amanda-input",
               "type": "search",
               "role": "conversation",

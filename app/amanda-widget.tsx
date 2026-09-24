@@ -128,7 +128,6 @@ export default function AmandaWidget() {
 
   const avatar = segment.items.find((item) => item.type === "image" && item.role === "avatar");
   const conversation = segment.items.find((item) => item.type === "search");
-  const prompts = segment.items.filter((item) => item.role === "prompt");
   const style = {
     "--segment-bg": segment.style.background || siteContent.site.surfaceColor,
     "--segment-color": segment.style.color || siteContent.site.textColor,
@@ -292,17 +291,7 @@ export default function AmandaWidget() {
                 <span>{getText("status")}</span>
               </div>
             )}
-            {messages.length === 0 ? (
-              <div className="amanda-prompts">
-                <small>Você pode começar por aqui</small>
-                {prompts.map((prompt) => (
-                  <button key={prompt.id} type="button" onClick={() => askAmanda(prompt.value || "")}>
-                    {prompt.value}
-                    <b aria-hidden="true">↗</b>
-                  </button>
-                ))}
-              </div>
-            ) : (
+            {messages.length > 0 && (
               <div
                 className="amanda-transcript"
                 aria-live="polite"
