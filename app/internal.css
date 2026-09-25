@@ -90,4 +90,5 @@
 .service-request-option dt{color:var(--muted);font-size:11px;font-weight:800;text-transform:uppercase}
 .service-request-option dd{min-width:0;margin:0;color:var(--ink);font-size:14px;line-height:1.5;overflow-wrap:anywhere}
 .service-request-emails{display:flex;flex-direction:column;align-items:flex-start;gap:3px}
+.service-request-contact-links,.service-request-phone{display:flex;flex-direction:column;align-items:flex-start;gap:3px}
 @media(max-width:480px){.service-request-option dl>div{grid-template-columns:1fr;gap:2px}}

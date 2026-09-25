@@ -24,6 +24,25 @@ export type ServiceWhereWhen = {
 const genericDigitalUrl = /^https?:\/\/acesso\.amargosa\.ba\.gov\.br\/protocolodigital\/?(?:[?#].*)?$/i;
 const factPattern = /\b(Atendimento presencial(?: e virtual)?|Atendimento virtual|Telefone|E-mail|WhatsApp|Endereço|Site|Horários? de atendimento|Protocolo Digital|Canal on-line):\s*/gi;
 
+function normalizedOfficeName(value: string) {
+  return value.normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+    .toLocaleLowerCase("pt-BR").replace(/[^a-z0-9]+/g, " ").trim();
+}
+
+export function sameInPersonServiceOffice(local: string, responsible: string) {
+  const place = normalizedOfficeName(local);
+  const office = normalizedOfficeName(responsible);
+  if (!place || !office) return false;
+  if (place === office) return true;
+  if (place === "ouvidoria municipal" && office.startsWith("ouvidoria municipal ")) return true;
+  if (place === "sac municipal" && /^sac sac municipal(?: |$)/.test(office)) return true;
+
+  const acronym = local.match(/\b(SEAFI|SEMOP|SEMED|SESAU|SEAMA|SECAC|SADS|CGM)\b/i)?.[1];
+  if (!acronym || !new RegExp(`^${acronym}(?:\\b|-)`, "i").test(responsible)) return false;
+  return /^Secretaria\b/i.test(local) ||
+    new RegExp(`^${acronym}(?:\\s*$|\\s*[—–]\\s*)`, "i").test(local);
+}
+
 function extractFacts(text: string) {
   const matches = [...text.matchAll(factPattern)];
   const facts = new Map<string, string[]>();

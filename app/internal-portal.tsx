@@ -29,7 +29,7 @@ import {
 } from "./search-popularity-client";
 import { trackServiceClick, trackServiceStart } from "./analytics";
 import { contactForService, organizationForService } from "./service-contacts";
-import { serviceWhereWhen } from "./service-where-when";
+import { sameInPersonServiceOffice, serviceWhereWhen } from "./service-where-when";
 import { isBaGovUrl } from "./service-request-system";
 
 // O roteador cliente do Vinext pode cancelar a navegação ao preparar o RSC.
@@ -1265,10 +1265,13 @@ function ServiceManualNotice({ service }: { service: Service }) {
   );
 }
 
-function ServiceWhereWhenSection({ service }: { service: Service }) {
-  const details = serviceWhereWhen(service, contactForService(service));
+function ServiceWhereWhenSection({ service, mergeContact = false }: { service: Service; mergeContact?: boolean }) {
+  const contact = contactForService(service);
+  const details = serviceWhereWhen(service, contact);
   const hasSchedule = Boolean(service.whereWhenItems?.length);
-  const phoneNumber = details.phone?.match(/\(\d{2}\)\s*\d{4,5}-\d{4}/)?.[0];
+  const phoneValues = [...new Set([details.phone, ...(mergeContact ? [contact.phone] : [])].filter((value): value is string => Boolean(value)))];
+  const phones = phoneValues.filter((value) => !phoneValues.some((other) => other !== value && other.startsWith(`${value}, ramal`)));
+  const emails = [...new Set([...details.emails, ...(mergeContact && contact.email ? [contact.email] : [])])];
 
   return (
     <section id="onde-quando" className="service-where-when">
@@ -1315,18 +1318,31 @@ function ServiceWhereWhenSection({ service }: { service: Service }) {
                 <div className="service-request-option">
                   <dl>
                   <div><dt>Local</dt><dd>{details.local}</dd></div>
+                  {mergeContact && contact.officeName && contact.name !== details.local && !/^SAC - SAC Municipal$/i.test(contact.name) && (
+                    <div><dt>Setor responsável</dt><dd>{contact.name}</dd></div>
+                  )}
                   <div><dt>Endereço</dt><dd>{details.address}</dd></div>
                   <div><dt>Horário</dt><dd>{details.hours}</dd></div>
-                  {details.phone && (
-                    <div><dt>Telefone</dt><dd>{phoneNumber
-                      ? <a href={`tel:+55${phoneNumber.replace(/\D/g, "")}`}>{details.phone}</a>
-                      : details.phone}</dd></div>
+                  {phones.length > 0 && (
+                    <div><dt>Telefone</dt><dd className="service-request-contact-links">{phones.map((phone) => {
+                      const number = phone.match(/\(\d{2}\)\s*\d{4,5}-\d{4}/)?.[0];
+                      const extension = phone.match(/,\s*ramal\s*(\d+)/i)?.[1];
+                      if (!number) return <span key={phone}>{phone}</span>;
+                      const href = `tel:+55${number.replace(/\D/g, "")}`;
+                      return <span className="service-request-phone" key={phone}>
+                        <a href={href}>{number}</a>
+                        {extension && <a href={`${href};ext=${extension}`}>ramal {extension}</a>}
+                      </span>;
+                    })}</dd></div>
                   )}
                   {details.whatsapp && <div><dt>WhatsApp</dt><dd>{details.whatsapp}</dd></div>}
-                  {details.emails.length > 0 && (
-                    <div><dt>E-mail</dt><dd className="service-request-emails">{details.emails.map((email) => (
+                  {emails.length > 0 && (
+                    <div><dt>E-mail</dt><dd className="service-request-emails">{emails.map((email) => (
                       <a href={`mailto:${email}`} key={email}>{email}</a>
                     ))}</dd></div>
+                  )}
+                  {mergeContact && (
+                    <div><dt>Mais informações</dt><dd><a href={contact.officialUrl} target="_blank" rel="noreferrer">Ver contatos no site da Prefeitura ↗</a></dd></div>
                   )}
                   </dl>
                 </div>
@@ -1347,6 +1363,11 @@ function RichServiceDetail({ service }: { service: Service }) {
   const relatedServices = services.filter((entry) =>
     service.relatedServiceIds?.includes(entry.id),
   );
+  const contact = contactForService(service);
+  const location = serviceWhereWhen(service, contact);
+  const hasInPersonCard = Boolean(service.whereWhen) && location.presencial &&
+    (!service.whereWhenItems?.length || location.digital);
+  const mergeContact = hasInPersonCard && sameInPersonServiceOffice(location.local, contact.name);
 
   return (
     <main {...rootProps()}>
@@ -1383,7 +1404,7 @@ function RichServiceDetail({ service }: { service: Service }) {
             {service.whereWhen && (
               <a href="#onde-quando">Onde e quando solicitar</a>
             )}
-            <a href="#canais">Canais de atendimento</a>
+            {!mergeContact && <a href="#canais">Canais de atendimento</a>}
             {(service.legislation?.length || service.legislationNotice) && (
               <a href="#legislacao">Legislação</a>
             )}
@@ -1420,7 +1441,7 @@ function RichServiceDetail({ service }: { service: Service }) {
                 ))}
               </ol>
             </section>
-            {service.whereWhen && <ServiceWhereWhenSection service={service} />}
+            {service.whereWhen && <ServiceWhereWhenSection service={service} mergeContact={mergeContact} />}
             <section id="informacoes" className="service-facts">
               <div>
                 <span>Custo</span>
@@ -1431,7 +1452,7 @@ function RichServiceDetail({ service }: { service: Service }) {
                 <strong className={service.duration?.startsWith("*") || !service.duration ? "service-pending-information" : undefined}>{service.duration || PENDING_SERVICE_INFORMATION}</strong>
               </div>
             </section>
-            <ServiceContactSection service={service} />
+            {!mergeContact && <ServiceContactSection service={service} />}
             {(service.legislation?.length || service.legislationNotice) && (
               <section id="legislacao">
                 <h2>Legislação relacionada</h2>
