@@ -1311,9 +1311,7 @@ function ServiceWhereWhenSection({ service }: { service: Service }) {
                   <dl>
                   <div><dt>Local</dt><dd>{details.local}</dd></div>
                   <div><dt>Endereço</dt><dd>{details.address}</dd></div>
-                  <div><dt>Horário</dt><dd>{details.hoursSourceUrl
-                    ? <a href={details.hoursSourceUrl} target="_blank" rel="noreferrer" title="Fonte: Prefeitura de Amargosa — SEAFI">{details.hours} ↗</a>
-                    : details.hours}</dd></div>
+                  <div><dt>Horário</dt><dd>{details.hours}</dd></div>
                   {details.phone && (
                     <div><dt>Telefone</dt><dd>{phoneNumber
                       ? <a href={`tel:+55${phoneNumber.replace(/\D/g, "")}`}>{details.phone}</a>

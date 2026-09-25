@@ -19,8 +19,7 @@ test("specific service link and in-person instructions show both request options
   assert.equal(result.presencial, true);
   assert.equal(result.local, "SAC MUNICIPAL");
   assert.equal(result.address, "Av. Dr. Luis Sandes, 120 Valle Shopping");
-  assert.equal(result.hours, "Segunda a sexta-feira, das 8h às 17h");
-  assert.equal(result.hoursSourceUrl, "https://amargosa.ba.gov.br/secretarias&secretaria=desenvolvimento-institucional");
+  assert.equal(result.hours, "Horário do SAC Municipal não informado. Confirme por telefone antes de comparecer.");
 });
 
 test("generic protocol link follows the spreadsheet's digital classification", () => {
@@ -46,5 +45,4 @@ test("in-person service without a link shows the responsible office address", ()
   assert.equal(result.local, contact.name);
   assert.equal(result.address, contact.address);
   assert.match(result.hours, /Confirme o horário/);
-  assert.equal(result.hoursSourceUrl, undefined);
 });

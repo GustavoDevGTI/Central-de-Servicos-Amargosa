@@ -14,7 +14,6 @@ export type ServiceWhereWhen = {
   local: string;
   address: string;
   hours: string;
-  hoursSourceUrl?: string;
   phone?: string;
   whatsapp?: string;
   emails: string[];
@@ -59,11 +58,8 @@ export function serviceWhereWhen(
   const hours = rawHours && !rawHours.startsWith("*")
     ? rawHours
     : isSacMunicipal
-      ? "Segunda a sexta-feira, das 8h às 17h"
+      ? "Horário do SAC Municipal não informado. Confirme por telefone antes de comparecer."
       : "Confirme o horário por telefone antes de comparecer.";
-  const hoursSourceUrl = isSacMunicipal && (!rawHours || rawHours.startsWith("*"))
-    ? "https://amargosa.ba.gov.br/secretarias&secretaria=desenvolvimento-institucional"
-    : undefined;
   const emails = [...new Set(facts.get("e-mail") || [])];
   const commonText = /^(?:Atendimento digital\. Inicie a solicitação pelo link desta página\.|Atendimento presencial\. Consulte o endereço do órgão responsável nos canais abaixo e confirme o horário por telefone\.|Confirme com o órgão responsável se o atendimento é digital ou presencial\.)$/i.test(text);
   const note = facts.size === 0 && text && !text.startsWith("*") && !commonText
@@ -76,7 +72,6 @@ export function serviceWhereWhen(
     local,
     address,
     hours,
-    hoursSourceUrl,
     phone: facts.get("telefone")?.[0] || (presencial ? contact.phone : undefined),
     whatsapp: facts.get("whatsapp")?.[0],
     emails,
