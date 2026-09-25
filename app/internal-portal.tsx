@@ -1298,6 +1298,13 @@ function ServiceWhereWhenSection({ service, mergeContact = false }: { service: S
         </>
       ) : details.digital || details.presencial ? (
         <>
+          <p className="service-where-when-intro">
+            {details.digital && details.presencial
+              ? "Você pode solicitar este serviço pela internet ou presencialmente."
+              : details.digital
+                ? "Você pode solicitar este serviço pela internet."
+                : "Você pode solicitar este serviço presencialmente."}
+          </p>
           {details.note && !hasSchedule && <p>{details.note}</p>}
           <div className="service-request-options">
             {details.digital && (

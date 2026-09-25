@@ -22,14 +22,14 @@ test("specific service link and in-person instructions show both request options
   assert.equal(result.hours, "Horário do SAC Municipal não informado. Confirme por telefone antes de comparecer.");
 });
 
-test("request location keeps the access summary without repeating generic guidance", () => {
+test("request location leaves redundant guidance to the access summary", () => {
   const result = serviceWhereWhen({
     accessMode: "digital",
     url: "https://acesso.amargosa.ba.gov.br/abastecimento-agua",
     whereWhen: "O pedido pode ser iniciado pela internet. Para orientação presencial ou confirmação do setor, contate a Prefeitura pelo telefone (75) 3512-7811, de segunda a sexta-feira.",
   }, contact);
 
-  assert.equal(result.note, "Você pode solicitar este serviço pela internet ou presencialmente.");
+  assert.equal(result.note, undefined);
 });
 
 test("generic protocol link follows the spreadsheet's digital classification", () => {

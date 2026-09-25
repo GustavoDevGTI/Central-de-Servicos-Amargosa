@@ -2567,28 +2567,7 @@
               "type": "text",
               "role": "description",
               "label": "Apresentação",
-              "value": "Posso ajudar você a encontrar as informações do serviço e o canal de solicitação adequado."
-            },
-            {
-              "id": "amanda-prompt-1",
-              "type": "text",
-              "role": "prompt",
-              "label": "Sugestão 1",
-              "value": "Quero consultar meu IPTU"
-            },
-            {
-              "id": "amanda-prompt-2",
-              "type": "text",
-              "role": "prompt",
-              "label": "Sugestão 2",
-              "value": "Preciso emitir uma nota fiscal"
-            },
-            {
-              "id": "amanda-prompt-3",
-              "type": "text",
-              "role": "prompt",
-              "label": "Sugestão 3",
-              "value": "Como solicito iluminação pública?"
+              "value": "O que você precisa?"
             },
             {
               "id": "amanda-input",
@@ -2603,7 +2582,7 @@
               "type": "text",
               "role": "notice",
               "label": "Aviso",
-              "value": "Não envie dados pessoais. Esta demonstração não armazena mensagens."
+              "value": "Não envie dados pessoais. A conversa é curta e usada somente para orientar sua busca por serviços."
             }
           ]
         }

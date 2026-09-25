@@ -11,7 +11,10 @@ Portal municipal em React para localizar serviços públicos e encaminhar cada p
 - Menu Acessibilidade em `/menu`, com estrutura hierárquica aberta;
 - navegação por teclado e marcação semântica compatível com leitores de tela;
 - layout responsivo para desktop, tablet e celular;
-- agente virtual Amanda preparado como interface visual, ainda sem integração de IA.
+- agente virtual Amanda integrado ao catálogo oficial por ferramentas somente de leitura;
+- suporte a DeepSeek por padrão e OpenAI como provedor alternativo;
+- remoção preventiva de CPF, e-mail e telefone antes do envio ao provedor;
+- limite de mensagens, orçamento mensal estimado e fallback para a busca tradicional.
 
 ## Stack
 
@@ -82,6 +85,30 @@ scripts/             utilitários pontuais de identidade visual
 O arquivo `content/site.json` reúne identidade, segmentos, públicos, categorias e serviços. Cada serviço pode informar título, órgão, públicos atendidos, categoria, URL oficial e, quando disponível, resumo, requisitos, documentos, etapas, prazo, canais, legislação e serviços relacionados.
 
 Mudanças em componentes e estilos ficam em `app/`. Depois de qualquer atualização, execute `npm run build` antes de publicar.
+
+## Assistente virtual Amanda
+
+A Amanda usa o endpoint server-side `POST /api/agent/chat`. A chave do provedor nunca é enviada ao navegador. O provedor padrão é o DeepSeek:
+
+```env
+AI_PROVIDER=deepseek
+AI_MODEL=deepseek-flash
+DEEPSEEK_API_KEY=sua-chave
+```
+
+Para usar a OpenAI sem alterar o frontend:
+
+```env
+AI_PROVIDER=openai
+AI_MODEL=gpt-5.4-nano
+OPENAI_API_KEY=sua-chave
+```
+
+As ferramentas `buscar_servicos` e `obter_servico` consultam o mesmo catálogo utilizado pelo portal. Serviços ainda não aprovados podem ser localizados, mas seus campos pendentes não são apresentados como fatos oficiais. Sem uma chave válida ou quando o orçamento é atingido, a busca tradicional continua disponível.
+
+Cada resposta bem-sucedida gera no log do servidor um registro `[amanda-usage]` com quantidade de chamadas, tokens de entrada, tokens em cache, tokens de saída, custo estimado e identificadores dos serviços consultados. O registro não contém a pergunta, a resposta nem dados pessoais. Os mesmos totais de tokens e custo também são enviados em cabeçalhos `X-Amanda-*` da resposta HTTP para diagnóstico.
+
+Os limites podem ser ajustados com as variáveis documentadas em `.env.example`. Em Cloudflare, limites e uso mensal são persistidos no D1. No Docker sem banco compartilhado, o fallback é mantido em memória e deve ser substituído por Redis quando houver múltiplas réplicas.
 
 ## Acessibilidade
 

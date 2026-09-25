@@ -85,15 +85,9 @@ export function serviceWhereWhen(
   const emails = [...new Set([...(facts.get("e-mail") || []), ...(presencialSchedule && contact.email ? [contact.email] : [])])];
   const redundantGuidance = /^O pedido pode ser iniciado pel[ao] .+?\. Para orientação presencial ou confirmação do setor, contate a Prefeitura pelo telefone \(75\) 3512-7811, de segunda a sexta-feira\.$/i.test(text);
   const commonText = /^(?:Atendimento digital\. Inicie a solicitação pelo link desta página\.|Atendimento presencial\. Consulte o endereço do órgão responsável nos canais abaixo e confirme o horário por telefone\.|Confirme com o órgão responsável se o atendimento é digital ou presencial\.)$/i.test(text);
-  const note = redundantGuidance
-    ? digital && presencial
-      ? "Você pode solicitar este serviço pela internet ou presencialmente."
-      : digital
-        ? "Você pode solicitar este serviço pela internet."
-        : "Você pode solicitar este serviço presencialmente."
-    : facts.size === 0 && text && !text.startsWith("*") && !commonText
-      ? text
-      : undefined;
+  const note = facts.size === 0 && text && !text.startsWith("*") && !commonText && !redundantGuidance
+    ? text
+    : undefined;
 
   return {
     digital,
