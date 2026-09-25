@@ -3,25 +3,13 @@
 import { useEffect, useRef, useState } from "react";
 
 const helpItems = [
-  { label: "Dúvidas com o SEI", href: "/manual-sei" },
-  {
-    label: "Dúvidas com o BA.GOV",
-  },
+  { label: "Dúvidas com a plataforma", href: "/ajuda/plataforma" },
   { label: "Dúvidas sobre a Ouvidoria", href: "/servicos/ouvidoria-geral" },
-  {
-    label: "Fazer uma reclamação",
-    href: "https://falabr.cgu.gov.br/web/manifestacao/criar/selecionar-assunto",
-  },
   {
     label: "Reportar um bug ou problema",
     href: "/reportar-problema",
   },
 ];
-
-const external = (href: string) =>
-  /^https?:\/\//i.test(href)
-    ? { target: "_blank", rel: "noreferrer" }
-    : {};
 
 export default function HeaderHelp() {
   const [open, setOpen] = useState(false);
@@ -65,29 +53,16 @@ export default function HeaderHelp() {
       </button>
       {open && (
         <nav id="header-help-panel" className="header-help-panel" aria-label="Opções de ajuda">
-          {helpItems.map((item) =>
-            item.href ? (
-              <a
-                key={item.label}
-                href={item.href}
-                {...external(item.href)}
-                onClick={() => setOpen(false)}
-              >
-                <span>{item.label}</span>
-                <b aria-hidden="true">→</b>
-              </a>
-            ) : (
-              <button
-                key={item.label}
-                type="button"
-                aria-disabled="true"
-                title="Página em preparação"
-              >
-                <span>{item.label}</span>
-                <small>Em breve</small>
-              </button>
-            ),
-          )}
+          {helpItems.map((item) => (
+            <a
+              key={item.label}
+              href={item.href}
+              onClick={() => setOpen(false)}
+            >
+              <span>{item.label}</span>
+              <b aria-hidden="true">→</b>
+            </a>
+          ))}
         </nav>
       )}
     </div>

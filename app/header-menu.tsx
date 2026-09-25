@@ -11,7 +11,10 @@ const menuItems = [
     label: "Transparência",
     href: "https://amargosa.ba.gov.br/portal-da-transparencia",
   },
-  { label: "Organograma", href: "/organograma" },
+  {
+    label: "Organograma",
+    href: "https://amargosa.ba.gov.br/organograma",
+  },
   { label: "Telefones úteis", href: "/telefones-uteis" },
   {
     label: "Site oficial de Amargosa",

@@ -24,7 +24,6 @@ const audienceOrder = [
   "servidor",
   "ouvidoria",
   "orgaos-publicos-ongs",
-  "precatorio-fundef",
 ];
 const audiences = (segments.find((segment) => segment.type === "audiences")?.items.filter((item) => item.type === "audience") || [])
   .sort((first, second) => {

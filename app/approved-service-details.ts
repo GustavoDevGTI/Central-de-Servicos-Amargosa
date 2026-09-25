@@ -1,5 +1,7 @@
 import pdfServiceDetails from './pdf-service-details.json' with { type: 'json' };
 
+import { PENDING_SERVICE_INFORMATION } from "./pending-information";
+
 type Channel = { label: string; value: string; url?: string };
 type Legislation = { label: string; url: string };
 type WhereWhenItem = {
@@ -81,7 +83,7 @@ export const approvedServiceDetails: Record<string, ApprovedServiceDetail> = {
     ],
     whereWhen:
       "O pedido pode ser iniciado pela Central de Atendimento 1Doc. Para orientação presencial ou confirmação do setor, contate a Prefeitura pelo telefone (75) 3512-7811, de segunda a sexta-feira.",
-    cost: "O valor deste serviço ainda não foi definido.",
+    cost: PENDING_SERVICE_INFORMATION,
     duration:
       "O atendimento é agendado após a abertura da ordem de serviço, conforme a programação municipal.",
     channels: [
@@ -212,7 +214,7 @@ export const approvedServiceDetails: Record<string, ApprovedServiceDetail> = {
     whereWhen: municipalTrafficWhere,
     cost: "Sem cobrança para protocolar a defesa administrativa.",
     duration:
-      "O prazo estimado de análise ainda não foi definido. A defesa deve ser apresentada até a data indicada na notificação.",
+      `${PENDING_SERVICE_INFORMATION} A defesa deve ser apresentada até a data indicada na notificação.`,
     channels: municipalTrafficChannels,
     legislation: trafficLegislation,
     relatedServiceIds: [
@@ -248,7 +250,7 @@ export const approvedServiceDetails: Record<string, ApprovedServiceDetail> = {
     whereWhen: municipalTrafficWhere,
     cost: "Gratuito.",
     duration:
-      "A indicação deve ser apresentada até a data-limite da notificação. O prazo estimado de processamento ainda não foi definido.",
+      `${PENDING_SERVICE_INFORMATION} A indicação deve ser apresentada até a data-limite da notificação.`,
     channels: municipalTrafficChannels,
     legislation: trafficLegislation,
     relatedServiceIds: [
@@ -285,7 +287,7 @@ export const approvedServiceDetails: Record<string, ApprovedServiceDetail> = {
     whereWhen: municipalTrafficWhere,
     cost: "Gratuito.",
     duration:
-      "A indicação deve ser apresentada até a data-limite da notificação. O prazo estimado de processamento ainda não foi definido.",
+      `${PENDING_SERVICE_INFORMATION} A indicação deve ser apresentada até a data-limite da notificação.`,
     channels: municipalTrafficChannels,
     legislation: trafficLegislation,
     relatedServiceIds: [
@@ -321,7 +323,7 @@ export const approvedServiceDetails: Record<string, ApprovedServiceDetail> = {
     whereWhen:
       "O pedido pode ser protocolado pela Central de Atendimento 1Doc ou no SAC Municipal, na Avenida Dr. Luís Sandes, 120, Valle Shopping. Para orientação, utilize o telefone ou WhatsApp (75) 3512-7811.",
     cost: "Gratuito.",
-    duration: "O prazo estimado ainda não foi definido.",
+    duration: PENDING_SERVICE_INFORMATION,
     channels: [
       { label: "Online", value: "Central de Atendimento 1Doc", url: oneDocCentral },
       { label: "Telefone e WhatsApp", value: amargosaPhone },
@@ -363,7 +365,7 @@ export const approvedServiceDetails: Record<string, ApprovedServiceDetail> = {
     whereWhen:
       "O pedido pode ser protocolado pela Central de Atendimento 1Doc ou no SAC Municipal, na Avenida Dr. Luís Sandes, 120, Valle Shopping. Para orientação, utilize o telefone ou WhatsApp (75) 3512-7811.",
     cost: "Gratuito.",
-    duration: "O prazo estimado ainda não foi definido.",
+    duration: PENDING_SERVICE_INFORMATION,
     channels: [
       { label: "Online", value: "Central de Atendimento 1Doc", url: oneDocCentral },
       { label: "Telefone e WhatsApp", value: amargosaPhone },
@@ -432,7 +434,7 @@ export const approvedServiceDetails: Record<string, ApprovedServiceDetail> = {
         description: "Gravatá, Sucupira e Campo Belo.",
       },
     ],
-    cost: "O valor deste serviço ainda não foi definido.",
+    cost: PENDING_SERVICE_INFORMATION,
     duration: "Atendimento conforme os dias e horários publicados para cada rota.",
     channels: [
       {
@@ -539,7 +541,7 @@ export const approvedServiceDetails: Record<string, ApprovedServiceDetail> = {
     whereWhen: municipalTrafficWhere,
     cost: "Sem cobrança para protocolar o recurso administrativo.",
     duration:
-      "O prazo estimado de julgamento ainda não foi definido. Respeite a data-limite informada na decisão ou notificação.",
+      `${PENDING_SERVICE_INFORMATION} Respeite a data-limite informada na decisão ou notificação.`,
     channels: municipalTrafficChannels,
     legislation: trafficLegislation,
     relatedServiceIds: ["1doc-recurso-a-junta-administrativa-de-recursos-de-infracoes-jari"],
@@ -573,7 +575,7 @@ export const approvedServiceDetails: Record<string, ApprovedServiceDetail> = {
     whereWhen: municipalTrafficWhere,
     cost: "Sem cobrança para protocolar o recurso administrativo.",
     duration:
-      "O prazo estimado de julgamento ainda não foi definido. Respeite a data-limite indicada na notificação.",
+      `${PENDING_SERVICE_INFORMATION} Respeite a data-limite indicada na notificação.`,
     channels: municipalTrafficChannels,
     legislation: trafficLegislation,
     relatedServiceIds: [
@@ -608,9 +610,9 @@ export const approvedServiceDetails: Record<string, ApprovedServiceDetail> = {
     ],
     whereWhen:
       "A solicitação deve ser feita antes de colocar o entulho para coleta. A SEMOP/SUPESP agenda a medição e orienta o descarte conforme a programação do serviço.",
-    cost: "O valor deste serviço ainda não foi definido.",
+    cost: PENDING_SERVICE_INFORMATION,
     duration:
-      "O prazo estimado ainda não foi definido. O atendimento depende da avaliação, da medição e da agenda da SEMOP/SUPESP.",
+      `${PENDING_SERVICE_INFORMATION} O atendimento depende da avaliação, da medição e da agenda da SEMOP/SUPESP.`,
     channels: [
       { label: "Online", value: "Central de Atendimento 1Doc", url: oneDocCentral },
       { label: "Telefone", value: amargosaPhone },
@@ -652,7 +654,7 @@ export const approvedServiceDetails: Record<string, ApprovedServiceDetail> = {
     whereWhen: municipalTrafficWhere,
     cost: "Sem cobrança para protocolar a defesa administrativa.",
     duration:
-      "O prazo estimado de análise ainda não foi definido. A defesa deve ser apresentada até a data indicada na notificação.",
+      `${PENDING_SERVICE_INFORMATION} A defesa deve ser apresentada até a data indicada na notificação.`,
     channels: municipalTrafficChannels,
     legislation: trafficLegislation,
     relatedServiceIds: [
@@ -690,7 +692,7 @@ export const approvedServiceDetails: Record<string, ApprovedServiceDetail> = {
       "A solicitação pode ser registrada online ou pelo telefone (75) 3512-7811. O ponto deve estar em área pública e ser identificado pelo número da plaqueta ou por endereço e referência precisos.",
     cost: "Gratuito para registrar a solicitação de manutenção da iluminação pública.",
     duration:
-      "O prazo estimado ainda não foi definido. O atendimento depende da vistoria, da disponibilidade da equipe e do material necessário.",
+      `${PENDING_SERVICE_INFORMATION} O atendimento depende da vistoria, da disponibilidade da equipe e do material necessário.`,
     channels: [
       { label: "Online", value: "Central de Atendimento 1Doc", url: oneDocCentral },
       { label: "Telefone", value: amargosaPhone },

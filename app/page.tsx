@@ -156,12 +156,18 @@ function Brand({ segment }: { segment: Segment }) {
   const logo = items(segment, "image").find((item) => item.role === "logo");
   return (
     <span className="brand home-brand municipal-brand">
-      <img
-        {...itemSizeProps(logo)}
-        className="brand-image"
-        src="/prefeitura-amargosa-logo-preta.png"
-        alt="Prefeitura de Amargosa"
-      />
+      <picture>
+        <source
+          media="(max-width: 760px)"
+          srcSet="/prefeitura-amargosa-simbolo.png"
+        />
+        <img
+          {...itemSizeProps(logo)}
+          className="brand-image"
+          src="/prefeitura-amargosa-logo-preta.png"
+          alt="Prefeitura de Amargosa"
+        />
+      </picture>
     </span>
   );
 }
@@ -190,7 +196,6 @@ export default function Home() {
   const [suggestionsOpen, setSuggestionsOpen] = useState(false);
   const [heroSlide, setHeroSlide] = useState(0);
   const [audiencesExpanded, setAudiencesExpanded] = useState(false);
-  const [quickAccessExpanded, setQuickAccessExpanded] = useState(false);
   const [servicePopularity, setServicePopularity] = useState<
     Record<string, number>
   >({});
@@ -416,9 +421,11 @@ export default function Home() {
               ))}
             </div>
           )}
-          <span {...itemSizeProps(eyebrow)} className="eyebrow">
-            {eyebrow?.value}
-          </span>
+          {eyebrow?.value && (
+            <span {...itemSizeProps(eyebrow)} className="eyebrow">
+              {eyebrow.value}
+            </span>
+          )}
           <h1 {...itemSizeProps(title)}>{title?.value}</h1>
           {description?.value && (
             <p {...itemSizeProps(description)}>{description.value}</p>
@@ -496,87 +503,73 @@ export default function Home() {
       );
     }
     if (segment.type === "audiences") {
-      const audienceOrder = new Map([
-        ["cidadao", 0],
-        ["empresa", 1],
-        ["servidor", 2],
-        ["ouvidoria", 3],
-        ["orgaos-publicos-ongs", 4],
-      ]);
-      const audienceItems = items(segment, "audience").sort(
-        (first, second) =>
-          (audienceOrder.get(first.id) ?? Number.MAX_SAFE_INTEGER) -
-          (audienceOrder.get(second.id) ?? Number.MAX_SAFE_INTEGER),
-      );
-      const serviceAccessItems = [...audienceItems];
-      const ombudsmanIndex = serviceAccessItems.findIndex(
-        (item) => item.id === "ouvidoria",
-      );
-      serviceAccessItems.splice(ombudsmanIndex + 1, 0, {
-        id: "manual-sei",
-        type: "manual",
-        label: "Manual do SEI",
-        description:
-          "Passo a passo para abrir processos e enviar documentos pelo Protocolo Digital.",
-        url: "/manual-sei",
-      });
-      const hasMore = serviceAccessItems.length + 1 > 4;
+      const requestedServices = [...services]
+        .sort((first, second) =>
+          first.title.localeCompare(second.title, "pt-BR", {
+            sensitivity: "base",
+          }),
+        )
+        .slice(0, 8);
+      const hasMore = requestedServices.length > 4;
       return (
         <section
           key={segment.id}
-          id="publicos"
+          id="mais-solicitados"
           className={classes(segment, "audience-panel")}
           style={segmentStyle(segment)}
         >
           <SectionHeading segment={segment} />
           <div
-            className={`audience-service-list${hasMore ? " has-more" : ""}${audiencesExpanded ? " is-expanded" : " is-collapsed"}`}
+            className={`requested-service-list${hasMore ? " has-more" : ""}${audiencesExpanded ? " is-expanded" : " is-collapsed"}`}
           >
             <div
-              id="audience-services"
-              className="audiences"
+              id="requested-services"
+              className="requested-service-grid"
               role="group"
-              aria-label="Acessar serviços por público"
+              aria-label="Serviços mais solicitados"
             >
-            {serviceAccessItems.map((item) => (
-              <button
-                key={item.id}
-                {...itemSizeProps(item)}
-                type="button"
-                onClick={() =>
-                  window.location.assign(item.url || `/publicos/${item.id}`)
-                }
-              >
-                <strong>{item.label}</strong>
-                <small>{item.description}</small>
-                <b>{item.type === "manual" ? "Acessar manual →" : "Ver serviços →"}</b>
-              </button>
-            ))}
-            <button
-              type="button"
-              className="all-services-audience"
-              onClick={() => window.location.assign("/servicos")}
-            >
-              <strong>Todos os serviços</strong>
-              <small>
-                Consulte o catálogo completo da Central de Serviços.
-              </small>
-              <b>Ver todos →</b>
-            </button>
+              {requestedServices.map((service) => {
+                const href = service.slug
+                  ? `/servicos/${service.slug}`
+                  : service.url;
+                return (
+                  <a
+                    key={service.id}
+                    className="requested-service-card"
+                    href={href}
+                    {...external(href)}
+                    onClick={() => {
+                      trackServiceClick(service);
+                      if (/^https?:\/\//i.test(href)) trackServiceStart(service);
+                    }}
+                  >
+                    <span className="requested-service-content">
+                      <span className="requested-service-public">
+                        <span className="sr-only">Público: </span>
+                        {serviceAudienceLabel(service)}
+                      </span>
+                      <strong>{service.title}</strong>
+                      <small>{service.department}</small>
+                      {officialCategoryLabels.has(service.category) && (
+                        <span className="requested-service-category">
+                          <span className="sr-only">Categoria: </span>
+                          {service.category}
+                        </span>
+                      )}
+                    </span>
+                  </a>
+                );
+              })}
             </div>
             {hasMore && (
               <button
                 type="button"
-                className="audience-service-toggle"
+                className="requested-service-toggle"
                 aria-expanded={audiencesExpanded}
-                aria-controls="audience-services"
+                aria-controls="requested-services"
                 onClick={() => setAudiencesExpanded((expanded) => !expanded)}
               >
-                <span className="sr-only">
-                  {audiencesExpanded
-                    ? "Recolher públicos de serviços"
-                    : "Mostrar mais públicos de serviços"}
-                </span>
+                <span>{audiencesExpanded ? "Mostrar menos" : "Ver todos os 8 serviços"}</span>
                 <b aria-hidden="true">{audiencesExpanded ? "↑" : "↓"}</b>
               </button>
             )}
@@ -585,47 +578,48 @@ export default function Home() {
       );
     }
     if (segment.type === "featured") {
-      const featured = items(segment, "serviceRef")
-        .map((ref) => ({
-          ref,
-          service: services.find((service) => service.id === ref.serviceId),
-        }))
-        .filter((entry): entry is { ref: Item; service: Service } =>
-          Boolean(entry.service),
-        );
-      const hasMore = featured.length > 3;
+      const audienceOrder = new Map([
+        ["cidadao", 0],
+        ["empresa", 1],
+        ["servidor", 2],
+        ["ouvidoria", 3],
+        ["orgaos-publicos-ongs", 4],
+      ]);
+      const audienceSegment = segments.find(
+        (entry) => entry.type === "audiences",
+      );
+      const audienceItems = items(audienceSegment, "audience").sort(
+        (first, second) =>
+          (audienceOrder.get(first.id) ?? Number.MAX_SAFE_INTEGER) -
+          (audienceOrder.get(second.id) ?? Number.MAX_SAFE_INTEGER),
+      );
       return (
         <section
           key={segment.id}
-          id="mais-usados"
+          id="publicos"
           className={classes(segment, "section")}
           style={segmentStyle(segment)}
         >
           <SectionHeading segment={segment} />
           <div
-            className={`quick-access-list${hasMore ? " has-more" : ""}${quickAccessExpanded ? " is-expanded" : " is-collapsed"}`}
+            className="featured public-audience-grid"
+            role="group"
+            aria-label="Acessar serviços por público"
           >
-            <div id="quick-access-services" className="featured">
-              {featured.map(({ ref, service }, index) =>
-                serviceCard(service, index, true, ref),
-              )}
-            </div>
-            {hasMore && (
-              <button
-                type="button"
-                className="quick-access-toggle"
-                aria-expanded={quickAccessExpanded}
-                aria-controls="quick-access-services"
-                onClick={() => setQuickAccessExpanded((expanded) => !expanded)}
+            {audienceItems.map((item) => (
+              <a
+                key={item.id}
+                {...itemSizeProps(item)}
+                className="featured-card public-audience-card"
+                href={item.url || `/publicos/${item.id}`}
               >
-                <span className="sr-only">
-                  {quickAccessExpanded
-                    ? "Recolher serviços de acesso rápido"
-                    : "Mostrar mais serviços de acesso rápido"}
+                <span>
+                  <strong>{item.label}</strong>
+                  <em>{item.description}</em>
                 </span>
-                <b aria-hidden="true">{quickAccessExpanded ? "↑" : "↓"}</b>
-              </button>
-            )}
+                <b aria-hidden="true">→</b>
+              </a>
+            ))}
           </div>
         </section>
       );

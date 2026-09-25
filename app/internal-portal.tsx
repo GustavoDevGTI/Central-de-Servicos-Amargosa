@@ -28,6 +28,10 @@ import {
   recordServiceSearch,
 } from "./search-popularity-client";
 import { trackServiceClick, trackServiceStart } from "./analytics";
+import { contactForService, organizationForService } from "./service-contacts";
+import { sameInPersonServiceOffice, serviceWhereWhen } from "./service-where-when";
+import { isBaGovUrl } from "./service-request-system";
+import { servicePageCopy } from "./service-page-copy";
 
 // O roteador cliente do Vinext pode cancelar a navegação ao preparar o RSC.
 // Links internos simples preservam a URL e funcionam também sem JavaScript.
@@ -212,10 +216,16 @@ export function PortalHeader({
       style={internalStyle(entry)}
     >
       <Link className="internal-brand municipal-brand" href="/">
-        <img
-          src="/prefeitura-amargosa-logo-preta.png"
-          alt="Prefeitura de Amargosa"
-        />
+        <picture>
+          <source
+            media="(max-width: 760px)"
+            srcSet="/prefeitura-amargosa-simbolo.png"
+          />
+          <img
+            src="/prefeitura-amargosa-logo-preta.png"
+            alt="Prefeitura de Amargosa"
+          />
+        </picture>
       </Link>
       <nav aria-label="Navegação interna">
         {links
@@ -644,21 +654,23 @@ export function ServiceDirectory({
     document.addEventListener("click", recordSelection);
     return () => document.removeEventListener("click", recordSelection);
   }, [query]);
-  const departments = useMemo(
-    () =>
-      [
-        ...new Set(
-          services
-            .filter(
-              (service) =>
-                (categoryFilter === "todos" ||
-                  service.category === categoryFilter) &&
-                (audienceFilter === "todos" ||
-                  serviceAudiences(service).includes(audienceFilter)),
-            )
-            .map((service) => service.department),
-        ),
-      ].sort((a, b) => a.localeCompare(b, "pt-BR")),
+  const organizations = useMemo(
+    () => {
+      const organizations = new Map<string, string>();
+      services
+        .filter(
+          (service) =>
+            (categoryFilter === "todos" || service.category === categoryFilter) &&
+            (audienceFilter === "todos" ||
+              serviceAudiences(service).includes(audienceFilter)),
+        )
+        .forEach((service) => {
+          const organization = organizationForService(service);
+          organizations.set(organization.id, organization.label);
+        });
+      return [...organizations].map(([id, label]) => ({ id, label }))
+        .sort((a, b) => a.label.localeCompare(b.label, "pt-BR"));
+    },
     [audienceFilter, categoryFilter],
   );
   const explicitlyFiltered = useMemo(
@@ -669,7 +681,7 @@ export function ServiceDirectory({
             serviceAudiences(service).includes(audienceFilter)) &&
           (categoryFilter === "todos" || service.category === categoryFilter) &&
           (departmentFilter === "todos" ||
-            service.department === departmentFilter),
+            organizationForService(service).id === departmentFilter),
       ),
     [audienceFilter, categoryFilter, departmentFilter],
   );
@@ -988,10 +1000,10 @@ export function ServiceDirectory({
                 resetCarouselPosition();
               }}
             >
-              <option value="todos">Todos</option>
-              {departments.map((entry) => (
-                <option key={entry} value={entry}>
-                  {entry}
+              <option value="todos">Todos os órgãos</option>
+              {organizations.map((entry) => (
+                <option key={entry.id} value={entry.id}>
+                  {entry.label}
                 </option>
               ))}
             </select>
@@ -1136,6 +1148,74 @@ export function ServiceDirectory({
   );
 }
 
+function ServiceStartCta({ label = "INICIAR" }: { label?: string }) {
+  return (
+    <b className="service-reference-cta">
+      {label} <span aria-hidden="true">↗</span>
+    </b>
+  );
+}
+
+function ServiceContactSection({ service }: { service: Service }) {
+  const contact = contactForService(service);
+  const phoneNumber = contact.phone.match(/\(\d{2}\)\s*\d{4,5}-\d{4}/)?.[0];
+  const phoneHref = phoneNumber ? `tel:+55${phoneNumber.replace(/\D/g, "")}` : undefined;
+  const extension = contact.phone.match(/,\s*ramal\s*(\d+)/i)?.[1];
+
+  return (
+    <section id="canais" className="service-contact-section">
+      <h2>Canais de atendimento</h2>
+      <div className="service-channel-list">
+        <div className="service-contact-office">
+          <span>{contact.officeName ? "Setor responsável" : "Órgão responsável"}</span>
+          <strong>{contact.name}</strong>
+          {contact.officeName && !/^(?:[A-Z]{2,8}\s*[-—]\s*)?Secretaria(?: Municipal)?\b/i.test(contact.name) && (
+            <small>Vinculado a {contact.officeName}</small>
+          )}
+        </div>
+        <div>
+          <span>Telefone{contact.extensionLabel === "ramal da secretaria" ? " da secretaria" : ""}</span>
+          {phoneHref && phoneNumber ? (
+            <div className="service-contact-phone-links">
+              <a href={phoneHref}>{phoneNumber}</a>
+              {extension && (
+                <a href={`${phoneHref};ext=${extension}`}>{contact.extensionLabel || "ramal"} {extension}</a>
+              )}
+            </div>
+          ) : (
+            <strong>{contact.phone}</strong>
+          )}
+          {service.id.startsWith("planilha-") && service.channels?.map((channel) => (
+            channel.url?.startsWith("tel:") ? (
+              <div key={channel.label} className="service-contact-extra-phone">
+                <span>{channel.label}: </span><a href={channel.url}>{channel.value}</a>
+              </div>
+            ) : null
+          ))}
+        </div>
+        <div>
+          <span>{service.accessMode === "presencial"
+            ? contact.officeName ? "Atendimento presencial — endereço da secretaria" : "Atendimento presencial — endereço"
+            : "Endereço"}</span>
+          <address>{contact.address}</address>
+        </div>
+        {contact.email && (
+          <div>
+            <span>{contact.emailLabel || "E-mail"}</span>
+            <a href={`mailto:${contact.email}`}>{contact.email}</a>
+          </div>
+        )}
+        <div>
+          <span>Mais informações</span>
+          <a href={contact.officialUrl} target="_blank" rel="noreferrer">
+            Ver contatos no site da Prefeitura ↗
+          </a>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function ServiceRequestNotice({
   service,
   repeated = false,
@@ -1143,17 +1223,11 @@ function ServiceRequestNotice({
   service: Service;
   repeated?: boolean;
 }) {
-  if (!service.url) {
-    return (
-      <div
-        className={`service-reference-notice service-reference-notice-pending${repeated ? " service-reference-notice-repeat" : ""}`}
-        role="note"
-      >
-        <span>{PENDING_SERVICE_INFORMATION}</span>
-      </div>
-    );
-  }
-  if (!service.notice) return null;
+  if (!service.url) return null;
+  const isGenericNotice =
+    service.notice?.startsWith("Consulte as informações disponíveis nesta página") ||
+    service.notice?.startsWith("Consulte as orientações desta página");
+  const baGovReference = isBaGovUrl(service.url);
 
   return (
     <a
@@ -1163,16 +1237,18 @@ function ServiceRequestNotice({
       rel="noreferrer"
       onClick={() => trackServiceStart(service)}
     >
-      <span>{service.notice}</span>
-      <small>
-        {service.noticeAction || "Acessar o processo no e-SIC ↗"}
-      </small>
+      <span>{baGovReference
+        ? "Consulte as informações oficiais e acesse este serviço."
+        : repeated || !service.notice || isGenericNotice
+          ? "Clique aqui para iniciar a solicitação deste serviço."
+          : service.notice}</span>
+      <ServiceStartCta label={baGovReference ? "ACESSAR" : "INICIAR"} />
     </a>
   );
 }
 
-function SeiManualNotice({ service }: { service: Service }) {
-  if (service.requestSystem !== "sei") return null;
+function ServiceManualNotice({ service }: { service: Service }) {
+  if (!service.url || isBaGovUrl(service.url)) return null;
 
   return (
     <Link className="service-sei-guide" href="/manual-sei">
@@ -1183,11 +1259,101 @@ function SeiManualNotice({ service }: { service: Service }) {
         </svg>
       </span>
       <span className="service-sei-guide-copy">
-        <strong>Dúvidas para realizar o processo?</strong>{" "}
-        Acesse o Manual de Peticionamento do SEI
+        <strong>Dúvidas para realizar o processo?</strong>
       </span>
       <b aria-hidden="true">→</b>
     </Link>
+  );
+}
+
+function ServiceWhereWhenSection({ service, mergeContact = false }: { service: Service; mergeContact?: boolean }) {
+  const contact = contactForService(service);
+  const details = serviceWhereWhen(service, contact);
+  const hasSchedule = Boolean(service.whereWhenItems?.length);
+  const phoneValues = [...new Set([details.phone, ...(mergeContact ? [contact.phone] : [])].filter((value): value is string => Boolean(value)))];
+  const phones = phoneValues.filter((value) => !phoneValues.some((other) => other !== value && other.startsWith(`${value}, ramal`)));
+  const emails = [...new Set([...details.emails, ...(mergeContact && contact.email ? [contact.email] : [])])];
+
+  return (
+    <section id="onde-quando" className="service-where-when">
+      <h2>Onde e quando solicitar</h2>
+      {hasSchedule && !(details.digital && details.presencial) ? (
+        <>
+          <p>{service.whereWhen}</p>
+          <div className="service-schedule-grid">
+            {service.whereWhenItems?.map((item) => (
+              <article
+                className={`service-schedule-item${item.wide ? " service-schedule-item-wide" : ""}`}
+                key={`${item.label}-${item.schedule || item.description}`}
+              >
+                <div className="service-schedule-heading">
+                  <strong>{item.label}</strong>
+                  {item.schedule && <span>{item.schedule}</span>}
+                </div>
+                <p>{item.description}</p>
+              </article>
+            ))}
+          </div>
+          {service.url && <ServiceRequestNotice service={service} repeated />}
+        </>
+      ) : details.digital || details.presencial ? (
+        <>
+          {details.note && !hasSchedule && <p>{details.note}</p>}
+          <div className="service-request-options">
+            {details.digital && (
+              <div className="service-request-digital">
+                <h3>Atendimento digital</h3>
+                <ServiceRequestNotice service={service} repeated />
+              </div>
+            )}
+            {details.presencial && (
+              <div className="service-request-presencial">
+                <h3>Atendimento presencial</h3>
+                <div className="service-request-option">
+                  <dl>
+                  <div><dt>Local</dt><dd>{details.local}</dd></div>
+                  {mergeContact && contact.officeName && contact.name !== details.local && !/^SAC - SAC Municipal$/i.test(contact.name) && (
+                    <div><dt>Setor responsável</dt><dd>{contact.name}</dd></div>
+                  )}
+                  <div><dt>Endereço</dt><dd>{details.address}</dd></div>
+                  <div><dt>Horário</dt><dd>{details.hours}</dd></div>
+                  {phones.length > 0 && (
+                    <div><dt>Telefone</dt><dd className="service-request-contact-links">{phones.map((phone) => {
+                      const number = phone.match(/\(\d{2}\)\s*\d{4,5}-\d{4}/)?.[0];
+                      const extension = phone.match(/,\s*ramal\s*(\d+)/i)?.[1];
+                      if (!number) return <span key={phone}>{phone}</span>;
+                      const href = `tel:+55${number.replace(/\D/g, "")}`;
+                      return <span className="service-request-phone" key={phone}>
+                        <a href={href}>{number}</a>
+                        {extension && <a href={`${href};ext=${extension}`}>ramal {extension}</a>}
+                      </span>;
+                    })}</dd></div>
+                  )}
+                  {details.whatsapp && <div><dt>WhatsApp</dt><dd>{details.whatsapp}</dd></div>}
+                  {emails.length > 0 && (
+                    <div><dt>E-mail</dt><dd className="service-request-emails">{emails.map((email) => (
+                      <a href={`mailto:${email}`} key={email}>{email}</a>
+                    ))}</dd></div>
+                  )}
+                  {mergeContact && (
+                    <div><dt>Mais informações</dt><dd><a href={contact.officialUrl} target="_blank" rel="noreferrer">Ver contatos no site da Prefeitura ↗</a></dd></div>
+                  )}
+                  </dl>
+                </div>
+              </div>
+            )}
+          </div>
+        </>
+      ) : (
+        <p className={service.whereWhen?.startsWith("*") ? "service-pending-information" : undefined}>{service.whereWhen}</p>
+      )}
+    </section>
+  );
+}
+
+function availableRequestSteps(service: Service): string[] {
+  return (service.steps || []).filter((entry) =>
+    entry.trim() && !entry.trim().startsWith("*") && !/^etapas ainda não informadas\.?$/i.test(entry.trim()),
   );
 }
 
@@ -1197,6 +1363,12 @@ function RichServiceDetail({ service }: { service: Service }) {
   const relatedServices = services.filter((entry) =>
     service.relatedServiceIds?.includes(entry.id),
   );
+  const contact = contactForService(service);
+  const location = serviceWhereWhen(service, contact);
+  const requestSteps = availableRequestSteps(service);
+  const hasInPersonCard = Boolean(service.whereWhen) && location.presencial &&
+    (!service.whereWhenItems?.length || location.digital);
+  const mergeContact = hasInPersonCard && sameInPersonServiceOffice(location.local, contact.name);
 
   return (
     <main {...rootProps()}>
@@ -1213,12 +1385,12 @@ function RichServiceDetail({ service }: { service: Service }) {
           <div>
             <small>{serviceAudienceLabel(service) || service.category}</small>
             <h1>{service.title}</h1>
-            <p className={service.summary?.startsWith("*") ? "service-pending-information" : undefined}>{service.summary}</p>
+            <p className={service.summary?.startsWith("*") || !service.summary ? "service-pending-information" : undefined}>{service.summary || PENDING_SERVICE_INFORMATION}</p>
           </div>
         </header>
 
         <ServiceRequestNotice service={service} />
-        <SeiManualNotice service={service} />
+        <ServiceManualNotice service={service} />
 
         <div
           className={internalClasses(contentSegment, "service-detail-layout")}
@@ -1233,9 +1405,7 @@ function RichServiceDetail({ service }: { service: Service }) {
             {service.whereWhen && (
               <a href="#onde-quando">Onde e quando solicitar</a>
             )}
-            {service.channels?.length && (
-              <a href="#canais">Canais de atendimento</a>
-            )}
+            {!mergeContact && <a href="#canais">Canais de atendimento</a>}
             {(service.legislation?.length || service.legislationNotice) && (
               <a href="#legislacao">Legislação</a>
             )}
@@ -1247,95 +1417,45 @@ function RichServiceDetail({ service }: { service: Service }) {
           <div className="service-detail-content">
             <section id="o-que-e">
               <h2>O que é</h2>
-              <p className={service.summary?.startsWith("*") ? "service-pending-information" : undefined}>{service.summary}</p>
+              <p className={service.summary?.startsWith("*") || !service.summary ? "service-pending-information" : undefined}>{service.summary || PENDING_SERVICE_INFORMATION}</p>
             </section>
             <section id="quem-pode">
               <h2>Quem pode solicitar</h2>
-              <p className={service.eligibility?.startsWith("*") ? "service-pending-information" : undefined}>{service.eligibility}</p>
+              <p className={service.eligibility?.startsWith("*") || !service.eligibility ? "service-pending-information" : undefined}>{service.eligibility || PENDING_SERVICE_INFORMATION}</p>
             </section>
             <section id="documentos">
               <h2>Documentos necessários</h2>
               <ul>
-                {service.documents?.map((entry) => (
+                {(service.documents?.length ? service.documents : [PENDING_SERVICE_INFORMATION]).map((entry) => (
                   <li className={entry.startsWith("*") ? "service-pending-information" : undefined} key={entry}>{entry}</li>
                 ))}
               </ul>
             </section>
             <section id="como-solicitar">
               <h2>Como solicitar</h2>
-              <ol className="service-steps">
-                {service.steps?.map((entry, index) => (
-                  <li key={entry}>
-                    <b>{index + 1}</b>
-                    <span className={entry.startsWith("*") ? "service-pending-information" : undefined}>{entry}</span>
-                  </li>
-                ))}
-              </ol>
+              {requestSteps.length ? (
+                <ol className="service-steps">
+                  {requestSteps.map((entry, index) => (
+                    <li key={`${index}-${entry}`}>
+                      <b>{index + 1}</b>
+                      <span>{entry}</span>
+                    </li>
+                  ))}
+                </ol>
+              ) : <p className="service-pending-information">{PENDING_SERVICE_INFORMATION}</p>}
             </section>
-            {service.whereWhen && (
-              <section id="onde-quando">
-                <h2>Onde e quando solicitar</h2>
-                <p className={service.whereWhen?.startsWith("*") ? "service-pending-information" : undefined}>{service.whereWhen}</p>
-                {service.whereWhenItems?.length ? (
-                  <div className="service-schedule-grid">
-                    {service.whereWhenItems.map((item) => (
-                      <article
-                        className={`service-schedule-item${item.wide ? " service-schedule-item-wide" : ""}`}
-                        key={`${item.label}-${item.schedule || item.description}`}
-                      >
-                        <div className="service-schedule-heading">
-                          <strong>{item.label}</strong>
-                          {item.schedule && <span>{item.schedule}</span>}
-                        </div>
-                        <p>{item.description}</p>
-                      </article>
-                    ))}
-                  </div>
-                ) : null}
-              </section>
-            )}
+            {service.whereWhen && <ServiceWhereWhenSection service={service} mergeContact={mergeContact} />}
             <section id="informacoes" className="service-facts">
               <div>
                 <span>Custo</span>
-                <strong className={service.cost?.startsWith("*") ? "service-pending-information" : undefined}>{service.cost}</strong>
+                <strong className={service.cost?.startsWith("*") || !service.cost ? "service-pending-information" : undefined}>{service.cost || PENDING_SERVICE_INFORMATION}</strong>
               </div>
               <div>
                 <span>Prazo estimado</span>
-                <strong className={service.duration?.startsWith("*") ? "service-pending-information" : undefined}>{service.duration}</strong>
+                <strong className={service.duration?.startsWith("*") || !service.duration ? "service-pending-information" : undefined}>{service.duration || PENDING_SERVICE_INFORMATION}</strong>
               </div>
             </section>
-            <ServiceRequestNotice service={service} repeated />
-            {service.channels?.length && (
-              <section id="canais">
-                <h2>Canais de atendimento</h2>
-                <div className="service-channel-list">
-                  {service.channels.map((channel) => (
-                    <div key={channel.label}>
-                      <span>{channel.label}</span>
-                      {channel.url ? (
-                        <a
-                          href={channel.url}
-                          target={
-                            channel.url.startsWith("http")
-                              ? "_blank"
-                              : undefined
-                          }
-                          rel={
-                            channel.url.startsWith("http")
-                              ? "noreferrer"
-                              : undefined
-                          }
-                        >
-                          {channel.value}
-                        </a>
-                      ) : (
-                        <strong className={channel.value.startsWith("*") ? "service-pending-information" : undefined}>{channel.value}</strong>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              </section>
-            )}
+            {!mergeContact && <ServiceContactSection service={service} />}
             {(service.legislation?.length || service.legislationNotice) && (
               <section id="legislacao">
                 <h2>Legislação relacionada</h2>
@@ -1347,12 +1467,13 @@ function RichServiceDetail({ service }: { service: Service }) {
                       target="_blank"
                       rel="noreferrer"
                     >
-                      {law.label}
-                      <span aria-hidden="true">↗</span>
+                      <span className="service-legislation-symbol" aria-hidden="true">§</span>
+                      <span className="service-legislation-label">{law.label}</span>
+                      <span className="service-legislation-arrow" aria-hidden="true">↗</span>
                     </a>
                   ))}
                 </div> : null}
-                {service.legislationNotice && (
+                {!service.legislation?.length && service.legislationNotice && (
                   <p className="service-pending-information">{service.legislationNotice}</p>
                 )}
               </section>
@@ -1388,7 +1509,8 @@ function RichServiceDetail({ service }: { service: Service }) {
 export function ServiceDetail({ slug }: { slug: string }) {
   const heroSegment = internalSegment(detailPage, "serviceHero");
   const contentSegment = internalSegment(detailPage, "serviceContent");
-  const service = services.find((entry) => (entry.slug || entry.id) === slug);
+  const foundService = services.find((entry) => (entry.slug || entry.id) === slug);
+  const service = foundService ? servicePageCopy(foundService) : undefined;
   if (!service)
     return (
       <main {...rootProps()}>
@@ -1403,8 +1525,9 @@ export function ServiceDetail({ slug }: { slug: string }) {
         <PortalFooter />
       </main>
     );
-  if (service.notice && service.documents?.length && service.steps?.length)
+  if (service.id.startsWith("planilha-") || (service.notice && service.documents?.length && service.steps?.length))
     return <RichServiceDetail service={service} />;
+  const requestSteps = availableRequestSteps(service);
   return (
     <main {...rootProps()}>
       <a className="skip" href="#conteudo-servico">
@@ -1420,38 +1543,26 @@ export function ServiceDetail({ slug }: { slug: string }) {
           <div>
             <small>{serviceAudienceLabel(service) || service.category}</small>
             <h1>{service.title}</h1>
-            <p>
-              {service.summary ||
-                `Consulte nesta Central as informações sobre ${service.title.toLocaleLowerCase("pt-BR")} e, quando necessário, acesse o canal de solicitação indicado.`}
+            <p className={!service.summary || service.summary.startsWith("*") ? "service-pending-information" : undefined}>
+              {service.summary || PENDING_SERVICE_INFORMATION}
             </p>
           </div>
         </header>
 
-        {service.url ? (
+        {service.url && (
           <a
-            className="service-reference-notice service-reference-notice-centered"
+            className="service-reference-notice"
             href={service.url}
             target="_blank"
             rel="noreferrer"
             onClick={() => trackServiceStart(service)}
           >
-            <span>
-              Acessar{" "}
-              {service.destination ||
-                internalText(heroSegment, "action", "canal de solicitação")}{" "}
-              ↗
-            </span>
+            <span>Clique aqui para iniciar a solicitação deste serviço.</span>
+            <ServiceStartCta />
           </a>
-        ) : (
-          <div
-            className="service-reference-notice service-reference-notice-centered service-reference-notice-pending"
-            role="note"
-          >
-            <span>{PENDING_SERVICE_INFORMATION}</span>
-          </div>
         )}
 
-        <SeiManualNotice service={service} />
+        <ServiceManualNotice service={service} />
 
         <div
           className={internalClasses(contentSegment, "service-detail-layout")}
@@ -1476,13 +1587,13 @@ export function ServiceDetail({ slug }: { slug: string }) {
               {internalText(contentSegment, "stepsTitle", "Como fazer")}
             </a>
             <a href="#informacoes">Custo e prazo</a>
+            <a href="#canais">Canais de atendimento</a>
           </nav>
           <div className="service-detail-content">
             <section id="o-que-e">
               <h2>{internalText(contentSegment, "aboutTitle", "O que é")}</h2>
-              <p>
-                {service.summary ||
-                  "Página explicativa do serviço municipal e do canal responsável pelo atendimento."}
+              <p className={!service.summary || service.summary.startsWith("*") ? "service-pending-information" : undefined}>
+                {service.summary || PENDING_SERVICE_INFORMATION}
               </p>
             </section>
             <section id="quem-pode">
@@ -1493,9 +1604,8 @@ export function ServiceDetail({ slug }: { slug: string }) {
                   "Quem pode solicitar",
                 )}
               </h2>
-              <p>
-                {service.eligibility ||
-                  "Os critérios de atendimento devem ser confirmados com o órgão responsável antes da publicação definitiva."}
+              <p className={!service.eligibility || service.eligibility.startsWith("*") ? "service-pending-information" : undefined}>
+                {service.eligibility || PENDING_SERVICE_INFORMATION}
               </p>
             </section>
             <section id="documentos">
@@ -1509,34 +1619,25 @@ export function ServiceDetail({ slug }: { slug: string }) {
               {service.documents?.length ? (
                 <ul>
                   {service.documents.map((entry) => (
-                    <li key={entry}>{entry}</li>
+                    <li className={entry.startsWith("*") ? "service-pending-information" : undefined} key={entry}>{entry}</li>
                   ))}
                 </ul>
               ) : (
-                <p>
-                  A relação oficial de documentos ainda será confirmada pelo
-                  órgão responsável.
-                </p>
+                <p className="service-pending-information">{PENDING_SERVICE_INFORMATION}</p>
               )}
             </section>
             <section id="como-fazer">
               <h2>
                 {internalText(contentSegment, "stepsTitle", "Como fazer")}
               </h2>
-              {service.steps?.length ? (
+              {requestSteps.length ? (
                 <ol>
-                  {service.steps.map((entry) => (
-                    <li key={entry}>{entry}</li>
+                  {requestSteps.map((entry, index) => (
+                    <li key={`${index}-${entry}`}>{entry}</li>
                   ))}
                 </ol>
               ) : (
-                <ol>
-                  <li>Confira os critérios e documentos.</li>
-                  <li>Acesse o canal de solicitação indicado nesta página.</li>
-                  <li>
-                    Acompanhe a solicitação diretamente no sistema responsável.
-                  </li>
-                </ol>
+                <p className="service-pending-information">{PENDING_SERVICE_INFORMATION}</p>
               )}
             </section>
             <section id="informacoes" className="service-facts">
@@ -1544,8 +1645,8 @@ export function ServiceDetail({ slug }: { slug: string }) {
                 <span>
                   {internalText(contentSegment, "costLabel", "Quanto custa")}
                 </span>
-                <strong>
-                  {service.cost || "O valor deste serviço ainda não foi definido."}
+                <strong className={!service.cost || service.cost.startsWith("*") ? "service-pending-information" : undefined}>
+                  {service.cost || PENDING_SERVICE_INFORMATION}
                 </strong>
               </div>
               <div>
@@ -1556,12 +1657,12 @@ export function ServiceDetail({ slug }: { slug: string }) {
                     "Quanto tempo leva",
                   )}
                 </span>
-                <strong>
-                  {service.duration ||
-                    "O prazo estimado deste serviço ainda não foi definido."}
+                <strong className={!service.duration || service.duration.startsWith("*") ? "service-pending-information" : undefined}>
+                  {service.duration || PENDING_SERVICE_INFORMATION}
                 </strong>
               </div>
             </section>
+            <ServiceContactSection service={service} />
             <ServiceManifestationNotice service={service} />
             {service.updatedAt && (
               <small className="service-updated">
