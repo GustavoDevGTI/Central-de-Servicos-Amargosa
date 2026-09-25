@@ -1147,10 +1147,10 @@ export function ServiceDirectory({
   );
 }
 
-function ServiceStartCta() {
+function ServiceStartCta({ label = "INICIAR" }: { label?: string }) {
   return (
     <b className="service-reference-cta">
-      INICIAR <span aria-hidden="true">↗</span>
+      {label} <span aria-hidden="true">↗</span>
     </b>
   );
 }
@@ -1226,6 +1226,7 @@ function ServiceRequestNotice({
   const isGenericNotice =
     service.notice?.startsWith("Consulte as informações disponíveis nesta página") ||
     service.notice?.startsWith("Consulte as orientações desta página");
+  const baGovReference = isBaGovUrl(service.url);
 
   return (
     <a
@@ -1235,8 +1236,12 @@ function ServiceRequestNotice({
       rel="noreferrer"
       onClick={() => trackServiceStart(service)}
     >
-      <span>{repeated || !service.notice || isGenericNotice ? "Clique aqui para iniciar a solicitação deste serviço." : service.notice}</span>
-      <ServiceStartCta />
+      <span>{baGovReference
+        ? "Acesse a ficha oficial deste serviço no BA.gov."
+        : repeated || !service.notice || isGenericNotice
+          ? "Clique aqui para iniciar a solicitação deste serviço."
+          : service.notice}</span>
+      <ServiceStartCta label={baGovReference ? "ACESSAR" : "INICIAR"} />
     </a>
   );
 }

@@ -52,6 +52,16 @@ test("dual-channel service keeps its own in-person office and schedule", () => {
   assert.deepEqual(result.emails, ["ouvidoria@amargosa.ba.gov.br"]);
 });
 
+test("BA.gov channel does not become part of the contact email", () => {
+  const result = serviceWhereWhen({
+    accessMode: "digital",
+    url: "https://servicos.ba.gov.br/detalhe/servico/10092",
+    whereWhen: "Atendimento presencial: SAC MUNICIPAL. E-mail: sacdigital@amargosa.ba.gov.br. Canal on-line: Ba.gov — https://www.ba.gov.br/. Endereço: Av. Dr. Luis Sandes, 120 Valle Shopping.",
+  }, contact);
+
+  assert.deepEqual(result.emails, ["sacdigital@amargosa.ba.gov.br"]);
+});
+
 test("in-person service without a link shows the responsible office address", () => {
   const result = serviceWhereWhen({
     accessMode: "presencial",

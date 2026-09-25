@@ -9,6 +9,7 @@ import {
   cartaServiceLinks,
 } from "./carta-service-catalog";
 import {
+  baGovServiceLinks,
   isBaGovUrl,
   requestSystemForService,
   type ServiceRequestSystem,
@@ -321,8 +322,8 @@ const mergedServices = [...baseServices, ...cartaOnlyServices].map(
   },
 );
 
-export const services = [...mergedServices, ...(spreadsheetServiceData.created as Service[])].map((service) =>
-  documentTopics(applySpreadsheetAccessMode({
+export const services = [...mergedServices, ...(spreadsheetServiceData.created as Service[])].map((service) => {
+  const prepared = applySpreadsheetAccessMode({
     ...service,
     requestSystem:
       service.requestSystem ||
@@ -330,5 +331,9 @@ export const services = [...mergedServices, ...(spreadsheetServiceData.created a
       servicesWithoutSeiGuide.has(service.id)
         ? "other"
         : requestSystemForService(service.id)),
-  })),
-);
+  });
+  const baGovUrl = baGovServiceLinks[prepared.id];
+  return documentTopics(baGovUrl
+    ? { ...prepared, url: baGovUrl, destination: "BA.gov" }
+    : prepared);
+});

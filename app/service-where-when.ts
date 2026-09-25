@@ -22,7 +22,7 @@ export type ServiceWhereWhen = {
 };
 
 const genericDigitalUrl = /^https?:\/\/acesso\.amargosa\.ba\.gov\.br\/protocolodigital\/?(?:[?#].*)?$/i;
-const factPattern = /\b(Atendimento presencial(?: e virtual)?|Atendimento virtual|Telefone|E-mail|WhatsApp|Endereço|Site|Horários? de atendimento|Protocolo Digital):\s*/gi;
+const factPattern = /\b(Atendimento presencial(?: e virtual)?|Atendimento virtual|Telefone|E-mail|WhatsApp|Endereço|Site|Horários? de atendimento|Protocolo Digital|Canal on-line):\s*/gi;
 
 function extractFacts(text: string) {
   const matches = [...text.matchAll(factPattern)];
