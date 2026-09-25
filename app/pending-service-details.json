@@ -27,34 +27,6 @@
     "noticeAction": "Acessar o canal de atendimento ↗",
     "updatedAt": "08/09/2026"
   },
-  "acesso-informacao": {
-    "slug": "acesso-informacao",
-    "destination": "e-SIC de Amargosa",
-    "url": "https://amargosa.1doc.com.br/b.php?is=920&itd=12&pg=wp/wp&s=amargosa",
-    "summary": "* Será adicionado em breve.",
-    "eligibility": "* Será adicionado em breve.",
-    "documents": [
-      "* Será adicionado em breve."
-    ],
-    "steps": [
-      "* Será adicionado em breve."
-    ],
-    "whereWhen": "* Será adicionado em breve.",
-    "cost": "* Será adicionado em breve.",
-    "duration": "* Será adicionado em breve.",
-    "channels": [
-      {
-        "label": "Solicitação",
-        "value": "e-SIC de Amargosa",
-        "url": "https://amargosa.1doc.com.br/b.php?is=920&itd=12&pg=wp/wp&s=amargosa"
-      }
-    ],
-    "legislation": [],
-    "legislationNotice": "* Será adicionado em breve.",
-    "notice": "Consulte as informações disponíveis nesta página e utilize o canal indicado para solicitar ou obter orientações sobre o serviço.",
-    "noticeAction": "Acessar o canal de atendimento ↗",
-    "updatedAt": "08/09/2026"
-  },
   "1doc-adesao-carona-licitatoria": {
     "slug": "adesao-carona-licitatoria",
     "destination": "Portal de Protocolos 1Doc",
@@ -2921,34 +2893,6 @@
         "url": "https://leismunicipais.com.br/a/ba/a/amargosa/lei-ordinaria/2024/78/778/lei-ordinaria-n-778-2024-dispoe-sobre-plano-diretor-de-arborizacao-urbana-de-amargosa-e-da-outras-providencias"
       }
     ],
-    "notice": "Consulte as informações disponíveis nesta página e utilize o canal indicado para solicitar ou obter orientações sobre o serviço.",
-    "noticeAction": "Acessar o canal de atendimento ↗",
-    "updatedAt": "08/09/2026"
-  },
-  "1doc-precatorio-fundef": {
-    "slug": "precatorio-fundef",
-    "destination": "Portal de Protocolos 1Doc",
-    "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
-    "summary": "* Será adicionado em breve.",
-    "eligibility": "* Será adicionado em breve.",
-    "documents": [
-      "* Será adicionado em breve."
-    ],
-    "steps": [
-      "* Será adicionado em breve."
-    ],
-    "whereWhen": "* Será adicionado em breve.",
-    "cost": "* Será adicionado em breve.",
-    "duration": "* Será adicionado em breve.",
-    "channels": [
-      {
-        "label": "Solicitação",
-        "value": "Portal de Protocolos 1Doc",
-        "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp"
-      }
-    ],
-    "legislation": [],
-    "legislationNotice": "* Será adicionado em breve.",
     "notice": "Consulte as informações disponíveis nesta página e utilize o canal indicado para solicitar ou obter orientações sobre o serviço.",
     "noticeAction": "Acessar o canal de atendimento ↗",
     "updatedAt": "08/09/2026"

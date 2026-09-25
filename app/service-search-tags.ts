@@ -111,7 +111,6 @@ const rules: Array<[RegExp, string[]]> = [
     /ouvidoria|reclamacao|denuncia/,
     ["reclamação", "denúncia", "elogio", "sugestão", "manifestação"],
   ],
-  [/fundef|precatorio/, ["precatório fundef", "professor", "educação"]],
   [
     /ressarcimento|indenizacao|restituicao|compensacao/,
     ["devolução de dinheiro", "reembolso", "indenização"],

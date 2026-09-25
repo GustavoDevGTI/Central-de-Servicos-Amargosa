@@ -15,12 +15,15 @@
 :where(.editable-segment,.internal-editable,.editable) :where(button,a):not(:disabled):active{transform:var(--segment-click-transform);filter:var(--segment-click-filter);outline:var(--segment-click-outline);outline-offset:2px}
 :where(a,button,input,textarea,select,[tabindex]):focus-visible{outline:3px solid #c9344c!important;outline-offset:3px!important;box-shadow:0 0 0 6px #17251f!important}
 .search:has(input:focus-visible){outline:3px solid #c9344c;outline-offset:3px}.search input:focus-visible{border-radius:2px;outline:0!important;box-shadow:none!important}
+.amanda-compose:focus-within{outline:3px solid #c9344c;outline-offset:3px}
+.amanda-compose :is(textarea,button):focus-visible{outline:0!important;box-shadow:none!important}
 .audiences button[aria-pressed="true"],.categories button[aria-pressed="true"]{border-color:var(--green);box-shadow:inset 0 -4px 0 var(--green)}
 #results-title{scroll-margin-top:28px}
 #results-title:focus-visible{border-radius:2px}
 .service-grid:empty{display:none}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}:where(button,.featured-card,.service-card,.help a,.generic a,.search>a,.header nav a,.header-actions a){transform:none!important}}
 @media(forced-colors:active){:where(a,button,input,textarea,select,[tabindex]):focus-visible{outline:3px solid Highlight!important;box-shadow:none!important}.audiences button[aria-pressed="true"],.categories button[aria-pressed="true"]{outline:2px solid Highlight}}
+@media(forced-colors:active){.amanda-compose:focus-within{outline-color:Highlight}}
 @media(max-width:620px){.header-actions{gap:10px}.header-actions .menu{font-size:9px}.header .brand-image{max-width:145px;height:44px}.hero .search{min-height:60px;gap:8px;padding:6px 6px 6px 14px;border-radius:7px}.hero .search>span{flex:0 0 auto;font-size:22px;line-height:1}.hero .search input{width:100%;min-width:0;min-height:46px;padding:10px 2px;font-size:16px;line-height:1.2}.hero .search button{min-width:84px;min-height:46px;flex:0 0 auto;padding:0 14px;border-radius:4px;font-size:14px}}
 
 /* A escala de texto é aplicada somente às fontes pelo controle de acessibilidade. */
@@ -34,5 +37,7 @@ html[data-high-contrast="true"] body :where(a){color:#ffea00!important;text-deco
 html[data-high-contrast="true"] body :where(button,input,select,textarea){border:2px solid #fff!important;background:#000!important;color:#fff!important;box-shadow:none!important}
 html[data-high-contrast="true"] body :where(button[aria-pressed="true"],.is-active){border-color:#ffea00!important;outline:3px solid #ffea00!important;outline-offset:1px;color:#ffea00!important}
 html[data-high-contrast="true"] body :where(a,button,input,select,textarea):focus-visible{outline:4px solid #ffea00!important;outline-offset:3px!important}
+html[data-high-contrast="true"] .amanda-compose:focus-within{outline:4px solid #ffea00;outline-offset:3px}
+html[data-high-contrast="true"] body .amanda-compose :is(textarea,button):focus-visible{outline:0!important;box-shadow:none!important}
 html[data-high-contrast="true"] body :where(svg,path){color:#ffea00!important;stroke:currentColor!important}
 @media(max-width:340px){.hero .search{display:grid;grid-template-columns:22px minmax(0,1fr);padding:8px}.hero .search>span{grid-column:1}.hero .search input{grid-column:2}.hero .search button{width:100%;grid-column:1/-1}}
