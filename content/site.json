@@ -412,7 +412,7 @@
                   {
                     "label": "Online",
                     "schedule": "A qualquer momento",
-                    "description": "e-SIC da Prefeitura de Amargosa no 1Doc."
+                    "description": "e-SIC da Prefeitura de Amargosa."
                   },
                   {
                     "label": "Presencial",
@@ -425,7 +425,7 @@
               "channels": [
                 {
                   "label": "Online",
-                  "value": "e-SIC / 1Doc",
+                  "value": "e-SIC da Prefeitura de Amargosa",
                   "url": "https://amargosa.1doc.com.br/b.php?is=920&itd=12&pg=wp/wp&s=amargosa"
                 },
                 {
