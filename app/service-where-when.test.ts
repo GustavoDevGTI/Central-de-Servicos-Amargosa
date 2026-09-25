@@ -33,6 +33,25 @@ test("generic protocol link follows the spreadsheet's digital classification", (
   assert.equal(result.presencial, false);
 });
 
+test("dual-channel service keeps its own in-person office and schedule", () => {
+  const result = serviceWhereWhen({
+    accessMode: "a-confirmar",
+    url: "https://amargosa.1doc.com.br/",
+    whereWhen: "O pedido pode ser registrado online ou presencialmente.",
+    whereWhenItems: [
+      { label: "Online", schedule: "A qualquer momento", description: "e-SIC." },
+      { label: "Presencial", schedule: "De segunda a sexta-feira, das 8h às 12h e das 14h às 17h", description: "Ouvidoria Municipal — Avenida Dr. Luís Sandes, Valle Shopping, Amargosa – BA." },
+    ],
+  }, { ...contact, email: "ouvidoria@amargosa.ba.gov.br" });
+
+  assert.equal(result.digital, true);
+  assert.equal(result.presencial, true);
+  assert.equal(result.local, "Ouvidoria Municipal");
+  assert.equal(result.address, "Avenida Dr. Luís Sandes, Valle Shopping, Amargosa – BA");
+  assert.equal(result.hours, "De segunda a sexta-feira, das 8h às 12h e das 14h às 17h");
+  assert.deepEqual(result.emails, ["ouvidoria@amargosa.ba.gov.br"]);
+});
+
 test("in-person service without a link shows the responsible office address", () => {
   const result = serviceWhereWhen({
     accessMode: "presencial",

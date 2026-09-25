@@ -1235,7 +1235,7 @@ function ServiceRequestNotice({
       rel="noreferrer"
       onClick={() => trackServiceStart(service)}
     >
-      <span>{!service.notice || isGenericNotice ? "Clique aqui para iniciar a solicitação deste serviço." : service.notice}</span>
+      <span>{repeated || !service.notice || isGenericNotice ? "Clique aqui para iniciar a solicitação deste serviço." : service.notice}</span>
       <ServiceStartCta />
     </a>
   );
@@ -1268,7 +1268,7 @@ function ServiceWhereWhenSection({ service }: { service: Service }) {
   return (
     <section id="onde-quando" className="service-where-when">
       <h2>Onde e quando solicitar</h2>
-      {hasSchedule ? (
+      {hasSchedule && !(details.digital && details.presencial) ? (
         <>
           <p>{service.whereWhen}</p>
           <div className="service-schedule-grid">
@@ -1296,7 +1296,7 @@ function ServiceWhereWhenSection({ service }: { service: Service }) {
                 ? "Você pode solicitar este serviço pela internet."
                 : "Você pode solicitar este serviço presencialmente."}
           </p>
-          {details.note && <p>{details.note}</p>}
+          {details.note && !hasSchedule && <p>{details.note}</p>}
           <div className="service-request-options">
             {details.digital && (
               <div className="service-request-digital">
