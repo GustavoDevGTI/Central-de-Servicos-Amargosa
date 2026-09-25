@@ -1250,8 +1250,7 @@ function ServiceManualNotice({ service }: { service: Service }) {
         </svg>
       </span>
       <span className="service-sei-guide-copy">
-        <strong>Dúvidas para realizar o processo?</strong>{" "}
-        Acesse o Manual
+        <strong>Dúvidas para realizar o processo?</strong>
       </span>
       <b aria-hidden="true">→</b>
     </Link>
