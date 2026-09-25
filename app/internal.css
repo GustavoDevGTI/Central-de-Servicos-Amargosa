@@ -80,11 +80,10 @@
 .service-contact-office small{color:var(--muted);font-size:13px;line-height:1.5}
 .service-where-when .service-where-when-intro{margin:0 0 18px}
 .service-request-options{display:grid;gap:12px;margin-top:18px}
-.service-request-digital h3{margin:0 0 10px;color:var(--ink);font-family:var(--site-body-font);font-size:19px}
+.service-request-options h3{margin:0 0 10px;color:var(--ink);font-family:var(--site-body-font);font-size:19px}
 .service-where-when .service-request-digital .service-reference-notice-repeat{margin:0}
 .service-where-when>.service-reference-notice-repeat{margin:18px 0 0}
 .service-request-option{min-width:0;padding:22px;border:1px solid #cbd8d3;border-left:4px solid var(--green);border-radius:5px;background:#fff}
-.service-request-option h3{margin:0 0 12px;color:var(--ink);font-family:var(--site-body-font);font-size:19px}
 .service-request-option dd a{color:var(--green);font-weight:800;text-decoration:underline;text-underline-offset:3px}
 .service-request-option dl{display:grid;gap:11px;margin:0}
 .service-request-option dl>div{display:grid;grid-template-columns:76px minmax(0,1fr);gap:12px}

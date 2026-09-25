@@ -1305,9 +1305,10 @@ function ServiceWhereWhenSection({ service }: { service: Service }) {
               </div>
             )}
             {details.presencial && (
-              <article className="service-request-option">
+              <div className="service-request-presencial">
                 <h3>Atendimento presencial</h3>
-                <dl>
+                <div className="service-request-option">
+                  <dl>
                   <div><dt>Local</dt><dd>{details.local}</dd></div>
                   <div><dt>Endereço</dt><dd>{details.address}</dd></div>
                   <div><dt>Horário</dt><dd>{details.hoursSourceUrl
@@ -1324,8 +1325,9 @@ function ServiceWhereWhenSection({ service }: { service: Service }) {
                       <a href={`mailto:${email}`} key={email}>{email}</a>
                     ))}</dd></div>
                   )}
-                </dl>
-              </article>
+                  </dl>
+                </div>
+              </div>
             )}
           </div>
         </>
