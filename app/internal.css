@@ -96,9 +96,8 @@
 /* Leis como referências individuais, sem linhas de pauta entre os itens. */
 .service-legislation{display:grid;gap:10px;border-top:0}
 .service-legislation a{min-height:72px;justify-content:flex-start;gap:16px;padding:16px 18px;border:1px solid #d4e2db;border-left:4px solid var(--green);border-radius:8px;background:#fff;color:var(--ink);font-size:14px;line-height:1.45;text-decoration:none;box-shadow:0 3px 12px rgba(3,55,42,.04);transition:border-color .18s ease,background-color .18s ease,box-shadow .18s ease,transform .18s ease}
-.service-legislation .service-legislation-symbol{width:36px;height:36px;flex:0 0 36px;display:grid;place-items:center;border-radius:8px;background:#e8f3ee;color:var(--green);font-family:Georgia,serif;font-size:22px;font-weight:700}
 .service-legislation .service-legislation-label{min-width:0;flex:1}
-.service-legislation .service-legislation-arrow{width:30px;height:30px;flex:0 0 30px;display:grid;place-items:center;margin-left:auto;border-radius:50%;background:#eef5f1;color:var(--green);font-size:17px;line-height:1}
+.service-legislation .service-legislation-arrow{width:20px;height:20px;flex:0 0 20px;display:grid;place-items:center;margin-left:auto;color:var(--green);font-size:19px;line-height:1}
 .service-legislation a:hover{border-color:#92b7a6;background:#f9fcfa;box-shadow:0 8px 20px rgba(3,55,42,.09);transform:translateY(-2px)}
 .service-legislation a:focus-visible{outline:3px solid #f2c94c;outline-offset:3px}
-@media(max-width:480px){.service-legislation a{gap:12px;padding:14px}.service-legislation .service-legislation-symbol{width:32px;height:32px;flex-basis:32px}.service-legislation .service-legislation-arrow{width:26px;height:26px;flex-basis:26px}}
+@media(max-width:480px){.service-legislation a{gap:12px;padding:14px}}

@@ -1474,7 +1474,6 @@ function RichServiceDetail({ service }: { service: Service }) {
                       target="_blank"
                       rel="noreferrer"
                     >
-                      <span className="service-legislation-symbol" aria-hidden="true">§</span>
                       <span className="service-legislation-label">{law.label}</span>
                       <span className="service-legislation-arrow" aria-hidden="true">↗</span>
                     </a>
