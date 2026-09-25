@@ -29,6 +29,7 @@ import {
 } from "./search-popularity-client";
 import { trackServiceClick, trackServiceStart } from "./analytics";
 import { contactForService, organizationForService } from "./service-contacts";
+import { serviceWhereWhen } from "./service-where-when";
 import { isBaGovUrl } from "./service-request-system";
 
 // O roteador cliente do Vinext pode cancelar a navegação ao preparar o RSC.
@@ -1259,6 +1260,82 @@ function ServiceManualNotice({ service }: { service: Service }) {
   );
 }
 
+function ServiceWhereWhenSection({ service }: { service: Service }) {
+  const details = serviceWhereWhen(service, contactForService(service));
+  const hasSchedule = Boolean(service.whereWhenItems?.length);
+  const phoneNumber = details.phone?.match(/\(\d{2}\)\s*\d{4,5}-\d{4}/)?.[0];
+
+  return (
+    <section id="onde-quando" className="service-where-when">
+      <h2>Onde e quando solicitar</h2>
+      {hasSchedule ? (
+        <>
+          <p>{service.whereWhen}</p>
+          <div className="service-schedule-grid">
+            {service.whereWhenItems?.map((item) => (
+              <article
+                className={`service-schedule-item${item.wide ? " service-schedule-item-wide" : ""}`}
+                key={`${item.label}-${item.schedule || item.description}`}
+              >
+                <div className="service-schedule-heading">
+                  <strong>{item.label}</strong>
+                  {item.schedule && <span>{item.schedule}</span>}
+                </div>
+                <p>{item.description}</p>
+              </article>
+            ))}
+          </div>
+        </>
+      ) : details.digital || details.presencial ? (
+        <>
+          <p className="service-where-when-intro">
+            {details.digital && details.presencial
+              ? "Você pode solicitar este serviço pela internet ou presencialmente."
+              : details.digital
+                ? "Você pode solicitar este serviço pela internet."
+                : "Você pode solicitar este serviço presencialmente."}
+          </p>
+          {details.note && <p>{details.note}</p>}
+          <div className="service-request-options">
+            {details.digital && (
+              <article className="service-request-option">
+                <h3>Solicitação digital</h3>
+                <p>Inicie a solicitação pelo link do serviço.</p>
+                <a href={service.url} target="_blank" rel="noreferrer" onClick={() => trackServiceStart(service)}>
+                  Iniciar solicitação digital <span aria-hidden="true">↗</span>
+                </a>
+              </article>
+            )}
+            {details.presencial && (
+              <article className="service-request-option">
+                <h3>Atendimento presencial</h3>
+                <dl>
+                  <div><dt>Local</dt><dd>{details.local}</dd></div>
+                  <div><dt>Endereço</dt><dd>{details.address}</dd></div>
+                  <div><dt>Horário</dt><dd>{details.hours}</dd></div>
+                  {details.phone && (
+                    <div><dt>Telefone</dt><dd>{phoneNumber
+                      ? <a href={`tel:+55${phoneNumber.replace(/\D/g, "")}`}>{details.phone}</a>
+                      : details.phone}</dd></div>
+                  )}
+                  {details.whatsapp && <div><dt>WhatsApp</dt><dd>{details.whatsapp}</dd></div>}
+                  {details.emails.length > 0 && (
+                    <div><dt>E-mail</dt><dd className="service-request-emails">{details.emails.map((email) => (
+                      <a href={`mailto:${email}`} key={email}>{email}</a>
+                    ))}</dd></div>
+                  )}
+                </dl>
+              </article>
+            )}
+          </div>
+        </>
+      ) : (
+        <p className={service.whereWhen?.startsWith("*") ? "service-pending-information" : undefined}>{service.whereWhen}</p>
+      )}
+    </section>
+  );
+}
+
 function RichServiceDetail({ service }: { service: Service }) {
   const heroSegment = internalSegment(detailPage, "serviceHero");
   const contentSegment = internalSegment(detailPage, "serviceContent");
@@ -1338,28 +1415,7 @@ function RichServiceDetail({ service }: { service: Service }) {
                 ))}
               </ol>
             </section>
-            {service.whereWhen && (
-              <section id="onde-quando">
-                <h2>Onde e quando solicitar</h2>
-                <p className={service.whereWhen?.startsWith("*") ? "service-pending-information" : undefined}>{service.whereWhen}</p>
-                {service.whereWhenItems?.length ? (
-                  <div className="service-schedule-grid">
-                    {service.whereWhenItems.map((item) => (
-                      <article
-                        className={`service-schedule-item${item.wide ? " service-schedule-item-wide" : ""}`}
-                        key={`${item.label}-${item.schedule || item.description}`}
-                      >
-                        <div className="service-schedule-heading">
-                          <strong>{item.label}</strong>
-                          {item.schedule && <span>{item.schedule}</span>}
-                        </div>
-                        <p>{item.description}</p>
-                      </article>
-                    ))}
-                  </div>
-                ) : null}
-              </section>
-            )}
+            {service.whereWhen && <ServiceWhereWhenSection service={service} />}
             <section id="informacoes" className="service-facts">
               <div>
                 <span>Custo</span>
