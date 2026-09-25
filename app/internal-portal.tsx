@@ -1285,6 +1285,7 @@ function ServiceWhereWhenSection({ service }: { service: Service }) {
               </article>
             ))}
           </div>
+          {service.url && <ServiceRequestNotice service={service} repeated />}
         </>
       ) : details.digital || details.presencial ? (
         <>
@@ -1298,9 +1299,9 @@ function ServiceWhereWhenSection({ service }: { service: Service }) {
           {details.note && <p>{details.note}</p>}
           <div className="service-request-options">
             {details.digital && (
-              <div className="service-request-digital-note">
-                <strong>Atendimento digital</strong>
-                <p>Para solicitar pela internet, use o botão “INICIAR” desta página.</p>
+              <div className="service-request-digital">
+                <h3>Atendimento digital</h3>
+                <ServiceRequestNotice service={service} repeated />
               </div>
             )}
             {details.presencial && (
@@ -1309,7 +1310,9 @@ function ServiceWhereWhenSection({ service }: { service: Service }) {
                 <dl>
                   <div><dt>Local</dt><dd>{details.local}</dd></div>
                   <div><dt>Endereço</dt><dd>{details.address}</dd></div>
-                  <div><dt>Horário</dt><dd>{details.hours}</dd></div>
+                  <div><dt>Horário</dt><dd>{details.hoursSourceUrl
+                    ? <a href={details.hoursSourceUrl} target="_blank" rel="noreferrer" title="Fonte: Prefeitura de Amargosa — SEAFI">{details.hours} ↗</a>
+                    : details.hours}</dd></div>
                   {details.phone && (
                     <div><dt>Telefone</dt><dd>{phoneNumber
                       ? <a href={`tel:+55${phoneNumber.replace(/\D/g, "")}`}>{details.phone}</a>
@@ -1423,7 +1426,6 @@ function RichServiceDetail({ service }: { service: Service }) {
                 <strong className={service.duration?.startsWith("*") || !service.duration ? "service-pending-information" : undefined}>{service.duration || PENDING_SERVICE_INFORMATION}</strong>
               </div>
             </section>
-            <ServiceRequestNotice service={service} repeated />
             <ServiceContactSection service={service} />
             {(service.legislation?.length || service.legislationNotice) && (
               <section id="legislacao">

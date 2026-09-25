@@ -14,6 +14,7 @@ export type ServiceWhereWhen = {
   local: string;
   address: string;
   hours: string;
+  hoursSourceUrl?: string;
   phone?: string;
   whatsapp?: string;
   emails: string[];
@@ -50,10 +51,19 @@ export function serviceWhereWhen(
   const presencial = service.accessMode === "presencial" ||
     (presencialMentioned && (specificLink || service.accessMode !== "digital"));
   const digital = specificLink || (service.accessMode === "digital" && Boolean(service.url));
+  const local = facts.get("atendimento presencial")?.[0] ||
+    facts.get("atendimento presencial e virtual")?.[0] || contact.name;
+  const address = facts.get("endereço")?.[0] || contact.address;
+  const isSacMunicipal = /^SAC MUNICIPAL$/i.test(local) && /Valle Shopping/i.test(address);
   const rawHours = facts.get("horário de atendimento")?.[0] || facts.get("horários de atendimento")?.[0];
   const hours = rawHours && !rawHours.startsWith("*")
     ? rawHours
-    : "Confirme o horário por telefone antes de comparecer.";
+    : isSacMunicipal
+      ? "Segunda a sexta-feira, das 8h às 17h"
+      : "Confirme o horário por telefone antes de comparecer.";
+  const hoursSourceUrl = isSacMunicipal && (!rawHours || rawHours.startsWith("*"))
+    ? "https://amargosa.ba.gov.br/secretarias&secretaria=desenvolvimento-institucional"
+    : undefined;
   const emails = [...new Set(facts.get("e-mail") || [])];
   const commonText = /^(?:Atendimento digital\. Inicie a solicitação pelo link desta página\.|Atendimento presencial\. Consulte o endereço do órgão responsável nos canais abaixo e confirme o horário por telefone\.|Confirme com o órgão responsável se o atendimento é digital ou presencial\.)$/i.test(text);
   const note = facts.size === 0 && text && !text.startsWith("*") && !commonText
@@ -63,10 +73,10 @@ export function serviceWhereWhen(
   return {
     digital,
     presencial,
-    local: facts.get("atendimento presencial")?.[0] ||
-      facts.get("atendimento presencial e virtual")?.[0] || contact.name,
-    address: facts.get("endereço")?.[0] || contact.address,
+    local,
+    address,
     hours,
+    hoursSourceUrl,
     phone: facts.get("telefone")?.[0] || (presencial ? contact.phone : undefined),
     whatsapp: facts.get("whatsapp")?.[0],
     emails,
