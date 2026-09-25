@@ -2567,7 +2567,7 @@
               "type": "text",
               "role": "description",
               "label": "Apresentação",
-              "value": "Posso ajudar com serviços, documentos, taxas e canais da Prefeitura. O que você precisa?"
+              "value": "O que você precisa?"
             },
             {
               "id": "amanda-input",
