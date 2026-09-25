@@ -12,6 +12,7 @@
     "lint": "eslint . --ignore-pattern dist --ignore-pattern .next",
     "db:generate": "drizzle-kit generate",
     "test:agent": "tsx --test app/agent/agent.test.ts",
+    "sync:coleta": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/sync-coleta-cronograma.ps1",
     "test:search": "node --experimental-strip-types --test app/search-engine.test.ts"
   },
   "dependencies": {

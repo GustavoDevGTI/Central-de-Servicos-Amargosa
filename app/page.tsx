@@ -196,6 +196,7 @@ export default function Home() {
   const [suggestionsOpen, setSuggestionsOpen] = useState(false);
   const [heroSlide, setHeroSlide] = useState(0);
   const [audiencesExpanded, setAudiencesExpanded] = useState(false);
+  const [publicExpanded, setPublicExpanded] = useState(false);
   const [servicePopularity, setServicePopularity] = useState<
     Record<string, number>
   >({});
@@ -569,7 +570,7 @@ export default function Home() {
                 aria-controls="requested-services"
                 onClick={() => setAudiencesExpanded((expanded) => !expanded)}
               >
-                <span>{audiencesExpanded ? "Mostrar menos" : "Ver todos os 8 serviços"}</span>
+                <span className="sr-only">{audiencesExpanded ? "Mostrar menos" : "Ver todos os 8 serviços"}</span>
                 <b aria-hidden="true">{audiencesExpanded ? "↑" : "↓"}</b>
               </button>
             )}
@@ -601,25 +602,40 @@ export default function Home() {
           style={segmentStyle(segment)}
         >
           <SectionHeading segment={segment} />
-          <div
-            className="featured public-audience-grid"
-            role="group"
-            aria-label="Acessar serviços por público"
-          >
-            {audienceItems.map((item) => (
-              <a
-                key={item.id}
-                {...itemSizeProps(item)}
-                className="featured-card public-audience-card"
-                href={item.url || `/publicos/${item.id}`}
+          <div className={`public-audience-list${audienceItems.length > 2 ? " has-more" : ""}${publicExpanded ? " is-expanded" : " is-collapsed"}`}>
+            <div
+              id="public-audiences"
+              className="featured public-audience-grid"
+              role="group"
+              aria-label="Acessar serviços por público"
+            >
+              {audienceItems.map((item) => (
+                <a
+                  key={item.id}
+                  {...itemSizeProps(item)}
+                  className="featured-card public-audience-card"
+                  href={item.url || `/publicos/${item.id}`}
+                >
+                  <span>
+                    <strong>{item.label}</strong>
+                    <em>{item.description}</em>
+                  </span>
+                  <b aria-hidden="true">→</b>
+                </a>
+              ))}
+            </div>
+            {audienceItems.length > 2 && (
+              <button
+                type="button"
+                className="public-audience-toggle"
+                aria-expanded={publicExpanded}
+                aria-controls="public-audiences"
+                onClick={() => setPublicExpanded((expanded) => !expanded)}
               >
-                <span>
-                  <strong>{item.label}</strong>
-                  <em>{item.description}</em>
-                </span>
-                <b aria-hidden="true">→</b>
-              </a>
-            ))}
+                <span className="sr-only">{publicExpanded ? "Mostrar menos públicos" : "Ver todos os públicos"}</span>
+                <b aria-hidden="true">{publicExpanded ? "↑" : "↓"}</b>
+              </button>
+            )}
           </div>
         </section>
       );

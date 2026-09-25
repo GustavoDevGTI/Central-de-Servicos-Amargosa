@@ -32,6 +32,7 @@ import { contactForService, organizationForService } from "./service-contacts";
 import { sameInPersonServiceOffice, serviceWhereWhen } from "./service-where-when";
 import { isBaGovUrl } from "./service-request-system";
 import { servicePageCopy } from "./service-page-copy";
+import { CollectionScheduleSection } from "./coleta-cronograma";
 
 // O roteador cliente do Vinext pode cancelar a navegação ao preparar o RSC.
 // Links internos simples preservam a URL e funcionam também sem JavaScript.
@@ -148,7 +149,7 @@ const serviceAudienceLabel = (service: Service) =>
     .map((id) => audiences.find((entry) => entry.id === id)?.label || id)
     .join(" · ");
 const falabrManifestationUrl =
-  "https://falabr.cgu.gov.br/web/manifestacao/criar/selecionar-assunto";
+  "https://falabr.cgu.gov.br/web/home";
 const serviceCreationOrder = new Map(
   services.map((service, index) => [service.id, index]),
 );
@@ -1248,7 +1249,7 @@ function ServiceRequestNotice({
 }
 
 function ServiceManualNotice({ service }: { service: Service }) {
-  if (!service.url || isBaGovUrl(service.url)) return null;
+  if (!service.url || service.requestSystem !== "sei" || isBaGovUrl(service.url)) return null;
 
   return (
     <Link className="service-sei-guide" href="/manual-sei">
@@ -1305,7 +1306,6 @@ function ServiceWhereWhenSection({ service, mergeContact = false }: { service: S
                 ? "Você pode solicitar este serviço pela internet."
                 : "Você pode solicitar este serviço presencialmente."}
           </p>
-          {details.note && !hasSchedule && <p>{details.note}</p>}
           <div className="service-request-options">
             {details.digital && (
               <div className="service-request-digital">
@@ -1323,7 +1323,7 @@ function ServiceWhereWhenSection({ service, mergeContact = false }: { service: S
                     <div><dt>Setor responsável</dt><dd>{contact.name}</dd></div>
                   )}
                   <div><dt>Endereço</dt><dd>{details.address}</dd></div>
-                  <div><dt>Horário</dt><dd>{details.hours}</dd></div>
+                  <div><dt>Horário</dt><dd className={details.hours.startsWith("*") ? "service-pending-information" : undefined}>{details.hours}</dd></div>
                   {phones.length > 0 && (
                     <div><dt>Telefone</dt><dd className="service-request-contact-links">{phones.map((phone) => {
                       const number = phone.match(/\(\d{2}\)\s*\d{4,5}-\d{4}/)?.[0];
@@ -1407,10 +1407,10 @@ function RichServiceDetail({ service }: { service: Service }) {
             <strong>Nesta página</strong>
             <a href="#o-que-e">O que é</a>
             <a href="#quem-pode">Quem pode solicitar</a>
-            <a href="#documentos">Documentos necessários</a>
+            <a href="#documentos">{service.id === "planilha-27-comunicacao-de-animais-soltos" ? "Informações para o registro" : "Documentos necessários"}</a>
             <a href="#como-solicitar">Como solicitar</a>
             {service.whereWhen && (
-              <a href="#onde-quando">Onde e quando solicitar</a>
+              <a href="#onde-quando">{service.id === "1doc-limpeza-publica" ? "Dias e horários da coleta" : "Onde e quando solicitar"}</a>
             )}
             {!mergeContact && <a href="#canais">Canais de atendimento</a>}
             {(service.legislation?.length || service.legislationNotice) && (
@@ -1431,7 +1431,7 @@ function RichServiceDetail({ service }: { service: Service }) {
               <p className={service.eligibility?.startsWith("*") || !service.eligibility ? "service-pending-information" : undefined}>{service.eligibility || PENDING_SERVICE_INFORMATION}</p>
             </section>
             <section id="documentos">
-              <h2>Documentos necessários</h2>
+              <h2>{service.id === "planilha-27-comunicacao-de-animais-soltos" ? "Informações para o registro" : "Documentos necessários"}</h2>
               <ul>
                 {(service.documents?.length ? service.documents : [PENDING_SERVICE_INFORMATION]).map((entry) => (
                   <li className={entry.startsWith("*") ? "service-pending-information" : undefined} key={entry}>{entry}</li>
@@ -1451,7 +1451,9 @@ function RichServiceDetail({ service }: { service: Service }) {
                 </ol>
               ) : <p className="service-pending-information">{PENDING_SERVICE_INFORMATION}</p>}
             </section>
-            {service.whereWhen && <ServiceWhereWhenSection service={service} mergeContact={mergeContact} />}
+            {service.id === "1doc-limpeza-publica"
+              ? <CollectionScheduleSection />
+              : service.whereWhen && <ServiceWhereWhenSection service={service} mergeContact={mergeContact} />}
             <section id="informacoes" className="service-facts">
               <div>
                 <span>Custo</span>

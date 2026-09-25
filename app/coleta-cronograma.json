@@ -1,0 +1,826 @@
+{
+  "sourceUrl": "https://acesso.amargosa.ba.gov.br/coletalixo",
+  "retrievedAt": "2026-09-25",
+  "groups": [
+    {
+      "id": "bairros",
+      "title": "Bairros",
+      "places": [
+        {
+          "name": "Alto da Bela Vista",
+          "routes": [
+            {
+              "name": "Rua Rio de Janeiro, Minguara",
+              "slots": [
+                {
+                  "day": "Terça-feira",
+                  "time": "10:40"
+                },
+                {
+                  "day": "Quinta-feira",
+                  "time": "10:40"
+                },
+                {
+                  "day": "Sábado",
+                  "time": "10:40"
+                }
+              ]
+            },
+            {
+              "name": "Loteamento Nono",
+              "slots": [
+                {
+                  "day": "Terça-feira",
+                  "time": "13:30"
+                },
+                {
+                  "day": "Quinta-feira",
+                  "time": "12:00"
+                },
+                {
+                  "day": "Sábado",
+                  "time": "12:00"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Cajueiro / São José",
+          "routes": [
+            {
+              "name": "Rua Dr. Bertino Passos",
+              "slots": [
+                {
+                  "day": "Segunda-feira",
+                  "time": "08:15"
+                },
+                {
+                  "day": "Quarta-feira",
+                  "time": "08:00"
+                },
+                {
+                  "day": "Sexta-feira",
+                  "time": "08:00"
+                }
+              ]
+            },
+            {
+              "name": "Eline Passos, Loteamento Bandeirante e Maracanã",
+              "slots": [
+                {
+                  "day": "Segunda-feira",
+                  "time": "10:00"
+                },
+                {
+                  "day": "Quarta-feira",
+                  "time": "09:50"
+                },
+                {
+                  "day": "Sexta-feira",
+                  "time": "09:50"
+                }
+              ]
+            },
+            {
+              "name": "Loteamento Marival Almeida",
+              "slots": [
+                {
+                  "day": "Segunda-feira",
+                  "time": "07:40"
+                },
+                {
+                  "day": "Quarta-feira",
+                  "time": "07:40"
+                },
+                {
+                  "day": "Sexta-feira",
+                  "time": "07:40"
+                }
+              ]
+            },
+            {
+              "name": "Loteamento Veíto",
+              "slots": [
+                {
+                  "day": "Segunda-feira",
+                  "time": "09:00"
+                },
+                {
+                  "day": "Quarta-feira",
+                  "time": "09:00"
+                },
+                {
+                  "day": "Sexta-feira",
+                  "time": "09:00"
+                }
+              ]
+            },
+            {
+              "name": "Cajueiro / São José",
+              "slots": [
+                {
+                  "day": "Segunda-feira",
+                  "time": "08:15"
+                },
+                {
+                  "day": "Quarta-feira",
+                  "time": "08:15"
+                },
+                {
+                  "day": "Sexta-feira",
+                  "time": "08:15"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Catiara",
+          "routes": [
+            {
+              "name": "Bate Bico e São Jorge",
+              "slots": [
+                {
+                  "day": "Terça-feira",
+                  "time": "08:40"
+                },
+                {
+                  "day": "Quinta-feira",
+                  "time": "08:40"
+                },
+                {
+                  "day": "Sábado",
+                  "time": "08:40"
+                }
+              ]
+            },
+            {
+              "name": "(Cidade Jardim) Resort Baitinga",
+              "slots": [
+                {
+                  "day": "Terça-feira",
+                  "time": "11:00"
+                },
+                {
+                  "day": "Quinta-feira",
+                  "time": "10:20"
+                },
+                {
+                  "day": "Sábado",
+                  "time": "10:20"
+                }
+              ]
+            },
+            {
+              "name": "Loteamento Boa Esperança",
+              "slots": [
+                {
+                  "day": "Terça-feira",
+                  "time": "07:00"
+                },
+                {
+                  "day": "Quinta-feira",
+                  "time": "07:00"
+                },
+                {
+                  "day": "Sábado",
+                  "time": "07:00"
+                }
+              ]
+            },
+            {
+              "name": "Parque dos Pássaros",
+              "slots": [
+                {
+                  "day": "Terça-feira",
+                  "time": "09:30"
+                },
+                {
+                  "day": "Quinta-feira",
+                  "time": "09:00"
+                },
+                {
+                  "day": "Sábado",
+                  "time": "09:00"
+                }
+              ]
+            },
+            {
+              "name": "Trança Gaia",
+              "slots": [
+                {
+                  "day": "Terça-feira",
+                  "time": "10:00"
+                },
+                {
+                  "day": "Quinta-feira",
+                  "time": "09:40"
+                },
+                {
+                  "day": "Sábado",
+                  "time": "09:40"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Centro",
+          "routes": [
+            {
+              "name": "Área Comercial, Jaqueira e entorno do Mercado Municipal Abelardo Veloso",
+              "slots": [
+                {
+                  "day": "Segunda-feira",
+                  "time": "18:00"
+                },
+                {
+                  "day": "Terça-feira",
+                  "time": "18:30"
+                },
+                {
+                  "day": "Quarta-feira",
+                  "time": "18:00"
+                },
+                {
+                  "day": "Quinta-feira",
+                  "time": "18:30"
+                },
+                {
+                  "day": "Sexta-feira",
+                  "time": "18:00"
+                },
+                {
+                  "day": "Sábado",
+                  "time": "18:00"
+                }
+              ]
+            },
+            {
+              "name": "Malmequer, Praça do Bosque e Adjacências",
+              "slots": [
+                {
+                  "day": "Segunda-feira",
+                  "time": "16:30"
+                },
+                {
+                  "day": "Terça-feira",
+                  "time": "17:30"
+                },
+                {
+                  "day": "Quarta-feira",
+                  "time": "16:30"
+                },
+                {
+                  "day": "Quinta-feira",
+                  "time": "17:30"
+                },
+                {
+                  "day": "Sexta-feira",
+                  "time": "16:30"
+                },
+                {
+                  "day": "Sábado",
+                  "time": "17:30"
+                }
+              ]
+            },
+            {
+              "name": "Rodagem",
+              "slots": [
+                {
+                  "day": "Terça-feira",
+                  "time": "12:20"
+                },
+                {
+                  "day": "Quinta-feira",
+                  "time": "12:20"
+                },
+                {
+                  "day": "Sábado",
+                  "time": "12:20"
+                }
+              ]
+            },
+            {
+              "name": "Rua da Lapinha e Shopping",
+              "slots": [
+                {
+                  "day": "Segunda-feira",
+                  "time": "12:10"
+                },
+                {
+                  "day": "Quarta-feira",
+                  "time": "12:10"
+                },
+                {
+                  "day": "Sexta-feira",
+                  "time": "12:10"
+                }
+              ]
+            },
+            {
+              "name": "Rua do Buraco, Ribeirão, Vazlândia, Embasa",
+              "slots": [
+                {
+                  "day": "Segunda-feira",
+                  "time": "16:20"
+                },
+                {
+                  "day": "Terça-feira",
+                  "time": "16:20"
+                },
+                {
+                  "day": "Quarta-feira",
+                  "time": "16:20"
+                },
+                {
+                  "day": "Quinta-feira",
+                  "time": "16:20"
+                },
+                {
+                  "day": "Sexta-feira",
+                  "time": "16:20"
+                },
+                {
+                  "day": "Sábado",
+                  "time": "14:30"
+                }
+              ]
+            },
+            {
+              "name": "Fábrica",
+              "slots": [
+                {
+                  "day": "Terça-feira",
+                  "time": "12:40"
+                },
+                {
+                  "day": "Quinta-feira",
+                  "time": "12:40"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Lapinha",
+          "routes": [
+            {
+              "name": "Loteamento Hugo Nogueira",
+              "slots": [
+                {
+                  "day": "Segunda-feira",
+                  "time": "13:10"
+                },
+                {
+                  "day": "Quarta-feira",
+                  "time": "13:10"
+                },
+                {
+                  "day": "Sexta-feira",
+                  "time": "13:10"
+                }
+              ]
+            },
+            {
+              "name": "Loteamento Leninho Rosa",
+              "slots": [
+                {
+                  "day": "Terça-feira",
+                  "time": "07:00"
+                },
+                {
+                  "day": "Quinta-feira",
+                  "time": "07:00"
+                },
+                {
+                  "day": "Sábado",
+                  "time": "07:00"
+                }
+              ]
+            },
+            {
+              "name": "Loteamento Muniz",
+              "slots": [
+                {
+                  "day": "Segunda-feira",
+                  "time": "12:50"
+                },
+                {
+                  "day": "Quarta-feira",
+                  "time": "12:50"
+                },
+                {
+                  "day": "Sexta-feira",
+                  "time": "12:50"
+                }
+              ]
+            },
+            {
+              "name": "Loteamento Vá de Rosa",
+              "slots": [
+                {
+                  "day": "Segunda-feira",
+                  "time": "12:00"
+                },
+                {
+                  "day": "Quarta-feira",
+                  "time": "11:40"
+                },
+                {
+                  "day": "Sexta-feira",
+                  "time": "11:40"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Loteamento Santo Antônio",
+          "routes": [
+            {
+              "name": "Loteamento Santo Antônio",
+              "slots": [
+                {
+                  "day": "Segunda-feira",
+                  "time": "14:30"
+                },
+                {
+                  "day": "Quarta-feira",
+                  "time": "14:30"
+                },
+                {
+                  "day": "Sexta-feira",
+                  "time": "14:30"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Rodão",
+          "routes": [
+            {
+              "name": "Rua Nova",
+              "slots": [
+                {
+                  "day": "Segunda-feira",
+                  "time": "10:00"
+                },
+                {
+                  "day": "Quarta-feira",
+                  "time": "08:30"
+                },
+                {
+                  "day": "Sexta-feira",
+                  "time": "10:00"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Santa Rita",
+          "routes": [
+            {
+              "name": "Atrás do antigo CAPS",
+              "slots": [
+                {
+                  "day": "Terça-feira",
+                  "time": "07:20"
+                },
+                {
+                  "day": "Quinta-feira",
+                  "time": "07:20"
+                },
+                {
+                  "day": "Sábado",
+                  "time": "07:20"
+                }
+              ]
+            },
+            {
+              "name": "Avenida Dr. Luís Sande / Rua do Fogo",
+              "slots": [
+                {
+                  "day": "Segunda-feira",
+                  "time": "12:10"
+                },
+                {
+                  "day": "Quarta-feira",
+                  "time": "12:00"
+                },
+                {
+                  "day": "Sexta-feira",
+                  "time": "12:00"
+                }
+              ]
+            },
+            {
+              "name": "Dr. Aloísio Santos Borges, Largo do Hospital",
+              "slots": [
+                {
+                  "day": "Segunda-feira",
+                  "time": "11:00"
+                },
+                {
+                  "day": "Terça-feira",
+                  "time": "10:30"
+                },
+                {
+                  "day": "Quarta-feira",
+                  "time": "10:30"
+                },
+                {
+                  "day": "Quinta-feira",
+                  "time": "10:30"
+                },
+                {
+                  "day": "Sexta-feira",
+                  "time": "10:30"
+                },
+                {
+                  "day": "Sábado",
+                  "time": "09:00"
+                }
+              ]
+            },
+            {
+              "name": "João Bonfim",
+              "slots": [
+                {
+                  "day": "Terça-feira",
+                  "time": "07:40"
+                },
+                {
+                  "day": "Quinta-feira",
+                  "time": "07:40"
+                },
+                {
+                  "day": "Sábado",
+                  "time": "07:40"
+                }
+              ]
+            },
+            {
+              "name": "Paulo de Queiroz, Tenente Miguel, 08 de Setembro e Hélio Cardoso",
+              "slots": [
+                {
+                  "day": "Terça-feira",
+                  "time": "11:00"
+                },
+                {
+                  "day": "Quinta-feira",
+                  "time": "11:00"
+                },
+                {
+                  "day": "Sábado",
+                  "time": "11:00"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Sucupira",
+          "routes": [
+            {
+              "name": "Campo Belo",
+              "slots": [
+                {
+                  "day": "Terça-feira",
+                  "time": "14:30"
+                },
+                {
+                  "day": "Quinta-feira",
+                  "time": "14:30"
+                },
+                {
+                  "day": "Sábado",
+                  "time": "13:30"
+                }
+              ]
+            },
+            {
+              "name": "Loteamento Brasil",
+              "slots": [
+                {
+                  "day": "Terça-feira",
+                  "time": "13:10"
+                },
+                {
+                  "day": "Quinta-feira",
+                  "time": "13:30"
+                },
+                {
+                  "day": "Sábado",
+                  "time": "13:00"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "São Roque",
+          "routes": [
+            {
+              "name": "Gamboa Avenida ACM / Rua da Linha",
+              "slots": [
+                {
+                  "day": "Terça-feira",
+                  "time": "08:20"
+                },
+                {
+                  "day": "Quinta-feira",
+                  "time": "08:20"
+                },
+                {
+                  "day": "Sábado",
+                  "time": "08:20"
+                }
+              ]
+            },
+            {
+              "name": "Rua 15 e Loteamento Elísio Moura",
+              "slots": [
+                {
+                  "day": "Segunda-feira",
+                  "time": "11:30"
+                },
+                {
+                  "day": "Quarta-feira",
+                  "time": "10:00"
+                },
+                {
+                  "day": "Sexta-feira",
+                  "time": "11:30"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Urbis I / Urbis II",
+          "routes": [
+            {
+              "name": "Urbis II",
+              "slots": [
+                {
+                  "day": "Terça-feira",
+                  "time": "12:40"
+                },
+                {
+                  "day": "Quinta-feira",
+                  "time": "12:40"
+                },
+                {
+                  "day": "Sábado",
+                  "time": "12:40"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "distritos",
+      "title": "Distritos",
+      "places": [
+        {
+          "name": "Distrito de Corta Mão",
+          "routes": [
+            {
+              "name": "Zona Rural",
+              "slots": [
+                {
+                  "day": "Sexta-feira",
+                  "time": "08:30"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Distrito de Itachama / UFRB",
+          "routes": [
+            {
+              "name": "Faculdade / Distrito de Itachama (Zona Rural)",
+              "slots": [
+                {
+                  "day": "Segunda-feira",
+                  "time": "08:30"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Distrito de São Roque",
+          "routes": [
+            {
+              "name": "Zona Rural",
+              "slots": [
+                {
+                  "day": "Quarta-feira",
+                  "time": "13:00"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "localidades",
+      "title": "Localidades",
+      "places": [
+        {
+          "name": "Alto Seco, Cambaúba e Pista",
+          "routes": [
+            {
+              "name": "Localidade de Alto Seco, Cambaúba e Pista (BA-540)",
+              "slots": [
+                {
+                  "day": "Sexta-feira",
+                  "time": "07:30"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Baixa de Areia",
+          "routes": [
+            {
+              "name": "Localidade Baixa de Areia (Zona Rural)",
+              "slots": [
+                {
+                  "day": "Quarta-feira",
+                  "time": "07:20"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Barreiros",
+          "routes": [
+            {
+              "name": "Localidade Barreiros (Zona Rural)",
+              "slots": [
+                {
+                  "day": "Quinta-feira",
+                  "time": "13:10"
+                }
+              ]
+            },
+            {
+              "name": "Localidade Barreiros (Zona Rural)",
+              "slots": [
+                {
+                  "day": "Segunda-feira",
+                  "time": "07:30"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Mata das Covas",
+          "routes": [
+            {
+              "name": "Localidade Mata das Covas (Zona Rural Zeca de Patrão)",
+              "slots": [
+                {
+                  "day": "Quarta-feira",
+                  "time": "13:45"
+                },
+                {
+                  "day": "Sexta-feira",
+                  "time": "12:20"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Povoado de Três Lagoas",
+          "routes": [
+            {
+              "name": "Povoado de Três Lagoas",
+              "slots": [
+                {
+                  "day": "Quarta-feira",
+                  "time": "14:20"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -59,6 +59,7 @@ npm run start
 | `npm run build` | Compila o portal para produção |
 | `npm run start` | Inicia a compilação de produção na porta 3000 |
 | `npm run lint` | Verifica a qualidade do código |
+| `npm run sync:coleta` | Atualiza os horários da coleta a partir do cronograma oficial (PowerShell no Windows) |
 
 ## Organização do projeto
 
@@ -85,6 +86,10 @@ scripts/             utilitários pontuais de identidade visual
 O arquivo `content/site.json` reúne identidade, segmentos, públicos, categorias e serviços. Cada serviço pode informar título, órgão, públicos atendidos, categoria, URL oficial e, quando disponível, resumo, requisitos, documentos, etapas, prazo, canais, legislação e serviços relacionados.
 
 Mudanças em componentes e estilos ficam em `app/`. Depois de qualquer atualização, execute `npm run build` antes de publicar.
+
+### Cronograma da coleta de lixo
+
+A página de Limpeza pública e a Amanda usam os mesmos dados em `app/coleta-cronograma.json`. Esse arquivo é uma cópia datada do [cronograma municipal](https://acesso.amargosa.ba.gov.br/coletalixo), não uma consulta em tempo real. Quando a Prefeitura alterar o documento, execute `npm run sync:coleta`, confira as rotas modificadas e publique a nova versão. A página mantém o link oficial para consultas mais recentes.
 
 ## Assistente virtual Amanda
 

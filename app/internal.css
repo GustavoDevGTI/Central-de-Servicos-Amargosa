@@ -93,6 +93,28 @@
 .service-request-contact-links,.service-request-phone{display:flex;flex-direction:column;align-items:flex-start;gap:3px}
 @media(max-width:480px){.service-request-option dl>div{grid-template-columns:1fr;gap:2px}}
 
+.collection-schedule>p{margin:0 0 16px}
+.collection-schedule .collection-schedule-source{display:inline-flex;align-items:center;gap:6px;color:var(--green);font-weight:800;text-decoration:underline;text-underline-offset:3px}
+.collection-schedule .collection-schedule-source:hover{color:var(--deep)}
+.collection-schedule .collection-schedule-source:focus-visible,.collection-schedule .collection-schedule-place summary:focus-visible{outline:3px solid #f2c94c;outline-offset:3px}
+.collection-schedule .collection-schedule-updated{margin:10px 0 24px;color:var(--muted);font-size:13px}
+.collection-schedule-group{margin-top:28px}
+.collection-schedule-group h3{margin:0 0 12px;padding-bottom:8px;border-bottom:2px solid #d4e2db;color:var(--ink);font-size:19px}
+.collection-schedule-place{margin:10px 0;border:1px solid #d4e2db;border-radius:5px;background:#fff}
+.collection-schedule-place summary{display:flex;align-items:center;gap:12px;padding:14px 17px;color:var(--green);font-weight:800;cursor:pointer;list-style:none}
+.collection-schedule-place summary::-webkit-details-marker{display:none}
+.collection-schedule-place summary small{margin-left:auto;color:var(--muted);font-size:12px;font-weight:700;white-space:nowrap}
+.collection-schedule-place summary::after{content:"+";color:var(--green);font-size:22px;line-height:1}
+.collection-schedule-place[open] summary::after{content:"−"}
+.collection-schedule-routes{padding:0 17px 15px}
+.collection-schedule-route{padding:14px 0;border-top:1px solid #e3ebe6}
+.collection-schedule-route h4{margin:0 0 9px;color:var(--ink);font-size:15px}
+.collection-schedule-route ul{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:0;padding:0;list-style:none}
+.collection-schedule-route li{min-height:44px;display:flex;align-items:center;justify-content:space-between;gap:8px;padding:9px 10px;border-radius:4px;background:#f0f7f3;font-size:13px}
+.collection-schedule-route li+li{margin-top:0}
+.collection-schedule-route time{color:var(--green);font-weight:800;white-space:nowrap}
+@media(max-width:640px){.collection-schedule-route ul{grid-template-columns:1fr}.collection-schedule-place summary{flex-wrap:wrap}.collection-schedule-place summary small{margin-left:0}}
+
 /* Leis como referências individuais, sem linhas de pauta entre os itens. */
 .service-legislation{display:grid;gap:10px;border-top:0}
 .service-legislation a{min-height:72px;justify-content:flex-start;gap:16px;padding:16px 18px;border:1px solid #d4e2db;border-left:4px solid var(--green);border-radius:8px;background:#fff;color:var(--ink);font-size:14px;line-height:1.45;text-decoration:none;box-shadow:0 3px 12px rgba(3,55,42,.04);transition:border-color .18s ease,background-color .18s ease,box-shadow .18s ease,transform .18s ease}

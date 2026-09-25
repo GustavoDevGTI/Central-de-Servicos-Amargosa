@@ -126,17 +126,46 @@
   .site-root>.segment-featured .quick-access-list.is-expanded .quick-access-toggle{position:relative;left:auto;bottom:auto;margin:18px auto 0;transform:none}
 }
 
-/* Serviços em uma coluna e revelação progressiva no mobile. */
+/* Serviços em pares e revelação progressiva no mobile. */
 .requested-service-list{position:relative}
 .requested-service-toggle{display:none}
 @media(max-width:620px){
-  .site-root>.segment-audiences .requested-service-grid{grid-template-columns:1fr}
-  .site-root>.segment-audiences .requested-service-card{min-height:84px;padding:14px 15px}
+  .site-root>.segment-audiences.audience-panel{padding-top:18px}
+  #mais-solicitados header h2{margin-top:0;font-size:clamp(25px,6.7vw,30px)!important;line-height:1.12;letter-spacing:-.035em}
+  .site-root>.segment-audiences .requested-service-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+  .site-root>.segment-audiences .requested-service-card{min-width:0;min-height:132px;padding:12px}
+  .site-root>.segment-audiences .requested-service-content{gap:5px}
+  .site-root>.segment-audiences .requested-service-public{font-size:8px;overflow-wrap:anywhere}
+  .site-root>.segment-audiences .requested-service-content strong{font-size:14px;line-height:1.2;overflow-wrap:anywhere}
+  .site-root>.segment-audiences .requested-service-content small{font-size:11px;line-height:1.3;overflow-wrap:anywhere}
   .site-root>.segment-audiences .requested-service-list.has-more.is-collapsed .requested-service-card:nth-child(n+5){display:none}
-  .site-root>.segment-audiences .requested-service-toggle{display:flex;align-items:center;justify-content:center;gap:9px;margin:15px auto 0;padding:10px 16px;border:1px solid var(--segment-accent);border-radius:4px;background:#fff;color:var(--segment-accent);font-size:13px;font-weight:700;cursor:pointer}
-  .site-root>.segment-audiences .requested-service-toggle b{font-size:16px;line-height:1}
+  .site-root>.segment-audiences .requested-service-list.has-more.is-collapsed::after{content:"";position:absolute;z-index:1;left:0;right:0;bottom:0;height:92px;pointer-events:none;background:linear-gradient(to bottom,transparent 0%,color-mix(in srgb,var(--segment-bg) 88%,transparent) 48%,var(--segment-bg) 88%)}
+  .site-root>.segment-audiences .requested-service-toggle{position:absolute;z-index:2;left:50%;bottom:12px;width:44px;height:44px;display:grid;place-items:center;padding:0;transform:translateX(-50%);border:1px solid color-mix(in srgb,var(--segment-accent) 42%,#fff);border-radius:50%;background:var(--segment-accent);color:#fff;box-shadow:0 9px 24px rgba(3,57,44,.22);cursor:pointer}
+  .site-root>.segment-audiences .requested-service-toggle b{font-size:22px;line-height:1}
+  .site-root>.segment-audiences .requested-service-toggle:focus-visible{outline:3px solid #f2c94c;outline-offset:3px}
+  .site-root>.segment-audiences .requested-service-list.is-expanded .requested-service-toggle{position:relative;left:auto;bottom:auto;margin:18px auto 0;transform:none}
+}
+@media(max-width:360px){
+  .site-root>.segment-audiences .requested-service-card{padding:9px}
+  .site-root>.segment-audiences .requested-service-content strong{font-size:12px}
+  .site-root>.segment-audiences .requested-service-content small{font-size:10px}
+  .site-root>.segment-audiences .requested-service-public{font-size:7px}
 }
 @media(max-width:480px){.site-root>.segment-featured .public-audience-grid{grid-template-columns:1fr}.site-root>.segment-featured .public-audience-card{min-height:126px}}
+
+/* Os dois primeiros públicos ficam visíveis; o terceiro indica a continuação. */
+.public-audience-list{position:relative}
+.public-audience-toggle{display:none}
+@media(max-width:620px){
+  .site-root>.segment-featured .public-audience-grid{grid-template-columns:1fr}
+  .site-root>.segment-featured .public-audience-list.has-more.is-collapsed .public-audience-card:nth-child(3){height:92px;min-height:0;overflow:hidden}
+  .site-root>.segment-featured .public-audience-list.has-more.is-collapsed .public-audience-card:nth-child(n+4){display:none}
+  .site-root>.segment-featured .public-audience-list.has-more.is-collapsed::after{content:"";position:absolute;z-index:1;left:0;right:0;bottom:0;height:92px;pointer-events:none;background:linear-gradient(to bottom,transparent 0%,color-mix(in srgb,var(--segment-bg) 88%,transparent) 48%,var(--segment-bg) 88%)}
+  .site-root>.segment-featured .public-audience-toggle{position:absolute;z-index:2;left:50%;bottom:12px;width:44px;height:44px;display:grid;place-items:center;padding:0;transform:translateX(-50%);border:1px solid color-mix(in srgb,var(--segment-accent) 42%,#fff);border-radius:50%;background:var(--segment-accent);color:#fff;box-shadow:0 9px 24px rgba(3,57,44,.22);cursor:pointer}
+  .site-root>.segment-featured .public-audience-toggle b{font-size:22px;line-height:1}
+  .site-root>.segment-featured .public-audience-toggle:focus-visible{outline:3px solid #f2c94c;outline-offset:3px}
+  .site-root>.segment-featured .public-audience-list.is-expanded .public-audience-toggle{position:relative;left:auto;bottom:auto;margin:18px auto 0;transform:none}
+}
 
 /* Amanda ganha presença no desktop e vira um atalho visual no mobile. */
 .amanda-launcher{width:280px;min-height:76px;grid-template-columns:52px minmax(0,1fr) auto;gap:12px;padding:11px 14px}

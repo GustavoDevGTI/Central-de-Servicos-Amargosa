@@ -386,8 +386,8 @@ export const approvedServiceDetails: Record<string, ApprovedServiceDetail> = {
 
   "1doc-limpeza-publica": {
     slug: "limpeza-publica",
-    destination: "Orientações da Prefeitura de Amargosa",
-    url: "https://www.amargosa.ba.gov.br/faq-%E2%80%93-perguntas-frequentes",
+    destination: "Atendimento digital municipal",
+    url: "https://acesso.amargosa.ba.gov.br/limpeza-publica",
     summary:
       "Coleta regular de resíduos domiciliares e comerciais nos bairros e localidades atendidos pelo cronograma municipal de limpeza pública.",
     eligibility:
@@ -397,53 +397,23 @@ export const approvedServiceDetails: Record<string, ApprovedServiceDetail> = {
       "Acondicione os resíduos de forma segura e coloque-os para coleta pouco antes do horário da rota.",
     ],
     steps: [
-      "Identifique abaixo os dias e o horário da coleta em seu bairro ou localidade.",
+      "Encontre seu bairro, distrito ou localidade no cronograma abaixo e confira a rota da sua rua.",
       "Separe e acondicione os resíduos para evitar vazamentos e acidentes.",
       "Disponibilize o material no ponto de coleta próximo ao horário informado.",
       "Se houver falha recorrente na rota, registre a ocorrência no atendimento municipal.",
     ],
     whereWhen:
-      "Consulte o horário da sua localidade e disponibilize os resíduos pouco antes da passagem da equipe.",
-    whereWhenItems: [
-      {
-        label: "07h20",
-        schedule: "Segunda, quarta e sexta",
-        description: "Urbis 1, São José, Cajueiro e Eline Passos.",
-      },
-      {
-        label: "11h30",
-        schedule: "Segunda, quarta e sexta",
-        description:
-          "Loteamento Muniz, Tropical Center, Loteamento Santo Antônio e Rodão.",
-      },
-      {
-        label: "17h",
-        schedule: "Segunda a sábado",
-        description: "Centro, Malmequer, Rua do Buraco, Bosque e Comércio.",
-      },
-      {
-        label: "07h",
-        schedule: "Terça, quinta e sábado",
-        description:
-          "Boa Esperança, Loteamento São Jorge, Idalina Figueredo, Parque dos Pássaros, Avenida São Cristóvão, Casas Populares, Santa Rita, Alto da Bela Vista, Mansão do Forró, João Bonfim, Travessa Luís Sandes, Gamboa, São Roque, João do Fórum, Minguara e Urbis 2.",
-        wide: true,
-      },
-      {
-        label: "13h",
-        schedule: "Terça, quinta e sábado",
-        description: "Gravatá, Sucupira e Campo Belo.",
-      },
-    ],
+      "Os dias e horários variam por bairro, rua, distrito e localidade. Consulte o cronograma detalhado nesta página.",
     cost: PENDING_SERVICE_INFORMATION,
     duration: "Atendimento conforme os dias e horários publicados para cada rota.",
     channels: [
       {
         label: "Cronograma",
-        value: "Cronograma da Prefeitura",
-        url: "https://www.amargosa.ba.gov.br/faq-%E2%80%93-perguntas-frequentes",
+        value: "Consultar cronograma atualizado da coleta",
+        url: "https://acesso.amargosa.ba.gov.br/coletalixo",
       },
       { label: "Telefone", value: amargosaPhone },
-      { label: "Online", value: "Central de Atendimento 1Doc", url: oneDocCentral },
+      { label: "Online", value: "Solicitar atendimento de limpeza pública", url: "https://acesso.amargosa.ba.gov.br/limpeza-publica" },
     ],
     legislation: [
       { label: "Lei Federal nº 12.305/2010 — Política Nacional de Resíduos Sólidos", url: "https://www.planalto.gov.br/ccivil_03/_ato2007-2010/2010/lei/l12305.htm" },
@@ -451,15 +421,15 @@ export const approvedServiceDetails: Record<string, ApprovedServiceDetail> = {
     ],
     relatedServiceIds: ["1doc-retirada-de-entulhos"],
     notice:
-      "Consulte o cronograma antes de colocar os resíduos na rua; entulho de obra exige solicitação e agendamento próprios.",
-    noticeAction: "Consultar o cronograma da coleta ↗",
-    updatedAt: "01/09/2026",
+      "A coleta não ocorreu conforme a rota? Registre uma solicitação de atendimento.",
+    noticeAction: "Registrar solicitação ↗",
+    updatedAt: "25/09/2026",
   },
 
   "1doc-ouvidoria-geral": {
     slug: "ouvidoria-geral",
-    destination: "Ouvidoria Municipal no 1Doc",
-    url: "https://amargosa.1doc.com.br/b.php?itd=4&pg=wp/wp",
+    destination: "Atendimento digital da Ouvidoria",
+    url: "https://falabr.cgu.gov.br/web/home",
     summary:
       "Serviço para registrar reclamações, denúncias, sugestões, elogios e solicitações sobre os serviços públicos municipais de Amargosa.",
     eligibility:
@@ -476,18 +446,18 @@ export const approvedServiceDetails: Record<string, ApprovedServiceDetail> = {
       "Envie a manifestação e guarde o número de protocolo para acompanhar a resposta.",
     ],
     whereWhen:
-      "Escolha o canal mais conveniente para registrar ou acompanhar a manifestação.",
+      "Você pode registrar ou acompanhar sua manifestação pela internet ou presencialmente.",
     whereWhenItems: [
       {
         label: "Online",
         schedule: "A qualquer momento",
-        description: "Ouvidoria Municipal no 1Doc.",
+        description: "Registre ou acompanhe sua manifestação pelo atendimento digital desta página.",
       },
       {
         label: "Presencial",
         schedule: "De segunda a sexta-feira, das 8h às 12h e das 14h às 17h",
         description:
-          "Avenida Dr. Luís Sandes, Valle Shopping, Amargosa – BA.",
+          "Ouvidoria Municipal — Avenida Dr. Luís Sandes, Valle Shopping, Amargosa – BA.",
       },
     ],
     cost: "Gratuito.",
@@ -497,7 +467,7 @@ export const approvedServiceDetails: Record<string, ApprovedServiceDetail> = {
       {
         label: "Online",
         value: "Registrar manifestação na Ouvidoria",
-        url: "https://amargosa.1doc.com.br/b.php?itd=4&pg=wp/wp",
+        url: "https://falabr.cgu.gov.br/web/home",
       },
       { label: "Telefone", value: "(75) 3512-7811 — ramal 4141" },
       {
@@ -511,9 +481,9 @@ export const approvedServiceDetails: Record<string, ApprovedServiceDetail> = {
       { label: "Lei Federal nº 13.460/2017 — Defesa dos usuários de serviços públicos", url: userRightsLaw },
     ],
     notice:
-      "A manifestação é registrada na Ouvidoria Municipal e pode ser acompanhada pelo número de protocolo.",
+      "Registre sua manifestação pela internet e acompanhe pelo número de protocolo.",
     noticeAction: "Registrar manifestação na Ouvidoria ↗",
-    updatedAt: "01/09/2026",
+    updatedAt: "25/09/2026",
   },
 
   "1doc-recurso-a-junta-administrativa-de-recursos-de-infracoes-cetran": {

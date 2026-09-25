@@ -1,4 +1,5 @@
 import type { Service } from "./service-catalog";
+import { PENDING_SERVICE_INFORMATION } from "./pending-information";
 
 type ServiceLocation = Pick<Service, "accessMode" | "url" | "whereWhen" | "whereWhenItems">;
 
@@ -18,7 +19,6 @@ export type ServiceWhereWhen = {
   phone?: string;
   whatsapp?: string;
   emails: string[];
-  note?: string;
 };
 
 const genericDigitalUrl = /^https?:\/\/acesso\.amargosa\.ba\.gov\.br\/protocolodigital\/?(?:[?#].*)?$/i;
@@ -75,20 +75,11 @@ export function serviceWhereWhen(
   const local = facts.get("atendimento presencial")?.[0] ||
     facts.get("atendimento presencial e virtual")?.[0] || scheduleLocation?.[0] || contact.name;
   const address = facts.get("endereço")?.[0] || scheduleLocation?.[1] || contact.address;
-  const isSacMunicipal = /^SAC MUNICIPAL$/i.test(local) && /Valle Shopping/i.test(address);
   const rawHours = facts.get("horário de atendimento")?.[0] || facts.get("horários de atendimento")?.[0];
   const hours = presencialSchedule?.schedule || (rawHours && !rawHours.startsWith("*")
     ? rawHours
-    : isSacMunicipal
-      ? "Horário do SAC Municipal não informado. Confirme por telefone antes de comparecer."
-      : "Confirme o horário por telefone antes de comparecer.");
+    : PENDING_SERVICE_INFORMATION);
   const emails = [...new Set([...(facts.get("e-mail") || []), ...(presencialSchedule && contact.email ? [contact.email] : [])])];
-  const redundantGuidance = /^O pedido pode ser iniciado pel[ao] .+?\. Para orientação presencial ou confirmação do setor, contate a Prefeitura pelo telefone \(75\) 3512-7811, de segunda a sexta-feira\.$/i.test(text);
-  const commonText = /^(?:Atendimento digital\. Inicie a solicitação pelo link desta página\.|Atendimento presencial\. Consulte o endereço do órgão responsável nos canais abaixo e confirme o horário por telefone\.|Confirme com o órgão responsável se o atendimento é digital ou presencial\.)$/i.test(text);
-  const note = facts.size === 0 && text && !text.startsWith("*") && !commonText && !redundantGuidance
-    ? text
-    : undefined;
-
   return {
     digital,
     presencial,
@@ -98,6 +89,5 @@ export function serviceWhereWhen(
     phone: facts.get("telefone")?.[0] || (presencial ? contact.phone : undefined),
     whatsapp: facts.get("whatsapp")?.[0],
     emails,
-    note,
   };
 }

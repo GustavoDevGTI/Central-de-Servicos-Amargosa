@@ -248,8 +248,6 @@ function applySpreadsheetAccessMode(service: Service): Service {
       : accessMode === "a-confirmar"
         ? "Confirme com o órgão responsável se o atendimento é digital ou presencial."
         : genericPresentialWhereWhen;
-  } else if (accessMode === "digital" && whereWhen?.startsWith("Em caso de emergência, ligue 153. Para atendimento presencial")) {
-    whereWhen = "Em caso de emergência, ligue 153. Para iniciar uma solicitação digital, use o link desta página.";
   }
 
   return {

@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
+import { PENDING_SERVICE_INFORMATION } from "./pending-information.ts";
 import { sameInPersonServiceOffice, serviceWhereWhen } from "./service-where-when.ts";
 
 const contact = {
@@ -19,17 +20,18 @@ test("specific service link and in-person instructions show both request options
   assert.equal(result.presencial, true);
   assert.equal(result.local, "SAC MUNICIPAL");
   assert.equal(result.address, "Av. Dr. Luis Sandes, 120 Valle Shopping");
-  assert.equal(result.hours, "Horário do SAC Municipal não informado. Confirme por telefone antes de comparecer.");
+  assert.equal(result.hours, PENDING_SERVICE_INFORMATION);
 });
 
-test("request location leaves redundant guidance to the access summary", () => {
+test("request location keeps the digital access mode without extra guidance", () => {
   const result = serviceWhereWhen({
     accessMode: "digital",
     url: "https://acesso.amargosa.ba.gov.br/abastecimento-agua",
     whereWhen: "O pedido pode ser iniciado pela internet. Para orientação presencial ou confirmação do setor, contate a Prefeitura pelo telefone (75) 3512-7811, de segunda a sexta-feira.",
   }, contact);
 
-  assert.equal(result.note, undefined);
+  assert.equal(result.digital, true);
+  assert.equal(result.presencial, true);
 });
 
 test("generic protocol link follows the spreadsheet's digital classification", () => {
@@ -83,7 +85,7 @@ test("in-person service without a link shows the responsible office address", ()
   assert.equal(result.presencial, true);
   assert.equal(result.local, contact.name);
   assert.equal(result.address, contact.address);
-  assert.match(result.hours, /Confirme o horário/);
+  assert.equal(result.hours, PENDING_SERVICE_INFORMATION);
 });
 
 test("the same in-person office includes aliases and sectors within its secretariat", () => {

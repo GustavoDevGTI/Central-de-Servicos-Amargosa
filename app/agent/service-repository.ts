@@ -1,5 +1,6 @@
 import siteContent from "../../content/site.json" with { type: "json" };
 import { approvedServiceDetails } from "../approved-service-details";
+import collectionSchedule from "../coleta-cronograma.json" with { type: "json" };
 import { rankSearchSuggestions } from "../search-engine";
 import { services, type Service } from "../service-catalog";
 import type { AgentServiceCard } from "./types";
@@ -80,6 +81,10 @@ export function expandServiceSearchTerms(term: string) {
     add("Poda de árvores");
   }
 
+  if (/\b(coleta|lixo|residuos)\b/.test(normalized)) {
+    add("Limpeza pública");
+  }
+
   return [...new Set(variants.filter(Boolean))].slice(0, 4);
 }
 
@@ -110,6 +115,7 @@ export type AgentServiceDetail = AgentServiceCard & {
   channels: { label: string; value: string; url?: string }[];
   legislation: { label: string; url: string }[];
   updatedAt: string | null;
+  collectionSchedule: typeof collectionSchedule | null;
 };
 
 export function getServiceById(id: string): AgentServiceDetail | null {
@@ -130,6 +136,7 @@ export function getServiceById(id: string): AgentServiceDetail | null {
       channels: [],
       legislation: [],
       updatedAt: null,
+      collectionSchedule: null,
     };
   }
 
@@ -146,6 +153,7 @@ export function getServiceById(id: string): AgentServiceDetail | null {
     ),
     legislation: service.legislation || [],
     updatedAt: officialText(service.updatedAt),
+    collectionSchedule: service.id === "1doc-limpeza-publica" ? collectionSchedule : null,
   };
 }
 

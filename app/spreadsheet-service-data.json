@@ -1497,18 +1497,19 @@
       "department": "SECAC-GCM - Comando da Guarda Civil Municipal",
       "destination": "SEI - Acesso Externo/Peticionamento",
       "url": "",
-      "summary": "OBSERVAÇÃO:\nPor ser emergência, o ideal é que ligue para o 153.",
+      "summary": "Serviço para comunicar à Guarda Civil Municipal a presença de animais soltos em vias e espaços públicos de Amargosa, informando o local e as características da ocorrência.",
       "eligibility": "Cidadãos.",
       "documents": [
-        "Endereço ou localização",
-        "ponto de referência",
-        "descrição da ocorrência",
-        "Quando aplicável: Fotografias do local"
+        "Localização da ocorrência e ponto de referência.",
+        "Descrição dos animais e da situação observada.",
+        "Fotografias do local ou dos animais, se disponíveis."
       ],
       "steps": [
-        "Em caso de emergência, ligue 153 e informe o local da ocorrência."
+        "Se houver risco imediato a pessoas ou ao trânsito, ligue 153 e informe o local da ocorrência.",
+        "Para registrar a situação sem urgência, use o atendimento digital desta página.",
+        "Informe a localização, um ponto de referência e descreva os animais e a situação observada."
       ],
-      "whereWhen": "Em caso de emergência, ligue 153. Para atendimento presencial, consulte o endereço do órgão responsável abaixo.",
+      "whereWhen": "Atendimento digital. Inicie o registro pelo link desta página.",
       "channels": [
         {
           "label": "Emergência",

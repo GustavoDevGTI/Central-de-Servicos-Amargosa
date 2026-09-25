@@ -132,7 +132,7 @@ export default function ReportProblemPage() {
                 Para reclamações, sugestões, elogios ou manifestações sobre o
                 atendimento público, utilize a{" "}
                 <a
-                  href="https://falabr.cgu.gov.br/web/manifestacao/criar/selecionar-assunto"
+                  href="https://falabr.cgu.gov.br/web/home"
                   target="_blank"
                   rel="noreferrer"
                 >
