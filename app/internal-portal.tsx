@@ -1298,13 +1298,10 @@ function ServiceWhereWhenSection({ service }: { service: Service }) {
           {details.note && <p>{details.note}</p>}
           <div className="service-request-options">
             {details.digital && (
-              <article className="service-request-option">
-                <h3>Solicitação digital</h3>
-                <p>Inicie a solicitação pelo link do serviço.</p>
-                <a href={service.url} target="_blank" rel="noreferrer" onClick={() => trackServiceStart(service)}>
-                  Iniciar solicitação digital <span aria-hidden="true">↗</span>
-                </a>
-              </article>
+              <div className="service-request-digital-note">
+                <strong>Atendimento digital</strong>
+                <p>Para solicitar pela internet, use o botão “INICIAR” desta página.</p>
+              </div>
             )}
             {details.presencial && (
               <article className="service-request-option">
