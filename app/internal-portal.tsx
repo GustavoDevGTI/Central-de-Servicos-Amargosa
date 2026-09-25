@@ -1167,7 +1167,9 @@ function ServiceContactSection({ service }: { service: Service }) {
         <div className="service-contact-office">
           <span>{contact.officeName ? "Setor responsável" : "Órgão responsável"}</span>
           <strong>{contact.name}</strong>
-          {contact.officeName && <small>Vinculado a {contact.officeName}</small>}
+          {contact.officeName && !/^(?:[A-Z]{2,8}\s*[-—]\s*)?Secretaria(?: Municipal)?\b/i.test(contact.name) && (
+            <small>Vinculado a {contact.officeName}</small>
+          )}
         </div>
         <div>
           <span>Telefone{contact.extensionLabel === "ramal da secretaria" ? " da secretaria" : ""}</span>
