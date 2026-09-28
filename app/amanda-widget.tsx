@@ -253,6 +253,11 @@ export default function AmandaWidget() {
           </small>
           <strong>{sending && !open ? "Só um momento…" : "Amanda"}</strong>
         </span>
+        <span className="amanda-launcher-prompt">
+          <i className="amanda-launcher-ai" aria-hidden="true">✦</i>
+          <strong>{sending && !open ? "Preparando resposta…" : "Dúvidas sobre serviços?"}</strong>
+          <small>{sending && !open ? "A Amanda já vai responder." : "Fale com a Amanda, assistente virtual"}</small>
+        </span>
         <b aria-hidden="true">{open ? "×" : sending ? "•••" : "✦"}</b>
       </button>
 
@@ -352,6 +357,7 @@ export default function AmandaWidget() {
             className="amanda-compose"
             onSubmit={(event) => {
               event.preventDefault();
+              if (!draft.trim() || sending) return;
               askAmanda(draft);
             }}
           >
@@ -379,7 +385,7 @@ export default function AmandaWidget() {
             </label>
             <button
               type="submit"
-              disabled={!draft.trim() || sending}
+              aria-disabled={!draft.trim() || sending}
               aria-label={sending ? "Enviando mensagem" : "Enviar mensagem"}
             >
               <span aria-hidden="true">{conversation?.buttonText || "➤"}</span>

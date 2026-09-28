@@ -197,6 +197,7 @@ export default function Home() {
   const [heroSlide, setHeroSlide] = useState(0);
   const [audiencesExpanded, setAudiencesExpanded] = useState(false);
   const [publicExpanded, setPublicExpanded] = useState(false);
+  const [categoriesExpanded, setCategoriesExpanded] = useState(false);
   const [servicePopularity, setServicePopularity] = useState<
     Record<string, number>
   >({});
@@ -640,7 +641,16 @@ export default function Home() {
         </section>
       );
     }
-    if (segment.type === "categories")
+    if (segment.type === "categories") {
+      // Até a integração do ranking mensal do Analytics, a vitrine segue a ordem alfabética.
+      const categoryItems = items(segment, "category").sort((first, second) =>
+        (first.label || "").localeCompare(second.label || "", "pt-BR", {
+          sensitivity: "base",
+        }),
+      );
+      const visibleCategories = categoriesExpanded
+        ? categoryItems
+        : categoryItems.slice(0, 8);
       return (
         <section
           key={segment.id}
@@ -650,33 +660,49 @@ export default function Home() {
         >
           <div className="boundary">
             <SectionHeading segment={segment} />
-            <div
-              className="categories"
-              role="group"
-              aria-label="Acessar serviços por categoria"
-            >
-              {items(segment, "category").map((item) => (
+            <div className={`category-list${categoryItems.length > 8 ? " has-more" : ""}${categoriesExpanded ? " is-expanded" : " is-collapsed"}`}>
+              <div
+                id="category-list"
+                className="categories"
+                role="group"
+                aria-label="Acessar serviços por categoria"
+              >
+                {visibleCategories.map((item) => (
+                  <button
+                    key={item.id}
+                    {...itemSizeProps(item)}
+                    type="button"
+                    onClick={() =>
+                      window.location.assign(
+                        item.url || "/servicos",
+                      )
+                    }
+                  >
+                    <span>
+                      <strong>{item.label}</strong>
+                      <small>{item.description}</small>
+                    </span>
+                    <b aria-hidden="true">→</b>
+                  </button>
+                ))}
+              </div>
+              {categoryItems.length > 8 && (
                 <button
-                  key={item.id}
-                  {...itemSizeProps(item)}
                   type="button"
-                  onClick={() =>
-                    window.location.assign(
-                      item.url || "/servicos",
-                    )
-                  }
+                  className="category-toggle"
+                  aria-expanded={categoriesExpanded}
+                  aria-controls="category-list"
+                  onClick={() => setCategoriesExpanded((expanded) => !expanded)}
                 >
-                  <span>
-                    <strong>{item.label}</strong>
-                    <small>{item.description}</small>
-                  </span>
-                  <b aria-hidden="true">→</b>
+                  <span className="sr-only">{categoriesExpanded ? "Mostrar menos categorias" : "Ver todas as categorias"}</span>
+                  <b aria-hidden="true">{categoriesExpanded ? "↑" : "↓"}</b>
                 </button>
-              ))}
+              )}
             </div>
           </div>
         </section>
       );
+    }
     if (segment.type === "help") {
       const eyebrow = segment.items.find((item) => item.role === "eyebrow");
       const title = segment.items.find((item) => item.role === "title");

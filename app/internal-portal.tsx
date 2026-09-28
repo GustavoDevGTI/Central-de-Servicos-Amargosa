@@ -1374,6 +1374,24 @@ function availableRequestSteps(service: Service): string[] {
   );
 }
 
+function ServiceBackButton() {
+  return (
+    <button
+      type="button"
+      className="service-back-button"
+      onClick={() => {
+        if (window.history.length > 1) window.history.back();
+        else window.location.assign("/");
+      }}
+    >
+      <svg aria-hidden="true" viewBox="0 0 18 18" fill="none">
+        <path d="M15 9H3m0 0 4-4M3 9l4 4" />
+      </svg>
+      Voltar
+    </button>
+  );
+}
+
 function RichServiceDetail({ service }: { service: Service }) {
   const heroSegment = internalSegment(detailPage, "serviceHero");
   const contentSegment = internalSegment(detailPage, "serviceContent");
@@ -1398,6 +1416,7 @@ function RichServiceDetail({ service }: { service: Service }) {
         className={`${internalClasses(heroSegment, "service-detail")} service-detail-rich`}
         style={internalStyle(heroSegment)}
       >
+        <div className="service-back-row"><ServiceBackButton /></div>
         <header>
           <div>
             <small>{serviceAudienceLabel(service) || service.category}</small>
@@ -1557,6 +1576,7 @@ export function ServiceDetail({ slug }: { slug: string }) {
         className={`${internalClasses(heroSegment, "service-detail")} service-detail-rich service-detail-standard`}
         style={internalStyle(heroSegment)}
       >
+        <div className="service-back-row"><ServiceBackButton /></div>
         <header>
           <div>
             <small>{serviceAudienceLabel(service) || service.category}</small>
