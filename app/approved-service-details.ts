@@ -404,7 +404,7 @@ export const approvedServiceDetails: Record<string, ApprovedServiceDetail> = {
     ],
     whereWhen:
       "Os dias e horários variam por bairro, rua, distrito e localidade. Consulte o cronograma detalhado nesta página.",
-    cost: PENDING_SERVICE_INFORMATION,
+    cost: "Gratuito.",
     duration: "Atendimento conforme os dias e horários publicados para cada rota.",
     channels: [
       {

@@ -94,10 +94,7 @@
 @media(max-width:480px){.service-request-option dl>div{grid-template-columns:1fr;gap:2px}}
 
 .collection-schedule>p{margin:0 0 16px}
-.collection-schedule .collection-schedule-source{display:inline-flex;align-items:center;gap:6px;color:var(--green);font-weight:800;text-decoration:underline;text-underline-offset:3px}
-.collection-schedule .collection-schedule-source:hover{color:var(--deep)}
-.collection-schedule .collection-schedule-source:focus-visible,.collection-schedule .collection-schedule-place summary:focus-visible{outline:3px solid #f2c94c;outline-offset:3px}
-.collection-schedule .collection-schedule-updated{margin:10px 0 24px;color:var(--muted);font-size:13px}
+.collection-schedule .collection-schedule-place summary:focus-visible{outline:3px solid #f2c94c;outline-offset:3px}
 .collection-schedule-group{margin-top:28px}
 .collection-schedule-group h3{margin:0 0 12px;padding-bottom:8px;border-bottom:2px solid #d4e2db;color:var(--ink);font-size:19px}
 .collection-schedule-place{margin:10px 0;border:1px solid #d4e2db;border-radius:5px;background:#fff}

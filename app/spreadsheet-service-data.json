@@ -1488,7 +1488,7 @@
       "role": "entry",
       "slug": "comunicacao-de-animais-soltos",
       "title": "Comunicação de Animais Soltos",
-      "category": "Cidadão",
+      "category": "Agropecuária",
       "subject": "Agropecuária",
       "audienceId": "cidadao",
       "audienceIds": [
@@ -1526,7 +1526,7 @@
       "role": "entry",
       "slug": "concurso-do-brasao-oficial",
       "title": "Concurso do Brasão Oficial",
-      "category": "Cidadão",
+      "category": "Cultura e Entretenimento",
       "subject": "Cultura e Entretenimento",
       "audienceId": "cidadao",
       "audienceIds": [
@@ -1564,7 +1564,7 @@
       "role": "entry",
       "slug": "impugnacao-de-lancamento",
       "title": "Impugnação de lançamento",
-      "category": "Cidadão",
+      "category": "Impostos",
       "subject": "Impostos",
       "audienceId": "cidadao",
       "audienceIds": [
@@ -1596,7 +1596,7 @@
       "role": "entry",
       "slug": "inscricao-processo-seletivo-para-coordenador-de-polo-uab",
       "title": "Inscrição Processo Seletivo para Coordenador de Polo UAB",
-      "category": "Servidor",
+      "category": "Servidor Público",
       "subject": "Servidor Público",
       "audienceId": "servidor",
       "audienceIds": [
@@ -1628,7 +1628,7 @@
       "role": "entry",
       "slug": "lancamento-de-empreendimento-imobiliario",
       "title": "Lançamento de Empreendimento Imobiliário",
-      "category": "Cidadão",
+      "category": "Habitação",
       "subject": "Habitação",
       "audienceId": "cidadao",
       "audienceIds": [
@@ -1664,7 +1664,7 @@
       "role": "entry",
       "slug": "precatorio-fundef",
       "title": "Precatório FUNDEF",
-      "category": "Órgãos públicos e ONGs",
+      "category": "Servidor Público",
       "subject": "Servidor Público",
       "audienceId": "orgaos-publicos-ongs",
       "audienceIds": [
@@ -1696,7 +1696,7 @@
       "role": "entry",
       "slug": "recurso-de-progressao-funcional",
       "title": "Recurso de Progressão Funcional",
-      "category": "Servidor",
+      "category": "Servidor Público",
       "subject": "Servidor Público",
       "audienceId": "servidor",
       "audienceIds": [
@@ -1728,7 +1728,7 @@
       "role": "entry",
       "slug": "segunda-via-do-alvara-de-funcionamento",
       "title": "Segunda Via do Alvará de Funcionamento",
-      "category": "Empresa",
+      "category": "Negócios, Economia e Investimento",
       "subject": "Negócios, Economia e Investimento",
       "audienceId": "empresa",
       "audienceIds": [
@@ -1759,7 +1759,7 @@
       "role": "entry",
       "slug": "inscricao-para-barraqueiros-dos-eventos",
       "title": "Inscrição para barraqueiros dos eventos",
-      "category": "Cidadão e empresa",
+      "category": "Cultura e Entretenimento",
       "subject": "Cultura e Entretenimento",
       "audienceId": "cidadao",
       "audienceIds": [
@@ -1786,7 +1786,7 @@
       "role": "entry",
       "slug": "atendimento-da-gcm",
       "title": "Atendimento da GCM",
-      "category": "Cidadão",
+      "category": "Segurança Pública",
       "subject": "Segurança Pública",
       "audienceId": "cidadao",
       "audienceIds": [
@@ -1812,7 +1812,7 @@
       "role": "entry",
       "slug": "consulta-a-dados-sobre-os-conselhos-municipais",
       "title": "Consulta a dados sobre os Conselhos Municipais",
-      "category": "Cidadão",
+      "category": "Ação Social e Cidadania",
       "subject": "Ação Social e Cidadania",
       "audienceId": "cidadao",
       "audienceIds": [
@@ -1838,7 +1838,7 @@
       "role": "entry",
       "slug": "reserva-de-espacos-esportivos",
       "title": "Reserva de espaços esportivos",
-      "category": "Cidadão, empresa e ONG",
+      "category": "Esportes",
       "subject": "Esportes",
       "audienceId": "cidadao",
       "audienceIds": [
@@ -1866,7 +1866,7 @@
       "role": "entry",
       "slug": "solicitacao-de-apoio-na-infraestrutura-de-eventos",
       "title": "Solicitação de apoio na infraestrutura de eventos",
-      "category": "Cidadão, empresa e ONG",
+      "category": "Cultura e Entretenimento",
       "subject": "Cultura e Entretenimento",
       "audienceId": "cidadao",
       "audienceIds": [
@@ -1894,7 +1894,7 @@
       "role": "entry",
       "slug": "solicitar-visita-domiciliar-do-cadunico-exclusivo-para-pessoas-com-mobilidade-reduzida",
       "title": "Solicitar visita domiciliar do CadÚnico (exclusivo para pessoas com mobilidade reduzida)",
-      "category": "Cidadão",
+      "category": "Acessibilidade",
       "subject": "Acessibilidade",
       "audienceId": "cidadao",
       "audienceIds": [
@@ -1925,7 +1925,7 @@
       "role": "entry",
       "slug": "inscricao-no-cadunico",
       "title": "Inscrição no CadÚnico",
-      "category": "Cidadão",
+      "category": "Ação Social e Cidadania",
       "subject": "Ação Social e Cidadania",
       "audienceId": "cidadao",
       "audienceIds": [
@@ -1956,7 +1956,7 @@
       "role": "entry",
       "slug": "atualizacao-do-cadunico",
       "title": "Atualização do CadÚnico",
-      "category": "Cidadão",
+      "category": "Ação Social e Cidadania",
       "subject": "Ação Social e Cidadania",
       "audienceId": "cidadao",
       "audienceIds": [
@@ -1987,7 +1987,7 @@
       "role": "entry",
       "slug": "consultar-dados-do-cadunico-e-programa-bolsa-familia",
       "title": "Consultar dados do CadÚnico e Programa Bolsa Família",
-      "category": "Cidadão",
+      "category": "Ação Social e Cidadania",
       "subject": "Ação Social e Cidadania",
       "audienceId": "cidadao",
       "audienceIds": [
@@ -2016,7 +2016,7 @@
       "role": "entry",
       "slug": "solicitar-impressao-de-folha-resumo-com-nis",
       "title": "Solicitar impressão de Folha Resumo com NIS",
-      "category": "Cidadão",
+      "category": "Ação Social e Cidadania",
       "subject": "Ação Social e Cidadania",
       "audienceId": "cidadao",
       "audienceIds": [
@@ -2045,7 +2045,7 @@
       "role": "entry",
       "slug": "atendimento-psicossocial-cras",
       "title": "Atendimento psicossocial – CRAS",
-      "category": "Cidadão",
+      "category": "Ação Social e Cidadania",
       "subject": "Ação Social e Cidadania",
       "audienceId": "cidadao",
       "audienceIds": [
@@ -2075,7 +2075,7 @@
       "role": "entry",
       "slug": "avaliacao-social-para-concessao-de-beneficio-eventual",
       "title": "Avaliação Social para concessão de Benefício Eventual",
-      "category": "Cidadão",
+      "category": "Ação Social e Cidadania",
       "subject": "Ação Social e Cidadania",
       "audienceId": "cidadao",
       "audienceIds": [
@@ -2107,7 +2107,7 @@
       "role": "entry",
       "slug": "solicitar-beneficio-de-prestacao-continuada-bpc",
       "title": "Solicitar Benefício de Prestação Continuada (BPC)",
-      "category": "Cidadão",
+      "category": "Ação Social e Cidadania",
       "subject": "Ação Social e Cidadania",
       "audienceId": "cidadao",
       "audienceIds": [
@@ -2138,7 +2138,7 @@
       "role": "entry",
       "slug": "solicitar-passe-livre-exclusivo-para-pessoas-com-deficiencia",
       "title": "Solicitar Passe Livre (exclusivo para pessoas com deficiência)",
-      "category": "Cidadão",
+      "category": "Acessibilidade",
       "subject": "Acessibilidade",
       "audienceId": "cidadao",
       "audienceIds": [
@@ -2171,7 +2171,7 @@
       "role": "entry",
       "slug": "cadastrar-recurso-por-descumprimento-de-condicionalidades-do-pbf",
       "title": "Cadastrar recurso por descumprimento de condicionalidades do PBF",
-      "category": "Cidadão",
+      "category": "Ação Social e Cidadania",
       "subject": "Ação Social e Cidadania",
       "audienceId": "cidadao",
       "audienceIds": [
@@ -2203,7 +2203,7 @@
       "role": "entry",
       "slug": "solicitar-carteira-nacional-da-pessoa-idosa",
       "title": "Solicitar Carteira Nacional da Pessoa Idosa",
-      "category": "Cidadão",
+      "category": "Ação Social e Cidadania",
       "subject": "Ação Social e Cidadania",
       "audienceId": "cidadao",
       "audienceIds": [
@@ -2230,7 +2230,7 @@
       "role": "entry",
       "slug": "solicitar-visita-domiciliar-do-cras-exclusivo-para-pessoas-com-mobilidade-reduzida",
       "title": "Solicitar visita domiciliar do CRAS (exclusivo para pessoas com mobilidade reduzida)",
-      "category": "Cidadão",
+      "category": "Acessibilidade",
       "subject": "Acessibilidade",
       "audienceId": "cidadao",
       "audienceIds": [
@@ -2256,7 +2256,7 @@
       "role": "entry",
       "slug": "solicitar-segunda-via-de-encaminhamentos-cras",
       "title": "Solicitar segunda via de encaminhamentos – CRAS",
-      "category": "Cidadão",
+      "category": "Ação Social e Cidadania",
       "subject": "Ação Social e Cidadania",
       "audienceId": "cidadao",
       "audienceIds": [
@@ -2282,7 +2282,7 @@
       "role": "entry",
       "slug": "consulta-de-calendario-de-acoes-sociais",
       "title": "Consulta de calendário de ações sociais",
-      "category": "Cidadão",
+      "category": "Ação Social e Cidadania",
       "subject": "Ação Social e Cidadania",
       "audienceId": "cidadao",
       "audienceIds": [
@@ -2310,7 +2310,7 @@
       "role": "entry",
       "slug": "atendimento-psicossocial-creas",
       "title": "Atendimento psicossocial – CREAS",
-      "category": "Cidadão",
+      "category": "Ação Social e Cidadania",
       "subject": "Ação Social e Cidadania",
       "audienceId": "cidadao",
       "audienceIds": [
@@ -2340,7 +2340,7 @@
       "role": "entry",
       "slug": "solicitar-visita-domiciliar-do-creas-exclusivo-para-pessoas-com-mobilidade-reduzida",
       "title": "Solicitar visita domiciliar do CREAS (exclusivo para pessoas com mobilidade reduzida)",
-      "category": "Cidadão",
+      "category": "Ação Social e Cidadania",
       "subject": "Ação Social e Cidadania",
       "audienceId": "cidadao",
       "audienceIds": [
@@ -2366,7 +2366,7 @@
       "role": "entry",
       "slug": "solicitar-segunda-via-de-encaminhamentos-creas",
       "title": "Solicitar segunda via de encaminhamentos – CREAS",
-      "category": "Cidadão",
+      "category": "Ação Social e Cidadania",
       "subject": "Ação Social e Cidadania",
       "audienceId": "cidadao",
       "audienceIds": [
@@ -2392,7 +2392,7 @@
       "role": "entry",
       "slug": "denunciar-violacao-de-direitos",
       "title": "Denunciar violação de direitos",
-      "category": "Cidadão",
+      "category": "Ação Social e Cidadania",
       "subject": "Ação Social e Cidadania",
       "audienceId": "cidadao",
       "audienceIds": [
@@ -2436,7 +2436,7 @@
       "role": "entry",
       "slug": "inscricao-nuca",
       "title": "Inscrição NUCA",
-      "category": "Cidadão",
+      "category": "Ação Social e Cidadania",
       "subject": "Ação Social e Cidadania",
       "audienceId": "cidadao",
       "audienceIds": [
@@ -2462,7 +2462,7 @@
       "role": "entry",
       "slug": "solicitar-ciptea",
       "title": "Solicitar CIPTEA",
-      "category": "Cidadão",
+      "category": "Acessibilidade",
       "subject": "Acessibilidade",
       "audienceId": "cidadao",
       "audienceIds": [
@@ -2494,7 +2494,7 @@
       "role": "entry",
       "slug": "solicitar-id-jovem",
       "title": "Solicitar ID Jovem",
-      "category": "Cidadão",
+      "category": "Ação Social e Cidadania",
       "subject": "Ação Social e Cidadania",
       "audienceId": "cidadao",
       "audienceIds": [
@@ -2520,7 +2520,7 @@
       "role": "entry",
       "slug": "atendimento-do-programa-dignidade-menstrual",
       "title": "Atendimento do Programa Dignidade Menstrual",
-      "category": "Cidadão",
+      "category": "Saúde",
       "subject": "Saúde",
       "audienceId": "cidadao",
       "audienceIds": [
@@ -2546,7 +2546,7 @@
       "role": "entry",
       "slug": "inscricao-em-cursos-profissionalizantes",
       "title": "Inscrição em cursos profissionalizantes",
-      "category": "Cidadão",
+      "category": "Negócios, Economia e Investimento",
       "subject": "Negócios, Economia e Investimento",
       "audienceId": "cidadao",
       "audienceIds": [
@@ -2572,7 +2572,7 @@
       "role": "entry",
       "slug": "orientacao-e-suporte-para-inscricao-no-enem",
       "title": "Orientação e suporte para inscrição no ENEM",
-      "category": "Cidadão",
+      "category": "Ação Social e Cidadania",
       "subject": "Ação Social e Cidadania",
       "audienceId": "cidadao",
       "audienceIds": [
@@ -2598,7 +2598,7 @@
       "role": "entry",
       "slug": "orientacao-suporte-para-inscricao-no-programa-pe-de-meia",
       "title": "Orientação/Suporte para inscrição no Programa Pé de Meia",
-      "category": "Cidadão",
+      "category": "Ação Social e Cidadania",
       "subject": "Ação Social e Cidadania",
       "audienceId": "cidadao",
       "audienceIds": [
@@ -2624,7 +2624,7 @@
       "role": "entry",
       "slug": "orientacao-e-suporte-para-emissao-de-documentos-pessoais",
       "title": "Orientação e suporte para emissão de documentos pessoais",
-      "category": "Cidadão",
+      "category": "Ação Social e Cidadania",
       "subject": "Ação Social e Cidadania",
       "audienceId": "cidadao",
       "audienceIds": [
@@ -2650,7 +2650,7 @@
       "role": "entry",
       "slug": "orientacao-e-suporte-para-inscricao-no-programa-cnh-da-gente-cnh-na-escola",
       "title": "Orientação e suporte para inscrição no Programa CNH da Gente / CNH na Escola",
-      "category": "Cidadão",
+      "category": "Transporte",
       "subject": "Transporte",
       "audienceId": "cidadao",
       "audienceIds": [
@@ -2676,7 +2676,7 @@
       "role": "entry",
       "slug": "orientacao-suporte-para-confeccao-impressao-de-curriculos",
       "title": "Orientação/Suporte para confecção/impressão de currículos",
-      "category": "Cidadão",
+      "category": "Ação Social e Cidadania",
       "subject": "Ação Social e Cidadania",
       "audienceId": "cidadao",
       "audienceIds": [
@@ -2702,7 +2702,7 @@
       "role": "entry",
       "slug": "orientacao-suporte-encaminhamento-para-vagas-de-estagio-programa-jovem-aprendiz-e-emprego",
       "title": "Orientação/Suporte/Encaminhamento para vagas de Estágio, Programa Jovem Aprendiz e Emprego",
-      "category": "Cidadão",
+      "category": "Ação Social e Cidadania",
       "subject": "Ação Social e Cidadania",
       "audienceId": "cidadao",
       "audienceIds": [
@@ -2728,7 +2728,7 @@
       "role": "entry",
       "slug": "orientacao-suporte-para-matricula-escolar-todos-os-niveis",
       "title": "Orientação/Suporte para matrícula escolar (todos os níveis)",
-      "category": "Cidadão",
+      "category": "Ação Social e Cidadania",
       "subject": "Ação Social e Cidadania",
       "audienceId": "cidadao",
       "audienceIds": [

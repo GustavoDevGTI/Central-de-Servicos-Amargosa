@@ -662,12 +662,7 @@ export default function Home() {
                   type="button"
                   onClick={() =>
                     window.location.assign(
-                      `/servicos?categoria=${item.label
-                        ?.normalize("NFD")
-                        .replace(/[\u0300-\u036f]/g, "")
-                        .toLowerCase()
-                        .replace(/[^a-z0-9]+/g, "-")
-                        .replace(/(^-|-$)/g, "")}`,
+                      item.url || "/servicos",
                     )
                   }
                 >

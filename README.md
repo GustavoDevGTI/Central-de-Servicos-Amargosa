@@ -85,6 +85,8 @@ scripts/             utilitários pontuais de identidade visual
 
 O arquivo `content/site.json` reúne identidade, segmentos, públicos, categorias e serviços. Cada serviço pode informar título, órgão, públicos atendidos, categoria, URL oficial e, quando disponível, resumo, requisitos, documentos, etapas, prazo, canais, legislação e serviços relacionados.
 
+As 19 categorias dos serviços consolidados seguem a coluna `Categoria` da planilha `Catalogo_Servicos_Amargosa - 22-09-26.xlsx`. Os serviços exclusivos da Central usam também `Educação` e `Administração Pública`. O público atendido permanece separado da categoria. O endereço antigo `/categorias/tributos` reúne as categorias `Impostos` e `Taxas e Impostos`.
+
 Mudanças em componentes e estilos ficam em `app/`. Depois de qualquer atualização, execute `npm run build` antes de publicar.
 
 ### Cronograma da coleta de lixo

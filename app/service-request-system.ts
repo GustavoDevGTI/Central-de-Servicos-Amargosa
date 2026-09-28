@@ -7,6 +7,7 @@ export const isBaGovUrl = (value?: string) =>
   );
 
 export const baGovServiceLinks: Record<string, string> = {
+  "1doc-certidao-de-inexigibilidade-ci": "https://servicos.ba.gov.br/detalhe/servico/2559",
   "1doc-extincao-ou-suspensao-de-execucao-extrajudicial-ou-judicial": "https://servicos.ba.gov.br/detalhe/servico/10092",
   "1doc-prescricao-de-credito-tributario-ou-de-renda-iptu-tll-tff": "https://servicos.ba.gov.br/detalhe/servico/10035",
   "1doc-certidao-de-valor-venal-urbano": "https://servicos.ba.gov.br/detalhe/servico/10031",
@@ -20,6 +21,7 @@ export const baGovServiceLinks: Record<string, string> = {
 
 export const nonSeiServiceIds = new Set([
   "1doc-ouvidoria-geral",
+  "1doc-certidao-de-inexigibilidade-ci",
   "1doc-extincao-ou-suspensao-de-execucao-extrajudicial-ou-judicial",
   "1doc-prescricao-de-credito-tributario-ou-de-renda-iptu-tll-tff",
   "1doc-certidao-de-valor-venal-urbano",

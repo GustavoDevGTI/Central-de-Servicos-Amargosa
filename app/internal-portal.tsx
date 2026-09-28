@@ -107,6 +107,16 @@ const audiences = (segment("audiences")?.items.filter(
 const categories = (segment("categories")?.items.filter(
   (item) => item.type === "category",
 ) || []) as unknown as Category[];
+const legacyTaxCategory: Category = {
+  id: "cat-tributos",
+  label: "Tributos",
+  description: "Impostos e taxas municipais.",
+};
+const matchesCategory = (service: Service, category: string) =>
+  category === "todos" ||
+  service.category === category ||
+  (category === "Tributos" &&
+    (service.category === "Impostos" || service.category === "Taxas e Impostos"));
 const searchCategories = categories.map((entry) => ({
   id: entry.id,
   label: entry.label,
@@ -293,7 +303,7 @@ export function LegacyServiceDirectory({
     mode === "category"
       ? categories.find(
           (entry) => slugify(entry.label) === value || entry.id === value,
-        )
+        ) || (value === "tributos" ? legacyTaxCategory : undefined)
       : undefined;
   const [query, setQuery] = useState("");
   const [categoryFilter, setCategoryFilter] = useState(
@@ -310,12 +320,11 @@ export function LegacyServiceDirectory({
           const matchesAudience =
             audienceFilter === "todos" ||
             serviceAudiences(service).includes(audienceFilter);
-          const matchesCategory =
-            categoryFilter === "todos" || service.category === categoryFilter;
+          const matchesSelectedCategory = matchesCategory(service, categoryFilter);
           const normalized = query.trim().toLocaleLowerCase("pt-BR");
           return (
             matchesAudience &&
-            matchesCategory &&
+            matchesSelectedCategory &&
             (!normalized ||
               `${service.title} ${service.category} ${service.department}`
                 .toLocaleLowerCase("pt-BR")
@@ -332,7 +341,7 @@ export function LegacyServiceDirectory({
   const availableCategories = categories.filter((entry) =>
     services.some(
       (service) =>
-        service.category === entry.label &&
+        matchesCategory(service, entry.label) &&
         (mode !== "audience" ||
           serviceAudiences(service).includes(audience?.id || "")),
     ),
@@ -544,14 +553,14 @@ export function ServiceDirectory({
     mode === "category"
       ? categories.find(
           (entry) => slugify(entry.label) === value || entry.id === value,
-        )
+        ) || (value === "tributos" ? legacyTaxCategory : undefined)
       : undefined;
   const requestedCategory =
     categories.find(
       (entry) =>
         entry.id === initialCategory ||
         slugify(entry.label) === initialCategory,
-    )?.label || "todos";
+    )?.label || (initialCategory === "tributos" ? "Tributos" : "todos");
   const [query, setQuery] = useState(initialQuery);
   const [suggestionsOpen, setSuggestionsOpen] = useState(false);
   const [categoryFilter, setCategoryFilter] = useState(
@@ -661,7 +670,7 @@ export function ServiceDirectory({
       services
         .filter(
           (service) =>
-            (categoryFilter === "todos" || service.category === categoryFilter) &&
+            matchesCategory(service, categoryFilter) &&
             (audienceFilter === "todos" ||
               serviceAudiences(service).includes(audienceFilter)),
         )
@@ -680,7 +689,7 @@ export function ServiceDirectory({
         (service) =>
           (audienceFilter === "todos" ||
             serviceAudiences(service).includes(audienceFilter)) &&
-          (categoryFilter === "todos" || service.category === categoryFilter) &&
+          matchesCategory(service, categoryFilter) &&
           (departmentFilter === "todos" ||
             organizationForService(service).id === departmentFilter),
       ),
@@ -985,6 +994,7 @@ export function ServiceDirectory({
               }}
             >
               <option value="todos">Todas</option>
+              {categoryFilter === "Tributos" && <option value="Tributos">Tributos</option>}
               {categories.map((entry) => (
                 <option key={entry.id} value={entry.label}>
                   {entry.label}

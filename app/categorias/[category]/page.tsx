@@ -1,6 +1,6 @@
 import { categories, ServiceDirectory, slugify } from "../../internal-portal";
 
-export function generateStaticParams() { return categories.map((entry) => ({ category: slugify(entry.label) })); }
+export function generateStaticParams() { return [...categories.map((entry) => ({ category: slugify(entry.label) })), { category: "tributos" }]; }
 
 export default async function CategoryPage({ params }: { params: Promise<{ category: string }> }) {
   const { category } = await params;

@@ -327,12 +327,172 @@
               "value": "Categorias"
             },
             {
-              "id": "cat-tributos",
+              "id": "cat-acessibilidade",
               "type": "category",
               "role": "entry",
-              "label": "Tributos",
-              "description": "44 serviços de IPTU, ISS, ITIV, TFF, TLL, cadastros e certidões fiscais",
-              "url": "/categorias/tributos"
+              "label": "Acessibilidade",
+              "description": "Atendimentos e direitos de pessoas com deficiência.",
+              "url": "/categorias/acessibilidade"
+            },
+            {
+              "id": "cat-acao-social-e-cidadania",
+              "type": "category",
+              "role": "entry",
+              "label": "Ação Social e Cidadania",
+              "description": "Assistência social, cidadania e apoio à população.",
+              "url": "/categorias/acao-social-e-cidadania"
+            },
+            {
+              "id": "cat-administracao-publica",
+              "type": "category",
+              "role": "entry",
+              "label": "Administração Pública",
+              "description": "Demandas institucionais e requerimentos gerais.",
+              "url": "/categorias/administracao-publica"
+            },
+            {
+              "id": "cat-agricultura-familiar",
+              "type": "category",
+              "role": "entry",
+              "label": "Agricultura Familiar",
+              "description": "Serviços para produtores da agricultura familiar.",
+              "url": "/categorias/agricultura-familiar"
+            },
+            {
+              "id": "cat-agropecuaria",
+              "type": "category",
+              "role": "entry",
+              "label": "Agropecuária",
+              "description": "Serviços relacionados à produção agropecuária.",
+              "url": "/categorias/agropecuaria"
+            },
+            {
+              "id": "cat-cultura-e-entretenimento",
+              "type": "category",
+              "role": "entry",
+              "label": "Cultura e Entretenimento",
+              "description": "Ações culturais, eventos e atividades de lazer.",
+              "url": "/categorias/cultura-e-entretenimento"
+            },
+            {
+              "id": "cat-educacao",
+              "type": "category",
+              "role": "entry",
+              "label": "Educação",
+              "description": "Matrículas e documentos escolares.",
+              "url": "/categorias/educacao"
+            },
+            {
+              "id": "cat-esportes",
+              "type": "category",
+              "role": "entry",
+              "label": "Esportes",
+              "description": "Atividades esportivas e solicitações para eventos.",
+              "url": "/categorias/esportes"
+            },
+            {
+              "id": "cat-habitacao",
+              "type": "category",
+              "role": "entry",
+              "label": "Habitação",
+              "description": "Cadastros e serviços de habitação.",
+              "url": "/categorias/habitacao"
+            },
+            {
+              "id": "cat-impostos",
+              "type": "category",
+              "role": "entry",
+              "label": "Impostos",
+              "description": "IPTU e demais impostos municipais.",
+              "url": "/categorias/impostos"
+            },
+            {
+              "id": "cat-licitacoes",
+              "type": "category",
+              "role": "entry",
+              "label": "Licitações",
+              "description": "Contratos, fornecedores e processos licitatórios.",
+              "url": "/categorias/licitacoes"
+            },
+            {
+              "id": "cat-meio-ambiente",
+              "type": "category",
+              "role": "entry",
+              "label": "Meio Ambiente",
+              "description": "Atendimentos e solicitações ambientais.",
+              "url": "/categorias/meio-ambiente"
+            },
+            {
+              "id": "cat-negocios-economia-e-investimento",
+              "type": "category",
+              "role": "entry",
+              "label": "Negócios, Economia e Investimento",
+              "description": "Abertura e regularização de atividades econômicas.",
+              "url": "/categorias/negocios-economia-e-investimento"
+            },
+            {
+              "id": "cat-obras-publicas",
+              "type": "category",
+              "role": "entry",
+              "label": "Obras Públicas",
+              "description": "Obras, infraestrutura e serviços públicos.",
+              "url": "/categorias/obras-publicas"
+            },
+            {
+              "id": "cat-ouvidorias",
+              "type": "category",
+              "role": "entry",
+              "label": "Ouvidorias",
+              "description": "Manifestações, dúvidas, denúncias e elogios.",
+              "url": "/categorias/ouvidorias"
+            },
+            {
+              "id": "cat-saude",
+              "type": "category",
+              "role": "entry",
+              "label": "Saúde",
+              "description": "Atendimentos e documentos da área de saúde.",
+              "url": "/categorias/saude"
+            },
+            {
+              "id": "cat-seguranca-publica",
+              "type": "category",
+              "role": "entry",
+              "label": "Segurança Pública",
+              "description": "Atendimentos de segurança municipal.",
+              "url": "/categorias/seguranca-publica"
+            },
+            {
+              "id": "cat-servidor-publico",
+              "type": "category",
+              "role": "entry",
+              "label": "Servidor Público",
+              "description": "Serviços funcionais de servidoras e servidores.",
+              "url": "/categorias/servidor-publico"
+            },
+            {
+              "id": "cat-taxas-e-impostos",
+              "type": "category",
+              "role": "entry",
+              "label": "Taxas e Impostos",
+              "description": "Taxas municipais, cobranças e certidões fiscais.",
+              "url": "/categorias/taxas-e-impostos"
+            },
+            {
+              "id": "cat-transporte",
+              "type": "category",
+              "role": "entry",
+              "label": "Transporte",
+              "description": "Serviços de transporte municipal.",
+              "url": "/categorias/transporte"
+            },
+            {
+              "id": "cat-transito",
+              "type": "category",
+              "role": "entry",
+              "label": "Trânsito",
+              "description": "Autuações, recursos e serviços de trânsito.",
+              "url": "/categorias/transito"
             }
           ]
         },
@@ -371,7 +531,7 @@
               "role": "entry",
               "title": "Abastecimento de água",
               "department": "SEMOP-SUPESP - Superintendência de Serviços Públicos",
-              "category": "Cidadão, Empresas",
+              "category": "Obras Públicas",
               "audienceId": "cidadao",
               "audienceIds": [
                 "cidadao",
@@ -388,7 +548,7 @@
               "role": "entry",
               "title": "Acesso à Informação — LAI (Lei nº 12.527/2011)",
               "department": "Controladoria Geral do Município",
-              "category": "Cidadão",
+              "category": "Ouvidorias",
               "audienceId": "cidadao",
               "destination": "e-SIC de Amargosa",
               "url": "https://amargosa.1doc.com.br/b.php?is=920&itd=12&pg=wp/wp&s=amargosa",
@@ -407,19 +567,19 @@
                 "Descreva a informação desejada com clareza e envie o pedido.",
                 "Guarde o número do protocolo para consultar o andamento e receber a resposta."
               ],
-                "whereWhen": "O pedido pode ser registrado online ou presencialmente, conforme a preferência do solicitante.",
-                "whereWhenItems": [
-                  {
-                    "label": "Online",
-                    "schedule": "A qualquer momento",
-                    "description": "e-SIC da Prefeitura de Amargosa."
-                  },
-                  {
-                    "label": "Presencial",
-                    "schedule": "De segunda a sexta-feira, das 8h às 12h e das 14h às 17h",
-                    "description": "Ouvidoria Municipal — Avenida Dr. Luís Sandes, Valle Shopping, Amargosa – BA."
-                  }
-                ],
+              "whereWhen": "O pedido pode ser registrado online ou presencialmente, conforme a preferência do solicitante.",
+              "whereWhenItems": [
+                {
+                  "label": "Online",
+                  "schedule": "A qualquer momento",
+                  "description": "e-SIC da Prefeitura de Amargosa."
+                },
+                {
+                  "label": "Presencial",
+                  "schedule": "De segunda a sexta-feira, das 8h às 12h e das 14h às 17h",
+                  "description": "Ouvidoria Municipal — Avenida Dr. Luís Sandes, Valle Shopping, Amargosa – BA."
+                }
+              ],
               "cost": "Gratuito. Poderá haver cobrança apenas do custo de reprodução de documentos, quando aplicável.",
               "duration": "Acesso imediato quando a informação estiver disponível ou resposta em até 20 dias, prorrogáveis por mais 10 dias mediante justificativa.",
               "channels": [
@@ -467,7 +627,7 @@
               "role": "entry",
               "title": "Adesão — carona licitatória",
               "department": "SEAFI - Secretaria Municipal de Administração, Finanças e Desenvolvimento Institucional",
-              "category": "Órgãos Públicos e ONGs",
+              "category": "Licitações",
               "audienceId": "orgaos-publicos-ongs",
               "audienceIds": [
                 "orgaos-publicos-ongs"
@@ -483,7 +643,7 @@
               "role": "entry",
               "title": "Aditivo de contrato",
               "department": "SEAFI-DIREC - Diretoria de Contratos",
-              "category": "Empresas",
+              "category": "Licitações",
               "audienceId": "empresa",
               "audienceIds": [
                 "empresa"
@@ -499,7 +659,7 @@
               "role": "entry",
               "title": "Alteração contratual de fornecedor",
               "department": "SEAFI-DIREC - Diretoria de Contratos",
-              "category": "Empresas",
+              "category": "Licitações",
               "audienceId": "empresa",
               "audienceIds": [
                 "empresa"
@@ -515,7 +675,7 @@
               "role": "entry",
               "title": "Alteração do cadastro econômico",
               "department": "SEAFI-SUDIV - Supervisão de Dívida Ativa",
-              "category": "Tributos",
+              "category": "Taxas e Impostos",
               "audienceId": "cidadao",
               "audienceIds": [
                 "cidadao",
@@ -541,7 +701,7 @@
                 "empresa"
               ],
               "sourceRow": 9,
-              "category": "Empresas"
+              "category": "Negócios, Economia e Investimento"
             },
             {
               "id": "1doc-alvara-de-obras-construcao-ampliacao-reforma-e-demolicao",
@@ -559,7 +719,7 @@
                 "empresa"
               ],
               "sourceRow": 10,
-              "category": "Cidadão, Empresas"
+              "category": "Habitação"
             },
             {
               "id": "1doc-alvara-sanitario",
@@ -567,7 +727,7 @@
               "role": "entry",
               "title": "Alvará sanitário",
               "department": "SESAU-DIVISA - Diretoria de Vigilância Sanitária e Ambiental",
-              "category": "Cidadão, Empresas",
+              "category": "Saúde",
               "audienceId": "cidadao",
               "audienceIds": [
                 "cidadao",
@@ -594,7 +754,7 @@
                 "empresa"
               ],
               "sourceRow": 12,
-              "category": "Cidadão, Empresas"
+              "category": "Cultura e Entretenimento"
             },
             {
               "id": "1doc-ampliacao-de-carga-horaria-enquadramento",
@@ -611,7 +771,7 @@
                 "servidor"
               ],
               "sourceRow": 13,
-              "category": "Servidor"
+              "category": "Servidor Público"
             },
             {
               "id": "1doc-atestado-medico-licenca-tratamento-de-saude",
@@ -619,7 +779,7 @@
               "role": "entry",
               "title": "Atestado médico — licença para tratamento de saúde",
               "department": "COCAD - Cadastro",
-              "category": "Servidor",
+              "category": "Servidor Público",
               "audienceId": "servidor",
               "audienceIds": [
                 "servidor"
@@ -644,7 +804,7 @@
                 "servidor"
               ],
               "sourceRow": 16,
-              "category": "Servidor"
+              "category": "Servidor Público"
             },
             {
               "id": "1doc-autorizacao-para-eventos-em-espaco-publico",
@@ -652,7 +812,7 @@
               "role": "entry",
               "title": "Autorização para eventos em espaço público",
               "department": "DOP - Diretoria de Ordem Pública",
-              "category": "Cidadão",
+              "category": "Cultura e Entretenimento",
               "audienceId": "cidadao",
               "audienceIds": [
                 "cidadao"
@@ -668,7 +828,7 @@
               "role": "entry",
               "title": "Averbação de imóveis",
               "department": "SEAFI-SUCAI - Supervisão de Cadastro Imobiliário",
-              "category": "Tributos",
+              "category": "Taxas e Impostos",
               "audienceId": "cidadao",
               "audienceIds": [
                 "cidadao",
@@ -695,7 +855,7 @@
                 "empresa"
               ],
               "sourceRow": 20,
-              "category": "Cidadão, Empresas"
+              "category": "Taxas e Impostos"
             },
             {
               "id": "1doc-cadastramento-de-area-urbana-com-origem-rural",
@@ -703,7 +863,7 @@
               "role": "entry",
               "title": "Cadastramento de área urbana com origem rural",
               "department": "SEAFI-SUCAI - Supervisão de Cadastro Imobiliário",
-              "category": "Tributos",
+              "category": "Taxas e Impostos",
               "audienceId": "cidadao",
               "audienceIds": [
                 "cidadao",
@@ -720,7 +880,7 @@
               "role": "entry",
               "title": "Cadastro imobiliário",
               "department": "SEAFI-SUCAI - Supervisão de Cadastro Imobiliário",
-              "category": "Tributos",
+              "category": "Taxas e Impostos",
               "audienceId": "cidadao",
               "audienceIds": [
                 "cidadao"
@@ -736,7 +896,7 @@
               "role": "entry",
               "title": "Câmara de Vereadores",
               "department": "GP-AGP - Assessoria de Gabinete do Prefeito",
-              "category": "Órgãos Públicos e ONGs",
+              "category": "Administração Pública",
               "audienceId": "orgaos-publicos-ongs",
               "audienceIds": [
                 "orgaos-publicos-ongs"
@@ -752,7 +912,7 @@
               "role": "entry",
               "title": "Cancelamento ou baixa de crédito tributário",
               "department": "SEAFI-SUDIV - Supervisão de Dívida Ativa",
-              "category": "Tributos",
+              "category": "Impostos",
               "audienceId": "cidadao",
               "audienceIds": [
                 "cidadao",
@@ -769,7 +929,7 @@
               "role": "entry",
               "title": "Cancelamento/Retificação de NFS-e",
               "department": "SEAFI-SUDIV - Supervisão de Dívida Ativa",
-              "category": "Tributos",
+              "category": "Impostos",
               "audienceId": "cidadao",
               "audienceIds": [
                 "cidadao",
@@ -786,7 +946,7 @@
               "role": "entry",
               "title": "Capacitação funcional",
               "department": "SEAFI-SUGEP - Superintendência de Gestão de Pessoas",
-              "category": "Servidor",
+              "category": "Servidor Público",
               "audienceId": "servidor",
               "audienceIds": [
                 "servidor"
@@ -802,7 +962,7 @@
               "role": "entry",
               "title": "Certidão de 1º lançamento do IPTU",
               "department": "SEAFI-SUCAI - Supervisão de Cadastro Imobiliário",
-              "category": "Tributos",
+              "category": "Impostos",
               "audienceId": "cidadao",
               "audienceIds": [
                 "cidadao",
@@ -820,7 +980,7 @@
               "title": "Certidão de comprovação de endereço",
               "subject": "Solicitar certidão de comprovação de endereço",
               "department": "SEAFI-SUDIV - Supervisão de Dívida Ativa",
-              "category": "Tributos",
+              "category": "Taxas e Impostos",
               "audienceId": "cidadao",
               "audienceIds": [
                 "cidadao",
@@ -847,7 +1007,7 @@
                 "empresa"
               ],
               "sourceRow": 30,
-              "category": "Cidadão, Empresas"
+              "category": "Meio Ambiente"
             },
             {
               "id": "1doc-certidao-de-inexistencia-de-inscricao",
@@ -855,7 +1015,7 @@
               "role": "entry",
               "title": "Certidão de inexistência de inscrição",
               "department": "SEAFI-SUCAI - Supervisão de Cadastro Imobiliário",
-              "category": "Tributos",
+              "category": "Taxas e Impostos",
               "audienceId": "cidadao",
               "audienceIds": [
                 "cidadao",
@@ -872,7 +1032,7 @@
               "role": "entry",
               "title": "Certidão de inscrição municipal — empresa",
               "department": "SEAFI-SUDIV - Supervisão de Dívida Ativa",
-              "category": "Tributos",
+              "category": "Taxas e Impostos",
               "audienceId": "cidadao",
               "audienceIds": [
                 "cidadao",
@@ -889,7 +1049,7 @@
               "role": "entry",
               "title": "Certidão de lançamento de número de imóvel",
               "department": "SEAFI-SUCAI - Supervisão de Cadastro Imobiliário",
-              "category": "Tributos",
+              "category": "Taxas e Impostos",
               "audienceId": "cidadao",
               "audienceIds": [
                 "cidadao",
@@ -907,7 +1067,7 @@
               "title": "Certidão de regularidade fiscal — empresas",
               "subject": "Solicitar certidão de regularidade fiscal",
               "department": "SEAFI-SUDIV - Supervisão de Dívida Ativa",
-              "category": "Tributos",
+              "category": "Impostos",
               "audienceId": "cidadao",
               "audienceIds": [
                 "cidadao",
@@ -924,7 +1084,7 @@
               "role": "entry",
               "title": "Certidão de regularidade fiscal do IPTU",
               "department": "SEAFI-SUCAI - Supervisão de Cadastro Imobiliário",
-              "category": "Tributos",
+              "category": "Impostos",
               "audienceId": "cidadao",
               "audienceIds": [
                 "cidadao",
@@ -942,7 +1102,7 @@
               "title": "Certidão de valor venal — imóvel rural",
               "subject": "Solicitar certidão de valor venal rural",
               "department": "SEAFI-SUCAI - Supervisão de Cadastro Imobiliário",
-              "category": "Tributos",
+              "category": "Impostos",
               "audienceId": "cidadao",
               "audienceIds": [
                 "cidadao",
@@ -960,7 +1120,7 @@
               "title": "Certidão de valor venal — imóvel urbano",
               "subject": "Solicitar certidão de valor venal urbano",
               "department": "SEAFI-SUCAI - Supervisão de Cadastro Imobiliário",
-              "category": "Tributos",
+              "category": "Impostos",
               "audienceId": "cidadao",
               "audienceIds": [
                 "cidadao",
@@ -977,7 +1137,7 @@
               "role": "entry",
               "title": "Certidão negativa de pessoa física",
               "department": "SEAFI-SUDIV - Supervisão de Dívida Ativa",
-              "category": "Tributos",
+              "category": "Impostos",
               "audienceId": "cidadao",
               "audienceIds": [
                 "cidadao",
@@ -994,7 +1154,7 @@
               "role": "entry",
               "title": "Certidão por tempo de serviço",
               "department": "SEAFI-SUGEP - Superintendência de Gestão de Pessoas",
-              "category": "Servidor",
+              "category": "Servidor Público",
               "audienceId": "servidor",
               "audienceIds": [
                 "servidor"
@@ -1010,7 +1170,7 @@
               "role": "entry",
               "title": "Compensação — pessoa física e jurídica",
               "department": "SEAFI-SUDIV - Supervisão de Dívida Ativa",
-              "category": "Tributos",
+              "category": "Impostos",
               "audienceId": "cidadao",
               "audienceIds": [
                 "cidadao",
@@ -1027,7 +1187,7 @@
               "role": "entry",
               "title": "Concurso",
               "department": "SEAFI-SUGEP - Superintendência de Gestão de Pessoas",
-              "category": "Cidadão",
+              "category": "Servidor Público",
               "audienceId": "cidadao",
               "audienceIds": [
                 "cidadao"
@@ -1043,7 +1203,7 @@
               "role": "entry",
               "title": "Concurso de remoção de servidor",
               "department": "CAPRS - Comissão de Avaliação e Acompanhamento para subsidiar a realização de futuro processo de remoção de servidores",
-              "category": "Servidor",
+              "category": "Servidor Público",
               "audienceId": "servidor",
               "audienceIds": [
                 "servidor"
@@ -1059,7 +1219,7 @@
               "role": "entry",
               "title": "Consulta de débitos e informações cadastrais",
               "department": "SEAFI-SUDIV - Supervisão de Dívida Ativa",
-              "category": "Tributos",
+              "category": "Impostos",
               "audienceId": "cidadao",
               "audienceIds": [
                 "cidadao",
@@ -1076,7 +1236,7 @@
               "role": "entry",
               "title": "Contracheque",
               "department": "GAB-DGP - Gabinete DGP",
-              "category": "Servidor",
+              "category": "Servidor Público",
               "audienceId": "servidor",
               "audienceIds": [
                 "servidor"
@@ -1092,7 +1252,7 @@
               "role": "entry",
               "title": "Convênios (diversos)",
               "department": "SEAFI-SUCONV - Superintendência de Projetos e Convênios",
-              "category": "Órgãos Públicos e ONGs",
+              "category": "Administração Pública",
               "audienceId": "orgaos-publicos-ongs",
               "audienceIds": [
                 "orgaos-publicos-ongs"
@@ -1108,7 +1268,7 @@
               "role": "entry",
               "title": "Correção de valores salariais",
               "department": "SEAFI-SUGEP - Superintendência de Gestão de Pessoas",
-              "category": "Servidor",
+              "category": "Servidor Público",
               "audienceId": "servidor",
               "audienceIds": [
                 "servidor"
@@ -1133,7 +1293,7 @@
                 "cidadao"
               ],
               "sourceRow": 49,
-              "category": "Cidadão"
+              "category": "Acessibilidade"
             },
             {
               "id": "1doc-credencial-de-estacionamento-para-pcd",
@@ -1150,7 +1310,7 @@
                 "cidadao"
               ],
               "sourceRow": 50,
-              "category": "Cidadão"
+              "category": "Acessibilidade"
             },
             {
               "id": "1doc-declaracao-de-perfil-profissiografico-previdenciario-ppp",
@@ -1158,7 +1318,7 @@
               "role": "entry",
               "title": "Declaração de Perfil Profissiográfico Previdenciário - PPP",
               "department": "SEAFI-SUGEP - Superintendência de Gestão de Pessoas",
-              "category": "Servidor",
+              "category": "Servidor Público",
               "audienceId": "servidor",
               "audienceIds": [
                 "servidor"
@@ -1183,7 +1343,7 @@
                 "cidadao"
               ],
               "sourceRow": 52,
-              "category": "Cidadão"
+              "category": "Trânsito"
             },
             {
               "id": "1doc-descompatibilizacao-eleitoral",
@@ -1191,7 +1351,7 @@
               "role": "entry",
               "title": "Descompatibilização eleitoral",
               "department": "SEAFI-SUGEP - Superintendência de Gestão de Pessoas",
-              "category": "Servidor",
+              "category": "Servidor Público",
               "audienceId": "servidor",
               "audienceIds": [
                 "servidor"
@@ -1207,7 +1367,7 @@
               "role": "entry",
               "title": "Desmembramento de área rural",
               "department": "SEAFI-SUCAI - Supervisão de Cadastro Imobiliário",
-              "category": "Tributos",
+              "category": "Agricultura Familiar",
               "audienceId": "cidadao",
               "audienceIds": [
                 "cidadao",
@@ -1224,7 +1384,7 @@
               "role": "entry",
               "title": "Desmembramento de área urbana",
               "department": "SEAFI-SUCAI - Supervisão de Cadastro Imobiliário",
-              "category": "Tributos",
+              "category": "Habitação",
               "audienceId": "cidadao",
               "audienceIds": [
                 "cidadao",
@@ -1251,7 +1411,7 @@
                 "empresa"
               ],
               "sourceRow": 56,
-              "category": "Cidadão, Empresas"
+              "category": "Habitação"
             },
             {
               "id": "1doc-dispensa-de-licenca-dl",
@@ -1269,7 +1429,7 @@
                 "empresa"
               ],
               "sourceRow": 57,
-              "category": "Cidadão, Empresas"
+              "category": "Meio Ambiente"
             },
             {
               "id": "1doc-duvidas-sobre-concursos-processos-seletivos",
@@ -1286,7 +1446,7 @@
                 "ouvidoria"
               ],
               "sourceRow": 58,
-              "category": "Ouvidoria"
+              "category": "Ouvidorias"
             },
             {
               "id": "1doc-entrega-de-documentos-licitatorios",
@@ -1294,7 +1454,7 @@
               "role": "entry",
               "title": "Entrega de documentos licitatórios",
               "department": "SEAFI-GELIC - Gerência de Licitações",
-              "category": "Empresas",
+              "category": "Licitações",
               "audienceId": "empresa",
               "audienceIds": [
                 "empresa"
@@ -1310,7 +1470,7 @@
               "role": "entry",
               "title": "Esclarecimento em licitação",
               "department": "SEAFI-GELIC - Gerência de Licitações",
-              "category": "Empresas",
+              "category": "Licitações",
               "audienceId": "empresa",
               "audienceIds": [
                 "empresa"
@@ -1326,7 +1486,7 @@
               "role": "entry",
               "title": "Estágio probatório",
               "department": "SEAP - Subcomissão Especial de Avaliação",
-              "category": "Servidor",
+              "category": "Servidor Público",
               "audienceId": "servidor",
               "audienceIds": [
                 "servidor"
@@ -1342,7 +1502,7 @@
               "role": "entry",
               "title": "Exoneração de cargo",
               "department": "SEAFI-SUGEP - Superintendência de Gestão de Pessoas",
-              "category": "Servidor",
+              "category": "Servidor Público",
               "audienceId": "servidor",
               "audienceIds": [
                 "servidor"
@@ -1359,7 +1519,7 @@
               "title": "Extinção ou suspensão de execução extrajudicial ou judicial",
               "subject": "Solicitar extinção ou suspensão de execução extrajudicial ou judicial",
               "department": "AJU - DA - Assessoria Jurídica - Dívida Ativa",
-              "category": "Tributos",
+              "category": "Impostos",
               "audienceId": "cidadao",
               "audienceIds": [
                 "cidadao",
@@ -1376,7 +1536,7 @@
               "role": "entry",
               "title": "Férias (marcação e alteração)",
               "department": "GAB-DGP - Gabinete DGP",
-              "category": "Servidor",
+              "category": "Servidor Público",
               "audienceId": "servidor",
               "audienceIds": [
                 "servidor"
@@ -1392,7 +1552,7 @@
               "role": "entry",
               "title": "Gratificação por estímulo ao aperfeiçoamento - GEA (SEMED)",
               "department": "PFGEA - Progressão Funcional e GEA",
-              "category": "Servidor",
+              "category": "Servidor Público",
               "audienceId": "servidor",
               "audienceIds": [
                 "servidor"
@@ -1408,7 +1568,7 @@
               "role": "entry",
               "title": "Guia de sepultamento",
               "department": "SAC - SAC Municipal",
-              "category": "Cidadão",
+              "category": "Ação Social e Cidadania",
               "audienceId": "cidadao",
               "audienceIds": [
                 "cidadao"
@@ -1434,7 +1594,7 @@
                 "empresa"
               ],
               "sourceRow": 68,
-              "category": "Cidadão, Empresas"
+              "category": "Habitação"
             },
             {
               "id": "1doc-impugnacao-de-edital-de-licitacao",
@@ -1442,7 +1602,7 @@
               "role": "entry",
               "title": "Impugnação de edital de licitação",
               "department": "SEAFI-GELIC - Gerência de Licitações",
-              "category": "Empresas",
+              "category": "Licitações",
               "audienceId": "empresa",
               "audienceIds": [
                 "empresa"
@@ -1467,7 +1627,7 @@
                 "cidadao"
               ],
               "sourceRow": 71,
-              "category": "Cidadão"
+              "category": "Trânsito"
             },
             {
               "id": "1doc-indicacao-de-condutor-infrator-pessoa-juridica",
@@ -1484,7 +1644,7 @@
                 "cidadao"
               ],
               "sourceRow": 72,
-              "category": "Cidadão"
+              "category": "Trânsito"
             },
             {
               "id": "1doc-informe-de-rendimentos-para-imposto-de-renda",
@@ -1492,7 +1652,7 @@
               "role": "entry",
               "title": "Informe de rendimentos para Imposto de Renda",
               "department": "GAB-DGP - Gabinete DGP",
-              "category": "Servidor",
+              "category": "Servidor Público",
               "audienceId": "servidor",
               "audienceIds": [
                 "servidor"
@@ -1508,7 +1668,7 @@
               "role": "entry",
               "title": "Inscrição municipal — cadastro econômico",
               "department": "SEAFI-SUDIV - Supervisão de Dívida Ativa",
-              "category": "Tributos",
+              "category": "Taxas e Impostos",
               "audienceId": "cidadao",
               "audienceIds": [
                 "cidadao",
@@ -1525,7 +1685,7 @@
               "role": "entry",
               "title": "Interdição de via",
               "department": "DOP - Diretoria de Ordem Pública",
-              "category": "Cidadão",
+              "category": "Trânsito",
               "audienceId": "cidadao",
               "audienceIds": [
                 "cidadao"
@@ -1541,7 +1701,7 @@
               "role": "entry",
               "title": "Isenção de IPTU",
               "department": "SEAFI-SUCAI - Supervisão de Cadastro Imobiliário",
-              "category": "Tributos",
+              "category": "Impostos",
               "audienceId": "cidadao",
               "audienceIds": [
                 "cidadao",
@@ -1558,7 +1718,7 @@
               "role": "entry",
               "title": "Isenção de ITBI/ITV",
               "department": "SEAFI-SUCAI - Supervisão de Cadastro Imobiliário",
-              "category": "Tributos",
+              "category": "Impostos",
               "audienceId": "cidadao",
               "audienceIds": [
                 "cidadao",
@@ -1575,7 +1735,7 @@
               "role": "entry",
               "title": "Isenção de taxas",
               "department": "SEAFI-SUDIV - Supervisão de Dívida Ativa",
-              "category": "Tributos",
+              "category": "Taxas e Impostos",
               "audienceId": "cidadao",
               "audienceIds": [
                 "cidadao",
@@ -1594,7 +1754,7 @@
               "title": "Isenção tributária — cadastro econômico",
               "subject": "Solicitar isenção tributária de cadastro econômico",
               "department": "Prefeitura Municipal de Amargosa",
-              "category": "Tributos",
+              "category": "Impostos",
               "audienceId": "cidadao",
               "audienceIds": [
                 "cidadao",
@@ -1612,7 +1772,7 @@
               "title": "Isenção tributária — cadastro imobiliário",
               "subject": "Solicitar isenção tributária de cadastro imobiliário",
               "department": "Prefeitura Municipal de Amargosa",
-              "category": "Tributos",
+              "category": "Impostos",
               "audienceId": "cidadao",
               "audienceIds": [
                 "cidadao",
@@ -1628,7 +1788,7 @@
               "role": "entry",
               "title": "ISS (Imposto Sobre Serviços)",
               "department": "SEAFI-SUDIV - Supervisão de Dívida Ativa",
-              "category": "Tributos",
+              "category": "Impostos",
               "audienceId": "cidadao",
               "audienceIds": [
                 "cidadao",
@@ -1646,7 +1806,7 @@
               "title": "Lançamento de inscrição imobiliária",
               "subject": "Solicitar criação de inscrição imobiliária",
               "department": "SEAFI-SUCAI - Supervisão de Cadastro Imobiliário",
-              "category": "Tributos",
+              "category": "Taxas e Impostos",
               "audienceId": "cidadao",
               "audienceIds": [
                 "cidadao",
@@ -1663,7 +1823,7 @@
               "role": "entry",
               "title": "Lançamento do ISSQN para habite-se",
               "department": "SEAFI-SUDIV - Supervisão de Dívida Ativa",
-              "category": "Tributos",
+              "category": "Impostos",
               "audienceId": "cidadao",
               "audienceIds": [
                 "cidadao",
@@ -1680,7 +1840,7 @@
               "role": "entry",
               "title": "Licença não remunerada",
               "department": "SEAFI-SUGEP - Superintendência de Gestão de Pessoas",
-              "category": "Servidor",
+              "category": "Servidor Público",
               "audienceId": "servidor",
               "audienceIds": [
                 "servidor"
@@ -1696,7 +1856,7 @@
               "role": "entry",
               "title": "Licença por motivo de doença em pessoa da família",
               "department": "SEAFI-SUGEP - Superintendência de Gestão de Pessoas",
-              "category": "Cidadão",
+              "category": "Servidor Público",
               "audienceId": "cidadao",
               "audienceIds": [
                 "cidadao"
@@ -1712,7 +1872,7 @@
               "role": "entry",
               "title": "Licença-prêmio",
               "department": "SEAFI-SUGEP - Superintendência de Gestão de Pessoas",
-              "category": "Servidor",
+              "category": "Servidor Público",
               "audienceId": "servidor",
               "audienceIds": [
                 "servidor"
@@ -1728,7 +1888,7 @@
               "role": "entry",
               "title": "Limpeza pública",
               "department": "SEMOP-SUPESP - Superintendência de Serviços Públicos",
-              "category": "Cidadão, Empresas",
+              "category": "Obras Públicas",
               "audienceId": "cidadao",
               "audienceIds": [
                 "cidadao",
@@ -1745,7 +1905,7 @@
               "role": "entry",
               "title": "Margem para empréstimo consignado",
               "department": "SEAFI-SUGEP - Superintendência de Gestão de Pessoas",
-              "category": "Servidor",
+              "category": "Servidor Público",
               "audienceId": "servidor",
               "audienceIds": [
                 "servidor"
@@ -1770,7 +1930,7 @@
                 "cidadao"
               ],
               "sourceRow": 90,
-              "category": "Cidadão"
+              "category": "Impostos"
             },
             {
               "id": "1doc-numeracao-predial",
@@ -1788,7 +1948,7 @@
                 "empresa"
               ],
               "sourceRow": 91,
-              "category": "Cidadão, Empresas"
+              "category": "Habitação"
             },
             {
               "id": "1doc-outros-orgaos-publicos-e-ongs",
@@ -1796,7 +1956,7 @@
               "role": "entry",
               "title": "Outros — órgãos públicos e ONGs",
               "department": "Prefeitura de Amargosa",
-              "category": "Órgãos Públicos e ONGs",
+              "category": "Administração Pública",
               "audienceId": "orgaos-publicos-ongs",
               "audienceIds": [
                 "orgaos-publicos-ongs"
@@ -1821,7 +1981,7 @@
                 "ouvidoria"
               ],
               "sourceRow": 96,
-              "category": "Ouvidoria"
+              "category": "Ouvidorias"
             },
             {
               "id": "1doc-parcelamento-de-debito-do-iptu",
@@ -1829,7 +1989,7 @@
               "role": "entry",
               "title": "Parcelamento de débito do IPTU",
               "department": "SEAFI-SUCAI - Supervisão de Cadastro Imobiliário",
-              "category": "Tributos",
+              "category": "Impostos",
               "audienceId": "cidadao",
               "audienceIds": [
                 "cidadao",
@@ -1846,7 +2006,7 @@
               "role": "entry",
               "title": "Pedido de certidão",
               "department": "SEAFI-SUDIV - Supervisão de Dívida Ativa",
-              "category": "Tributos",
+              "category": "Taxas e Impostos",
               "audienceId": "empresa",
               "audienceIds": [
                 "empresa"
@@ -1862,7 +2022,7 @@
               "role": "entry",
               "title": "Pedido de reajuste ou reequilíbrio contratual",
               "department": "CGM - Controladoria Geral do Município",
-              "category": "Empresas",
+              "category": "Licitações",
               "audienceId": "empresa",
               "audienceIds": [
                 "empresa"
@@ -1878,7 +2038,7 @@
               "role": "entry",
               "title": "Poda de árvore",
               "department": "SEAMA-SUMA-DIMA - Superintendência e Diretoria de Meio Ambiente",
-              "category": "Cidadão",
+              "category": "Meio Ambiente",
               "audienceId": "cidadao",
               "audienceIds": [
                 "cidadao"
@@ -1895,7 +2055,7 @@
               "title": "Prescrição de crédito tributário ou de renda/IPTU/TLL/TFF",
               "subject": "Solicitar prescrição de débitos tributários municipais",
               "department": "SEAFI-SUDIV - Supervisão de Dívida Ativa",
-              "category": "Tributos",
+              "category": "Impostos",
               "audienceId": "cidadao",
               "audienceIds": [
                 "cidadao",
@@ -1912,7 +2072,7 @@
               "role": "entry",
               "title": "Prestação de contas de diárias",
               "department": "CGM - Controladoria Geral do Município",
-              "category": "Servidor",
+              "category": "Servidor Público",
               "audienceId": "servidor",
               "audienceIds": [
                 "servidor"
@@ -1928,7 +2088,7 @@
               "role": "entry",
               "title": "Progressão funcional — SEMED (mudança de nível)",
               "department": "PFGEA - Progressão Funcional e GEA",
-              "category": "Servidor",
+              "category": "Servidor Público",
               "audienceId": "servidor",
               "audienceIds": [
                 "servidor"
@@ -1944,7 +2104,7 @@
               "role": "entry",
               "title": "Progressão na carreira",
               "department": "SEAFI-SUGEP - Superintendência de Gestão de Pessoas",
-              "category": "Servidor",
+              "category": "Servidor Público",
               "audienceId": "servidor",
               "audienceIds": [
                 "servidor"
@@ -1960,7 +2120,7 @@
               "role": "entry",
               "title": "Reconhecimento de imunidade, isenção ou não incidência",
               "department": "SEAFI-SUDIV - Supervisão de Dívida Ativa",
-              "category": "Tributos",
+              "category": "Impostos",
               "audienceId": "cidadao",
               "audienceIds": [
                 "cidadao",
@@ -1986,7 +2146,7 @@
                 "cidadao"
               ],
               "sourceRow": 108,
-              "category": "Cidadão"
+              "category": "Trânsito"
             },
             {
               "id": "1doc-recurso-a-junta-administrativa-de-recursos-de-infracoes-jari",
@@ -2003,7 +2163,7 @@
                 "cidadao"
               ],
               "sourceRow": 109,
-              "category": "Cidadão"
+              "category": "Trânsito"
             },
             {
               "id": "1doc-regularizacao-de-loteamentos",
@@ -2021,7 +2181,7 @@
                 "empresa"
               ],
               "sourceRow": 111,
-              "category": "Cidadão, Empresas"
+              "category": "Habitação"
             },
             {
               "id": "1doc-regularizacao-fundiaria",
@@ -2029,7 +2189,7 @@
               "role": "entry",
               "title": "Regularização fundiária",
               "department": "SEAFI-SUCAI - Supervisão de Cadastro Imobiliário",
-              "category": "Cidadão",
+              "category": "Habitação",
               "audienceId": "cidadao",
               "audienceIds": [
                 "cidadao"
@@ -2045,7 +2205,7 @@
               "role": "entry",
               "title": "Requerimento escolar",
               "department": "SEMED-GAB - Gabinete",
-              "category": "Cidadão",
+              "category": "Ação Social e Cidadania",
               "audienceId": "cidadao",
               "audienceIds": [
                 "cidadao"
@@ -2061,7 +2221,7 @@
               "role": "entry",
               "title": "Requerimento ao Gabinete da SEAFI",
               "department": "SAC - SAC Municipal",
-              "category": "Cidadão, Empresas",
+              "category": "Administração Pública",
               "audienceId": "cidadao",
               "audienceIds": [
                 "cidadao",
@@ -2078,7 +2238,7 @@
               "role": "entry",
               "title": "Requerimento de gratificação por estímulo ao aperfeiçoamento",
               "department": "PFGEA - Progressão Funcional e GEA",
-              "category": "Servidor",
+              "category": "Servidor Público",
               "audienceId": "servidor",
               "audienceIds": [
                 "servidor"
@@ -2094,7 +2254,7 @@
               "role": "entry",
               "title": "Ressarcimento e indenizações",
               "department": "SEAFI-GAB - Gabinete - SEAFI",
-              "category": "Cidadão",
+              "category": "Ouvidorias",
               "audienceId": "cidadao",
               "audienceIds": [
                 "cidadao"
@@ -2110,7 +2270,7 @@
               "role": "entry",
               "title": "Restituição de tributos",
               "department": "SEAFI-SUDIV - Supervisão de Dívida Ativa",
-              "category": "Tributos",
+              "category": "Impostos",
               "audienceId": "cidadao",
               "audienceIds": [
                 "cidadao",
@@ -2127,7 +2287,7 @@
               "role": "entry",
               "title": "Retirada de entulhos",
               "department": "SEMOP-SUPESP - Superintendência de Serviços Públicos",
-              "category": "Cidadão, Empresas",
+              "category": "Obras Públicas",
               "audienceId": "cidadao",
               "audienceIds": [
                 "cidadao",
@@ -2144,7 +2304,7 @@
               "role": "entry",
               "title": "Revisão de área",
               "department": "SEAFI-SUCAI - Supervisão de Cadastro Imobiliário",
-              "category": "Tributos",
+              "category": "Taxas e Impostos",
               "audienceId": "cidadao",
               "audienceIds": [
                 "cidadao",
@@ -2161,7 +2321,7 @@
               "role": "entry",
               "title": "Revisão de cálculo de IPTU",
               "department": "SEAFI-SUCAI - Supervisão de Cadastro Imobiliário",
-              "category": "Tributos",
+              "category": "Impostos",
               "audienceId": "cidadao",
               "audienceIds": [
                 "cidadao",
@@ -2178,7 +2338,7 @@
               "role": "entry",
               "title": "Revisão de cálculo de ITIV",
               "department": "SEAFI-SUCAI - Supervisão de Cadastro Imobiliário",
-              "category": "Tributos",
+              "category": "Impostos",
               "audienceId": "cidadao",
               "audienceIds": [
                 "cidadao",
@@ -2195,7 +2355,7 @@
               "role": "entry",
               "title": "Revisão de cálculo de TFF",
               "department": "SEAFI-SUDIV - Supervisão de Dívida Ativa",
-              "category": "Tributos",
+              "category": "Impostos",
               "audienceId": "cidadao",
               "audienceIds": [
                 "cidadao",
@@ -2212,7 +2372,7 @@
               "role": "entry",
               "title": "Revisão de características imobiliárias",
               "department": "SEAFI-SUCAI - Supervisão de Cadastro Imobiliário",
-              "category": "Tributos",
+              "category": "Taxas e Impostos",
               "audienceId": "cidadao",
               "audienceIds": [
                 "cidadao",
@@ -2229,7 +2389,7 @@
               "role": "entry",
               "title": "Serviços de manutenção pública",
               "department": "DIROB - Diretoria de Obras",
-              "category": "Cidadão, Empresas",
+              "category": "Obras Públicas",
               "audienceId": "cidadao",
               "audienceIds": [
                 "cidadao",
@@ -2256,7 +2416,7 @@
                 "empresa"
               ],
               "sourceRow": 129,
-              "category": "Cidadão, Empresas"
+              "category": "Meio Ambiente"
             },
             {
               "id": "1doc-solicitacao-de-reforma-de-carneira",
@@ -2264,7 +2424,7 @@
               "role": "entry",
               "title": "Solicitação de reforma de carneira",
               "department": "SEMOP-SUPESP - Superintendência de Serviços Públicos",
-              "category": "Cidadão",
+              "category": "Obras Públicas",
               "audienceId": "cidadao",
               "audienceIds": [
                 "cidadao"
@@ -2290,7 +2450,7 @@
                 "empresa"
               ],
               "sourceRow": 131,
-              "category": "Cidadão, Empresas"
+              "category": "Meio Ambiente"
             },
             {
               "id": "1doc-solicitacoes-para-eventos-esportivos-caminhadas-carreatas-e-etc",
@@ -2308,7 +2468,7 @@
                 "empresa"
               ],
               "sourceRow": 132,
-              "category": "Cidadão, Empresas"
+              "category": "Esportes"
             },
             {
               "id": "1doc-suspensao-do-cadastro-economico",
@@ -2316,7 +2476,7 @@
               "role": "entry",
               "title": "Suspensão do cadastro econômico",
               "department": "SEAFI-SUDIV - Supervisão de Dívida Ativa",
-              "category": "Tributos",
+              "category": "Taxas e Impostos",
               "audienceId": "cidadao",
               "audienceIds": [
                 "cidadao",
@@ -2333,7 +2493,7 @@
               "role": "entry",
               "title": "Transferência de titularidade imobiliária",
               "department": "SEAFI-SUCAI - Supervisão de Cadastro Imobiliário",
-              "category": "Tributos",
+              "category": "Taxas e Impostos",
               "audienceId": "cidadao",
               "audienceIds": [
                 "cidadao",
@@ -2359,7 +2519,7 @@
                 "cidadao"
               ],
               "sourceRow": 135,
-              "category": "Cidadão"
+              "category": "Trânsito"
             },
             {
               "id": "1doc-troca-de-lampadas",
@@ -2367,7 +2527,7 @@
               "role": "entry",
               "title": "Troca de lâmpadas",
               "department": "SEMOP-SUPESP - Superintendência de Serviços Públicos",
-              "category": "Cidadão, Empresas",
+              "category": "Obras Públicas",
               "audienceId": "cidadao",
               "audienceIds": [
                 "cidadao",
@@ -2394,7 +2554,7 @@
                 "empresa"
               ],
               "sourceRow": 138,
-              "category": "Cidadão, Empresas"
+              "category": "Habitação"
             },
             {
               "id": "1doc-verbas-rescisorias",
@@ -2402,7 +2562,7 @@
               "role": "entry",
               "title": "Verbas rescisórias",
               "department": "SEAFI-SUGEP - Superintendência de Gestão de Pessoas",
-              "category": "Servidor",
+              "category": "Servidor Público",
               "audienceId": "servidor",
               "audienceIds": [
                 "servidor"

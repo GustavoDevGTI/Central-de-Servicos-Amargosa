@@ -99,7 +99,7 @@ export const cartaOnlyServices: CartaService[] = [
   {
     id: "carta-segunda-via-iptu",
     title: "2ª via do IPTU",
-    category: "Tributos",
+    category: "Impostos",
     audienceId: "cidadao",
     audienceIds: ["cidadao", "empresa"],
     department: "SEAFI-SUCAI - Supervisão de Cadastro Imobiliário",
@@ -110,7 +110,7 @@ export const cartaOnlyServices: CartaService[] = [
   {
     id: "carta-declaracao-de-matricula",
     title: "Declaração de matrícula",
-    category: "Cidadão",
+    category: "Educação",
     audienceId: "cidadao",
     audienceIds: ["cidadao"],
     department: "SEMED-GAB - Gabinete",
@@ -122,7 +122,7 @@ export const cartaOnlyServices: CartaService[] = [
   {
     id: "carta-emissao-de-boletim-escolar",
     title: "Emissão de boletim escolar",
-    category: "Cidadão",
+    category: "Educação",
     audienceId: "cidadao",
     audienceIds: ["cidadao"],
     department: "SEMED-GAB - Gabinete",
@@ -134,7 +134,7 @@ export const cartaOnlyServices: CartaService[] = [
   {
     id: "carta-matricula-escolar",
     title: "Matrícula escolar",
-    category: "Cidadão",
+    category: "Educação",
     audienceId: "cidadao",
     audienceIds: ["cidadao"],
     department: "SEMED-GAB - Gabinete",
@@ -146,7 +146,7 @@ export const cartaOnlyServices: CartaService[] = [
   {
     id: "carta-segunda-via-de-documentos-escolares",
     title: "Segunda via de documentos escolares",
-    category: "Cidadão",
+    category: "Educação",
     audienceId: "cidadao",
     audienceIds: ["cidadao"],
     department: "SEMED-GAB - Gabinete",
@@ -158,7 +158,7 @@ export const cartaOnlyServices: CartaService[] = [
   {
     id: "carta-solicitacao-de-historico-escolar",
     title: "Solicitação de histórico escolar",
-    category: "Cidadão",
+    category: "Educação",
     audienceId: "cidadao",
     audienceIds: ["cidadao"],
     department: "SEMED-GAB - Gabinete",
