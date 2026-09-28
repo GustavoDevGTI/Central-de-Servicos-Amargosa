@@ -122,7 +122,7 @@
 @media(max-width:480px){.service-legislation a{gap:12px;padding:14px}}
 
 /* Navegação de retorno nas páginas de serviço. */
-.internal-header>nav>a{font-family:var(--site-body-font);font-size:13px;font-weight:800}
+@media(max-width:760px){.internal-header>nav>a{font-family:var(--site-body-font);font-size:13px;font-weight:800}}
 .service-back-row{min-height:40px;display:flex;align-items:flex-start;justify-content:flex-start}
 .service-back-button{min-height:40px;display:inline-flex;align-items:center;gap:7px;padding:0 8px;border:0;background:transparent;color:var(--ink);font-family:var(--site-body-font);font-size:13px;font-weight:800;line-height:1.2;cursor:pointer;transition:transform .18s ease,color .18s ease}
 .service-back-button svg{width:14px;height:14px;flex:0 0 14px;color:var(--green);stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
