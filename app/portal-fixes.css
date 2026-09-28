@@ -74,9 +74,15 @@
 .site-root>.segment-hero .popular a{min-height:34px;display:flex;align-items:center;justify-content:center;padding:6px 11px;border:1px solid rgba(255,255,255,.42);border-radius:999px;background:rgba(255,255,255,.13);color:#fff;font-size:12px;font-weight:750;line-height:1.15;text-align:center;white-space:nowrap}
 @media(hover:hover) and (pointer:fine){.site-root>.segment-hero .popular button:hover{border-color:rgba(255,255,255,.72);background:rgba(255,255,255,.2);box-shadow:0 7px 18px rgba(2,43,33,.2)}}
 @media(hover:hover) and (pointer:fine){.site-root>.segment-hero .popular a:hover{border-color:rgba(255,255,255,.72);background:rgba(255,255,255,.2);box-shadow:0 7px 18px rgba(2,43,33,.2)}}
-.site-root>.segment-categories.categories-section{padding-block:62px;background:linear-gradient(180deg,#edf5f0 0%,#f5f8f6 100%)}
+/* Um único degradê acompanha o conteúdo, sem reiniciar em cada seção. */
+.site-root{background:linear-gradient(180deg,#fff 0px,#fff 1020px,#edf5f0 1230px,#dceee3 1500px,#dceee3 100%)}
+.site-root>.segment-featured.section,.site-root>.segment-categories.categories-section{background:transparent}
+.site-root>.segment-categories.categories-section{padding-block:62px}
+@media(min-width:621px) and (max-width:1100px){
+  .site-root{background:linear-gradient(180deg,#fff 0px,#fff 1350px,#edf5f0 1590px,#dceee3 1870px,#dceee3 100%)}
+}
 .site-root>.segment-categories .categories{grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:30px}
-.site-root>.segment-categories .categories button{min-height:132px;display:grid;grid-template-columns:1fr auto;align-items:start;gap:16px;padding:21px 20px;border:1px solid #cbdad4;border-top:4px solid var(--segment-accent);border-radius:2px;background:#fff;text-align:left}
+.site-root>.segment-categories .categories button{min-height:132px;display:grid;grid-template-columns:1fr auto;align-items:start;gap:16px;padding:21px 20px;border:1px solid #cbdad4;border-top:3px solid var(--segment-accent);border-radius:4px;background:#fff;text-align:left}
 .site-root>.segment-categories .categories button>span{height:100%}
 .site-root>.segment-categories .categories strong{font-size:18px;line-height:1.18}
 .site-root>.segment-categories .categories small{max-width:28ch;margin-top:auto;padding-top:13px;font-size:10px;line-height:1.45}
@@ -130,9 +136,13 @@
   .site-root>.segment-hero.text-size-large h1,.site-root>.segment-hero.text-size-xlarge h1{white-space:normal}
 }
 
+/* No celular, a transição também começa no meio da seção Público. */
+@media(max-width:620px){
+  .site-root{background:linear-gradient(180deg,#fff 0px,#fff 1040px,#edf5f0 1290px,#dceee3 1570px,#dceee3 100%)}
+}
+
 /* No mobile, duas categorias completas e a terceira com indicação de continuidade. */
 @media(max-width:620px){
-  .site-root>.segment-categories.categories-section{background:linear-gradient(180deg,#fff 0%,#edf5f0 160px,#edf5f0 calc(100% - 120px),#f5f8f6 100%)}
   .site-root>.segment-categories .categories{grid-template-columns:1fr}
   .site-root>.segment-categories .category-list.has-more.is-collapsed .categories button:nth-child(3){height:100px;min-height:0;overflow:hidden}
   .site-root>.segment-categories .category-list.has-more.is-collapsed .categories button:nth-child(n+4){display:none}
