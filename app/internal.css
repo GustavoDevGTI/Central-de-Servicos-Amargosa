@@ -121,14 +121,14 @@
 .service-legislation a:focus-visible{outline:3px solid #f2c94c;outline-offset:3px}
 @media(max-width:480px){.service-legislation a{gap:12px;padding:14px}}
 
-/* Navegação de retorno nas páginas de serviço. */
+/* Navegação e compartilhamento nas páginas de serviço. */
 .internal-header>nav>a{font-family:var(--site-body-font);font-size:13px;font-weight:800}
-.service-back-row{min-height:40px;display:flex;align-items:flex-start;justify-content:flex-start}
-.service-back-button{min-height:40px;display:inline-flex;align-items:center;gap:7px;padding:0 8px;border:0;background:transparent;color:var(--ink);font-family:var(--site-body-font);font-size:13px;font-weight:800;line-height:1.2;cursor:pointer;transition:transform .18s ease,color .18s ease}
-.service-back-button svg{width:14px;height:14px;flex:0 0 14px;color:var(--green);stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.service-back-row{min-height:40px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.service-back-button,.service-share-button{min-height:40px;display:inline-flex;align-items:center;gap:7px;padding:0 8px;border:0;background:transparent;color:var(--ink);font-family:var(--site-body-font);font-size:13px;font-weight:800;line-height:1.2;white-space:nowrap;cursor:pointer;transition:transform .18s ease,color .18s ease}
+.service-back-button svg,.service-share-button svg{width:14px;height:14px;flex:0 0 14px;color:var(--green);stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
 .service-detail-rich>header{padding-top:14px}
-@media(hover:hover) and (pointer:fine){.service-back-button:hover{transform:translateY(-2px)}}
-.service-back-button:active{transform:translateY(0) scale(.98)}
-.service-back-button:focus-visible{outline:3px solid #f2c94c;outline-offset:3px}
+@media(hover:hover) and (pointer:fine){.service-back-button:hover,.service-share-button:hover{transform:translateY(-2px)}}
+.service-back-button:active,.service-share-button:active{transform:translateY(0) scale(.98)}
+.service-back-button:focus-visible,.service-share-button:focus-visible{outline:3px solid #f2c94c;outline-offset:3px}
 @media(max-width:760px){.service-detail-rich>header{padding-top:18px}}
-@media(prefers-reduced-motion:reduce){.service-back-button{transition:none}}
+@media(prefers-reduced-motion:reduce){.service-back-button,.service-share-button{transition:none}}

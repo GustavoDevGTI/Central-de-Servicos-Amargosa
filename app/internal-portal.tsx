@@ -33,6 +33,7 @@ import { sameInPersonServiceOffice, serviceWhereWhen } from "./service-where-whe
 import { isBaGovUrl } from "./service-request-system";
 import { servicePageCopy } from "./service-page-copy";
 import { CollectionScheduleSection } from "./coleta-cronograma";
+import ShareServiceButton from "./share-service-button";
 
 // O roteador cliente do Vinext pode cancelar a navegação ao preparar o RSC.
 // Links internos simples preservam a URL e funcionam também sem JavaScript.
@@ -1461,7 +1462,7 @@ function RichServiceDetail({ service }: { service: Service }) {
         className={`${internalClasses(heroSegment, "service-detail")} service-detail-rich`}
         style={internalStyle(heroSegment)}
       >
-        <div className="service-back-row"><ServiceBackButton /></div>
+        <div className="service-back-row"><ServiceBackButton /><ShareServiceButton title={service.title} /></div>
         <header>
           <div>
             <small>{serviceAudienceLabel(service) || service.category}</small>
@@ -1622,7 +1623,7 @@ export function ServiceDetail({ slug }: { slug: string }) {
         className={`${internalClasses(heroSegment, "service-detail")} service-detail-rich service-detail-standard`}
         style={internalStyle(heroSegment)}
       >
-        <div className="service-back-row"><ServiceBackButton /></div>
+        <div className="service-back-row"><ServiceBackButton /><ShareServiceButton title={service.title} /></div>
         <header>
           <div>
             <small>{serviceAudienceLabel(service) || service.category}</small>
