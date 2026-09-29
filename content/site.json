@@ -2728,13 +2728,6 @@
               "label": "Campo da conversa",
               "placeholder": "Escreva o que você precisa…",
               "buttonText": "Enviar"
-            },
-            {
-              "id": "amanda-privacy",
-              "type": "text",
-              "role": "notice",
-              "label": "Aviso",
-              "value": "Não envie dados pessoais. A conversa é curta e usada somente para orientar sua busca por serviços."
             }
           ]
         }

@@ -391,7 +391,6 @@ export default function AmandaWidget() {
               <span aria-hidden="true">{conversation?.buttonText || "➤"}</span>
             </button>
           </form>
-          {getText("notice") && <small className="amanda-notice">{getText("notice")}</small>}
         </aside>
       )}
     </div>
