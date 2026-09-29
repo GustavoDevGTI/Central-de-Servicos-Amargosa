@@ -43,7 +43,7 @@ test("classifica os sistemas de solicitação cadastrados", () => {
       .map((item) => item.id) || [],
   );
 
-  assert.equal(nonSeiServiceIds.size, 10);
+  assert.equal(nonSeiServiceIds.size, 11);
   assert.ok([...nonSeiServiceIds].every((serviceId) => catalogIds.has(serviceId)));
   assert.ok(
     [...nonSeiServiceIds].every(

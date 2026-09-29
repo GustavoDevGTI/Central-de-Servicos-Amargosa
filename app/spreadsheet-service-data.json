@@ -1659,38 +1659,6 @@
       "sourceRow": 55
     },
     {
-      "id": "planilha-70-precatorio-fundef",
-      "type": "service",
-      "role": "entry",
-      "slug": "precatorio-fundef",
-      "title": "Precatório FUNDEF",
-      "category": "Servidor Público",
-      "subject": "Servidor Público",
-      "audienceId": "orgaos-publicos-ongs",
-      "audienceIds": [
-        "orgaos-publicos-ongs"
-      ],
-      "department": "SEAFI - Secretaria de Administração, Finanças e Desenvolvimento Institucional",
-      "destination": "SEI - Acesso Externo/Peticionamento",
-      "url": "",
-      "summary": "Serviço para solicitar precatório fundef. Preencha as informações e anexe os documentos indicados para análise da unidade responsável.",
-      "eligibility": "Órgãos públicos e organizações não governamentais.",
-      "documents": [
-        "Documento de identificação",
-        "CPF",
-        "comprovante de endereço",
-        "requerimento com descrição do pedido",
-        "Quando aplicável: Procuração, quando solicitado por representante"
-      ],
-      "steps": [
-        "Reúna os documentos indicados, quando houver.",
-        "Procure o órgão responsável no endereço indicado em Canais de atendimento ou ligue para confirmar o atendimento."
-      ],
-      "whereWhen": "Atendimento presencial. Consulte o endereço do órgão responsável nos canais abaixo e confirme o horário por telefone.",
-      "requestSystem": "sei",
-      "sourceRow": 70
-    },
-    {
       "id": "planilha-76-recurso-de-progressao-funcional",
       "type": "service",
       "role": "entry",
@@ -3164,12 +3132,6 @@
       "sector": "SEAMA-SUMA-DIMA - Superintendência e Diretoria de Meio Ambiente",
       "phone": "(75) 3512-7811"
     },
-    "planilha-70-precatorio-fundef": {
-      "sourceRow": 70,
-      "secretariat": "SEAFI - Secretaria de Administração, Finanças e Desenvolvimento Institucional",
-      "sector": "FUNDEF - Comissão Precatório FUNDEF",
-      "phone": "(75) 3512-7811"
-    },
     "1doc-prescricao-de-credito-tributario-ou-de-renda-iptu-tll-tff": {
       "sourceRow": 71,
       "secretariat": "SEAFI - Secretaria de Administração, Finanças e Desenvolvimento Institucional",
@@ -3704,7 +3666,6 @@
     "1doc-pedido-de-certidao": "digital",
     "1doc-declaracao-de-perfil-profissiografico-previdenciario-ppp": "digital",
     "1doc-poda-de-arvore": "digital",
-    "planilha-70-precatorio-fundef": "digital",
     "1doc-prescricao-de-credito-tributario-ou-de-renda-iptu-tll-tff": "digital",
     "1doc-prestacao-de-contas-de-diarias": "digital",
     "1doc-progressao-na-carreira": "digital",
