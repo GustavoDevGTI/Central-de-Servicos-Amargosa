@@ -1,4 +1,4 @@
-/* Links de ação e contato usam o mesmo azul das chamadas para serviços. */
+/* Links para canais externos usam o mesmo azul das chamadas para serviços. */
 :root{--action-link-blue:#0759a5;--action-link-blue-hover:#06467e}
 
 .manual-sei-card-action,.useful-phone-links a,.service-detail header aside a{background:var(--action-link-blue);color:#fff}
@@ -10,15 +10,10 @@
 .useful-phone-links a{border-color:var(--action-link-blue)}
 .useful-phone-links a:hover,.useful-phone-links a:focus-visible{background:var(--action-link-blue-hover);box-shadow:0 8px 18px rgba(7,89,165,.24)}
 
-:is(.service-contact-section .service-channel-list a,.service-request-option dd a,.service-manifestation-notice a,.platform-help-options a,.report-problem-email-fallback a,.portal-footer-contact a){color:var(--action-link-blue);text-decoration:underline;text-underline-offset:3px}
-:is(.service-contact-section .service-channel-list a,.service-request-option dd a,.service-manifestation-notice a,.platform-help-options a,.report-problem-email-fallback a,.portal-footer-contact a):is(:hover,:active,:focus-visible){color:var(--action-link-blue-hover)}
+:is(.service-contact-section .service-channel-list a,.service-request-option dd a,.service-manifestation-notice a,.report-problem-email-fallback a,.portal-footer-contact a){color:var(--action-link-blue);text-decoration:underline;text-underline-offset:3px}
+:is(.service-contact-section .service-channel-list a,.service-request-option dd a,.service-manifestation-notice a,.report-problem-email-fallback a,.portal-footer-contact a):is(:hover,:active,:focus-visible){color:var(--action-link-blue-hover)}
 .service-manifestation-notice a:visited{color:var(--action-link-blue)}
 
-.service-sei-guide{border-color:#c6dae5;color:var(--action-link-blue)}
-.service-sei-guide-icon{background:#e2f4fb;color:var(--action-link-blue)}
-.service-sei-guide-copy strong,.service-sei-guide>b{color:var(--action-link-blue)}
-.service-sei-guide:hover{border-color:#83c9e7;background:#f3faff}
 .service-legislation a{border-left-color:var(--action-link-blue);color:var(--action-link-blue)}
 .service-legislation .service-legislation-arrow{color:var(--action-link-blue)}
 .service-legislation a:hover{border-color:#83c9e7;background:#f3faff}
-.service-related-list strong,.service-related-list b{color:var(--action-link-blue)}
