@@ -3,6 +3,7 @@ import { PortalHeader } from "../internal-portal";
 import PortalFooter from "../portal-footer";
 
 const supportEmail = "seafi.gti@amargosa.ba.gov.br";
+const informationEmail = "seafi@amargosa.ba.gov.br";
 
 const bugMailto = `mailto:${supportEmail}?subject=${encodeURIComponent(
   "Relato de bug na Central de Serviços",
@@ -10,10 +11,10 @@ const bugMailto = `mailto:${supportEmail}?subject=${encodeURIComponent(
   "Página ou endereço (URL):\n\nO que aconteceu:\n\nO que você esperava que acontecesse:\n\nSe possível, informe o dispositivo e o navegador utilizados:\n",
 )}`;
 
-const informationMailto = `mailto:${supportEmail}?subject=${encodeURIComponent(
-  "Solicitação de correção em uma página de serviço",
+const informationMailto = `mailto:${informationEmail}?subject=${encodeURIComponent(
+  "Aos cuidados da SIMP — correção em uma página de serviço",
 )}&body=${encodeURIComponent(
-  "Nome do serviço:\n\nPágina ou endereço (URL):\n\nInformação que está incorreta ou desatualizada:\n\nQual é a informação correta:\n\nSe possível, indique a fonte da informação correta:\n",
+  "À Superintendência de Inovação e Modernização dos Serviços Públicos (SIMP):\n\nNome do serviço:\n\nPágina ou endereço (URL):\n\nInformação que está incorreta ou desatualizada:\n\nQual é a informação correta:\n\nSe possível, indique a fonte da informação correta:\n",
 )}`;
 
 export const metadata: Metadata = {
@@ -67,9 +68,16 @@ export default function ReportProblemPage() {
                   <small>FUNCIONAMENTO DO PORTAL</small>
                   <h3>Bug ou falha técnica</h3>
                   <p>
-                    Use esta opção quando um botão não funcionar, uma página
-                    não abrir, houver conteúdo sobreposto ou surgir outro erro
-                    durante a navegação.
+                    Use esta opção para relatar problemas no funcionamento ou
+                    na navegação da Central de Serviços.
+                  </p>
+                  <ul>
+                    <li>Um botão ou link não responde ao clique.</li>
+                    <li>Uma página não abre ou apresenta uma mensagem de erro.</li>
+                    <li>Textos, cartões ou botões ficam sobrepostos ou fora da tela.</li>
+                  </ul>
+                  <p className="report-problem-owner">
+                    Órgão responsável: <strong>Gestão de Tecnologia da Informação (GTI)</strong>
                   </p>
                   <a className="report-problem-email-button" href={bugMailto}>
                     Relatar bug por e-mail <span aria-hidden="true">→</span>
@@ -93,6 +101,9 @@ export default function ReportProblemPage() {
                       O local, prazo, custo, contato ou procedimento mudou.
                     </li>
                   </ul>
+                  <p className="report-problem-owner">
+                    Órgão responsável: <strong>Superintendência de Inovação e Modernização dos Serviços Públicos (SIMP)</strong>
+                  </p>
                   <a
                     className="report-problem-email-button"
                     href={informationMailto}

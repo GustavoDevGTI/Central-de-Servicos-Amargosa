@@ -399,14 +399,6 @@
               "url": "/categorias/habitacao"
             },
             {
-              "id": "cat-impostos",
-              "type": "category",
-              "role": "entry",
-              "label": "Impostos",
-              "description": "IPTU e demais impostos municipais.",
-              "url": "/categorias/impostos"
-            },
-            {
               "id": "cat-licitacoes",
               "type": "category",
               "role": "entry",
@@ -475,7 +467,7 @@
               "type": "category",
               "role": "entry",
               "label": "Taxas e Impostos",
-              "description": "Taxas municipais, cobranças e certidões fiscais.",
+              "description": "IPTU, outros impostos, taxas municipais e certidões fiscais.",
               "url": "/categorias/taxas-e-impostos"
             },
             {
@@ -912,7 +904,7 @@
               "role": "entry",
               "title": "Cancelamento ou baixa de crédito tributário",
               "department": "SEAFI-SUDIV - Supervisão de Dívida Ativa",
-              "category": "Impostos",
+              "category": "Taxas e Impostos",
               "audienceId": "cidadao",
               "audienceIds": [
                 "cidadao",
@@ -929,7 +921,7 @@
               "role": "entry",
               "title": "Cancelamento/Retificação de NFS-e",
               "department": "SEAFI-SUDIV - Supervisão de Dívida Ativa",
-              "category": "Impostos",
+              "category": "Taxas e Impostos",
               "audienceId": "cidadao",
               "audienceIds": [
                 "cidadao",
@@ -962,7 +954,7 @@
               "role": "entry",
               "title": "Certidão de 1º lançamento do IPTU",
               "department": "SEAFI-SUCAI - Supervisão de Cadastro Imobiliário",
-              "category": "Impostos",
+              "category": "Taxas e Impostos",
               "audienceId": "cidadao",
               "audienceIds": [
                 "cidadao",
@@ -1067,7 +1059,7 @@
               "title": "Certidão de regularidade fiscal — empresas",
               "subject": "Solicitar certidão de regularidade fiscal",
               "department": "SEAFI-SUDIV - Supervisão de Dívida Ativa",
-              "category": "Impostos",
+              "category": "Taxas e Impostos",
               "audienceId": "cidadao",
               "audienceIds": [
                 "cidadao",
@@ -1084,7 +1076,7 @@
               "role": "entry",
               "title": "Certidão de regularidade fiscal do IPTU",
               "department": "SEAFI-SUCAI - Supervisão de Cadastro Imobiliário",
-              "category": "Impostos",
+              "category": "Taxas e Impostos",
               "audienceId": "cidadao",
               "audienceIds": [
                 "cidadao",
@@ -1102,7 +1094,7 @@
               "title": "Certidão de valor venal — imóvel rural",
               "subject": "Solicitar certidão de valor venal rural",
               "department": "SEAFI-SUCAI - Supervisão de Cadastro Imobiliário",
-              "category": "Impostos",
+              "category": "Taxas e Impostos",
               "audienceId": "cidadao",
               "audienceIds": [
                 "cidadao",
@@ -1120,7 +1112,7 @@
               "title": "Certidão de valor venal — imóvel urbano",
               "subject": "Solicitar certidão de valor venal urbano",
               "department": "SEAFI-SUCAI - Supervisão de Cadastro Imobiliário",
-              "category": "Impostos",
+              "category": "Taxas e Impostos",
               "audienceId": "cidadao",
               "audienceIds": [
                 "cidadao",
@@ -1137,7 +1129,7 @@
               "role": "entry",
               "title": "Certidão negativa de pessoa física",
               "department": "SEAFI-SUDIV - Supervisão de Dívida Ativa",
-              "category": "Impostos",
+              "category": "Taxas e Impostos",
               "audienceId": "cidadao",
               "audienceIds": [
                 "cidadao",
@@ -1170,7 +1162,7 @@
               "role": "entry",
               "title": "Compensação — pessoa física e jurídica",
               "department": "SEAFI-SUDIV - Supervisão de Dívida Ativa",
-              "category": "Impostos",
+              "category": "Taxas e Impostos",
               "audienceId": "cidadao",
               "audienceIds": [
                 "cidadao",
@@ -1219,7 +1211,7 @@
               "role": "entry",
               "title": "Consulta de débitos e informações cadastrais",
               "department": "SEAFI-SUDIV - Supervisão de Dívida Ativa",
-              "category": "Impostos",
+              "category": "Taxas e Impostos",
               "audienceId": "cidadao",
               "audienceIds": [
                 "cidadao",
@@ -1519,7 +1511,7 @@
               "title": "Extinção ou suspensão de execução extrajudicial ou judicial",
               "subject": "Solicitar extinção ou suspensão de execução extrajudicial ou judicial",
               "department": "AJU - DA - Assessoria Jurídica - Dívida Ativa",
-              "category": "Impostos",
+              "category": "Taxas e Impostos",
               "audienceId": "cidadao",
               "audienceIds": [
                 "cidadao",
@@ -1701,7 +1693,7 @@
               "role": "entry",
               "title": "Isenção de IPTU",
               "department": "SEAFI-SUCAI - Supervisão de Cadastro Imobiliário",
-              "category": "Impostos",
+              "category": "Taxas e Impostos",
               "audienceId": "cidadao",
               "audienceIds": [
                 "cidadao",
@@ -1718,7 +1710,7 @@
               "role": "entry",
               "title": "Isenção de ITBI/ITV",
               "department": "SEAFI-SUCAI - Supervisão de Cadastro Imobiliário",
-              "category": "Impostos",
+              "category": "Taxas e Impostos",
               "audienceId": "cidadao",
               "audienceIds": [
                 "cidadao",
@@ -1754,7 +1746,7 @@
               "title": "Isenção tributária — cadastro econômico",
               "subject": "Solicitar isenção tributária de cadastro econômico",
               "department": "Prefeitura Municipal de Amargosa",
-              "category": "Impostos",
+              "category": "Taxas e Impostos",
               "audienceId": "cidadao",
               "audienceIds": [
                 "cidadao",
@@ -1772,7 +1764,7 @@
               "title": "Isenção tributária — cadastro imobiliário",
               "subject": "Solicitar isenção tributária de cadastro imobiliário",
               "department": "Prefeitura Municipal de Amargosa",
-              "category": "Impostos",
+              "category": "Taxas e Impostos",
               "audienceId": "cidadao",
               "audienceIds": [
                 "cidadao",
@@ -1788,7 +1780,7 @@
               "role": "entry",
               "title": "ISS (Imposto Sobre Serviços)",
               "department": "SEAFI-SUDIV - Supervisão de Dívida Ativa",
-              "category": "Impostos",
+              "category": "Taxas e Impostos",
               "audienceId": "cidadao",
               "audienceIds": [
                 "cidadao",
@@ -1823,7 +1815,7 @@
               "role": "entry",
               "title": "Lançamento do ISSQN para habite-se",
               "department": "SEAFI-SUDIV - Supervisão de Dívida Ativa",
-              "category": "Impostos",
+              "category": "Taxas e Impostos",
               "audienceId": "cidadao",
               "audienceIds": [
                 "cidadao",
@@ -1930,7 +1922,7 @@
                 "cidadao"
               ],
               "sourceRow": 90,
-              "category": "Impostos"
+              "category": "Taxas e Impostos"
             },
             {
               "id": "1doc-numeracao-predial",
@@ -1989,7 +1981,7 @@
               "role": "entry",
               "title": "Parcelamento de débito do IPTU",
               "department": "SEAFI-SUCAI - Supervisão de Cadastro Imobiliário",
-              "category": "Impostos",
+              "category": "Taxas e Impostos",
               "audienceId": "cidadao",
               "audienceIds": [
                 "cidadao",
@@ -2055,7 +2047,7 @@
               "title": "Prescrição de crédito tributário ou de renda/IPTU/TLL/TFF",
               "subject": "Solicitar prescrição de débitos tributários municipais",
               "department": "SEAFI-SUDIV - Supervisão de Dívida Ativa",
-              "category": "Impostos",
+              "category": "Taxas e Impostos",
               "audienceId": "cidadao",
               "audienceIds": [
                 "cidadao",
@@ -2120,7 +2112,7 @@
               "role": "entry",
               "title": "Reconhecimento de imunidade, isenção ou não incidência",
               "department": "SEAFI-SUDIV - Supervisão de Dívida Ativa",
-              "category": "Impostos",
+              "category": "Taxas e Impostos",
               "audienceId": "cidadao",
               "audienceIds": [
                 "cidadao",
@@ -2270,7 +2262,7 @@
               "role": "entry",
               "title": "Restituição de tributos",
               "department": "SEAFI-SUDIV - Supervisão de Dívida Ativa",
-              "category": "Impostos",
+              "category": "Taxas e Impostos",
               "audienceId": "cidadao",
               "audienceIds": [
                 "cidadao",
@@ -2321,7 +2313,7 @@
               "role": "entry",
               "title": "Revisão de cálculo de IPTU",
               "department": "SEAFI-SUCAI - Supervisão de Cadastro Imobiliário",
-              "category": "Impostos",
+              "category": "Taxas e Impostos",
               "audienceId": "cidadao",
               "audienceIds": [
                 "cidadao",
@@ -2338,7 +2330,7 @@
               "role": "entry",
               "title": "Revisão de cálculo de ITIV",
               "department": "SEAFI-SUCAI - Supervisão de Cadastro Imobiliário",
-              "category": "Impostos",
+              "category": "Taxas e Impostos",
               "audienceId": "cidadao",
               "audienceIds": [
                 "cidadao",
@@ -2355,7 +2347,7 @@
               "role": "entry",
               "title": "Revisão de cálculo de TFF",
               "department": "SEAFI-SUDIV - Supervisão de Dívida Ativa",
-              "category": "Impostos",
+              "category": "Taxas e Impostos",
               "audienceId": "cidadao",
               "audienceIds": [
                 "cidadao",

@@ -99,7 +99,7 @@ export const cartaOnlyServices: CartaService[] = [
   {
     id: "carta-segunda-via-iptu",
     title: "2ª via do IPTU",
-    category: "Impostos",
+    category: "Taxas e Impostos",
     audienceId: "cidadao",
     audienceIds: ["cidadao", "empresa"],
     department: "SEAFI-SUCAI - Supervisão de Cadastro Imobiliário",

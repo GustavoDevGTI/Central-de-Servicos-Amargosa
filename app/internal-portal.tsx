@@ -199,9 +199,9 @@ function internalClasses(entry: InternalSegment | undefined, base: string) {
   return `${base} internal-editable segment-${entry.type} variant-${entry.style.variant || design.theme || "institutional"} width-${entry.style.width || "contained"} spacing-${entry.style.spacing || "comfortable"} radius-${entry.style.radius || "square"} text-size-${entry.style.fontSize || design.fontSize || "normal"} segment-hover-${entry.style.hoverEffect || design.hoverEffect || "none"} segment-click-${entry.style.clickEffect || design.clickEffect || "none"}`;
 }
 
-function rootProps() {
+function rootProps(extraClass = "") {
   return {
-    className: `site-root internal-site site-theme-${design.theme || "institutional"} site-palette-${design.palette || "amargosa"}`,
+    className: `site-root internal-site site-theme-${design.theme || "institutional"} site-palette-${design.palette || "amargosa"}${extraClass ? ` ${extraClass}` : ""}`,
     style: {
       "--green": siteContent.site.primaryColor,
       "--red": siteContent.site.accentColor,
@@ -560,7 +560,11 @@ export function ServiceDirectory({
       (entry) =>
         entry.id === initialCategory ||
         slugify(entry.label) === initialCategory,
-    )?.label || (initialCategory === "tributos" ? "Tributos" : "todos");
+    )?.label || (initialCategory === "tributos"
+      ? "Tributos"
+      : initialCategory === "impostos" || initialCategory === "cat-impostos"
+        ? "Taxas e Impostos"
+        : "todos");
   const [query, setQuery] = useState(initialQuery);
   const [suggestionsOpen, setSuggestionsOpen] = useState(false);
   const [categoryFilter, setCategoryFilter] = useState(
@@ -1258,11 +1262,22 @@ function ServiceRequestNotice({
   );
 }
 
-function ServiceManualNotice({ service }: { service: Service }) {
-  if (!service.url || service.requestSystem !== "sei" || isBaGovUrl(service.url)) return null;
+function ServiceManualNotice({
+  service,
+  contactHref = "#canais",
+}: {
+  service: Service;
+  contactHref?: string;
+}) {
+  if (!service.url || isBaGovUrl(service.url)) return null;
+
+  const isSei = service.requestSystem === "sei";
 
   return (
-    <Link className="service-sei-guide" href="/manual-sei">
+    <Link
+      className="service-sei-guide"
+      href={isSei ? "/manual-sei" : contactHref}
+    >
       <span className="service-sei-guide-icon" aria-hidden="true">
         <svg viewBox="0 0 24 24">
           <path d="M6 3h8l4 4v14H6zM14 3v5h4" />
@@ -1392,6 +1407,35 @@ function ServiceBackButton() {
   );
 }
 
+function ServiceFadePosition({ anchorId = "canais" }: { anchorId?: string }) {
+  useEffect(() => {
+    const root = document.querySelector<HTMLElement>(".service-detail-page");
+    const anchor = root?.querySelector<HTMLElement>(`#${anchorId}`) ?? root?.querySelector<HTMLElement>("#informacoes");
+    if (!root || !anchor) return;
+
+    let frame = 0;
+    const update = () => {
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(() => {
+        const offset = anchor.getBoundingClientRect().top - root.getBoundingClientRect().top;
+        root.style.setProperty("--service-fade-start", `${Math.max(0, Math.round(offset))}px`);
+      });
+    };
+    const observer = new ResizeObserver(update);
+    observer.observe(root);
+    observer.observe(anchor);
+    window.addEventListener("resize", update);
+    update();
+    return () => {
+      cancelAnimationFrame(frame);
+      observer.disconnect();
+      window.removeEventListener("resize", update);
+    };
+  }, [anchorId]);
+
+  return null;
+}
+
 function RichServiceDetail({ service }: { service: Service }) {
   const heroSegment = internalSegment(detailPage, "serviceHero");
   const contentSegment = internalSegment(detailPage, "serviceContent");
@@ -1406,7 +1450,8 @@ function RichServiceDetail({ service }: { service: Service }) {
   const mergeContact = hasInPersonCard && sameInPersonServiceOffice(location.local, contact.name);
 
   return (
-    <main {...rootProps()}>
+    <main {...rootProps("service-detail-page")}>
+      <ServiceFadePosition key={service.id} anchorId={mergeContact ? "informacoes" : "canais"} />
       <a className="skip" href="#conteudo-servico">
         Ir para o conteúdo do serviço
       </a>
@@ -1426,7 +1471,7 @@ function RichServiceDetail({ service }: { service: Service }) {
         </header>
 
         <ServiceRequestNotice service={service} />
-        <ServiceManualNotice service={service} />
+        <ServiceManualNotice service={service} contactHref={mergeContact ? "#onde-quando" : "#canais"} />
 
         <div
           className={internalClasses(contentSegment, "service-detail-layout")}
@@ -1566,7 +1611,8 @@ export function ServiceDetail({ slug }: { slug: string }) {
     return <RichServiceDetail service={service} />;
   const requestSteps = availableRequestSteps(service);
   return (
-    <main {...rootProps()}>
+    <main {...rootProps("service-detail-page")}>
+      <ServiceFadePosition key={service.id} />
       <a className="skip" href="#conteudo-servico">
         Ir para o conteúdo do serviço
       </a>

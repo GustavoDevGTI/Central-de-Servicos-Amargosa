@@ -42,7 +42,8 @@
 
 /* Catálogo em faixa: a ordem segue de cima para baixo em cada coluna. */
 .service-carousel{position:relative;display:grid;grid-template-columns:36px minmax(0,1fr) 36px;align-items:center;gap:4px;margin:6px -40px 0}
-.service-carousel-track{display:grid;grid-auto-flow:column;grid-template-columns:none;grid-template-rows:repeat(3,minmax(148px,auto));grid-auto-columns:calc((100% - 48px)/4);gap:16px;margin-top:0;overflow-x:auto;overscroll-behavior-x:contain;scroll-behavior:smooth;scroll-snap-type:x mandatory;scrollbar-width:none;touch-action:pan-x pan-y}
+.service-carousel-track{display:grid;grid-auto-flow:column;grid-template-columns:none;grid-template-rows:repeat(3,220px);grid-auto-columns:calc((100% - 48px)/4);gap:16px;margin-top:0;overflow-x:auto;overscroll-behavior-x:contain;scroll-behavior:smooth;scroll-snap-type:x mandatory;scrollbar-width:none;touch-action:pan-x pan-y}
+@media(min-width:761px) and (max-width:1100px){.service-carousel-track{grid-template-rows:repeat(3,260px)}}
 .service-carousel-track::-webkit-scrollbar{display:none}
 .service-carousel-track .context-service-card{min-width:0;scroll-snap-align:start}
 .service-carousel-track .context-service-card{overflow:hidden}
@@ -61,6 +62,7 @@
 @media(max-width:1380px){.context-results>header{padding-inline:0}.service-carousel{margin-inline:-40px;grid-template-columns:36px minmax(0,1fr) 36px;gap:4px}}
 
 @media(max-width:760px){.context-results>header{padding-inline:0}.service-carousel{display:block;margin-inline:0}.service-carousel-track{grid-template-columns:none;grid-template-rows:repeat(2,minmax(142px,auto));grid-auto-columns:calc((100% - 12px)/2);gap:12px}.service-carousel-arrow.previous,.service-carousel-arrow.next{position:absolute;z-index:5;top:50%;width:40px;height:40px;display:grid;transform:translateY(-50%);border-color:#fff;border-radius:50%;background:var(--green);color:#fff;box-shadow:0 7px 20px rgba(3,55,42,.28)}.service-carousel-arrow.previous{left:-14px}.service-carousel-arrow.next{right:-14px}.service-carousel::before,.service-carousel::after{content:"";position:absolute;z-index:3;top:0;bottom:0;width:34px;pointer-events:none;transition:opacity .18s ease}.service-carousel::before{left:0;background:linear-gradient(90deg,rgba(246,248,247,.95),rgba(246,248,247,0))}.service-carousel::after{right:0;background:linear-gradient(270deg,rgba(246,248,247,.95),rgba(246,248,247,0))}.service-carousel.at-start::before,.service-carousel.at-end::after{opacity:0}}
+@media(max-width:760px){.service-carousel-track{grid-template-rows:repeat(2,300px)}}
 
 @media(prefers-reduced-motion:reduce){.service-carousel-track{scroll-behavior:auto}}
 
@@ -76,6 +78,7 @@
 @media(hover:hover) and (pointer:fine){.site-root>.segment-hero .popular a:hover{border-color:rgba(255,255,255,.72);background:rgba(255,255,255,.2);box-shadow:0 7px 18px rgba(2,43,33,.2)}}
 /* Um único degradê acompanha o conteúdo, sem reiniciar em cada seção. */
 .site-root{background:linear-gradient(180deg,#fff 0px,#fff 1020px,#edf5f0 1230px,#dceee3 1500px,#dceee3 100%)}
+.site-root.service-detail-page{background:linear-gradient(180deg,#fff 0px,#fff var(--service-fade-start,100000px),#edf5f0 calc(var(--service-fade-start,100000px) + 220px),#dceee3 calc(var(--service-fade-start,100000px) + 480px),#dceee3 100%)}
 .site-root>.segment-featured.section,.site-root>.segment-categories.categories-section{background:transparent}
 .site-root>.segment-categories.categories-section{padding-block:62px}
 @media(min-width:621px) and (max-width:1100px){
@@ -106,6 +109,7 @@
 .site-root>.segment-audiences .requested-service-card:focus-visible{outline:3px solid var(--segment-accent);outline-offset:2px}
 .site-root>.segment-featured .public-audience-grid{grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}
 .site-root>.segment-featured .public-audience-card{min-height:148px;grid-template-columns:minmax(0,1fr) auto;align-items:start;border-top:3px solid var(--segment-accent)}
+.site-root>.segment-featured .public-audience-card{background:#fff}
 .site-root>.segment-featured .public-audience-card span{display:flex;flex-direction:column}
 .site-root>.segment-featured .public-audience-card strong{margin-top:0;font-size:18px;line-height:1.12}
 .site-root>.segment-featured .public-audience-card em{font-size:11px;line-height:1.45}
@@ -211,6 +215,19 @@
 .amanda-launcher>b{font-size:22px}
 .amanda-launcher .amanda-launcher-prompt{display:none}
 .amanda-panel{bottom:0}
+@media(min-width:621px){
+  .amanda-launcher{width:350px;min-height:72px;display:flex;align-items:center;justify-content:flex-end;gap:10px;padding:0;border:0;border-radius:0;background:transparent;box-shadow:none;transition:transform .18s ease}
+  .amanda-launcher .amanda-symbol{order:2;width:58px;height:58px;flex:0 0 58px;border-radius:12px;box-shadow:0 8px 18px rgba(3,55,42,.18)}
+  .amanda-launcher>span:nth-child(2),.amanda-launcher>b{display:none}
+  .amanda-launcher .amanda-launcher-prompt{position:relative;order:1;min-width:0;min-height:64px;display:flex;flex:1;flex-direction:column;justify-content:center;padding:9px 12px 9px 37px;border:1px solid #cbdcd5;border-radius:12px;background:#fff;box-shadow:0 8px 22px rgba(3,55,42,.14)}
+  .amanda-launcher .amanda-launcher-ai{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--segment-accent);font-size:21px;font-style:normal;line-height:1}
+  .amanda-launcher .amanda-launcher-prompt::after{content:"";position:absolute;top:calc(50% - 5px);right:-6px;width:10px;height:10px;transform:rotate(45deg);border-top:1px solid #cbdcd5;border-right:1px solid #cbdcd5;background:#fff}
+  .amanda-launcher .amanda-launcher-prompt strong{margin:0;color:var(--ink);font-family:var(--site-body-font);font-size:14px;font-weight:800;line-height:1.2}
+  .amanda-launcher .amanda-launcher-prompt small{margin-top:4px;color:#526a5e;font-family:var(--site-body-font);font-size:11px;font-weight:600;line-height:1.2;letter-spacing:0;text-transform:none}
+  .amanda-launcher:active{transform:translateY(0) scale(.98)}
+  .amanda-launcher:focus-visible{outline:3px solid #f2c94c;outline-offset:4px}
+}
+@media(min-width:621px) and (hover:hover) and (pointer:fine){.amanda-launcher:hover{transform:translateY(-2px)}}
 @media(max-width:620px){
   .amanda-widget{right:14px;bottom:14px}
   .amanda-launcher{width:min(300px,calc(100vw - 28px));min-height:72px;display:flex;align-items:center;justify-content:flex-end;gap:9px;padding:0;border:0;border-radius:0;background:transparent;box-shadow:none;transition:transform .18s ease}
