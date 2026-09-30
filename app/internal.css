@@ -73,7 +73,7 @@
 .service-contact-section .service-channel-list address{color:var(--ink);font-size:15px;font-style:normal;font-weight:700;line-height:1.5}
 .service-contact-section .service-channel-list a{color:var(--green);text-decoration:underline;text-underline-offset:3px}
 .service-contact-section .service-channel-list a:focus-visible{outline:3px solid #f2c94c;outline-offset:3px}
-.service-contact-phone-links{display:flex;flex-direction:column;align-items:flex-start;gap:4px;color:var(--ink);font-size:15px;font-weight:800;line-height:1.5}
+.service-contact-phone-links{display:flex;flex-wrap:wrap;align-items:center;gap:4px 12px;color:var(--ink);font-size:15px;font-weight:800;line-height:1.5}
 .service-contact-extra-phone{color:var(--ink);font-size:14px;line-height:1.5}
 .service-contact-extra-phone span{margin-right:4px;font-size:12px}
 .service-detail-content .service-contact-section{margin-top:28px}
@@ -91,6 +91,7 @@
 .service-request-option dd{min-width:0;margin:0;color:var(--ink);font-size:14px;line-height:1.5;overflow-wrap:anywhere}
 .service-request-emails{display:flex;flex-direction:column;align-items:flex-start;gap:3px}
 .service-request-contact-links,.service-request-phone{display:flex;flex-direction:column;align-items:flex-start;gap:3px}
+.service-request-phone{flex-direction:row;flex-wrap:wrap;align-items:center;gap:4px 12px}
 .contact-label,.contact-number-actions,.contact-extension-link{display:inline-flex;align-items:center;gap:4px}
 .contact-icon{width:14px;height:14px;flex:none;vertical-align:-2px}
 .contact-number-actions{gap:8px}
