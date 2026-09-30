@@ -8,15 +8,15 @@ export const isBaGovUrl = (value?: string) =>
 
 export const baGovServiceLinks: Record<string, string> = {
   "1doc-certidao-de-inexigibilidade-ci": "https://servicos.ba.gov.br/detalhe/servico/2559",
-  "1doc-extincao-ou-suspensao-de-execucao-extrajudicial-ou-judicial": "https://servicos.ba.gov.br/detalhe/servico/10092",
-  "1doc-prescricao-de-credito-tributario-ou-de-renda-iptu-tll-tff": "https://servicos.ba.gov.br/detalhe/servico/10035",
-  "1doc-certidao-de-valor-venal-urbano": "https://servicos.ba.gov.br/detalhe/servico/10031",
-  "1doc-lancamento-de-inscricao-imobiliaria": "https://servicos.ba.gov.br/detalhe/servico/10029",
-  "1doc-certidao-de-valor-venal-rural": "https://servicos.ba.gov.br/detalhe/servico/10043",
-  "1doc-certidao-de-regularidade-fiscal-empresas": "https://servicos.ba.gov.br/detalhe/servico/10032",
-  "1doc-certidao-de-comprovacao-de-endereco": "https://servicos.ba.gov.br/detalhe/servico/10028",
-  "1doc-isencao-tributaria-cadastro-imobiliario": "https://servicos.ba.gov.br/detalhe/servico/10110",
-  "1doc-isencao-tributaria-cadastro-economico": "https://servicos.ba.gov.br/detalhe/servico/10109",
+  "1doc-extincao-ou-suspensao-de-execucao-extrajudicial-ou-judicial": "https://www.ba.gov.br/servico/pm-amargosa/solicitar-extincao-suspensao-de-execucao-amargosa/etapa/solicitar-servico",
+  "1doc-prescricao-de-credito-tributario-ou-de-renda-iptu-tll-tff": "https://www.ba.gov.br/servico/pm-amargosa/solicitar-prescricao-de-debitos-tributarios-municipais-amargosa/etapa/prescricao-de-debitos",
+  "1doc-certidao-de-valor-venal-urbano": "https://www.ba.gov.br/servico/pm-amargosa/solicitar-certidao-de-valor-venal-urbano-amargosa/etapa/certidao-de-valor-venal",
+  "1doc-lancamento-de-inscricao-imobiliaria": "https://www.ba.gov.br/servico/pm-amargosa/solicitar-criacao-de-inscricao-imobiliaria-amargosa/etapa/certidao-de-lancamento",
+  "1doc-certidao-de-valor-venal-rural": "https://www.ba.gov.br/servico/pm-amargosa/solicitar-certidao-de-valor-venal-rural-amargosa/etapa/certidao-de-valor-venal",
+  "1doc-certidao-de-regularidade-fiscal-empresas": "https://www.ba.gov.br/servico/pm-amargosa/emitir-certidao-regularidade-fiscal-amargosa/etapa/regularidade-fiscal",
+  "1doc-certidao-de-comprovacao-de-endereco": "https://www.ba.gov.br/servico/pm-amargosa/emitir-certidao-de-comprovacao-de-endereco-amargosa/etapa/comprovacao-endereco",
+  "1doc-isencao-tributaria-cadastro-imobiliario": "https://www.ba.gov.br/servico/pm-amargosa/solicitar-isencao-tributaria-de-cadastro-imobiliario-amargosa/etapa/solicitar-isencao",
+  "1doc-isencao-tributaria-cadastro-economico": "https://www.ba.gov.br/servico/pm-amargosa/solicitar-isencao-tributaria-de-cadastro-economico-amargosa/etapa/solicitar-isencao",
 };
 
 export const nonSeiServiceIds = new Set([

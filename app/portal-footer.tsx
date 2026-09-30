@@ -2,6 +2,7 @@
 
 import type { CSSProperties } from "react";
 import siteContent from "../content/site.json";
+import ContactIcon from "./contact-icon";
 
 type Size = { width?: number; height?: number };
 type Item = {
@@ -115,16 +116,27 @@ export default function PortalFooter() {
           )}
         </section>
 
-        <section className="portal-footer-contact" aria-label="Informações de contato da Prefeitura de Amargosa">
+        <section className="portal-footer-contact" aria-label="Informações de contato do SAC Municipal de Amargosa">
           <div className="portal-footer-contact-group">
             <p><strong>CNPJ:</strong> 13.825.484/0001-50</p>
             <p><strong>CEP:</strong> 45300-000</p>
-            <p><strong>Telefone:</strong> <a href="tel:+557535127811">(75) 3512-7811</a></p>
-            <p><strong>E-mail:</strong> <a href="mailto:contato@amargosa.ba.gov.br">contato@amargosa.ba.gov.br</a></p>
+            <p><strong className="contact-label"><ContactIcon kind="phone" /> Telefone:</strong> <a href="https://wa.me/557535127811" target="_blank" rel="noopener noreferrer" title="Abrir WhatsApp">(75) 3512-7811</a> <a className="contact-whatsapp-shortcut" href="https://wa.me/557535127811" target="_blank" rel="noopener noreferrer" aria-label="Abrir WhatsApp do SAC Municipal" title="Abrir WhatsApp"><ContactIcon kind="whatsapp" /></a> <a className="contact-phone-shortcut" href="tel:+557535127811" aria-label="Ligar para o SAC Municipal" title="Ligar"><ContactIcon kind="phone" /></a></p>
+            <p><strong className="contact-label"><ContactIcon kind="email" /> E-mail:</strong> <a href="mailto:sacdigital@amargosa.ba.gov.br">sacdigital@amargosa.ba.gov.br</a></p>
           </div>
-          <div className="portal-footer-contact-group">
-            <p><strong>Endereço:</strong> Praça Lourival Monte, nº 001, Centro,<br className="portal-footer-desktop-break" />{" "}Amargosa – BA</p>
-            <p><strong>Atendimento:</strong> de segunda a sexta-feira, das 8h às<br className="portal-footer-desktop-break" />{" "}16h30</p>
+          <div className="portal-footer-location">
+            <div className="portal-footer-contact-group">
+              <p><strong>Endereço:</strong> Avenida Luis Sande, 96, (Valle Shopping).<br className="portal-footer-desktop-break" />{" "}SAC Municipal</p>
+              <p><strong>Atendimento:</strong> de segunda a sexta-feira, das 8h às<br className="portal-footer-desktop-break" />{" "}17h</p>
+            </div>
+            <img
+              className="portal-footer-sac-logo"
+              src="/images/sac-municipal-logo.png"
+              alt="SAC Municipal"
+              width={1630}
+              height={965}
+              loading="lazy"
+              decoding="async"
+            />
           </div>
         </section>
 

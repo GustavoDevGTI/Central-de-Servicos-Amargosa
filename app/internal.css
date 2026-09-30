@@ -91,6 +91,19 @@
 .service-request-option dd{min-width:0;margin:0;color:var(--ink);font-size:14px;line-height:1.5;overflow-wrap:anywhere}
 .service-request-emails{display:flex;flex-direction:column;align-items:flex-start;gap:3px}
 .service-request-contact-links,.service-request-phone{display:flex;flex-direction:column;align-items:flex-start;gap:3px}
+.contact-label,.contact-number-actions,.contact-extension-link{display:inline-flex;align-items:center;gap:4px}
+.contact-icon{width:14px;height:14px;flex:none;vertical-align:-2px}
+.contact-number-actions{gap:8px}
+.contact-whatsapp-shortcut{display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;min-width:20px;min-height:20px;color:#128c4a!important;text-decoration:none!important}
+.contact-whatsapp-shortcut .contact-icon{width:17px;height:17px}
+.contact-whatsapp-shortcut:hover,.contact-whatsapp-shortcut:focus-visible{color:#075d31!important}
+.contact-phone-shortcut{display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;min-width:20px;min-height:20px;color:var(--green)!important;text-decoration:none!important}
+.contact-phone-shortcut .contact-icon{width:15px;height:15px}
+.contact-whatsapp-link{display:inline-flex;align-items:center}
+.service-request-option dt.contact-label{display:flex;align-items:center}
+.service-contact-section .service-channel-list span.contact-label{display:inline-flex;align-items:center}
+.service-contact-section .service-channel-list .contact-icon{color:var(--green)}
+.service-request-option .contact-icon{color:var(--green)}
 @media(max-width:480px){.service-request-option dl>div{grid-template-columns:1fr;gap:2px}}
 
 .collection-schedule>p{margin:0 0 16px}

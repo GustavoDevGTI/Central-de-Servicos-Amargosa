@@ -16,6 +16,8 @@ import HeaderHelp from "./header-help";
 import HeaderMenu from "./header-menu";
 import HeaderAccessibility from "./header-accessibility";
 import SharedPortalFooter from "./portal-footer";
+import ContactIcon from "./contact-icon";
+import { whatsappHref } from "./contact-links";
 import { searchServices } from "./search-engine";
 import SearchSuggestions from "./search-suggestions";
 import {
@@ -1164,16 +1166,18 @@ export function ServiceDirectory({
   );
 }
 
-function ServiceStartCta({ label = "INICIAR" }: { label?: string }) {
+function ServiceStartCta() {
   return (
     <b className="service-reference-cta">
-      {label} <span aria-hidden="true">↗</span>
+      INICIAR <span aria-hidden="true">↗</span>
     </b>
   );
 }
 
 function ServiceContactSection({ service }: { service: Service }) {
   const contact = contactForService(service);
+  const whatsapp = serviceWhereWhen(service, contact).whatsapp;
+  const whatsappLink = whatsapp ? whatsappHref(whatsapp) : undefined;
   const phoneNumber = contact.phone.match(/\(\d{2}\)\s*\d{4,5}-\d{4}/)?.[0];
   const phoneHref = phoneNumber ? `tel:+55${phoneNumber.replace(/\D/g, "")}` : undefined;
   const extension = contact.phone.match(/,\s*ramal\s*(\d+)/i)?.[1];
@@ -1190,12 +1194,20 @@ function ServiceContactSection({ service }: { service: Service }) {
           )}
         </div>
         <div>
-          <span>Telefone{contact.extensionLabel === "ramal da secretaria" ? " da secretaria" : ""}</span>
+          <span className="contact-label"><ContactIcon kind="phone" /> Telefone{contact.extensionLabel === "ramal da secretaria" ? " da secretaria" : ""}</span>
           {phoneHref && phoneNumber ? (
             <div className="service-contact-phone-links">
-              <a href={phoneHref}>{phoneNumber}</a>
+              <span className="contact-number-actions">
+                {whatsappLink && whatsapp?.replace(/\D/g, "").endsWith(phoneNumber.replace(/\D/g, "")) ? (
+                  <>
+                    <a href={whatsappLink} target="_blank" rel="noopener noreferrer" title="Abrir WhatsApp">{phoneNumber}</a>
+                    <a className="contact-whatsapp-shortcut" href={whatsappLink} target="_blank" rel="noopener noreferrer" aria-label={`Abrir WhatsApp para ${phoneNumber}`} title="Abrir WhatsApp"><ContactIcon kind="whatsapp" /></a>
+                    <a className="contact-phone-shortcut" href={phoneHref} aria-label={`Ligar para ${phoneNumber}`} title="Ligar"><ContactIcon kind="phone" /></a>
+                  </>
+                ) : <a href={phoneHref}>{phoneNumber}</a>}
+              </span>
               {extension && (
-                <a href={`${phoneHref};ext=${extension}`}>{contact.extensionLabel || "ramal"} {extension}</a>
+                <a className="contact-extension-link" href={`${phoneHref};ext=${extension}`}><ContactIcon kind="phone" />{`${contact.extensionLabel || "ramal"} ${extension}`}</a>
               )}
             </div>
           ) : (
@@ -1204,7 +1216,7 @@ function ServiceContactSection({ service }: { service: Service }) {
           {service.id.startsWith("planilha-") && service.channels?.map((channel) => (
             channel.url?.startsWith("tel:") ? (
               <div key={channel.label} className="service-contact-extra-phone">
-                <span>{channel.label}: </span><a href={channel.url}>{channel.value}</a>
+                <span className="contact-label"><ContactIcon kind="phone" /> {channel.label}: </span><a href={channel.url}>{channel.value}</a>
               </div>
             ) : null
           ))}
@@ -1217,7 +1229,7 @@ function ServiceContactSection({ service }: { service: Service }) {
         </div>
         {contact.email && (
           <div>
-            <span>{contact.emailLabel || "E-mail"}</span>
+            <span className="contact-label"><ContactIcon kind="email" /> {contact.emailLabel || "E-mail"}</span>
             <a href={`mailto:${contact.email}`}>{contact.email}</a>
           </div>
         )}
@@ -1258,7 +1270,7 @@ function ServiceRequestNotice({
         : repeated || !service.notice || isGenericNotice
           ? "Clique aqui para iniciar a solicitação deste serviço."
           : service.notice}</span>
-      <ServiceStartCta label={baGovReference ? "ACESSAR" : "INICIAR"} />
+      <ServiceStartCta />
     </a>
   );
 }
@@ -1300,6 +1312,7 @@ function ServiceWhereWhenSection({ service, mergeContact = false }: { service: S
   const phoneValues = [...new Set([details.phone, ...(mergeContact ? [contact.phone] : [])].filter((value): value is string => Boolean(value)))];
   const phones = phoneValues.filter((value) => !phoneValues.some((other) => other !== value && other.startsWith(`${value}, ramal`)));
   const emails = [...new Set([...details.emails, ...(mergeContact && contact.email ? [contact.email] : [])])];
+  const whatsappLink = details.whatsapp ? whatsappHref(details.whatsapp) : undefined;
 
   return (
     <section id="onde-quando" className="service-where-when">
@@ -1351,20 +1364,30 @@ function ServiceWhereWhenSection({ service, mergeContact = false }: { service: S
                   <div><dt>Endereço</dt><dd>{details.address}</dd></div>
                   <div><dt>Horário</dt><dd className={details.hours.startsWith("*") ? "service-pending-information" : undefined}>{details.hours}</dd></div>
                   {phones.length > 0 && (
-                    <div><dt>Telefone</dt><dd className="service-request-contact-links">{phones.map((phone) => {
+                    <div><dt className="contact-label"><ContactIcon kind="phone" /> Telefone</dt><dd className="service-request-contact-links">{phones.map((phone) => {
                       const number = phone.match(/\(\d{2}\)\s*\d{4,5}-\d{4}/)?.[0];
                       const extension = phone.match(/,\s*ramal\s*(\d+)/i)?.[1];
                       if (!number) return <span key={phone}>{phone}</span>;
                       const href = `tel:+55${number.replace(/\D/g, "")}`;
+                      const matchingWhatsapp = details.whatsapp && details.whatsapp.replace(/\D/g, "").endsWith(number.replace(/\D/g, ""))
+                        ? whatsappLink
+                        : undefined;
                       return <span className="service-request-phone" key={phone}>
-                        <a href={href}>{number}</a>
-                        {extension && <a href={`${href};ext=${extension}`}>ramal {extension}</a>}
+                        <span className="contact-number-actions">
+                          {matchingWhatsapp ? <>
+                            <a href={matchingWhatsapp} target="_blank" rel="noopener noreferrer" title="Abrir WhatsApp">{number}</a>
+                            <a className="contact-phone-shortcut" href={href} aria-label={`Ligar para ${number}`} title="Ligar"><ContactIcon kind="phone" /></a>
+                          </> : <a href={href}>{number}</a>}
+                        </span>
+                        {extension && <a className="contact-extension-link" href={`${href};ext=${extension}`}><ContactIcon kind="phone" />{`ramal ${extension}`}</a>}
                       </span>;
                     })}</dd></div>
                   )}
-                  {details.whatsapp && <div><dt>WhatsApp</dt><dd>{details.whatsapp}</dd></div>}
+                  {details.whatsapp && <div><dt className="contact-label"><ContactIcon kind="whatsapp" /> WhatsApp</dt><dd>{whatsappLink
+                    ? <a className="contact-whatsapp-link" href={whatsappLink} target="_blank" rel="noopener noreferrer">{details.whatsapp}</a>
+                    : details.whatsapp}</dd></div>}
                   {emails.length > 0 && (
-                    <div><dt>E-mail</dt><dd className="service-request-emails">{emails.map((email) => (
+                    <div><dt className="contact-label"><ContactIcon kind="email" /> E-mail</dt><dd className="service-request-emails">{emails.map((email) => (
                       <a href={`mailto:${email}`} key={email}>{email}</a>
                     ))}</dd></div>
                   )}
