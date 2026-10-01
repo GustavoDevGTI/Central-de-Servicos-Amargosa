@@ -1181,6 +1181,7 @@ function ServiceContactSection({ service }: { service: Service }) {
   const phoneNumber = contact.phone.match(/\(\d{2}\)\s*\d{4,5}-\d{4}/)?.[0];
   const phoneHref = phoneNumber ? `tel:+55${phoneNumber.replace(/\D/g, "")}` : undefined;
   const extension = contact.phone.match(/,\s*ramal\s*(\d+)/i)?.[1];
+  const whatsappNumber = whatsapp?.match(/\(\d{2}\)\s*\d{4,5}-\d{4}/)?.[0] || whatsapp;
 
   return (
     <section id="canais" className="service-contact-section">
@@ -1194,24 +1195,24 @@ function ServiceContactSection({ service }: { service: Service }) {
           )}
         </div>
         <div>
-          <span className="contact-label"><ContactIcon kind="phone" /> Telefone{contact.extensionLabel === "ramal da secretaria" ? " da secretaria" : ""}</span>
-          {phoneHref && phoneNumber ? (
-            <div className="service-contact-phone-links">
-              <span className="contact-number-actions">
-                {whatsappLink && whatsapp?.replace(/\D/g, "").endsWith(phoneNumber.replace(/\D/g, "")) ? (
-                  <>
-                    <a href={whatsappLink} target="_blank" rel="noopener noreferrer" title="Abrir WhatsApp">{phoneNumber}</a>
-                    <a className="contact-whatsapp-shortcut" href={whatsappLink} target="_blank" rel="noopener noreferrer" aria-label={`Abrir WhatsApp para ${phoneNumber}`} title="Abrir WhatsApp"><ContactIcon kind="whatsapp" /></a>
-                    <a className="contact-phone-shortcut" href={phoneHref} aria-label={`Ligar para ${phoneNumber}`} title="Ligar"><ContactIcon kind="phone" /></a>
-                  </>
-                ) : <a href={phoneHref}>{phoneNumber}</a>}
+          <div className="service-contact-channel-row">
+            <span className="contact-label"><ContactIcon kind="phone" /> Telefone</span>
+            {phoneHref && phoneNumber ? (
+              <span className="service-contact-phone-links">
+                <a href={phoneHref}>{phoneNumber}</a>
+                {extension && (
+                  <a className="contact-extension-link" href={`${phoneHref};ext=${extension}`}>{`${contact.extensionLabel || "ramal"} ${extension}`}</a>
+                )}
               </span>
-              {extension && (
-                <a className="contact-extension-link" href={`${phoneHref};ext=${extension}`}><ContactIcon kind="phone" />{`${contact.extensionLabel || "ramal"} ${extension}`}</a>
-              )}
+            ) : <strong>{contact.phone}</strong>}
+          </div>
+          {whatsapp && (
+            <div className="service-contact-channel-row">
+              <span className="contact-label"><ContactIcon kind="whatsapp" /> WhatsApp</span>
+              {whatsappLink
+                ? <a href={whatsappLink} target="_blank" rel="noopener noreferrer">{whatsappNumber}</a>
+                : <strong>{whatsappNumber}</strong>}
             </div>
-          ) : (
-            <strong>{contact.phone}</strong>
           )}
           {service.id.startsWith("planilha-") && service.channels?.map((channel) => (
             channel.url?.startsWith("tel:") ? (
@@ -1369,17 +1370,9 @@ function ServiceWhereWhenSection({ service, mergeContact = false }: { service: S
                       const extension = phone.match(/,\s*ramal\s*(\d+)/i)?.[1];
                       if (!number) return <span key={phone}>{phone}</span>;
                       const href = `tel:+55${number.replace(/\D/g, "")}`;
-                      const matchingWhatsapp = details.whatsapp && details.whatsapp.replace(/\D/g, "").endsWith(number.replace(/\D/g, ""))
-                        ? whatsappLink
-                        : undefined;
                       return <span className="service-request-phone" key={phone}>
-                        <span className="contact-number-actions">
-                          {matchingWhatsapp ? <>
-                            <a href={matchingWhatsapp} target="_blank" rel="noopener noreferrer" title="Abrir WhatsApp">{number}</a>
-                            <a className="contact-phone-shortcut" href={href} aria-label={`Ligar para ${number}`} title="Ligar"><ContactIcon kind="phone" /></a>
-                          </> : <a href={href}>{number}</a>}
-                        </span>
-                        {extension && <a className="contact-extension-link" href={`${href};ext=${extension}`}><ContactIcon kind="phone" />{`ramal ${extension}`}</a>}
+                        <a href={href}>{number}</a>
+                        {extension && <a className="contact-extension-link" href={`${href};ext=${extension}`}>{`ramal ${extension}`}</a>}
                       </span>;
                     })}</dd></div>
                   )}

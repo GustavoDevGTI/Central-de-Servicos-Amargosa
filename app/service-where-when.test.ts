@@ -74,6 +74,27 @@ test("BA.gov channel does not become part of the contact email", () => {
   assert.deepEqual(result.emails, ["sacdigital@amargosa.ba.gov.br"]);
 });
 
+test("an explicitly labeled phone and WhatsApp channel supplies the WhatsApp number", () => {
+  const result = serviceWhereWhen({
+    accessMode: "digital",
+    url: "https://www.ba.gov.br/servico/exemplo",
+    whereWhen: "Atendimento digital.",
+    channels: [{ label: "Telefone e WhatsApp", value: "(75) 3512-7811" }],
+  }, contact);
+
+  assert.equal(result.whatsapp, "(75) 3512-7811");
+});
+
+test("an email ends before the next digital-attendance instruction", () => {
+  const result = serviceWhereWhen({
+    accessMode: "presencial",
+    url: "https://acesso.amargosa.ba.gov.br/interdicao-via",
+    whereWhen: "E-mail: supesp@amagosa.ba.gov.br. Atendimento digital: https://acesso.amargosa.ba.gov.br/interdicao-via.",
+  }, contact);
+
+  assert.deepEqual(result.emails, ["supesp@amagosa.ba.gov.br"]);
+});
+
 test("in-person service without a link shows the responsible office address", () => {
   const result = serviceWhereWhen({
     accessMode: "presencial",

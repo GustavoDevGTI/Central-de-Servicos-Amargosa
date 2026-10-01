@@ -1,5 +1,5 @@
 export function whatsappHref(value: string): string | undefined {
-  const number = value.match(/(?:\+?55[\s().-]*)?\(?\d{2}\)?[\s.-]*\d{4,5}[\s.-]*\d{4}/)?.[0];
+  const number = value.match(/(?:\+?55[\s().-]*)?\(?\d{2}\)?[\s.-]*\d(?:[\s.-]?\d){3,4}[\s.-]*\d{4}/)?.[0];
   if (!number) return undefined;
   const digits = number.replace(/\D/g, "");
   const local = (digits.length === 12 || digits.length === 13) && digits.startsWith("55")

@@ -1,7 +1,8 @@
 import type { Service } from "./service-catalog";
 import { PENDING_SERVICE_INFORMATION } from "./pending-information";
+import { whatsappHref } from "./contact-links";
 
-type ServiceLocation = Pick<Service, "accessMode" | "url" | "whereWhen" | "whereWhenItems">;
+type ServiceLocation = Pick<Service, "accessMode" | "url" | "whereWhen" | "whereWhenItems" | "channels">;
 
 type ContactLocation = {
   name: string;
@@ -22,7 +23,7 @@ export type ServiceWhereWhen = {
 };
 
 const genericDigitalUrl = /^https?:\/\/acesso\.amargosa\.ba\.gov\.br\/protocolodigital\/?(?:[?#].*)?$/i;
-const factPattern = /\b(Atendimento presencial(?: e virtual)?|Atendimento virtual|Telefone|E-mail|WhatsApp|Endereço|Site|Horários? de atendimento|Protocolo Digital|Canal on-line):\s*/gi;
+const factPattern = /\b(Atendimento presencial(?: e virtual)?|Atendimento virtual|Atendimento digital|Telefone|E-mail|WhatsApp|Endereço|Site|Horários? de atendimento|Protocolo Digital|Canal on-line):\s*/gi;
 
 function normalizedOfficeName(value: string) {
   return value.normalize("NFD").replace(/[\u0300-\u036f]/g, "")
@@ -80,6 +81,9 @@ export function serviceWhereWhen(
     ? rawHours
     : PENDING_SERVICE_INFORMATION);
   const emails = [...new Set([...(facts.get("e-mail") || []), ...(presencialSchedule && contact.email ? [contact.email] : [])])];
+  const channelWhatsapp = service.channels?.find((channel) =>
+    /\bwhatsapp\b/i.test(channel.label) && whatsappHref(channel.value),
+  )?.value;
   return {
     digital,
     presencial,
@@ -87,7 +91,7 @@ export function serviceWhereWhen(
     address,
     hours,
     phone: facts.get("telefone")?.[0] || (presencial ? contact.phone : undefined),
-    whatsapp: facts.get("whatsapp")?.[0],
+    whatsapp: facts.get("whatsapp")?.[0] || channelWhatsapp,
     emails,
   };
 }
