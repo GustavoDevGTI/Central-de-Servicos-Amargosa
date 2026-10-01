@@ -287,6 +287,19 @@ const documentTopicSplits: Record<string, string[]> = {
   ],
 };
 
+// A planilha associou um anexo com dezenas de serviços ao resumo desta ficha.
+const correctedSpreadsheetEntries: Record<string, Partial<Service>> = {
+  "1doc-pedido-de-certidao": {
+    summary:
+      "Serviço para solicitar uma certidão à Supervisão de Dívida Ativa da SEAFI. Informe no requerimento qual certidão deseja e apresente os documentos necessários para análise do setor.",
+    steps: [
+      "Indique no requerimento a certidão desejada e seus dados de contato.",
+      "Reúna os documentos listados nesta página e, se o pedido for feito por representante, inclua a procuração.",
+      "Use o botão INICIAR para enviar a solicitação e acompanhe a resposta pelo canal utilizado.",
+    ],
+  },
+};
+
 function documentTopics(service: Service): Service {
   if (!service.documents?.length) return service;
   return {
@@ -316,7 +329,7 @@ const mergedServices = [...baseServices, ...cartaOnlyServices].map(
         }
       : merged;
 
-    return sanitizeServiceReferences(resolved, resolvedCartaUrl);
+    return sanitizeServiceReferences({ ...resolved, ...correctedSpreadsheetEntries[service.id] }, resolvedCartaUrl);
   },
 );
 
