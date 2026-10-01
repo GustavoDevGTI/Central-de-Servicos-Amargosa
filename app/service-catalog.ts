@@ -66,7 +66,6 @@ const legacyOneDocUrlGlobalPattern =
   /https?:\/\/(?:amargosa\.1doc\.com\.br|servicos\.amargosa\.ba\.gov\.br\/b\.php)[^\s),;]*/gi;
 
 const servicesWithoutSeiGuide = new Set([
-  "acesso-informacao",
   "1doc-ouvidoria-geral",
 ]);
 
@@ -103,9 +102,6 @@ function replacePendingReference(value: string) {
 }
 
 function sanitizeServiceReferences(service: Service, cartaUrl?: string): Service {
-  // O e-SIC continua usando o canal 1Doc indicado pela Prefeitura.
-  if (service.id === "acesso-informacao") return service;
-
   const sanitizeText = (value?: string) => {
     if (!value) return value;
     const normalized = value

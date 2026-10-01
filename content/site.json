@@ -542,20 +542,20 @@
               "department": "Controladoria Geral do Município",
               "category": "Ouvidorias",
               "audienceId": "cidadao",
-              "destination": "e-SIC de Amargosa",
-              "url": "https://amargosa.1doc.com.br/b.php?is=920&itd=12&pg=wp/wp&s=amargosa",
+              "destination": "Protocolo Digital de Amargosa (SEI)",
+              "url": "https://acesso.amargosa.ba.gov.br/acesso-informacao-lai-lei-no-125272011",
               "initials": "AI",
-              "requestLabel": "Solicitar serviço",
+              "requestLabel": "Iniciar",
               "summary": "Serviço para solicitar informações públicas produzidas ou mantidas pela Prefeitura de Amargosa e acompanhar a resposta pelo número de protocolo.",
               "eligibility": "Qualquer pessoa física ou jurídica pode apresentar um pedido de acesso à informação. Não é necessário justificar o motivo da solicitação.",
               "documents": [
                 "Não há documento específico obrigatório para formular o pedido.",
-                "Informe seus dados de identificação quando optar por se identificar.",
+                "Para protocolar pela internet, utilize sua conta GOV.BR.",
                 "Descreva de forma clara e objetiva a informação pública desejada."
               ],
               "steps": [
-                "Acesse o e-SIC pelo botão “Solicitar serviço”.",
-                "Identifique-se ou escolha a opção disponibilizada pelo canal de atendimento.",
+                "Use o botão INICIAR para acessar o Protocolo Digital de Amargosa (SEI).",
+                "Entre com sua conta GOV.BR e selecione o tipo de processo adequado ao pedido de acesso à informação.",
                 "Descreva a informação desejada com clareza e envie o pedido.",
                 "Guarde o número do protocolo para consultar o andamento e receber a resposta."
               ],
@@ -564,7 +564,7 @@
                 {
                   "label": "Online",
                   "schedule": "A qualquer momento",
-                  "description": "e-SIC da Prefeitura de Amargosa."
+                  "description": "Protocolo Digital de Amargosa (SEI)."
                 },
                 {
                   "label": "Presencial",
@@ -577,8 +577,8 @@
               "channels": [
                 {
                   "label": "Online",
-                  "value": "e-SIC da Prefeitura de Amargosa",
-                  "url": "https://amargosa.1doc.com.br/b.php?is=920&itd=12&pg=wp/wp&s=amargosa"
+                  "value": "Protocolo Digital de Amargosa (SEI)",
+                  "url": "https://acesso.amargosa.ba.gov.br/acesso-informacao-lai-lei-no-125272011"
                 },
                 {
                   "label": "Telefone",
@@ -604,7 +604,7 @@
                   "url": "https://www.leismunicipais.com.br/a/ba/a/amargosa/lei-ordinaria/2016/46/465/lei-ordinaria-n-465-2016-dispoe-sobre-o-acesso-a-informacoes-previsto-no-inciso-xxxiii-do-art-5%C2%BA-no-inciso-ii-do-3%C2%BA-do-art-37-e-no-2%C2%BA-do-art-216-da-constituicao-federal-e-na-lei-federal-12527-de-18-de-novembro-de-2011-cria-o-servico-de-informacoes-ao-cidadao-no-ambito-municipal-e-da-outras-providencias"
                 }
               ],
-              "notice": "O pedido de acesso à informação é registrado e acompanhado no e-SIC oficial da Prefeitura de Amargosa.",
+              "notice": "O pedido de acesso à informação é registrado e pode ser acompanhado no Protocolo Digital de Amargosa (SEI).",
               "updatedAt": "27/08/2026",
               "slug": "acesso-informacao",
               "subject": "Documentos",

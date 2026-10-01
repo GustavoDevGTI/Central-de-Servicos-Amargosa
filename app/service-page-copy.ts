@@ -4,12 +4,6 @@ import { serviceRequestSteps } from "./service-request-steps";
 
 const specificCopy = new Map<string, string>([
   [
-    "O pedido de acesso à informação é registrado e acompanhado no e-SIC oficial da Prefeitura de Amargosa.",
-    "O pedido de acesso à informação é registrado e pode ser acompanhado pelo número de protocolo.",
-  ],
-  ["Acesse o e-SIC pelo botão “Solicitar serviço”.", "Use o botão INICIAR desta página para registrar o pedido."],
-  ["e-SIC da Prefeitura de Amargosa.", "Disponível pelo botão de solicitação desta página."],
-  [
     "É possível obter o contracheque com toda segurança pelo sítio:\nBaixe também o aplicativo para ter acesso ao seu contrachque: https://www.webcontracheque.com.br/app_Login/\nIOS: https://apps.apple.com/br/app/web-contracheque/id1459679336\nAndroid: https://play.google.com/store/apps/details?id=com.webcontracheque",
     "Consulte e obtenha seu contracheque pela internet com segurança.",
   ],
