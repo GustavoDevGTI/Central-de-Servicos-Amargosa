@@ -1462,7 +1462,6 @@ function RichServiceDetail({ service }: { service: Service }) {
   const contact = contactForService(service);
   const location = serviceWhereWhen(service, contact);
   const requestSteps = availableRequestSteps(service);
-  const about = service.description || service.summary;
   const hasInPersonCard = Boolean(service.whereWhen) && location.presencial &&
     (!service.whereWhenItems?.length || location.digital);
   const mergeContact = hasInPersonCard && sameInPersonServiceOffice(location.local, contact.name);
@@ -1516,7 +1515,7 @@ function RichServiceDetail({ service }: { service: Service }) {
           <div className="service-detail-content">
             <section id="o-que-e">
               <h2>O que é</h2>
-              <p className={!about || about.startsWith("*") ? "service-pending-information" : undefined}>{about || PENDING_SERVICE_INFORMATION}</p>
+              <p className={!service.summary || service.summary.startsWith("*") ? "service-pending-information" : undefined}>{service.summary || PENDING_SERVICE_INFORMATION}</p>
             </section>
             <section id="quem-pode">
               <h2>Quem pode solicitar</h2>
@@ -1628,7 +1627,6 @@ export function ServiceDetail({ slug }: { slug: string }) {
   if (service.id.startsWith("planilha-") || (service.notice && service.documents?.length && service.steps?.length))
     return <RichServiceDetail service={service} />;
   const requestSteps = availableRequestSteps(service);
-  const about = service.description || service.summary;
   return (
     <main {...rootProps("service-detail-page")}>
       <ServiceFadePosition key={service.id} />
@@ -1695,8 +1693,8 @@ export function ServiceDetail({ slug }: { slug: string }) {
           <div className="service-detail-content">
             <section id="o-que-e">
               <h2>{internalText(contentSegment, "aboutTitle", "O que é")}</h2>
-              <p className={!about || about.startsWith("*") ? "service-pending-information" : undefined}>
-                {about || PENDING_SERVICE_INFORMATION}
+              <p className={!service.summary || service.summary.startsWith("*") ? "service-pending-information" : undefined}>
+                {service.summary || PENDING_SERVICE_INFORMATION}
               </p>
             </section>
             <section id="quem-pode">
