@@ -14,6 +14,7 @@ import {
   AiProviderRequestError,
 } from "../../../agent/providers/ai-provider";
 import { createAiProvider } from "../../../agent/providers/chat-completions-provider";
+import { isAllowedRequestOrigin } from "../../../request-origin";
 import type {
   AgentChatRequest,
   AgentChatResponse,
@@ -39,30 +40,7 @@ function json(
   });
 }
 
-function firstForwardedValue(value: string | null) {
-  return value?.split(",")[0]?.trim().toLocaleLowerCase("en-US") || "";
-}
-
-export function isSameOrigin(request: Request) {
-  const origin = request.headers.get("Origin");
-  if (!origin) return true;
-
-  let originHost: string;
-  try {
-    originHost = new URL(origin).host.toLocaleLowerCase("en-US");
-  } catch {
-    return false;
-  }
-
-  const requestUrl = new URL(request.url);
-  const allowedHosts = new Set([
-    requestUrl.host.toLocaleLowerCase("en-US"),
-    firstForwardedValue(request.headers.get("Host")),
-    firstForwardedValue(request.headers.get("X-Forwarded-Host")),
-  ]);
-  allowedHosts.delete("");
-  return allowedHosts.has(originHost);
-}
+export const isSameOrigin = isAllowedRequestOrigin;
 
 async function clientKey(request: Request, sessionId: string) {
   const address =

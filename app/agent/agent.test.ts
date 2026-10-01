@@ -219,6 +219,18 @@ test("aceita a origem pública encaminhada pelo proxy reverso", () => {
   assert.equal(isSameOrigin(request), true);
 });
 
+test("aceita o novo domínio público da Central", () => {
+  const request = new Request("http://portal:3000/api/agent/chat", {
+    headers: {
+      Origin: "https://servicos.amargosa.ba.gov.br",
+      Host: "portal:3000",
+      "X-Forwarded-Host": "maisdigital.amargosa.ba.gov.br",
+      "X-Forwarded-Proto": "https",
+    },
+  });
+  assert.equal(isSameOrigin(request), true);
+});
+
 test("recusa uma origem externa mesmo atrás do proxy", () => {
   const request = new Request("http://portal:3000/api/agent/chat", {
     headers: {

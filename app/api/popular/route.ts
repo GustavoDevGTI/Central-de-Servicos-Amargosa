@@ -3,6 +3,7 @@ import {
   popularityDatabase,
 } from "../../search-popularity-db";
 import { services } from "../../service-catalog";
+import { isAllowedRequestOrigin } from "../../request-origin";
 
 export const dynamic = "force-dynamic";
 
@@ -39,11 +40,6 @@ async function isRateLimited(request: Request) {
   return current.count > 20;
 }
 
-function isSameOrigin(request: Request) {
-  const origin = request.headers.get("Origin");
-  return !origin || origin === new URL(request.url).origin;
-}
-
 export async function GET() {
   try {
     const database = popularityDatabase();
@@ -78,7 +74,7 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
-  if (!isSameOrigin(request))
+  if (!isAllowedRequestOrigin(request))
     return json({ error: "Origem não permitida." }, 403);
   if (request.headers.get("Content-Type")?.split(";")[0] !== "application/json")
     return json({ error: "Formato inválido." }, 415);
