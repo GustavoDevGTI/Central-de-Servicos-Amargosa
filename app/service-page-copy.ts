@@ -116,6 +116,7 @@ export function servicePageCopy(service: Service): Service {
   return {
     ...service,
     summary: copy(service.summary),
+    description: copy(service.description),
     eligibility: copy(service.eligibility),
     documents: service.documents?.map(neutralCopy),
     steps: (serviceRequestSteps[service.slug || service.id] || service.steps)?.map(neutralCopy),

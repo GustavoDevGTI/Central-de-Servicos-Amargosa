@@ -33,6 +33,8 @@ test("reported services show concise descriptions instead of imported instructio
     assert.ok(service, `Service not found: ${id}`);
     assert.ok(service.summary && service.summary.length < 300, `Invalid description: ${id}`);
     assert.doesNotMatch(service.summary, /\n|https?:\/\/|ANEXO|REGULAMENTO|DOCUMENTOS EXIGIDOS/i, id);
+    assert.ok(service.description && service.description.length > service.summary.length + 60, `Missing detailed explanation: ${id}`);
+    assert.doesNotMatch(service.description, /\n|https?:\/\/|ANEXO ÚNICO|DOCUMENTOS EXIGIDOS/i, id);
     assert.ok(service.steps?.length && service.steps.every((step) => !step.startsWith("*")), `Invalid steps: ${id}`);
   }
 
