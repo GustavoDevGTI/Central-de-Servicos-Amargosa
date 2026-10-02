@@ -6,6 +6,8 @@ export const isBaGovUrl = (value?: string) =>
       /^https?:\/\/(?:ba\.gov\.br|(?:(?:www\.)?servicos|cpu\d+|www)\.ba\.gov\.br)(?:[/?#]|$)/i.test(value),
   );
 
+const limpezaPublicaBaGovLink = "https://www.ba.gov.br/servico/pm-amargosa/solicitar-limpeza-publica-amargosa/etapa/limpeza-publica";
+
 export const baGovServiceLinks: Record<string, string> = {
   "1doc-certidao-de-inexigibilidade-ci": "https://servicos.ba.gov.br/detalhe/servico/2559",
   "1doc-extincao-ou-suspensao-de-execucao-extrajudicial-ou-judicial": "https://www.ba.gov.br/servico/pm-amargosa/solicitar-extincao-suspensao-de-execucao-amargosa/etapa/solicitar-servico",
@@ -21,7 +23,8 @@ export const baGovServiceLinks: Record<string, string> = {
   "1doc-solicitacao-de-reforma-de-carneira": "https://www.ba.gov.br/servico/pm-amargosa/solicitar-reforma-de-carneiras-amargosa/etapa/solicitar-o-servico",
   "1doc-retirada-de-entulhos": "https://www.ba.gov.br/servico/pm-amargosa/solicitar-retirada-de-entulhos-amargosa/etapa/solicitar-o-servico",
   "1doc-troca-de-lampadas": "https://www.ba.gov.br/servico/pm-amargosa/solicitar-iluminacao-publica-amargosa/etapa/solicitar-o-servico",
-  "ba-gov-limpeza-publica": "https://www.ba.gov.br/servico/pm-amargosa/solicitar-limpeza-publica-amargosa/etapa/limpeza-publica",
+  "1doc-limpeza-publica": limpezaPublicaBaGovLink,
+  "ba-gov-limpeza-publica": limpezaPublicaBaGovLink,
   "ba-gov-transferencia-de-corpos": "https://www.ba.gov.br/servico/pm-amargosa/solicitar-transferencia-de-corpos-amargosa/etapa/solicitar-o-servico",
 };
 
@@ -41,6 +44,7 @@ export const nonSeiServiceIds = new Set([
   "1doc-solicitacao-de-reforma-de-carneira",
   "1doc-retirada-de-entulhos",
   "1doc-troca-de-lampadas",
+  "1doc-limpeza-publica",
   "ba-gov-limpeza-publica",
   "ba-gov-transferencia-de-corpos",
 ]);

@@ -1,6 +1,7 @@
 import pdfServiceDetails from './pdf-service-details.json' with { type: 'json' };
 
 import { PENDING_SERVICE_INFORMATION } from "./pending-information";
+import { baGovServiceLinks } from "./service-request-system";
 
 type Channel = { label: string; value: string; url?: string };
 type Legislation = { label: string; url: string };
@@ -386,8 +387,8 @@ export const approvedServiceDetails: Record<string, ApprovedServiceDetail> = {
 
   "1doc-limpeza-publica": {
     slug: "coleta-de-lixo",
-    destination: "Atendimento digital municipal",
-    url: "https://acesso.amargosa.ba.gov.br/limpeza-publica",
+    destination: "BA.gov",
+    url: baGovServiceLinks["ba-gov-limpeza-publica"],
     summary:
       "Coleta regular de resíduos domiciliares e comerciais nos bairros e localidades atendidos pelo cronograma municipal de limpeza pública.",
     eligibility:
@@ -413,7 +414,7 @@ export const approvedServiceDetails: Record<string, ApprovedServiceDetail> = {
         url: "https://acesso.amargosa.ba.gov.br/coletalixo",
       },
       { label: "Telefone", value: amargosaPhone },
-      { label: "Online", value: "Solicitar atendimento de limpeza pública", url: "https://acesso.amargosa.ba.gov.br/limpeza-publica" },
+      { label: "Online", value: "Solicitar atendimento de limpeza pública", url: baGovServiceLinks["ba-gov-limpeza-publica"] },
     ],
     legislation: [
       { label: "Lei Federal nº 12.305/2010 — Política Nacional de Resíduos Sólidos", url: "https://www.planalto.gov.br/ccivil_03/_ato2007-2010/2010/lei/l12305.htm" },

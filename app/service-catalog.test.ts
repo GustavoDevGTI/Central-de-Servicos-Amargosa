@@ -48,7 +48,10 @@ test("coleta regular e solicitação de limpeza pública ficam em fichas distint
   assert.equal(collection.title, "Coleta de Lixo");
   assert.equal(collection.slug, "coleta-de-lixo");
   assert.match(collection.summary || "", /coleta regular/i);
-  assert.equal(collection.url, "https://acesso.amargosa.ba.gov.br/limpeza-publica");
+  assert.equal(collection.url, cleaning.url);
+  assert.equal(collection.channels?.find((channel) => channel.label === "Online")?.url, cleaning.url);
+  assert.equal(collection.channels?.find((channel) => channel.label === "Cronograma")?.url, "https://acesso.amargosa.ba.gov.br/coletalixo");
+  assert.match(collection.notice || "", /A coleta não ocorreu conforme a rota/);
   assert.equal(cleaning.title, "Limpeza pública");
   assert.equal(cleaning.slug, "limpeza-publica");
   assert.match(cleaning.summary || "", /varrição.*capina.*roçagem/i);

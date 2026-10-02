@@ -1194,51 +1194,57 @@ function ServiceContactSection({ service }: { service: Service }) {
             <small>Vinculado a {contact.officeName}</small>
           )}
         </div>
-        <div>
-          <div className="service-contact-channel-row">
-            <span className="contact-label"><ContactIcon kind="phone" /> Telefone</span>
-            {phoneHref && phoneNumber ? (
-              <span className="service-contact-phone-links">
-                <a href={phoneHref}>{phoneNumber}</a>
-                {extension && (
-                  <a className="contact-extension-link" href={`${phoneHref};ext=${extension}`}>{`${contact.extensionLabel || "ramal"} ${extension}`}</a>
-                )}
-              </span>
-            ) : <strong>{contact.phone}</strong>}
-          </div>
-          {whatsapp && (
-            <div className="service-contact-channel-row">
-              <span className="contact-label"><ContactIcon kind="whatsapp" /> WhatsApp</span>
-              {whatsappLink
-                ? <a href={whatsappLink} target="_blank" rel="noopener noreferrer">{whatsappNumber}</a>
-                : <strong>{whatsappNumber}</strong>}
-            </div>
-          )}
-          {service.id.startsWith("planilha-") && service.channels?.map((channel) => (
-            channel.url?.startsWith("tel:") ? (
-              <div key={channel.label} className="service-contact-extra-phone">
-                <span className="contact-label"><ContactIcon kind="phone" /> {channel.label}: </span><a href={channel.url}>{channel.value}</a>
+        <div className="service-contact-columns">
+          <div className="service-contact-column">
+            <div>
+              <div className="service-contact-channel-row">
+                <span className="contact-label"><ContactIcon kind="phone" /> Telefone</span>
+                {phoneHref && phoneNumber ? (
+                  <span className="service-contact-phone-links">
+                    <a href={phoneHref}>{phoneNumber}</a>
+                    {extension && (
+                      <a className="contact-extension-link" href={`${phoneHref};ext=${extension}`}>{`${contact.extensionLabel || "ramal"} ${extension}`}</a>
+                    )}
+                  </span>
+                ) : <strong>{contact.phone}</strong>}
               </div>
-            ) : null
-          ))}
-        </div>
-        <div>
-          <span>{service.accessMode === "presencial"
-            ? contact.officeName ? "Atendimento presencial — endereço da secretaria" : "Atendimento presencial — endereço"
-            : "Endereço"}</span>
-          <address>{contact.address}</address>
-        </div>
-        {contact.email && (
-          <div>
-            <span className="contact-label"><ContactIcon kind="email" /> {contact.emailLabel || "E-mail"}</span>
-            <a href={`mailto:${contact.email}`}>{contact.email}</a>
+              {whatsapp && (
+                <div className="service-contact-channel-row">
+                  <span className="contact-label"><ContactIcon kind="whatsapp" /> WhatsApp</span>
+                  {whatsappLink
+                    ? <a href={whatsappLink} target="_blank" rel="noopener noreferrer">{whatsappNumber}</a>
+                    : <strong>{whatsappNumber}</strong>}
+                </div>
+              )}
+              {service.id.startsWith("planilha-") && service.channels?.map((channel) => (
+                channel.url?.startsWith("tel:") ? (
+                  <div key={channel.label} className="service-contact-extra-phone">
+                    <span className="contact-label"><ContactIcon kind="phone" /> {channel.label}: </span><a href={channel.url}>{channel.value}</a>
+                  </div>
+                ) : null
+              ))}
+            </div>
+            {contact.email && (
+              <div>
+                <span className="contact-label"><ContactIcon kind="email" /> {contact.emailLabel || "E-mail"}</span>
+                <a href={`mailto:${contact.email}`}>{contact.email}</a>
+              </div>
+            )}
           </div>
-        )}
-        <div>
-          <span>Mais informações</span>
-          <a href={contact.officialUrl} target="_blank" rel="noreferrer">
-            Ver contatos no site da Prefeitura ↗
-          </a>
+          <div className="service-contact-column">
+            <div>
+              <span>{service.accessMode === "presencial"
+                ? contact.officeName ? "Atendimento presencial — endereço da secretaria" : "Atendimento presencial — endereço"
+                : "Endereço"}</span>
+              <address>{contact.address}</address>
+            </div>
+            <div>
+              <span>Mais informações</span>
+              <a href={contact.officialUrl} target="_blank" rel="noreferrer">
+                Ver contatos no site da Prefeitura ↗
+              </a>
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -1256,7 +1262,7 @@ function ServiceRequestNotice({
   const isGenericNotice =
     service.notice?.startsWith("Consulte as informações disponíveis nesta página") ||
     service.notice?.startsWith("Consulte as orientações desta página");
-  const baGovReference = isBaGovUrl(service.url);
+  const baGovReference = isBaGovUrl(service.url) && service.id !== "1doc-limpeza-publica";
 
   return (
     <a
