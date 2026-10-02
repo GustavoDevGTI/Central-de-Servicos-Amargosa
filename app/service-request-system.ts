@@ -17,6 +17,12 @@ export const baGovServiceLinks: Record<string, string> = {
   "1doc-certidao-de-comprovacao-de-endereco": "https://www.ba.gov.br/servico/pm-amargosa/emitir-certidao-de-comprovacao-de-endereco-amargosa/etapa/comprovacao-endereco",
   "1doc-isencao-tributaria-cadastro-imobiliario": "https://www.ba.gov.br/servico/pm-amargosa/solicitar-isencao-tributaria-de-cadastro-imobiliario-amargosa/etapa/solicitar-isencao",
   "1doc-isencao-tributaria-cadastro-economico": "https://www.ba.gov.br/servico/pm-amargosa/solicitar-isencao-tributaria-de-cadastro-economico-amargosa/etapa/solicitar-isencao",
+  "1doc-transferencia-de-titularidade-imobiliaria": "https://www.ba.gov.br/servico/pm-amargosa/solicitar-transferencia-de-titularidade-imobiliaria-amargosa/etapa/solicitar-o-servico",
+  "1doc-solicitacao-de-reforma-de-carneira": "https://www.ba.gov.br/servico/pm-amargosa/solicitar-reforma-de-carneiras-amargosa/etapa/solicitar-o-servico",
+  "1doc-retirada-de-entulhos": "https://www.ba.gov.br/servico/pm-amargosa/solicitar-retirada-de-entulhos-amargosa/etapa/solicitar-o-servico",
+  "1doc-troca-de-lampadas": "https://www.ba.gov.br/servico/pm-amargosa/solicitar-iluminacao-publica-amargosa/etapa/solicitar-o-servico",
+  "ba-gov-limpeza-publica": "https://www.ba.gov.br/servico/pm-amargosa/solicitar-limpeza-publica-amargosa/etapa/limpeza-publica",
+  "ba-gov-transferencia-de-corpos": "https://www.ba.gov.br/servico/pm-amargosa/solicitar-transferencia-de-corpos-amargosa/etapa/solicitar-o-servico",
 };
 
 export const nonSeiServiceIds = new Set([
@@ -31,6 +37,12 @@ export const nonSeiServiceIds = new Set([
   "1doc-certidao-de-comprovacao-de-endereco",
   "1doc-isencao-tributaria-cadastro-imobiliario",
   "1doc-isencao-tributaria-cadastro-economico",
+  "1doc-transferencia-de-titularidade-imobiliaria",
+  "1doc-solicitacao-de-reforma-de-carneira",
+  "1doc-retirada-de-entulhos",
+  "1doc-troca-de-lampadas",
+  "ba-gov-limpeza-publica",
+  "ba-gov-transferencia-de-corpos",
 ]);
 
 export const requestSystemForService = (serviceId: string): ServiceRequestSystem =>

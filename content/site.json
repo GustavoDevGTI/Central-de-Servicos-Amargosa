@@ -1878,7 +1878,7 @@
               "id": "1doc-limpeza-publica",
               "type": "service",
               "role": "entry",
-              "title": "Limpeza pública",
+              "title": "Coleta de Lixo",
               "department": "SEMOP-SUPESP - Superintendência de Serviços Públicos",
               "category": "Obras Públicas",
               "audienceId": "cidadao",
@@ -1890,6 +1890,19 @@
               "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
               "initials": "LP",
               "sourceRow": 87
+            },
+            {
+              "id": "ba-gov-limpeza-publica",
+              "type": "service",
+              "role": "entry",
+              "title": "Limpeza pública",
+              "department": "SEMOP-SUPESP - Superintendência de Serviços Públicos",
+              "category": "Obras Públicas",
+              "audienceId": "cidadao",
+              "audienceIds": ["cidadao", "empresa", "servidor"],
+              "destination": "BA.gov",
+              "url": "https://www.ba.gov.br/servico/pm-amargosa/solicitar-limpeza-publica-amargosa/etapa/limpeza-publica",
+              "initials": "LP"
             },
             {
               "id": "1doc-margem-para-emprestimo-consignado",
@@ -2497,6 +2510,19 @@
               "sourceRow": 134
             },
             {
+              "id": "ba-gov-transferencia-de-corpos",
+              "type": "service",
+              "role": "entry",
+              "title": "Transferência de corpos",
+              "department": "Prefeitura Municipal de Amargosa",
+              "category": "Ação Social e Cidadania",
+              "audienceId": "cidadao",
+              "audienceIds": ["cidadao", "empresa", "servidor"],
+              "destination": "BA.gov",
+              "url": "https://www.ba.gov.br/servico/pm-amargosa/solicitar-transferencia-de-corpos-amargosa/etapa/solicitar-o-servico",
+              "initials": "TC"
+            },
+            {
               "id": "1doc-transito-defesa-de-autuacao-pessoa-fisica",
               "type": "service",
               "role": "entry",
@@ -2517,7 +2543,8 @@
               "id": "1doc-troca-de-lampadas",
               "type": "service",
               "role": "entry",
-              "title": "Troca de lâmpadas",
+              "title": "Iluminação pública",
+              "searchTerms": ["troca de lâmpadas", "lâmpada queimada", "poste apagado", "iluminação intermitente"],
               "department": "SEMOP-SUPESP - Superintendência de Serviços Públicos",
               "category": "Obras Públicas",
               "audienceId": "cidadao",

@@ -70,7 +70,7 @@ export function expandServiceSearchTerms(term: string) {
   }
 
   if (normalized.includes("lampada") || normalized.includes("iluminacao publica")) {
-    add("Troca de lâmpadas");
+    add("Iluminação pública", "troca de lâmpadas");
   }
 
   if (normalized.includes("nota fiscal") || normalized.includes("nfse")) {
@@ -82,7 +82,7 @@ export function expandServiceSearchTerms(term: string) {
   }
 
   if (/\b(coleta|lixo|residuos)\b/.test(normalized)) {
-    add("Limpeza pública");
+    add("Coleta de Lixo");
   }
 
   return [...new Set(variants.filter(Boolean))].slice(0, 4);

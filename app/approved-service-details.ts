@@ -385,7 +385,7 @@ export const approvedServiceDetails: Record<string, ApprovedServiceDetail> = {
   },
 
   "1doc-limpeza-publica": {
-    slug: "limpeza-publica",
+    slug: "coleta-de-lixo",
     destination: "Atendimento digital municipal",
     url: "https://acesso.amargosa.ba.gov.br/limpeza-publica",
     summary:
@@ -419,11 +419,66 @@ export const approvedServiceDetails: Record<string, ApprovedServiceDetail> = {
       { label: "Lei Federal nº 12.305/2010 — Política Nacional de Resíduos Sólidos", url: "https://www.planalto.gov.br/ccivil_03/_ato2007-2010/2010/lei/l12305.htm" },
       { label: "Lei Federal nº 13.460/2017 — Direitos do usuário de serviços públicos", url: userRightsLaw },
     ],
-    relatedServiceIds: ["1doc-retirada-de-entulhos"],
+    relatedServiceIds: ["ba-gov-limpeza-publica", "1doc-retirada-de-entulhos"],
     notice:
       "A coleta não ocorreu conforme a rota? Registre uma solicitação de atendimento.",
     noticeAction: "Registrar solicitação ↗",
     updatedAt: "25/09/2026",
+  },
+
+  "ba-gov-limpeza-publica": {
+    slug: "limpeza-publica",
+    destination: "BA.gov",
+    url: "https://www.ba.gov.br/servico/pm-amargosa/solicitar-limpeza-publica-amargosa/etapa/limpeza-publica",
+    summary: "Solicite varrição, capina, roçagem ou limpeza de vias, praças e outras áreas públicas de Amargosa.",
+    eligibility: "Cidadãos, empresas e servidores públicos que identifiquem necessidade de limpeza em área pública do município.",
+    documents: [
+      "Endereço completo do local que necessita de limpeza e ponto de referência, quando necessário.",
+      "Descrição do serviço solicitado, como varrição, capina, roçagem ou recolhimento de resíduos.",
+      "Nome completo, CPF e telefone para contato.",
+    ],
+    steps: [
+      "Identifique o local e descreva a necessidade de limpeza.",
+      "Use o botão INICIAR para registrar a solicitação no BA.gov.",
+      "Aguarde a avaliação da equipe responsável; poderá haver vistoria antes da programação do serviço.",
+    ],
+    whereWhen: "Solicitação digital pelo BA.gov. A equipe responsável avalia a prioridade e programa a execução do serviço.",
+    cost: "Isento de taxas, conforme o BA.gov.",
+    duration: "Prazo indeterminado, conforme o BA.gov.",
+    channels: [{ label: "Online", value: "Solicitar limpeza pública no BA.gov", url: "https://www.ba.gov.br/servico/pm-amargosa/solicitar-limpeza-publica-amargosa/etapa/limpeza-publica" }],
+    legislation: [{ label: "Lei Federal nº 13.460/2017 — Direitos do usuário de serviços públicos", url: userRightsLaw }],
+    relatedServiceIds: ["1doc-limpeza-publica", "1doc-retirada-de-entulhos"],
+    notice: "Descreva o local e o tipo de limpeza necessária para a avaliação da equipe.",
+    noticeAction: "Iniciar solicitação ↗",
+    updatedAt: "02/10/2026",
+  },
+
+  "ba-gov-transferencia-de-corpos": {
+    slug: "transferencia-de-corpos",
+    destination: "BA.gov",
+    url: "https://www.ba.gov.br/servico/pm-amargosa/solicitar-transferencia-de-corpos-amargosa/etapa/solicitar-o-servico",
+    summary: "Solicite a transferência ou o traslado de um corpo entre cemitérios, localidades ou municípios, conforme as exigências legais e sanitárias.",
+    eligibility: "Familiar, responsável legal ou representante autorizado a solicitar o traslado.",
+    documents: [
+      "Certidão de óbito.",
+      "Documento de identificação do solicitante e do responsável pelo traslado.",
+      "Autorização da família ou do responsável legal.",
+      "Informações completas sobre o local de origem e o destino da transferência.",
+    ],
+    steps: [
+      "Reúna os documentos e identifique os locais de origem e destino.",
+      "Use o botão INICIAR para apresentar o pedido no BA.gov.",
+      "Siga as orientações dos órgãos e da empresa funerária responsável; traslados entre municípios ou estados podem exigir documentos adicionais.",
+    ],
+    whereWhen: "Solicitação digital pelo BA.gov. A página oficial também informa os postos disponíveis para atendimento.",
+    cost: "Isento de taxas, conforme o BA.gov.",
+    duration: "Prazo indeterminado, conforme o BA.gov.",
+    channels: [{ label: "Online", value: "Solicitar transferência de corpos no BA.gov", url: "https://www.ba.gov.br/servico/pm-amargosa/solicitar-transferencia-de-corpos-amargosa/etapa/solicitar-o-servico" }],
+    legislation: [],
+    relatedServiceIds: ["1doc-guia-de-sepultamento", "1doc-solicitacao-de-reforma-de-carneira"],
+    notice: "O traslado pode exigir documentação adicional conforme o trajeto e as regras sanitárias aplicáveis.",
+    noticeAction: "Iniciar solicitação ↗",
+    updatedAt: "02/10/2026",
   },
 
   "1doc-ouvidoria-geral": {
@@ -567,7 +622,7 @@ export const approvedServiceDetails: Record<string, ApprovedServiceDetail> = {
     eligibility:
       "Moradores e responsáveis por imóveis ou atividades que precisam solicitar a retirada programada de entulho.",
     documents: [
-      "Nome e telefone do solicitante.",
+      "Nome, CPF, telefone e endereço do solicitante.",
       "Endereço exato do material, com ponto de referência.",
       "Descrição do tipo e da quantidade aproximada de entulho.",
       "Foto do local, quando disponível, para facilitar a avaliação.",
@@ -592,7 +647,7 @@ export const approvedServiceDetails: Record<string, ApprovedServiceDetail> = {
       { label: "Lei Federal nº 12.305/2010 — Política Nacional de Resíduos Sólidos", url: "https://www.planalto.gov.br/ccivil_03/_ato2007-2010/2010/lei/l12305.htm" },
       { label: "Lei Federal nº 13.460/2017 — Direitos do usuário de serviços públicos", url: userRightsLaw },
     ],
-    relatedServiceIds: ["1doc-limpeza-publica"],
+    relatedServiceIds: ["ba-gov-limpeza-publica", "1doc-limpeza-publica"],
     notice:
       "A Prefeitura orienta que a SEMOP/SUPESP seja avisada antes do descarte para agendar a medição e a retirada.",
     noticeAction: "Acessar o canal de solicitação ↗",
@@ -639,32 +694,30 @@ export const approvedServiceDetails: Record<string, ApprovedServiceDetail> = {
   },
 
   "1doc-troca-de-lampadas": {
-    slug: "troca-de-lampadas",
+    slug: "iluminacao-publica",
     destination: "Central de Atendimento 1Doc",
     url: oneDocCentral,
     summary:
-      "Solicitação de manutenção da iluminação pública para substituir lâmpada apagada, intermitente ou com defeito em via pública de Amargosa.",
+      "Comunique problemas na iluminação pública de Amargosa, como lâmpadas queimadas, postes apagados, luz intermitente ou outros defeitos, para avaliação e reparo.",
     eligibility:
       "Qualquer pessoa que identifique problema em ponto de iluminação pública no Município de Amargosa.",
     documents: [
-      "Não há documento obrigatório.",
-      "Informe o número da plaqueta instalada no poste, sempre que estiver visível.",
-      "Indique rua, número aproximado, bairro e ponto de referência.",
-      "Descreva o problema e deixe um telefone para contato.",
+      "Endereço exato do ponto de iluminação com defeito e um ponto de referência.",
+      "Descrição do problema, como lâmpada queimada, poste apagado, luz intermitente ou outro defeito.",
+      "Telefone para contato e, se possível, o número de identificação do poste.",
     ],
     steps: [
-      "Localize o poste e anote o número da plaqueta.",
-      "Registre a solicitação pela Central 1Doc ou pelo telefone (75) 3512-7811.",
-      "Informe o endereço completo e descreva o defeito observado.",
-      "Guarde o protocolo para acompanhar o atendimento.",
+      "Localize o ponto com problema e anote o endereço e a identificação do poste, se estiver visível.",
+      "Use o botão INICIAR para registrar no BA.gov a ocorrência, inclusive quando for troca de lâmpadas.",
+      "Aguarde a avaliação da equipe responsável e guarde o protocolo para acompanhamento.",
     ],
     whereWhen:
-      "A solicitação pode ser registrada online ou pelo telefone (75) 3512-7811. O ponto deve estar em área pública e ser identificado pelo número da plaqueta ou por endereço e referência precisos.",
+      "A solicitação pode ser registrada no BA.gov ou pelo telefone (75) 3512-7811. Informe o endereço do ponto e, se possível, o número de identificação do poste.",
     cost: "Gratuito para registrar a solicitação de manutenção da iluminação pública.",
     duration:
       `${PENDING_SERVICE_INFORMATION} O atendimento depende da vistoria, da disponibilidade da equipe e do material necessário.`,
     channels: [
-      { label: "Online", value: "Central de Atendimento 1Doc", url: oneDocCentral },
+      { label: "Online", value: "Solicitar iluminação pública no BA.gov", url: "https://www.ba.gov.br/servico/pm-amargosa/solicitar-iluminacao-publica-amargosa/etapa/solicitar-o-servico" },
       { label: "Telefone", value: amargosaPhone },
     ],
     legislation: [
@@ -673,6 +726,6 @@ export const approvedServiceDetails: Record<string, ApprovedServiceDetail> = {
     notice:
       "Informe o número da plaqueta do poste para que a equipe localize o ponto de iluminação com precisão.",
     noticeAction: "Acessar o canal de solicitação ↗",
-    updatedAt: "01/09/2026",
+    updatedAt: "02/10/2026",
   },
 };

@@ -341,6 +341,26 @@ export const services = [...mergedServices, ...(spreadsheetServiceData.created a
   });
   const baGovUrl = baGovServiceLinks[prepared.id];
   return documentTopics(baGovUrl
-    ? { ...prepared, url: baGovUrl, destination: "BA.gov" }
+    ? {
+        ...prepared,
+        url: baGovUrl,
+        destination: "BA.gov",
+        channels: prepared.channels?.map((channel) => {
+          const pointsToService = channel.url && (
+            isBaGovUrl(channel.url) ||
+            channel.url === prepared.url ||
+            channel.url === cartaServiceLinks[prepared.id]
+          );
+          return pointsToService
+            ? {
+                ...channel,
+                value: /portal de serviços|central de atendimento/i.test(channel.value)
+                  ? "BA.gov — etapa deste serviço"
+                  : channel.value,
+                url: baGovUrl,
+              }
+            : channel;
+        }),
+      }
     : prepared);
 });
