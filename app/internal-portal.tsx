@@ -31,7 +31,7 @@ import {
 } from "./search-popularity-client";
 import { trackServiceClick, trackServiceStart } from "./analytics";
 import { contactForService, organizationForService } from "./service-contacts";
-import { sameInPersonServiceOffice, serviceWhereWhen } from "./service-where-when";
+import { extractEmailAddresses, sameInPersonServiceOffice, serviceWhereWhen } from "./service-where-when";
 import { isBaGovUrl } from "./service-request-system";
 import { servicePageCopy } from "./service-page-copy";
 import { CollectionScheduleSection } from "./coleta-cronograma";
@@ -1318,7 +1318,11 @@ function ServiceWhereWhenSection({ service, mergeContact = false }: { service: S
   const hasSchedule = Boolean(service.whereWhenItems?.length);
   const phoneValues = [...new Set([details.phone, ...(mergeContact ? [contact.phone] : [])].filter((value): value is string => Boolean(value)))];
   const phones = phoneValues.filter((value) => !phoneValues.some((other) => other !== value && other.startsWith(`${value}, ramal`)));
-  const emails = [...new Set([...details.emails, ...(mergeContact && contact.email ? [contact.email] : [])])];
+  const contactEmails = mergeContact ? extractEmailAddresses(contact.email) : [];
+  const emails = [...new Set([...details.emails, ...contactEmails])];
+  const emailLabel = details.emails.length === 0 && contactEmails.length > 0
+    ? contact.emailLabel || "E-mail"
+    : "E-mail";
   const whatsappLink = details.whatsapp ? whatsappHref(details.whatsapp) : undefined;
 
   return (
@@ -1386,7 +1390,7 @@ function ServiceWhereWhenSection({ service, mergeContact = false }: { service: S
                     ? <a className="contact-whatsapp-link" href={whatsappLink} target="_blank" rel="noopener noreferrer">{details.whatsapp}</a>
                     : details.whatsapp}</dd></div>}
                   {emails.length > 0 && (
-                    <div><dt className="contact-label"><ContactIcon kind="email" /> E-mail</dt><dd className="service-request-emails">{emails.map((email) => (
+                    <div><dt className="contact-label"><ContactIcon kind="email" /> {emailLabel}</dt><dd className="service-request-emails">{emails.map((email) => (
                       <a href={`mailto:${email}`} key={email}>{email}</a>
                     ))}</dd></div>
                   )}

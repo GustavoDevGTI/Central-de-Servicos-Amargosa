@@ -95,6 +95,16 @@ test("an email ends before the next digital-attendance instruction", () => {
   assert.deepEqual(result.emails, ["supesp@amagosa.ba.gov.br"]);
 });
 
+test("placeholder de e-mail da planilha não vira link de contato", () => {
+  const result = serviceWhereWhen({
+    accessMode: "digital",
+    url: "https://acesso.amargosa.ba.gov.br/ferias-marcacao",
+    whereWhen: "Canal: SEI - Acesso Externo/Peticionamento. Telefone: (75) 3512-7811. E-mail: A preencher. Horário e atendimento presencial devem ser confirmados com a unidade responsável.",
+  }, { ...contact, email: "seafi@amargosa.ba.gov.br" });
+
+  assert.deepEqual(result.emails, []);
+});
+
 test("in-person service without a link shows the responsible office address", () => {
   const result = serviceWhereWhen({
     accessMode: "presencial",

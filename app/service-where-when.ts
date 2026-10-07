@@ -24,6 +24,11 @@ export type ServiceWhereWhen = {
 
 const genericDigitalUrl = /^https?:\/\/acesso\.amargosa\.ba\.gov\.br\/protocolodigital\/?(?:[?#].*)?$/i;
 const factPattern = /\b(Atendimento presencial(?: e virtual)?|Atendimento virtual|Atendimento digital|Telefone|E-mail|WhatsApp|Endereço|Site|Horários? de atendimento|Protocolo Digital|Canal on-line):\s*/gi;
+const emailPattern = /[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/gi;
+
+export function extractEmailAddresses(value?: string): string[] {
+  return value?.match(emailPattern) || [];
+}
 
 function normalizedOfficeName(value: string) {
   return value.normalize("NFD").replace(/[\u0300-\u036f]/g, "")
@@ -80,7 +85,10 @@ export function serviceWhereWhen(
   const hours = presencialSchedule?.schedule || (rawHours && !rawHours.startsWith("*")
     ? rawHours
     : PENDING_SERVICE_INFORMATION);
-  const emails = [...new Set([...(facts.get("e-mail") || []), ...(presencialSchedule && contact.email ? [contact.email] : [])])];
+  const emails = [...new Set([
+    ...(facts.get("e-mail") || []).flatMap(extractEmailAddresses),
+    ...(presencialSchedule ? extractEmailAddresses(contact.email) : []),
+  ])];
   const channelWhatsapp = service.channels?.find((channel) =>
     /\bwhatsapp\b/i.test(channel.label) && whatsappHref(channel.value),
   )?.value;
