@@ -74,6 +74,7 @@ type Service = Item & {
   category: string;
   audienceId: string;
   audienceIds?: string[];
+  audienceLabel?: string;
   destination: string;
   url: string;
   initials: string;
@@ -148,7 +149,7 @@ const fontStacks: Record<string, string> = {
   arial: "Arial, Helvetica, sans-serif",
 };
 const serviceAudienceLabel = (service: Service) =>
-  (service.audienceIds?.length ? service.audienceIds : [service.audienceId])
+  service.audienceLabel || (service.audienceIds?.length ? service.audienceIds : [service.audienceId])
     .map((id) => audienceLabels.get(id) || id)
     .join(" · ");
 

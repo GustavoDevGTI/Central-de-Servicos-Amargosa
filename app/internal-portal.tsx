@@ -158,7 +158,7 @@ const serviceAudiences = (service: Service) =>
       ? [service.audienceId]
       : [];
 const serviceAudienceLabel = (service: Service) =>
-  serviceAudiences(service)
+  service.audienceLabel || serviceAudiences(service)
     .map((id) => audiences.find((entry) => entry.id === id)?.label || id)
     .join(" · ");
 const falabrManifestationUrl =

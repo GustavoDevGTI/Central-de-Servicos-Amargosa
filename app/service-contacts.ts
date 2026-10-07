@@ -1,4 +1,5 @@
 import spreadsheetServiceData from "./spreadsheet-service-data.json" with { type: "json" };
+import spreadsheetServiceContent from "./spreadsheet-service-content.json" with { type: "json" };
 
 type OfficeKey =
   | "prefeitura"
@@ -201,9 +202,18 @@ type ServiceContactSource = {
   channels?: { label: string; value: string; url?: string }[];
 };
 
+function sectorForService(service: ServiceContactSource, source?: SpreadsheetContact): string | undefined {
+  const row = source?.sourceRow
+    ? spreadsheetServiceContent.bySourceRow[String(source.sourceRow) as keyof typeof spreadsheetServiceContent.bySourceRow]
+    : undefined;
+  return row?.department === service.department
+    ? row.department
+    : responsibleSector(source?.sector || "", service.department);
+}
+
 function officeKeyForService(service: ServiceContactSource): OfficeKey {
   const source = spreadsheetContacts[service.id];
-  const sector = responsibleSector(source?.sector || "", service.department);
+  const sector = sectorForService(service, source);
   return officeByServiceId[service.id] ||
     (sector && officeForDepartment(sector)) ||
     (source && officeForDepartment(source.secretariat)) ||
@@ -218,7 +228,7 @@ export function organizationForService(service: ServiceContactSource) {
 
 export function contactForService(service: ServiceContactSource): ServiceContact {
   const source = spreadsheetContacts[service.id];
-  const sector = responsibleSector(source?.sector || "", service.department);
+  const sector = sectorForService(service, source);
   const officeKey = officeKeyForService(service);
   const office = offices[officeKey];
   const name = officeKey === "ouvidoria" ? office.name : sector ||

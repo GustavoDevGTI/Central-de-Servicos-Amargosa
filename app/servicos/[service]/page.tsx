@@ -1,6 +1,6 @@
 import { ServiceDetail } from "../../internal-portal";
 import { services } from "../../service-catalog";
-import { redirect } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 
 const siteOrigin = "https://maisdigital.amargosa.ba.gov.br";
 const oldServiceSlugs: Record<string, string> = {
@@ -34,5 +34,6 @@ export async function generateMetadata({ params }: { params: Promise<{ service: 
 export default async function ServicePage({ params }: { params: Promise<{ service: string }> }) {
   const { service } = await params;
   if (oldServiceSlugs[service]) redirect(`/servicos/${oldServiceSlugs[service]}`);
+  if (!services.some((entry) => (entry.slug || entry.id) === service)) notFound();
   return <ServiceDetail slug={service} />;
 }

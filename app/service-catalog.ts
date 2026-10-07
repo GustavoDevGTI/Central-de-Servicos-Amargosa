@@ -2,6 +2,8 @@ import siteContent from "../content/site.json";
 import { approvedServiceDetails } from "./approved-service-details";
 import pendingServiceDetails from "./pending-service-details.json" with { type: "json" };
 import spreadsheetServiceData from "./spreadsheet-service-data.json" with { type: "json" };
+import spreadsheetServiceLinks from "./spreadsheet-service-links.json" with { type: "json" };
+import spreadsheetServiceContent from "./spreadsheet-service-content.json" with { type: "json" };
 import { PENDING_SERVICE_INFORMATION } from "./pending-information";
 import {
   cartaOnlyServices,
@@ -25,6 +27,7 @@ export type Service = {
   subject?: string;
   audienceId?: string;
   audienceIds?: string[];
+  audienceLabel?: string;
   department: string;
   destination: string;
   url: string;
@@ -306,6 +309,57 @@ function documentTopics(service: Service): Service {
   };
 }
 
+const preserveReviewedServiceContent = new Set([
+  ...Object.keys(baGovServiceLinks),
+  "acesso-informacao",
+  "1doc-pedido-de-certidao",
+]);
+
+function spreadsheetSteps(value: string): string[] {
+  return value.split(/\s*(?=\d+\.\s)/).map((part) => part.replace(/^\d+\.\s*/, "").trim()).filter(Boolean);
+}
+
+function spreadsheetAudienceIds(value: string, service: Service): string[] {
+  const ids = [
+    /cidad/i.test(value) && "cidadao",
+    /empresa/i.test(value) && "empresa",
+    /servidor/i.test(value) && "servidor",
+    /(?:órgãos públicos|ongs)/i.test(value) && "orgaos-publicos-ongs",
+    service.audienceId === "ouvidoria" && "ouvidoria",
+  ].filter((id): id is string => Boolean(id));
+  return [...new Set(ids)];
+}
+
+function applySpreadsheetContent(service: Service, sourceRow?: number): Service {
+  if (!sourceRow || preserveReviewedServiceContent.has(service.id)) return service;
+  const row = spreadsheetServiceContent.bySourceRow[String(sourceRow) as keyof typeof spreadsheetServiceContent.bySourceRow];
+  if (!row) return service;
+  const audienceIds = spreadsheetAudienceIds(row.audience, service);
+  return {
+    ...service,
+    title: row.title,
+    audienceLabel: row.audience,
+    audienceId: audienceIds[0],
+    audienceIds,
+    summary: row.summary,
+    eligibility: row.eligibility,
+    steps: spreadsheetSteps(row.steps),
+    whereWhen: row.whereWhen,
+    documents: row.optionalDocuments
+      ? [
+          row.requiredDocuments && `Obrigatórios: ${row.requiredDocuments}`,
+          `Opcionais: ${row.optionalDocuments}`,
+        ].filter((item): item is string => Boolean(item))
+      : row.requiredDocuments ? [row.requiredDocuments] : [],
+    cost: row.cost || undefined,
+    duration: row.duration || undefined,
+    department: row.department || service.department,
+    category: row.category,
+    subject: row.category,
+    updatedAt: "07/10/2026",
+  };
+}
+
 const mergedServices = [...baseServices, ...cartaOnlyServices].map(
   (service) => {
     const merged = addMissingSpreadsheetInformation(service, {
@@ -329,15 +383,37 @@ const mergedServices = [...baseServices, ...cartaOnlyServices].map(
   },
 );
 
-export const services = [...mergedServices, ...(spreadsheetServiceData.created as Service[])].map((service) => {
+// A legenda da planilha classifica as linhas vermelhas como "Excluir".
+export const excludedSpreadsheetServiceRows = new Set([17, 26, 28, 29, 37, 41, 46, 70]);
+
+export const services = [...mergedServices, ...(spreadsheetServiceData.created as Service[])]
+  .filter((service) => {
+    const sourceRow = spreadsheetDetails[service.id]?.sourceRow || service.sourceRow;
+    return !sourceRow || !excludedSpreadsheetServiceRows.has(sourceRow);
+  })
+  .map((service) => {
+  const sourceRow = spreadsheetDetails[service.id]?.sourceRow || service.sourceRow;
+  const spreadsheetUrl = sourceRow && spreadsheetServiceLinks.bySourceRow[String(sourceRow) as keyof typeof spreadsheetServiceLinks.bySourceRow];
+  const linkedService = spreadsheetUrl && !isBaGovUrl(service.url)
+    ? {
+        ...service,
+        url: spreadsheetUrl,
+        destination: cartaServiceDestination,
+        channels: service.channels?.map((channel) =>
+          channel.url && /^(?:Online|Solicitação)$/i.test(channel.label) &&
+          (channel.url === service.url || channel.url === digitalProtocolUrl || channel.url === cartaServiceLinks[service.id])
+            ? { ...channel, url: spreadsheetUrl }
+            : channel),
+      }
+    : service;
   const prepared = applySpreadsheetAccessMode({
-    ...service,
+    ...applySpreadsheetContent(linkedService, sourceRow),
     requestSystem:
-      service.requestSystem ||
-      (cartaServiceLinks[service.id] === service.url ||
-      servicesWithoutSeiGuide.has(service.id)
+      linkedService.requestSystem ||
+      (cartaServiceLinks[linkedService.id] === linkedService.url ||
+      servicesWithoutSeiGuide.has(linkedService.id)
         ? "other"
-        : requestSystemForService(service.id)),
+        : requestSystemForService(linkedService.id)),
   });
   const baGovUrl = baGovServiceLinks[prepared.id];
   return documentTopics(baGovUrl

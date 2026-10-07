@@ -574,11 +574,7 @@
       "sourceRow": 43,
       "summary": "Atentar à programação anual de férias do seu setor\nAtentar ao Decreto Municipal 027/2019:, constante no link: http://cidadedigital.cmttecnologia.com.br/api/getArquivos?id=7&hash=930d96a3ee\nCaberá à DGP instruir o processo e encaminhar à chefia competente para autorização.\nO servidor somente pode afastar-se após publicação de ato autorizativo em Boletim de pessoal a ser publicado no Diário Oficial do Município até o último dia do mês.\nPode ocorrer o parcelamento de férias em até 3 períodos.\nApenas pode ocorrer o agendamento de férias com indicação do período integral de férias, não sendo possível o agendamento de parte das férias.",
       "documents": [
-        "Matrícula funcional",
-        "documento de identificação",
-        "requerimento específico",
-        "Quando aplicável: Documentos comprobatórios",
-        "Quando aplicável: manifestação da chefia, quando exigida"
+        "Requerimento de marcação ou alteração de férias (Disponível no momento do protocolo)"
       ],
       "eligibility": "Servidores públicos.",
       "whereWhen": "Atendimento presencial. Consulte o endereço do órgão responsável nos canais abaixo e confirme o horário por telefone.",
@@ -2715,6 +2711,41 @@
       "whereWhen": "Atendimento presencial. Consulte o endereço do órgão responsável nos canais abaixo e confirme o horário por telefone.",
       "requestSystem": "other",
       "sourceRow": 129
+    },
+    {
+      "id": "planilha-70-precatorio-fundef",
+      "type": "service",
+      "role": "entry",
+      "slug": "precatorio-fundef",
+      "title": "Precatório FUNDEF",
+      "category": "Servidor Público",
+      "subject": "Servidor Público",
+      "audienceId": "orgaos-publicos-ongs",
+      "audienceIds": ["orgaos-publicos-ongs"],
+      "department": "FUNDEF - Comissão Precatório FUNDEF",
+      "destination": "SEI - Acesso Externo/Peticionamento",
+      "url": "https://acesso.amargosa.ba.gov.br/precatorio-fundef",
+      "summary": "Serviço para solicitar precatório fundef. Preencha as informações e anexe os documentos indicados para análise da unidade responsável.",
+      "eligibility": "Pessoas do público “Órgãos públicos e ONGs”, observados os critérios definidos pela unidade responsável.",
+      "documents": [
+        "Documento de identificação",
+        "CPF",
+        "comprovante de endereço",
+        "requerimento com descrição do pedido",
+        "Quando aplicável: Procuração, quando solicitado por representante",
+        "Quando aplicável: documentos complementares solicitados pela unidade responsável"
+      ],
+      "steps": [
+        "Consulte as orientações e reúna os documentos.",
+        "Acesse SEI - Acesso Externo/Peticionamento.",
+        "Registre o pedido e guarde o protocolo.",
+        "Acompanhe a análise junto à unidade responsável."
+      ],
+      "whereWhen": "Canal: SEI - Acesso Externo/Peticionamento. Telefone: (75) 3512-7811. E-mail: A preencher. Horário e atendimento presencial devem ser confirmados com a unidade responsável.",
+      "cost": "A preencher",
+      "duration": "A preencher",
+      "requestSystem": "sei",
+      "sourceRow": 70
     }
   ],
   "contacts": {
@@ -2973,7 +3004,7 @@
     "1doc-ferias-marcacao-e-alteracao": {
       "sourceRow": 43,
       "secretariat": "SEAFI - Secretaria de Administração, Finanças e Desenvolvimento Institucional",
-      "sector": "GAB-DGP - Gabinete DGP",
+      "sector": "SEAFI.SUGEP",
       "phone": "(75) 3512-7811"
     },
     "1doc-gratificacao-por-estimulo-ao-aperfeicoamento-gea-semed": {
@@ -3130,6 +3161,12 @@
       "sourceRow": 69,
       "secretariat": "SEAMA - Secretaria de Agricultura e Meio Ambiente",
       "sector": "SEAMA-SUMA-DIMA - Superintendência e Diretoria de Meio Ambiente",
+      "phone": "(75) 3512-7811"
+    },
+    "planilha-70-precatorio-fundef": {
+      "sourceRow": 70,
+      "secretariat": "SEAFI - Secretaria de Administração, Finanças e Desenvolvimento Institucional",
+      "sector": "FUNDEF - Comissão Precatório FUNDEF",
       "phone": "(75) 3512-7811"
     },
     "1doc-prescricao-de-credito-tributario-ou-de-renda-iptu-tll-tff": {
@@ -3666,6 +3703,7 @@
     "1doc-pedido-de-certidao": "digital",
     "1doc-declaracao-de-perfil-profissiografico-previdenciario-ppp": "digital",
     "1doc-poda-de-arvore": "digital",
+    "planilha-70-precatorio-fundef": "digital",
     "1doc-prescricao-de-credito-tributario-ou-de-renda-iptu-tll-tff": "digital",
     "1doc-prestacao-de-contas-de-diarias": "digital",
     "1doc-progressao-na-carreira": "digital",

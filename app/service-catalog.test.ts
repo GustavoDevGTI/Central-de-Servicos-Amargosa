@@ -1,6 +1,44 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { services } from "./service-catalog.ts";
+import { excludedSpreadsheetServiceRows, services } from "./service-catalog.ts";
+import { contactForService } from "./service-contacts.ts";
+import spreadsheetServiceData from "./spreadsheet-service-data.json" with { type: "json" };
+import spreadsheetServiceLinks from "./spreadsheet-service-links.json" with { type: "json" };
+import { baGovServiceLinks } from "./service-request-system.ts";
+
+test("serviços vermelhos ficam fora da Central; os demais mantêm o link correto", () => {
+  const idsByRow = new Map<number, string[]>();
+  for (const [id, detail] of Object.entries(spreadsheetServiceData.existing)) {
+    idsByRow.set(detail.sourceRow, [...(idsByRow.get(detail.sourceRow) || []), id]);
+  }
+  for (const detail of spreadsheetServiceData.created) {
+    idsByRow.set(detail.sourceRow, [...(idsByRow.get(detail.sourceRow) || []), detail.id]);
+  }
+  for (const [row, spreadsheetUrl] of Object.entries(spreadsheetServiceLinks.bySourceRow)) {
+    const ids = idsByRow.get(Number(row));
+    assert.ok(ids?.length, `Linha ${row} não mapeada`);
+    for (const id of ids) {
+      const service = services.find((entry) => entry.id === id);
+      if (excludedSpreadsheetServiceRows.has(Number(row))) {
+        assert.equal(service, undefined, `Serviço vermelho ${id} ainda está publicado`);
+        continue;
+      }
+      assert.ok(service, `Serviço ${id} não encontrado`);
+      assert.equal(service.url, baGovServiceLinks[id] || spreadsheetUrl, `Link incorreto em ${id}`);
+    }
+  }
+});
+
+test("férias usa os documentos e o setor atualizados na planilha", () => {
+  const service = services.find((entry) => entry.id === "1doc-ferias-marcacao-e-alteracao");
+  assert.ok(service);
+  assert.deepEqual(service.documents, [
+    "Requerimento de marcação ou alteração de férias (Disponível no momento do protocolo)",
+  ]);
+  assert.equal(service.department, "SEAFI.SUGEP");
+  assert.equal(service.audienceLabel, "Servidor");
+  assert.equal(contactForService(service).name, "SEAFI.SUGEP");
+});
 
 test("acesso à informação inicia na página específica do SEI", () => {
   const service = services.find((entry) => entry.id === "acesso-informacao");

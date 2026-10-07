@@ -1881,7 +1881,7 @@
     "summary": "Serviço destinado a servidores municipais que desejam agendar, remarcar ou alterar o período de gozo de férias. O procedimento garante o planejamento adequado da escala de trabalho e o exercício regular do direito ao descanso anual previsto em lei.",
     "eligibility": "Servidor municipal que precise marcar ou alterar o período de férias, com anuência do gestor imediato.",
     "documents": [
-      "Documento de identificação do servidor (RG e CPF). Matrícula funcional. Requerimento de marcação ou alteração de férias preenchido e assinado pelo servidor e pelo gestor imediato."
+      "Requerimento de marcação ou alteração de férias (Disponível no momento do protocolo)"
     ],
     "steps": [
       "A solicitação deve ser protocolada no setor de Gestão de Pessoas com antecedência mínima de 30 dias do início do período pretendido. A aprovação está condicionada à conveniência administrativa e à escala da unidade de lotação. Férias não gozadas dentro do período concessivo podem ser convertidas em abono pecuniário, conforme legislação municipal aplicável."
@@ -1905,7 +1905,7 @@
     "legislationNotice": "* Será adicionado em breve.",
     "notice": "Consulte as informações disponíveis nesta página e utilize o canal indicado para solicitar ou obter orientações sobre o serviço.",
     "noticeAction": "Acessar o canal de atendimento ↗",
-    "updatedAt": "08/09/2026"
+    "updatedAt": "07/10/2026"
   },
   "1doc-gratificacao-por-estimulo-ao-aperfeicoamento-gea-semed": {
     "slug": "gratificacao-por-estimulo-ao-aperfeicoamento-gea-semed",

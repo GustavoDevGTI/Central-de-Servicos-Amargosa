@@ -531,9 +531,7 @@
     "summary": "Serviço destinado a servidores municipais que desejam agendar, remarcar ou alterar o período de gozo de férias. O procedimento garante o planejamento adequado da escala de trabalho e o exercício regular do direito ao descanso anual previsto em lei.",
     "eligibility": "Servidor municipal que precise marcar ou alterar o período de férias, com anuência do gestor imediato.",
     "documents": [
-      "Documento de identificação do servidor (RG e CPF).",
-      "Matrícula funcional.",
-      "Requerimento de marcação ou alteração de férias preenchido e assinado pelo servidor e pelo gestor imediato."
+      "Requerimento de marcação ou alteração de férias (Disponível no momento do protocolo)"
     ],
     "steps": [
       "Protocole a solicitação no setor de Gestão de Pessoas com antecedência mínima de 30 dias do período pretendido.",

@@ -1527,7 +1527,7 @@
               "type": "service",
               "role": "entry",
               "title": "Férias (marcação e alteração)",
-              "department": "GAB-DGP - Gabinete DGP",
+              "department": "SEAFI.SUGEP",
               "category": "Servidor Público",
               "audienceId": "servidor",
               "audienceIds": [
@@ -1536,7 +1536,7 @@
               "destination": "Portal de Protocolos 1Doc",
               "url": "https://amargosa.1doc.com.br/b.php?pg=wp/wp",
               "initials": "FM",
-              "sourceRow": 65
+              "sourceRow": 43
             },
             {
               "id": "1doc-gratificacao-por-estimulo-ao-aperfeicoamento-gea-semed",
