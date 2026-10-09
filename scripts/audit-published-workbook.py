@@ -9,6 +9,7 @@ from html.parser import HTMLParser
 from pathlib import Path
 
 from openpyxl import load_workbook
+from workbook_presentation_audit import verify_where_when, COLUMN
 
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE = Path(sys.argv[1])
@@ -79,6 +80,19 @@ def audit(service):
         if not docs and cells["Documentação necessária"]: docs = ["Documentação necessária"]
         fields += docs + [c for c in ["Secretaria responsável", "Ramal"] if cells[c]]
         for column in fields:
+            presentations = [n.attrs["data-workbook-where-when-parts"] for n in nodes if "data-workbook-where-when-parts" in n.attrs]
+            if column == COLUMN and presentations:
+                try:
+                    assert len(presentations) == 1
+                    hour_nodes = {descendant for parent in nodes if parent.attrs.get("id") == "canais" or "service-request-presencial" in parent.attrs.get("class", "").split() for descendant in parent.all()}
+                    slices = [(n.attrs.get("data-workbook-start"), n.attrs.get("data-workbook-end"), n.text(), "hours" if n in hour_nodes else "intro") for n in nodes if n.attrs.get("data-workbook-column") == COLUMN]
+                    visible_fields = {c: [n.text() for n in nodes if n.attrs.get("data-workbook-column") == c] for c in fields}
+                    verify_where_when(cells, presentations[0], slices, visible_fields)
+                    result["checks"].append({"column": column, "equal": True, "presentation": "source slices and equivalent contact fields verified"})
+                except AssertionError as error:
+                    result["differences"].append(column)
+                    result["checks"].append({"column": column, "equal": False, "error": str(error)})
+                continue
             marked = [n.text() for n in nodes if n.attrs.get("data-workbook-column") == column]
             if marked:
                 compare(column, marked); continue

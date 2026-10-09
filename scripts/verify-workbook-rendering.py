@@ -4,6 +4,7 @@ import sys
 from html.parser import HTMLParser
 from pathlib import Path
 from openpyxl import load_workbook
+from workbook_presentation_audit import verify_where_when, COLUMN
 
 root = Path(__file__).resolve().parents[1]
 folder = root / "tmp/workbook-audit"
@@ -22,8 +23,10 @@ class Page(HTMLParser):
         super().__init__(convert_charrefs=True)
         self.stack = []; self.fields = {}; self.ids = []; self.classes = []; self.headings = []
         self.in_service = False
+        self.partitions = []; self.source_slices = []
     def handle_starttag(self, tag, attrs):
         attrs = dict(attrs)
+        if "data-workbook-where-when-parts" in attrs: self.partitions.append(attrs["data-workbook-where-when-parts"])
         self.classes.extend(attrs.get("class", "").split())
         if attrs.get("id"): self.ids.append(attrs["id"])
         if attrs.get("id") == "conteudo-servico": self.in_service = True
@@ -32,8 +35,11 @@ class Page(HTMLParser):
             field = "Público"
         value = [] if field else None
         if field: self.fields.setdefault(field, []).append(value)
+        if field == COLUMN and "data-workbook-start" in attrs:
+            placement = "hours" if any(frame[3].get("id") == "canais" or "service-request-presencial" in frame[3].get("class", "").split() for frame in self.stack) else "intro"
+            self.source_slices.append((attrs["data-workbook-start"], attrs["data-workbook-end"], value, placement))
         if tag not in {"img", "br", "hr", "input", "meta", "link", "source", "wbr", "area"}:
-            self.stack.append((tag, value, "data-workbook-decoration" in attrs))
+            self.stack.append((tag, value, "data-workbook-decoration" in attrs, attrs))
     def handle_endtag(self, tag):
         if tag == "article": self.in_service = False
         for i in range(len(self.stack) - 1, -1, -1):
@@ -41,7 +47,7 @@ class Page(HTMLParser):
                 del self.stack[i:]; break
     def handle_data(self, value):
         if any(frame[2] for frame in self.stack): return
-        for _, field, _ in self.stack:
+        for _, field, _, _ in self.stack:
             if field is not None: field.append(value)
 
 catalog = {s["id"]: s for s in json.loads((folder / "catalog-after.json").read_text(encoding="utf8"))}
@@ -57,7 +63,14 @@ for service_id, html in pages.items():
     if not documents and cells["Documentação necessária"]: documents = ["Documentação necessária"]
     expected += documents
     expected += [c for c in ["Secretaria responsável", "Ramal"] if cells[c]]
-    assert set(page.fields) == set(expected), f"Missing/extra displayed fields: {service_id}: {set(page.fields) ^ set(expected)}"
+    if page.partitions:
+        assert len(page.partitions) == 1, f"Repeated presentation: {service_id}"
+        expected.remove(COLUMN)
+        assert set(page.fields) - {COLUMN} == set(expected), f"Missing/extra displayed fields: {service_id}"
+        count += verify_where_when(cells, page.partitions[0], [(start, end, "".join(value), placement) for start, end, value, placement in page.source_slices],
+            {col: ["".join(value) for value in values] for col, values in page.fields.items()})
+    else:
+        assert set(page.fields) == set(expected), f"Missing/extra displayed fields: {service_id}: {set(page.fields) ^ set(expected)}"
     for column in expected:
         for value in page.fields[column]:
             assert "".join(value) == cells[column], f"Changed visible text: {service_id}: {column}: {''.join(value)!r}"

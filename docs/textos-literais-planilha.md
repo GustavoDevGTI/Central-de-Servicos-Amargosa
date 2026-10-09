@@ -12,10 +12,17 @@ Os modelos de página e estilos existentes foram preservados. Título, descriç�
 
 Os cartões de atendimento usam os dados da planilha. Informações ausentes não são completadas com dados de outras fontes. O cronograma de coleta e os componentes de navegação existentes são preservados como recursos do portal. Os arquivos de CSS e o componente de layout global não foram alterados.
 
+### Onde e quando solicitar sem repetição
+
+Por autorização do usuário, a célula original continua intacta, mas a apresentação distribui seus trechos nos campos existentes. Telefones, e-mails, ramais e canais idênticos aos valores visíveis nos cartões não são repetidos na introdução. Horários e a orientação de confirmar o atendimento vão para o campo Horário do cartão existente. Informações próprias, contatos diferentes e instruções não reconhecidas continuam visíveis. Se não houver informação própria, o parágrafo introdutório é omitido.
+
+O componente compartilhado `app/workbook-where-when.tsx` aplica a regra automaticamente, inclusive após novas importações. O verificador independente confere a cobertura da célula: cada trecho deve estar visível sem reescrita, ou ser uma repetição comprovada de um campo visível. Essa é uma exceção de apresentação, não uma autorização para alterar a fonte, inventar informações ou redesenhar a página.
+
 ## Verificação e atualização
 
 ```sh
 tsx --test app/service-catalog.test.ts
+tsx --test app/workbook-where-when.test.tsx
 tsx scripts/verify-workbook-services.tsx
 python scripts/verify-workbook-rendering.py /caminho/para/planilha.xlsx
 python scripts/audit-published-workbook.py /caminho/para/planilha.xlsx

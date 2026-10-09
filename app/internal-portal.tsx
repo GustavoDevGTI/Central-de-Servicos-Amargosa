@@ -35,6 +35,7 @@ import { extractEmailAddresses, sameInPersonServiceOffice, serviceWhereWhen } fr
 import { isBaGovUrl } from "./service-request-system";
 import { servicePageCopy } from "./service-page-copy";
 import { workbookDocumentColumns, workbookFieldProps, workbookStepParts } from "./workbook-service";
+import { WorkbookWhereWhenIntro, WorkbookWhereWhenHours, workbookHasHours, workbookWhereWhenPresentationProps } from "./workbook-where-when";
 import { CollectionScheduleSection } from "./coleta-cronograma";
 import ShareServiceButton from "./share-service-button";
 
@@ -1218,6 +1219,10 @@ function ServiceContactSection({ service }: { service: Service }) {
                 <span>Plataforma</span>
                 <strong {...workbookFieldProps(service, "Plataforma")}>{cells["Plataforma"]}</strong>
               </div>
+              {workbookHasHours(service) && (service.id === "1doc-limpeza-publica" || !serviceWhereWhen(service, contactForService(service)).presencial) && <div>
+                <span>Horário</span>
+                <strong><WorkbookWhereWhenHours service={service} /></strong>
+              </div>}
               <div>
                 <span>Link de acesso</span>
                 {/^https?:\/\//i.test(link)
@@ -1373,9 +1378,9 @@ function ServiceWhereWhenSection({ service, mergeContact = false }: { service: S
     const contact = contactForService(service);
     const details = serviceWhereWhen(service, contact);
     return (
-      <section id="onde-quando" className="service-where-when">
+      <section id="onde-quando" className="service-where-when" {...workbookWhereWhenPresentationProps(cells)}>
         <h2>Onde e quando solicitar</h2>
-        <p className="service-where-when-intro" {...workbookFieldProps(service, "Onde e quando solicitar2")}>{service.whereWhen}</p>
+        <WorkbookWhereWhenIntro service={service} className="service-where-when-intro" />
         <div className="service-request-options">
           {details.digital && /^https?:\/\//i.test(service.url) && <div className="service-request-digital">
             <h3>Atendimento digital</h3>
@@ -1385,6 +1390,7 @@ function ServiceWhereWhenSection({ service, mergeContact = false }: { service: S
             <h3>Atendimento presencial</h3>
             <div className="service-request-option"><dl>
               <div><dt>Local</dt><dd {...workbookFieldProps(service, "Setor/Unidade responsável no SEI")}>{cells["Setor/Unidade responsável no SEI"]}</dd></div>
+              {workbookHasHours(service) && <div><dt>Horário</dt><dd><WorkbookWhereWhenHours service={service} /></dd></div>}
               {mergeContact && <>
                 {cells["Secretaria responsável"] && <div><dt>Secretaria</dt><dd {...workbookFieldProps(service, "Secretaria responsável")}>{cells["Secretaria responsável"]}</dd></div>}
                 <div><dt className="contact-label"><ContactIcon kind="phone" /> Telefone</dt><dd className="service-request-contact-links">
