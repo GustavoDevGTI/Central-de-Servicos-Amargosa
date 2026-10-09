@@ -17,8 +17,11 @@ A planilha oficial é a fonte prioritária dos serviços que têm espelho no por
 
 A planilha fornece CONTEÚDO, nunca um novo design. Atualizar o conteúdo não autoriza alterar o layout preestabelecido do site.
 
+Extraia da planilha apenas as informações dos serviços. A organização das colunas, os títulos internos, a formatação e a aparência da planilha não são instruções para modificar a apresentação da Central.
+
 - Preserve os componentes, os modelos de página, as classes CSS, fontes, cores, espaçamentos, listas, cartões, botões e comportamento responsivo existentes. Não substitua a página por um renderizador genérico de células. Mudanças de design exigem solicitação explícita do usuário.
 - Distribua o texto das etapas nos itens numerados já existentes, mantendo todos os caracteres e a sequência da célula. Não transforme etapas numeradas em um parágrafo corrido. Os marcadores podem ocupar os elementos visuais de numeração existentes.
 - Use a lista original de documentos com as células de documentos obrigatórios e opcionais. A coluna consolidada de documentação serve de alternativa quando essas células não estiverem preenchidas; não duplique a mesma documentação em blocos com novos subtítulos.
 - Exiba os dados da planilha nos cartões de atendimento existentes. Não crie endereços, horários, contatos ou etapas ausentes na fonte para preencher cartões. Preserve os recursos de navegação e os componentes funcionais existentes, incluindo o cronograma de coleta.
 - Antes de publicar, confira tanto a igualdade do conteúdo com o XLSX original quanto a apresentação visual em relação à versão anterior. Validar apenas o texto não basta.
+- Ao conferir o site publicado, audite as URLs públicas separadamente do código local e da `main`. Se a versão publicada divergir, registre a pendência de implantação e as diferenças; não declare que o site está atualizado apenas porque o repositório passou na verificação.

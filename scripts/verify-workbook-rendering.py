@@ -21,16 +21,21 @@ class Page(HTMLParser):
     def __init__(self):
         super().__init__(convert_charrefs=True)
         self.stack = []; self.fields = {}; self.ids = []; self.classes = []; self.headings = []
+        self.in_service = False
     def handle_starttag(self, tag, attrs):
         attrs = dict(attrs)
         self.classes.extend(attrs.get("class", "").split())
         if attrs.get("id"): self.ids.append(attrs["id"])
+        if attrs.get("id") == "conteudo-servico": self.in_service = True
         field = attrs.get("data-workbook-column")
+        if tag == "small" and self.in_service and any(frame[0] == "header" for frame in self.stack):
+            field = "Público"
         value = [] if field else None
         if field: self.fields.setdefault(field, []).append(value)
         if tag not in {"img", "br", "hr", "input", "meta", "link", "source", "wbr", "area"}:
             self.stack.append((tag, value, "data-workbook-decoration" in attrs))
     def handle_endtag(self, tag):
+        if tag == "article": self.in_service = False
         for i in range(len(self.stack) - 1, -1, -1):
             if self.stack[i][0] == tag:
                 del self.stack[i:]; break
@@ -45,7 +50,7 @@ count = 0
 for service_id, html in pages.items():
     page = Page(); page.feed(html)
     cells = original[str(catalog[service_id]["sourceRow"])]
-    expected = ["Nome do serviço consolidado", "O que é", "Quem pode solicitar2", "Como solicitar - etapas",
+    expected = ["Nome do serviço consolidado", "Público", "O que é", "Quem pode solicitar2", "Como solicitar - etapas",
         "Onde e quando solicitar2", "Custo", "Prazo", "Setor/Unidade responsável no SEI", "Telefone",
         "E-mail do setor/unidade", "Plataforma", "Link de acesso"]
     documents = [c for c in ["Documentos obrigatórios", "Documentos opcionais"] if cells[c]]

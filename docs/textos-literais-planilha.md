@@ -18,10 +18,13 @@ Os cartões de atendimento usam os dados da planilha. Informações ausentes nã
 tsx --test app/service-catalog.test.ts
 tsx scripts/verify-workbook-services.tsx
 python scripts/verify-workbook-rendering.py /caminho/para/planilha.xlsx
+python scripts/audit-published-workbook.py /caminho/para/planilha.xlsx
 npm run build
 ```
 
 O Python requer `openpyxl`. O verificador compara o texto dos elementos visíveis do HTML completo com o XLSX, incluindo a concatenação dos marcadores e textos dos passos. Também verifica a lista original de documentos, a ausência dos blocos duplicados e os componentes de etapas e atendimento. Os resultados intermediários são gerados em `tmp/workbook-audit` e não precisam ser versionados.
+
+A auditoria pública consulta todas as URLs, incluindo as exceções, e salva o HTML e a comparação em `tmp/workbook-audit/published-final`. Ela deve ser interpretada separadamente da renderização local: um repositório atualizado não comprova que a mesma versão já foi implantada. A conferência de 09/10/2026 está em `docs/conferencia-planilha-2026-10-09.md`.
 
 Para sincronizar outra planilha com a mesma estrutura:
 
