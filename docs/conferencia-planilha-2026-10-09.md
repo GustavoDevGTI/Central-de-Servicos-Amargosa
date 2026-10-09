@@ -1,5 +1,7 @@
 # Conferência literal da planilha — 09/10/2026
 
+**Atualização após a correção local:** as 105 diferenças em 40 fichas foram resolvidas. A prévia local de produção foi conferida por HTTP: 145 páginas com espelho, zero diferenças de texto. A importação administrativa e o build também passaram. Veja [a correção concluída](correcao-local-planilha-2026-10-09.md). O levantamento abaixo preserva o estado anterior à correção; a conferência pública abaixo continua sendo a consulta realizada naquele horário.
+
 A conferência do conteúdo da `main` passou; a conferência do site público não passou. São verificações independentes.
 
 Consulta pública: 2026-10-09T14:51:43.021037+00:00. Fonte: aba `Catálogo consolidado`, XLSX de 22/09/2026, SHA-256 `a4202d2e236326bb7acec8ee412291d7488c1614529faa7f63035f50e2fbe61c`.

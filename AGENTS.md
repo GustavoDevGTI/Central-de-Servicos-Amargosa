@@ -12,6 +12,7 @@ A planilha oficial é a fonte prioritária dos serviços que têm espelho no por
 - Ao atualizar a planilha, sincronize `app/workbook-service-data.json` com `scripts/sync-workbook-content.py`, revise os vínculos do catálogo e as exclusões da legenda e confira a apresentação nos componentes existentes em `app/internal-portal.tsx`. Uma importação deve aplicar as células originais por último, sem enriquecimentos posteriores.
 - Os serviços sem espelho permanecem publicados e listados como exceções em `docs/textos-literais-planilha.md`. Quando passarem a ter espelho, atualize a página pela planilha e retire o serviço da lista de exceções.
 - Antes de concluir ou publicar uma atualização, execute os testes do catálogo, o verificador TypeScript e a comparação do HTML com o XLSX original descritos em `docs/textos-literais-planilha.md`. Verifique cobertura dos registros ativos, campos renderizados sem diferenças e build de produção. Não declare fidelidade à planilha com base apenas nos dados intermediários em JSON.
+- Se a conferência encontrar diferenças no projeto local, corrija-as e repita a comparação antes de concluir. Não entregue apenas um levantamento de divergências que podem ser corrigidas no código. Valide também a importação administrativa e todos os espelhos de uma mesma linha; não substitua textos, links ou campos vazios por dados antigos do site.
 
 ## Preservação obrigatória do design
 
