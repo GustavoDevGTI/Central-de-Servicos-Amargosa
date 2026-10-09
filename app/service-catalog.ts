@@ -4,8 +4,6 @@ import pendingServiceDetails from "./pending-service-details.json" with { type: 
 import spreadsheetServiceData from "./spreadsheet-service-data.json" with { type: "json" };
 import spreadsheetServiceLinks from "./spreadsheet-service-links.json" with { type: "json" };
 import spreadsheetServiceContent from "./spreadsheet-service-content.json" with { type: "json" };
-import workbookServiceData from "./workbook-service-data.json" with { type: "json" };
-import { applyWorkbookCells, type WorkbookCells } from "./workbook-service";
 import { PENDING_SERVICE_INFORMATION } from "./pending-information";
 import {
   cartaOnlyServices,
@@ -59,14 +57,6 @@ export type Service = {
   updatedAt?: string;
   initials?: string;
   sourceRow?: number;
-  workbookCells?: WorkbookCells;
-  contactOverride?: {
-    sector?: string;
-    secretariat?: string;
-    phone?: string;
-    extension?: string;
-    email?: string;
-  };
 };
 
 export { PENDING_SERVICE_INFORMATION } from "./pending-information";
@@ -206,11 +196,6 @@ const spreadsheetDetails = spreadsheetServiceData.existing as Record<
   string,
   Partial<Service>
 >;
-
-const workbookRowByServiceId = new Map([
-  ...Object.entries(spreadsheetDetails).map(([id, item]) => [id, item.sourceRow] as const),
-  ...spreadsheetServiceData.created.map((item) => [item.id, item.sourceRow] as const),
-]);
 
 const spreadsheetAccessModes = spreadsheetServiceData.accessModes as Record<
   string,
@@ -401,13 +386,13 @@ const mergedServices = [...baseServices, ...cartaOnlyServices].map(
 // A legenda da planilha classifica as linhas vermelhas como "Excluir".
 export const excludedSpreadsheetServiceRows = new Set([17, 26, 28, 29, 37, 41, 46, 70]);
 
-const preparedServices = [...mergedServices, ...(spreadsheetServiceData.created as Service[])]
+export const services = [...mergedServices, ...(spreadsheetServiceData.created as Service[])]
   .filter((service) => {
-    const sourceRow = workbookRowByServiceId.get(service.id);
+    const sourceRow = spreadsheetDetails[service.id]?.sourceRow || service.sourceRow;
     return !sourceRow || !excludedSpreadsheetServiceRows.has(sourceRow);
   })
   .map((service) => {
-  const sourceRow = workbookRowByServiceId.get(service.id);
+  const sourceRow = spreadsheetDetails[service.id]?.sourceRow || service.sourceRow;
   const spreadsheetUrl = sourceRow && spreadsheetServiceLinks.bySourceRow[String(sourceRow) as keyof typeof spreadsheetServiceLinks.bySourceRow];
   const linkedService = spreadsheetUrl && !isBaGovUrl(service.url)
     ? {
@@ -454,11 +439,4 @@ const preparedServices = [...mergedServices, ...(spreadsheetServiceData.created 
         }),
       }
     : prepared);
-});
-
-// Apply the original cells last so no enrichment or presentation rewrite can win.
-export const services = preparedServices.map((service) => {
-  const sourceRow = workbookRowByServiceId.get(service.id);
-  const row = sourceRow && workbookServiceData.rows[String(sourceRow) as keyof typeof workbookServiceData.rows];
-  return row ? applyWorkbookCells(service, row.cells, sourceRow) : service;
 });

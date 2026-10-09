@@ -106,7 +106,6 @@ function neutralCopy(value: string): string {
 
 /** Mantém os destinos e os dados originais; altera apenas a cópia mostrada na ficha. */
 export function servicePageCopy(service: Service): Service {
-  if (service.workbookCells) return service;
   const copy = (value?: string) => value === undefined ? undefined : neutralCopy(value);
   return {
     ...service,

@@ -199,7 +199,6 @@ function responsibleSector(raw: string, currentDepartment: string): string | und
 type ServiceContactSource = {
   id: string;
   department: string;
-  workbookCells?: Record<string, string>;
   channels?: { label: string; value: string; url?: string }[];
 };
 
@@ -228,18 +227,6 @@ export function organizationForService(service: ServiceContactSource) {
 }
 
 export function contactForService(service: ServiceContactSource): ServiceContact {
-  if (service.workbookCells) {
-    const cells = service.workbookCells;
-    return {
-      name: cells["Setor/Unidade responsável no SEI"] || "",
-      officeName: cells["Secretaria responsável"] || undefined,
-      phone: cells["Telefone"] || "",
-      address: "",
-      email: cells["E-mail do setor/unidade"] || undefined,
-      emailLabel: "E-mail do setor/unidade",
-      officialUrl: "",
-    };
-  }
   const source = spreadsheetContacts[service.id];
   const sector = sectorForService(service, source);
   const officeKey = officeKeyForService(service);
