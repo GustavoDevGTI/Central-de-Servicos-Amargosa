@@ -6,6 +6,10 @@ Fonte: aba **Catálogo consolidado**, cópia local de 07/10/2026 da planilha de 
 
 São 150 registros: 8 excluídos pela legenda, 142 ativos e 145 páginas com espelho (há URLs que compartilham o mesmo registro). Os 16 serviços abaixo permanecem publicados por orientação do responsável, como exceções sem espelho.
 
+## Prioridade nas atualizações
+
+Ao adicionar ou alterar um serviço na planilha, qualquer página correspondente deve ser atualizada com os dados literais dessa linha, mesmo que já tenha informações ou links diferentes. Essa regra permanente está em `AGENTS.md`. Se um dos serviços sem espelho ganhar uma linha correspondente, vincule-o ao registro, atualize todas as suas páginas e retire-o da lista de exceções.
+
 ## Verificação
 
 O teste `app/service-catalog.test.ts` verifica cobertura, campos literais e o caso da licença ambiental. Execute com o runner TypeScript usado no projeto (`tsx --test app/service-catalog.test.ts`).
