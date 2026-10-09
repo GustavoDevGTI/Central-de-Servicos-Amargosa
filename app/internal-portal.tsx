@@ -34,6 +34,7 @@ import { contactForService, organizationForService } from "./service-contacts";
 import { extractEmailAddresses, sameInPersonServiceOffice, serviceWhereWhen } from "./service-where-when";
 import { isBaGovUrl } from "./service-request-system";
 import { servicePageCopy } from "./service-page-copy";
+import { WorkbookServiceContent } from "./workbook-service-content";
 import { CollectionScheduleSection } from "./coleta-cronograma";
 import ShareServiceButton from "./share-service-button";
 
@@ -1258,7 +1259,7 @@ function ServiceRequestNotice({
   service: Service;
   repeated?: boolean;
 }) {
-  if (!service.url) return null;
+  if (!service.url || (service.workbookCells && !/^https?:\/\//i.test(service.url))) return null;
   const isGenericNotice =
     service.notice?.startsWith("Consulte as informações disponíveis nesta página") ||
     service.notice?.startsWith("Consulte as orientações desta página");
@@ -1289,7 +1290,7 @@ function ServiceManualNotice({
   service: Service;
   contactHref?: string;
 }) {
-  if (!service.url || isBaGovUrl(service.url)) return null;
+  if (!service.url || isBaGovUrl(service.url) || service.workbookCells) return null;
 
   const isSei = service.requestSystem === "sei";
 
@@ -1474,7 +1475,7 @@ function RichServiceDetail({ service }: { service: Service }) {
   const requestSteps = availableRequestSteps(service);
   const hasInPersonCard = Boolean(service.whereWhen) && location.presencial &&
     (!service.whereWhenItems?.length || location.digital);
-  const mergeContact = hasInPersonCard && sameInPersonServiceOffice(location.local, contact.name);
+  const mergeContact = !service.workbookCells && hasInPersonCard && sameInPersonServiceOffice(location.local, contact.name);
 
   return (
     <main {...rootProps("service-detail-page")}>
@@ -1493,7 +1494,7 @@ function RichServiceDetail({ service }: { service: Service }) {
           <div>
             <small>{serviceAudienceLabel(service) || service.category}</small>
             <h1>{service.title}</h1>
-            <p className={service.summary?.startsWith("*") || !service.summary ? "service-pending-information" : undefined}>{service.summary || PENDING_SERVICE_INFORMATION}</p>
+            <p style={service.workbookCells ? { whiteSpace: "pre-wrap", overflowWrap: "anywhere" } : undefined} className={service.summary?.startsWith("*") || !service.summary ? "service-pending-information" : undefined}>{service.workbookCells ? service.summary : service.summary || PENDING_SERVICE_INFORMATION}</p>
           </div>
         </header>
 
@@ -1511,7 +1512,7 @@ function RichServiceDetail({ service }: { service: Service }) {
             <a href="#documentos">{service.id === "planilha-27-comunicacao-de-animais-soltos" ? "Informações para o registro" : "Documentos necessários"}</a>
             <a href="#como-solicitar">Como solicitar</a>
             {service.whereWhen && (
-              <a href="#onde-quando">{service.id === "1doc-limpeza-publica" ? "Dias e horários da coleta" : "Onde e quando solicitar"}</a>
+              <a href="#onde-quando">{!service.workbookCells && service.id === "1doc-limpeza-publica" ? "Dias e horários da coleta" : "Onde e quando solicitar"}</a>
             )}
             {!mergeContact && <a href="#canais">Canais de atendimento</a>}
             {(service.legislation?.length || service.legislationNotice) && (
@@ -1523,6 +1524,7 @@ function RichServiceDetail({ service }: { service: Service }) {
           </nav>
 
           <div className="service-detail-content">
+            {service.workbookCells ? <WorkbookServiceContent service={service} /> : <>
             <section id="o-que-e">
               <h2>O que é</h2>
               <p className={!service.summary || service.summary.startsWith("*") ? "service-pending-information" : undefined}>{service.summary || PENDING_SERVICE_INFORMATION}</p>
@@ -1601,6 +1603,7 @@ function RichServiceDetail({ service }: { service: Service }) {
                 </div>
               </section>
             )}
+            </>}
             <ServiceManifestationNotice service={service} />
             {service.updatedAt && (
               <small className="service-updated">
@@ -1634,7 +1637,7 @@ export function ServiceDetail({ slug }: { slug: string }) {
         <PortalFooter />
       </main>
     );
-  if (service.id.startsWith("planilha-") || (service.notice && service.documents?.length && service.steps?.length))
+  if (service.workbookCells || service.id.startsWith("planilha-") || (service.notice && service.documents?.length && service.steps?.length))
     return <RichServiceDetail service={service} />;
   const requestSteps = availableRequestSteps(service);
   return (
