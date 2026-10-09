@@ -11,6 +11,7 @@ const menuItems = [
     label: "Transparência",
     href: "https://amargosa.ba.gov.br/portal-da-transparencia",
   },
+  { label: "Diário Oficial", href: "http://dom.amargosa.ba.gov.br/" },
   {
     label: "Organograma",
     href: "https://amargosa.ba.gov.br/organograma",
