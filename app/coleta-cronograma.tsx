@@ -1,10 +1,12 @@
+import type { Service } from "./service-catalog";
+import { workbookFieldProps } from "./workbook-service";
 import schedule from "./coleta-cronograma.json" with { type: "json" };
 
-export function CollectionScheduleSection() {
+export function CollectionScheduleSection({ service }: { service?: Service } = {}) {
   return (
     <section id="onde-quando" className="collection-schedule">
       <h2>Dias e horários da coleta</h2>
-      <p>Escolha seu bairro, distrito ou localidade. Dentro de cada local, confira a rua ou rota antes de ver os horários.</p>
+      <p {...(service ? workbookFieldProps(service, "Onde e quando solicitar2") : {})}>{service?.workbookCells ? service.whereWhen : "Escolha seu bairro, distrito ou localidade. Dentro de cada local, confira a rua ou rota antes de ver os horários."}</p>
       {schedule.groups.map((group) => (
         <div className="collection-schedule-group" key={group.id}>
           <h3>{group.title}</h3>
