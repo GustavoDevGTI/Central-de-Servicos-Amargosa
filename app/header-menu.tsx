@@ -14,7 +14,7 @@ const menuItems = [
   { label: "Diário Oficial", href: "http://dom.amargosa.ba.gov.br/" },
   {
     label: "Organograma",
-    href: "https://amargosa.ba.gov.br/organograma",
+    href: "https://www.amargosa.ba.gov.br/arquivos/2026-04-27-09-16-00-organograma.pdf",
   },
   { label: "Telefones úteis", href: "/telefones-uteis" },
   {
