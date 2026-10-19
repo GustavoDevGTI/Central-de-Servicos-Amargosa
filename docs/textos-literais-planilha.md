@@ -34,7 +34,7 @@ O Python requer `openpyxl`. O verificador compara o texto dos elementos visívei
 
 A auditoria pública consulta todas as URLs, incluindo as exceções, e salva o HTML e a comparação em `tmp/workbook-audit/published-final`. Ela deve ser interpretada separadamente da renderização local: um repositório atualizado não comprova que a mesma versão já foi implantada. A conferência de 09/10/2026 está em `docs/conferencia-planilha-2026-10-09.md`.
 
-No projeto local com painel administrativo, o verificador TypeScript também importa o XLSX e gera `rendered-import-pages.json`; a opção `--imported` compara essas páginas com a mesma fonte original. Ele verifica mudanças em todos os espelhos de uma linha, inclusão de um novo serviço e preservação de campos vazios. A correção local foi concluída, com zero diferenças, e está registrada em `output/workbook-audit-final-2026-10-09/correcao-local.md`. O levantamento anterior registra o estado anterior à correção.
+No projeto local com painel administrativo, o verificador TypeScript também importa o XLSX e gera `rendered-import-pages.json`; a opção `--imported` compara essas páginas com a mesma fonte original. Ele verifica mudanças em todos os espelhos de uma linha, inclusão de um novo serviço e preservação de campos vazios. A correção local foi concluída, com zero diferenças, e está registrada em [correcao-local-planilha-2026-10-09.md](correcao-local-planilha-2026-10-09.md). O levantamento anterior registra o estado anterior à correção.
 
 Para sincronizar outra planilha com a mesma estrutura:
 

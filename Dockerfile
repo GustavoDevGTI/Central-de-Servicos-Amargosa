@@ -7,7 +7,7 @@ COPY package.json package-lock.json ./
 RUN npm ci
 
 FROM dependencies AS production-dependencies
-RUN npm prune --omit=dev
+RUN npm prune --omit=dev --omit=peer --no-audit --no-fund
 
 FROM dependencies AS builder
 

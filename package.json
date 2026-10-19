@@ -10,7 +10,6 @@
     "build": "vinext build",
     "start": "vinext start",
     "lint": "eslint . --ignore-pattern dist --ignore-pattern .next",
-    "db:generate": "drizzle-kit generate",
     "test:agent": "tsx --test app/agent/agent.test.ts",
     "sync:coleta": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/sync-coleta-cronograma.ps1",
     "test:search": "node --experimental-strip-types --test app/search-engine.test.ts",
@@ -19,7 +18,6 @@
   },
   "dependencies": {
     "better-auth": "^1.7.7",
-    "drizzle-orm": "^0.45.2",
     "exceljs": "^4.4.0",
     "next": "^16.3.2",
     "pg": "^8.23.1",
@@ -37,7 +35,6 @@
     "@types/react-dom": "19.2.3",
     "@vitejs/plugin-react": "6.0.2",
     "@vitejs/plugin-rsc": "0.5.26",
-    "drizzle-kit": "^0.31.10",
     "eslint": "9.39.4",
     "eslint-config-next": "16.2.6",
     "react-server-dom-webpack": "19.2.6",
@@ -46,6 +43,11 @@
     "vinext": "1.0.0-beta.3",
     "vite": "8.0.13",
     "wrangler": "4.92.0"
+  },
+  "overrides": {
+    "exceljs": {
+      "uuid": "^11.1.1"
+    }
   },
   "type": "module"
 }
