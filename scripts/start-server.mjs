@@ -2,6 +2,7 @@ import { betterAuth } from "better-auth";
 import { getMigrations } from "better-auth/db/migration";
 import { Pool } from "pg";
 import { createAuthOptions } from "../lib/auth-options.mjs";
+import { ADMIN_PASSWORD_HINT, isValidAdminPassword } from "../lib/admin-password-policy.mjs";
 
 async function prepareDatabase() {
   if (!process.env.DATABASE_URL) throw new Error("Configure DATABASE_URL.");
@@ -23,7 +24,8 @@ async function prepareDatabase() {
       const email = process.env.BOOTSTRAP_ADMIN_EMAIL?.trim().toLowerCase();
       const username = process.env.BOOTSTRAP_ADMIN_USERNAME?.trim().toLowerCase();
       const password = process.env.BOOTSTRAP_ADMIN_PASSWORD;
-      if (!name || !email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || !username || !/^[a-z0-9_.]{3,30}$/.test(username) || !password || password.length < 12 || password.length > 128) throw new Error("No primeiro início, configure BOOTSTRAP_ADMIN_NAME, EMAIL, USERNAME e PASSWORD (senha de 12 a 128 caracteres).");
+      if (!name || !email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || !username || !/^[a-z0-9_.]{3,30}$/.test(username)) throw new Error("No primeiro início, configure BOOTSTRAP_ADMIN_NAME, EMAIL e USERNAME.");
+      if (!isValidAdminPassword(password)) throw new Error(`Configure BOOTSTRAP_ADMIN_PASSWORD. ${ADMIN_PASSWORD_HINT}`);
       await betterAuth(options).api.createUser({ body: { name, email, password, role: "admin", data: { username } } });
       console.log("Administrador inicial criado. Remova as variáveis BOOTSTRAP_ADMIN_* da stack.");
     }

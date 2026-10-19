@@ -33,7 +33,8 @@ assert.ok(rootUser);
 try {
   await request("/api/admin/users", undefined, undefined, 401);
   await request("/api/admin/diagnostics", undefined, undefined, 401);
-  const account = { name: "Teste de permissões", username: `qa_roles_${suffix}`, email: `qa_roles_${suffix}@local.test`, role: "catalog_admin", password: randomUUID() };
+  const account = { name: "Teste de permissões", username: `qa_roles_${suffix}`, email: `qa_roles_${suffix}@local.test`, role: "catalog_admin", password: randomUUID().slice(0, 6) };
+  for (const password of ["a".repeat(5), "a".repeat(13)]) await request("/api/admin/users", rootHeaders, { action: "create", ...account, password }, 400);
   const created = await request("/api/admin/users", rootHeaders, { action: "create", ...account });
   fixtures.push({ id: created.userId, email: account.email });
   await request("/api/admin/users", rootHeaders, { action: "create", ...account }, 409);
@@ -61,7 +62,9 @@ try {
   assert.equal(found.total, 1);
   assert.equal(found.users[0].name, revised.name);
   await Promise.all(Array.from({ length: 12 }, (_, index) => request("/api/admin/users", rootHeaders, { action: "update", userId: created.userId, ...revised, name: `${revised.name} ${index}` })));
-  const newPassword = randomUUID();
+  for (const password of ["a".repeat(5), "a".repeat(13)]) await request("/api/admin/users", rootHeaders, { action: "password", userId: created.userId, password }, 400);
+  await request("/api/admin/session", catalogHeaders);
+  const newPassword = randomUUID().slice(0, 12);
   await request("/api/admin/users", rootHeaders, { action: "password", userId: created.userId, password: newPassword });
   await request("/api/admin/diagnostics", catalogHeaders, undefined, 401);
   await login(account.username, initialPassword, 401);
@@ -76,14 +79,14 @@ try {
   await request("/api/admin/session", activeAgain, undefined, 401);
   const managerHeaders = await login(account.username, newPassword);
   await request("/api/admin/users", managerHeaders);
-  const another = { name: "Segundo teste de permissões", username: `qa_second_${suffix}`, email: `qa_second_${suffix}@local.test`, role: "catalog_admin", password: randomUUID() };
+  const another = { name: "Segundo teste de permissões", username: `qa_second_${suffix}`, email: `qa_second_${suffix}@local.test`, role: "catalog_admin", password: randomUUID().slice(0, 12) };
   const second = await request("/api/admin/users", managerHeaders, { action: "create", ...another });
   fixtures.push({ id: second.userId, email: another.email });
   const signOut = await fetch(`${base}/api/auth/sign-out`, { method: "POST", headers: { ...managerHeaders, "Content-Type": "application/json" }, body: "{}" });
   assert.equal(signOut.status, 200);
   await request("/api/admin/users", managerHeaders, undefined, 401);
   assert.equal((await request("/api/catalog")).version, before.version);
-  console.log(JSON.stringify({ profiles: 2, diagnosticsForBoth: true, catalogCannotManageUsers: true, directEscalationBlocked: true, selfLockoutBlocked: true, concurrentUpdates: 12, passwordResetRevokesSessions: true, deactivationRevokesSessions: true, promotionVerified: true, catalogVersionUnchanged: before.version }));
+  console.log(JSON.stringify({ profiles: 2, passwordBoundariesChecked: [5, 6, 12, 13], diagnosticsForBoth: true, catalogCannotManageUsers: true, directEscalationBlocked: true, selfLockoutBlocked: true, concurrentUpdates: 12, passwordResetRevokesSessions: true, deactivationRevokesSessions: true, promotionVerified: true, catalogVersionUnchanged: before.version }));
 } finally {
   const pool = new Pool({ connectionString: process.env.DATABASE_URL });
   try {

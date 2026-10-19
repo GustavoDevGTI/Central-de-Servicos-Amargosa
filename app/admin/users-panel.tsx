@@ -2,6 +2,7 @@
 
 import { useEffect, useState, type FormEvent } from "react";
 import { adminRoles, isAdminRole, type AdminRole } from "../../lib/admin-permissions";
+import { ADMIN_PASSWORD_HINT, ADMIN_PASSWORD_MAX, ADMIN_PASSWORD_MIN } from "../../lib/admin-password-policy.mjs";
 
 type ManagedUser = { id: string; name: string; email: string; username: string | null; role: string | null; banned: boolean | null };
 type UserForm = { name: string; username: string; email: string; role: AdminRole; password: string };
@@ -71,12 +72,12 @@ export function UsersPanel({ currentUserId }: { currentUserId: string }) {
           <label>Usuário<input required minLength={3} maxLength={30} pattern="[a-zA-Z0-9_.]{3,30}" title="Use letras, números, ponto ou sublinhado." autoComplete="off" value={form.username} onChange={(event) => setForm({ ...form, username: event.target.value })} /></label>
           <label>E-mail<input type="email" required maxLength={254} autoComplete="off" value={form.email} onChange={(event) => setForm({ ...form, email: event.target.value })} /></label>
           <label>Perfil<select value={form.role} disabled={editing?.id === currentUserId} onChange={(event) => { if (isAdminRole(event.target.value)) setForm({ ...form, role: event.target.value }); }}>{Object.entries(adminRoles).map(([role, label]) => <option key={role} value={role}>{label}</option>)}</select><small>O administrador geral também gerencia usuários.</small></label>
-          {!editing && <label>Senha inicial<input type="password" required minLength={8} maxLength={128} autoComplete="new-password" value={form.password} onChange={(event) => setForm({ ...form, password: event.target.value })} /><small>Mínimo de 8 caracteres.</small></label>}
+          {!editing && <label>Senha inicial<input type="password" required minLength={ADMIN_PASSWORD_MIN} maxLength={ADMIN_PASSWORD_MAX} autoComplete="new-password" value={form.password} onChange={(event) => setForm({ ...form, password: event.target.value })} /><small>{ADMIN_PASSWORD_HINT}</small></label>}
         </fieldset>
         <div className="admin-preview-actions"><button type="submit" disabled={busy}>{busy ? "Salvando…" : editing ? "Salvar alterações" : "Cadastrar usuário"}</button><button type="button" disabled={busy} onClick={() => { setShowForm(false); setEditing(null); setForm(emptyForm); setNewPassword(""); }}>Cancelar</button></div>
       </form>
       {editing && editing.id !== currentUserId && <form className="admin-password-form" onSubmit={async (event) => { event.preventDefault(); if (await mutate({ action: "password", userId: editing.id, password: newPassword }, "Senha redefinida e sessões encerradas.")) setNewPassword(""); }}>
-        <h3>Redefinir senha</h3><label>Nova senha<input type="password" required minLength={8} maxLength={128} autoComplete="new-password" value={newPassword} disabled={busy} onChange={(event) => setNewPassword(event.target.value)} /></label><div className="admin-preview-actions"><button type="submit" disabled={busy}>Redefinir senha e encerrar sessões</button></div>
+        <h3>Redefinir senha</h3><label>Nova senha<input type="password" required minLength={ADMIN_PASSWORD_MIN} maxLength={ADMIN_PASSWORD_MAX} autoComplete="new-password" value={newPassword} disabled={busy} onChange={(event) => setNewPassword(event.target.value)} /><small>{ADMIN_PASSWORD_HINT}</small></label><div className="admin-preview-actions"><button type="submit" disabled={busy}>Redefinir senha e encerrar sessões</button></div>
       </form>}
     </div>}
     <div className="admin-preview-controls"><label htmlFor="admin-user-search">Pesquisar usuários</label><div className="admin-service-search"><input id="admin-user-search" type="search" placeholder="Nome, usuário ou e-mail" value={query} onChange={(event) => { setQuery(event.target.value); setPage(1); setError(""); }} /></div></div>

@@ -1,6 +1,7 @@
 import { auth } from "./auth";
 import { canManageUsers, isAdminRole, userAccessChangeError, type AdminRole } from "./admin-permissions";
 import { initializeCatalogDatabase, withCatalogTransaction } from "./catalog-db";
+import { ADMIN_PASSWORD_HINT, isValidAdminPassword } from "./admin-password-policy.mjs";
 
 export class UserManagementError extends Error {
   constructor(message: string, public status = 400) { super(message); }
@@ -28,7 +29,7 @@ function details(body: Record<string, unknown>) {
 
 function passwordOf(body: Record<string, unknown>) {
   const password = body.password;
-  if (typeof password !== "string" || password.length < 8 || password.length > 128) throw new UserManagementError("A senha deve ter de 8 a 128 caracteres.");
+  if (!isValidAdminPassword(password)) throw new UserManagementError(ADMIN_PASSWORD_HINT);
   return password;
 }
 

@@ -160,7 +160,7 @@ O Portainer utiliza somente a imagem pronta. Ele não clona o código, não exec
 2. escolha **Web editor**;
 3. cole o conteúdo de `docker-compose.yml`;
 4. preencha as variáveis de `.env.example`, incluindo `BETTER_AUTH_URL`, `BETTER_AUTH_SECRET` e `POSTGRES_PASSWORD`; o endereço deve ser a origem HTTPS que será usada no navegador;
-5. no primeiro início do banco vazio, preencha `BOOTSTRAP_ADMIN_NAME`, `BOOTSTRAP_ADMIN_EMAIL`, `BOOTSTRAP_ADMIN_USERNAME` e `BOOTSTRAP_ADMIN_PASSWORD` com as credenciais do responsável (senha de pelo menos 12 caracteres);
+5. no primeiro início do banco vazio, preencha `BOOTSTRAP_ADMIN_NAME`, `BOOTSTRAP_ADMIN_EMAIL`, `BOOTSTRAP_ADMIN_USERNAME` e `BOOTSTRAP_ADMIN_PASSWORD` com as credenciais do responsável (senha de 6 a 12 caracteres);
 6. defina `PORTAL_PORT=3000` ou outra porta livre e selecione **Deploy the stack**;
 7. entre em `/admin/login` e remova as variáveis `BOOTSTRAP_ADMIN_*` da stack. Atualizações posteriores preservam as contas existentes.
 

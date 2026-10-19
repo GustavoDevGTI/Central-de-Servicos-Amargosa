@@ -27,6 +27,7 @@ ENV NODE_ENV=production \
 COPY --from=builder --chown=node:node /app/dist/standalone ./
 COPY --from=production-dependencies --chown=node:node /app/node_modules ./node_modules
 COPY --from=builder --chown=node:node /app/lib/auth-options.mjs ./lib/auth-options.mjs
+COPY --from=builder --chown=node:node /app/lib/admin-password-policy.mjs ./lib/admin-password-policy.mjs
 COPY --from=builder --chown=node:node /app/scripts/start-server.mjs ./scripts/start-server.mjs
 
 USER node

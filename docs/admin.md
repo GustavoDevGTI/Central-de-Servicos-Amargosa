@@ -2,6 +2,8 @@
 
 O acesso fica em `/admin/login`. As credenciais iniciais são definidas pelo responsável na implantação; não há senha padrão. Veja a preparação do PostgreSQL em [portainer.md](portainer.md).
 
+Senhas novas e redefinições devem ter de 6 a 12 caracteres, podendo incluir letras, números e símbolos. Senhas já cadastradas continuam válidas até serem redefinidas.
+
 ## Perfis
 
 O **Administrador geral** gerencia catálogo, diagnóstico e usuários. O **Administrador do catálogo** importa, confere, publica e restaura versões, consulta o histórico e visualiza o diagnóstico. O cadastro público é desabilitado. Desativar uma conta, mudar seu perfil ou redefinir sua senha encerra suas sessões. A aplicação impede retirar o próprio acesso e deixar o sistema sem um administrador geral ativo.
