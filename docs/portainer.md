@@ -15,7 +15,7 @@ A stack agora precisa de PostgreSQL, além do portal. Substitua o YAML antigo pe
 | `POSTGRES_PASSWORD` | Senha aleatória hexadecimal, sem senha padrão; mantenha-a para reutilizar o volume |
 | `BOOTSTRAP_ADMIN_NAME` | Nome do primeiro administrador geral |
 | `BOOTSTRAP_ADMIN_EMAIL` | E-mail do primeiro administrador |
-| `BOOTSTRAP_ADMIN_USERNAME` | Usuário com 3 a 30 letras minúsculas, números, ponto ou sublinhado |
+| `BOOTSTRAP_ADMIN_USERNAME` | Usuário inicial `GTI`; o login não diferencia maiúsculas e minúsculas |
 | `BOOTSTRAP_ADMIN_PASSWORD` | Senha inicial de 12 a 128 caracteres |
 | `PORTAL_PORT` | Porta do host encaminhada pelo proxy para a porta 3000 do portal |
 | `IMAGE_NAME` | Imagem GHCR com a tag desejada |
