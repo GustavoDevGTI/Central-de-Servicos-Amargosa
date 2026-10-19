@@ -27,8 +27,19 @@ function announceReady() {
   window.dispatchEvent(new Event(VLIBRAS_READY_EVENT));
 }
 
-export default function VlibrasWidget() {
+export default function VlibrasWidget({ enabled = true }: { enabled?: boolean }) {
   useEffect(() => {
+    if (!enabled) {
+      const wrapper = document.getElementById("vlibras-access-wrapper");
+      if (!wrapper) return;
+      const display = wrapper.style.getPropertyValue("display");
+      const priority = wrapper.style.getPropertyPriority("display");
+      wrapper.style.setProperty("display", "none", "important");
+      return () => {
+        if (display) wrapper.style.setProperty("display", display, priority);
+        else wrapper.style.removeProperty("display");
+      };
+    }
     const initialize = () => {
       if (
         window.VLibras?.Widget &&
@@ -60,7 +71,7 @@ export default function VlibrasWidget() {
     document.head.appendChild(script);
 
     return () => script.removeEventListener("load", initialize);
-  }, []);
+  }, [enabled]);
 
   return null;
 }

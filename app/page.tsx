@@ -9,7 +9,7 @@ import HeaderAccessibility from "./header-accessibility";
 import PortalFooter from "./portal-footer";
 import SearchSuggestions from "./search-suggestions";
 import { searchServices } from "./search-engine";
-import { services as catalogServices } from "./service-catalog";
+import { useCatalogServices } from "./catalog-provider";
 import { searchPath } from "./search-url";
 import {
   loadServicePopularity,
@@ -93,7 +93,7 @@ const siteDesign = siteContent.site.design as SiteDesign;
 const officialCategoryLabels = new Set(
   (page.segments.find((segment) => segment.type === "categories")?.items || [])
     .filter((item) => item.type === "category")
-    .map((item) => item.label),
+    .flatMap((item) => item.label ? [item.label] : []),
 );
 const audienceLabels = new Map(
   (page.segments.find((segment) => segment.type === "audiences")?.items || [])
@@ -193,6 +193,7 @@ function SectionHeading({ segment }: { segment: Segment }) {
 }
 
 export default function Home() {
+  const catalogServices = useCatalogServices();
   const [query, setQuery] = useState("");
   const [suggestionsOpen, setSuggestionsOpen] = useState(false);
   const [heroSlide, setHeroSlide] = useState(0);
@@ -280,43 +281,6 @@ export default function Home() {
   function classes(segment: Segment, base: string) {
     return `${base} editable-segment segment-${segment.type} variant-${segment.style.variant || siteDesign.theme || "institutional"} width-${segment.style.width || "contained"} spacing-${segment.style.spacing || "comfortable"} radius-${segment.style.radius || "soft"} text-size-${segment.style.fontSize || siteDesign.fontSize || "normal"} ${interactionClasses(segment)}${segment.size ? " user-sized-segment" : ""}${mergeClasses(segment)}`;
   }
-  function serviceCard(
-    service: Service,
-    index: number,
-    featured = false,
-    editorItem: Item = service,
-  ) {
-    const href = service.slug ? `/servicos/${service.slug}` : service.url;
-    return (
-      <a
-        key={`${service.id}-${index}`}
-        {...itemSizeProps(editorItem)}
-        className={featured ? "featured-card" : "service-card"}
-        href={href}
-        {...external(href)}
-        onClick={() => {
-          trackServiceClick(service);
-          if (/^https?:\/\//i.test(href)) trackServiceStart(service);
-        }}
-      >
-        {featured && (
-          <span className="rank">{String(index + 1).padStart(2, "0")}</span>
-        )}
-        <span>
-          <small className="service-public-tag">
-            {serviceAudienceLabel(service)}
-          </small>
-          <strong>{service.title}</strong>
-          <em>{service.department}</em>
-          {officialCategoryLabels.has(service.category) && (
-            <small className="service-category-tag">{service.category}</small>
-          )}
-        </span>
-        <b>{featured ? "→" : <>Ver serviço →</>}</b>
-      </a>
-    );
-  }
-
   function renderSegment(segment: Segment): ReactNode {
     if (segment.type === "utility") {
       const label = segment.items.find((item) => item.role === "label");

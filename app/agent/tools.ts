@@ -5,6 +5,7 @@ import {
   type AgentServiceDetail,
 } from "./service-repository";
 import type { AgentServiceCard } from "./types";
+import { services as builtInServices, type Service } from "../service-catalog";
 
 export const agentTools = [
   {
@@ -64,7 +65,7 @@ function parseArguments(value: string) {
   }
 }
 
-export function executeAgentTool(name: string, rawArguments: string): AgentToolResult {
+export function executeAgentTool(name: string, rawArguments: string, catalog: Service[] = builtInServices): AgentToolResult {
   const args = parseArguments(rawArguments);
 
   if (name === "buscar_servicos") {
@@ -76,7 +77,7 @@ export function executeAgentTool(name: string, rawArguments: string): AgentToolR
     if (!term) {
       return { output: JSON.stringify({ error: "Termo de busca inválido." }), services: [] };
     }
-    const results = findServices(term, requestedAudience);
+    const results = findServices(term, requestedAudience, 5, catalog);
     return {
       output: JSON.stringify({ results }),
       services: results,
@@ -85,7 +86,7 @@ export function executeAgentTool(name: string, rawArguments: string): AgentToolR
 
   if (name === "obter_servico") {
     const id = typeof args.id === "string" ? args.id.trim().slice(0, 120) : "";
-    const service: AgentServiceDetail | null = id ? getServiceById(id) : null;
+    const service: AgentServiceDetail | null = id ? getServiceById(id, catalog) : null;
     return {
       output: JSON.stringify(
         service || { error: "Serviço inexistente ou identificador inválido." },

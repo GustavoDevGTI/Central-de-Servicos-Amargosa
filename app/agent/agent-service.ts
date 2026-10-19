@@ -2,6 +2,7 @@ import { AGENT_SYSTEM_PROMPT } from "./system-prompt";
 import { agentTools, executeAgentTool } from "./tools";
 import type { AgentHistoryMessage, AgentServiceCard, AgentUsage } from "./types";
 import type { AiMessage, AiProvider } from "./providers/ai-provider";
+import { services as builtInServices, type Service } from "../service-catalog";
 
 const MAX_TOOL_CALLS = 4;
 const NO_SERVICE_MATCH_MESSAGE =
@@ -61,6 +62,7 @@ export async function answerWithAgent(
   message: string,
   history: AgentHistoryMessage[],
   provider: AiProvider,
+  catalog: Service[] = builtInServices,
 ): Promise<AgentAnswer> {
   const messages: AiMessage[] = [
     { role: "system", content: AGENT_SYSTEM_PROMPT },
@@ -89,6 +91,7 @@ export async function answerWithAgent(
         const fallbackSearch = executeAgentTool(
           "buscar_servicos",
           JSON.stringify({ termo: message }),
+          catalog,
         );
         for (const service of fallbackSearch.services) {
           candidates.set(service.id, service);
@@ -122,7 +125,7 @@ export async function answerWithAgent(
         };
       }
 
-      const result = executeAgentTool(call.function.name, call.function.arguments);
+      const result = executeAgentTool(call.function.name, call.function.arguments, catalog);
       if (call.function.name === "buscar_servicos") searchedCatalog = true;
       const destination =
         call.function.name === "obter_servico" ? detailed : candidates;

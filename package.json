@@ -13,11 +13,16 @@
     "db:generate": "drizzle-kit generate",
     "test:agent": "tsx --test app/agent/agent.test.ts",
     "sync:coleta": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/sync-coleta-cronograma.ps1",
-    "test:search": "node --experimental-strip-types --test app/search-engine.test.ts"
+    "test:search": "node --experimental-strip-types --test app/search-engine.test.ts",
+    "test:catalog-link": "tsx --test lib/catalog-link-download.test.ts",
+    "test:release": "tsx --test app/agent/agent.test.ts app/search-engine.test.ts app/service-catalog.test.ts app/catalog-provider.test.tsx app/workbook-where-when.test.tsx lib/admin-permissions.test.ts lib/catalog-import.test.ts lib/catalog-link-download.test.ts"
   },
   "dependencies": {
+    "better-auth": "^1.7.7",
     "drizzle-orm": "^0.45.2",
+    "exceljs": "^4.4.0",
     "next": "^16.3.2",
+    "pg": "^8.23.1",
     "react": "19.2.6",
     "react-dom": "19.2.6"
   },
@@ -27,6 +32,7 @@
     "@openai/sites-vite-plugin": "^0.1.0 || ^0.2.0",
     "@tailwindcss/postcss": "4.2.1",
     "@types/node": "22.19.19",
+    "@types/pg": "^8.23.1",
     "@types/react": "19.2.14",
     "@types/react-dom": "19.2.3",
     "@vitejs/plugin-react": "6.0.2",

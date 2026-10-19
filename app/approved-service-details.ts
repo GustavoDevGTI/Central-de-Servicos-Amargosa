@@ -14,8 +14,8 @@ type WhereWhenItem = {
 
 type ApprovedServiceDetail = {
   slug: string;
-  destination: string;
-  url: string;
+  destination?: string;
+  url?: string;
   summary: string;
   eligibility: string;
   documents: string[];

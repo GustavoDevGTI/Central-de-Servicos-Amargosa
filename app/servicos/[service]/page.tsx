@@ -1,5 +1,5 @@
 import { ServiceDetail } from "../../internal-portal";
-import { services } from "../../service-catalog";
+import { runtimeService } from "../../../lib/runtime-catalog";
 import { notFound, redirect } from "next/navigation";
 
 const siteOrigin = "https://maisdigital.amargosa.ba.gov.br";
@@ -7,17 +7,12 @@ const oldServiceSlugs: Record<string, string> = {
   "troca-de-lampadas": "iluminacao-publica",
 };
 
-export function generateStaticParams() {
-  return [
-    ...services.filter((entry) => entry.slug).map((entry) => ({ service: entry.slug! })),
-    ...Object.keys(oldServiceSlugs).map((service) => ({ service })),
-  ];
-}
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({ params }: { params: Promise<{ service: string }> }) {
   const { service: slug } = await params;
-  const entry = services.find((item) => (item.slug || item.id) === (oldServiceSlugs[slug] || slug));
-  if (!entry) return { title: "Serviço não encontrado" };
+  const entry = await runtimeService(oldServiceSlugs[slug] || slug);
+  if (!entry || entry.inactive) return { title: "Serviço não disponível" };
 
   const title = `${entry.title} | Central de Serviços de Amargosa`;
   const description = entry.summary || `Orientações para acessar o serviço ${entry.title} em Amargosa.`;
@@ -34,6 +29,7 @@ export async function generateMetadata({ params }: { params: Promise<{ service: 
 export default async function ServicePage({ params }: { params: Promise<{ service: string }> }) {
   const { service } = await params;
   if (oldServiceSlugs[service]) redirect(`/servicos/${oldServiceSlugs[service]}`);
-  if (!services.some((entry) => (entry.slug || entry.id) === service)) notFound();
-  return <ServiceDetail slug={service} />;
+  const entry = await runtimeService(service);
+  if (!entry || entry.inactive) notFound();
+  return <ServiceDetail slug={service} initialService={entry} />;
 }

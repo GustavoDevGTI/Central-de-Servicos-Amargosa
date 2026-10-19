@@ -4,12 +4,23 @@ services:
     pull_policy: always
     restart: unless-stopped
     init: true
+    depends_on:
+      catalog-db:
+        condition: service_healthy
     ports:
       - "${PORTAL_PORT:-3000}:3000"
     environment:
       NODE_ENV: production
       HOST: 0.0.0.0
       PORT: 3000
+      NEXT_PUBLIC_SITE_URL: ${BETTER_AUTH_URL:?Configure BETTER_AUTH_URL com a origem HTTPS do portal}
+      BETTER_AUTH_URL: ${BETTER_AUTH_URL:?Configure BETTER_AUTH_URL}
+      BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET:?Configure BETTER_AUTH_SECRET}
+      DATABASE_URL: postgresql://central:${POSTGRES_PASSWORD:?Configure POSTGRES_PASSWORD}@catalog-db:5432/central_catalog
+      BOOTSTRAP_ADMIN_NAME: ${BOOTSTRAP_ADMIN_NAME:-}
+      BOOTSTRAP_ADMIN_EMAIL: ${BOOTSTRAP_ADMIN_EMAIL:-}
+      BOOTSTRAP_ADMIN_USERNAME: ${BOOTSTRAP_ADMIN_USERNAME:-}
+      BOOTSTRAP_ADMIN_PASSWORD: ${BOOTSTRAP_ADMIN_PASSWORD:-}
       AI_PROVIDER: ${AI_PROVIDER:-deepseek}
       AI_MODEL: ${AI_MODEL:-deepseek-flash}
       DEEPSEEK_API_KEY: ${DEEPSEEK_API_KEY:-}
@@ -30,5 +41,26 @@ services:
         - "fetch('http://127.0.0.1:3000/api/health').then(r=>{if(!r.ok)process.exit(1)}).catch(()=>process.exit(1))"
       interval: 30s
       timeout: 5s
-      start_period: 15s
+      start_period: 60s
       retries: 3
+
+  catalog-db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: central
+      POSTGRES_DB: central_catalog
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Configure POSTGRES_PASSWORD}
+    volumes:
+      - catalog-data:/var/lib/postgresql/data
+    security_opt:
+      - no-new-privileges:true
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U central -d central_catalog"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    # O banco só é acessível pela rede interna da stack, sem publicar uma porta.
+
+volumes:
+  catalog-data:

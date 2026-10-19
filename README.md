@@ -1,6 +1,6 @@
 # Central de Serviços de Amargosa
 
-Portal municipal em React para localizar serviços públicos e encaminhar cada pessoa ao canal oficial responsável. O portal não exige login, não possui banco de dados e não armazena dados pessoais.
+Portal municipal em React para localizar serviços públicos e encaminhar cada pessoa ao canal oficial responsável. A consulta pública não exige login. A área administrativa usa autenticação e PostgreSQL para manter usuários, planilhas, publicações e histórico.
 
 ## Funcionalidades
 
@@ -15,6 +15,8 @@ Portal municipal em React para localizar serviços públicos e encaminhar cada p
 - suporte a DeepSeek por padrão e OpenAI como provedor alternativo;
 - remoção preventiva de CPF, e-mail e telefone antes do envio ao provedor;
 - limite de mensagens, orçamento mensal estimado e fallback para a busca tradicional.
+- painel administrativo com importação de planilha, prévia, comparação e histórico das últimas 20 publicações com mudanças;
+- dois perfis administrativos, controle de usuários e diagnóstico com relatório Data Studio.
 
 ## Stack
 
@@ -148,7 +150,7 @@ docker compose pull
 docker compose up -d
 ```
 
-O healthcheck consulta `GET /api/health`. O contêiner é executado sem privilégios, com reinício automático e sem banco de dados ou volume persistente.
+O healthcheck consulta `GET /api/health` e verifica o acesso ao catálogo no banco. O contêiner é executado sem privilégios, com reinício automático. O PostgreSQL usa o volume persistente `catalog-data`, sem expor uma porta do banco no host.
 
 ## Portainer
 
@@ -157,8 +159,14 @@ O Portainer utiliza somente a imagem pronta. Ele não clona o código, não exec
 1. acesse **Stacks** e selecione **Add stack**;
 2. escolha **Web editor**;
 3. cole o conteúdo de `docker-compose.yml`;
-4. defina `PORTAL_PORT=3000` ou outra porta livre;
-5. selecione **Deploy the stack**.
+4. preencha as variáveis de `.env.example`, incluindo `BETTER_AUTH_URL`, `BETTER_AUTH_SECRET` e `POSTGRES_PASSWORD`; o endereço deve ser a origem HTTPS que será usada no navegador;
+5. no primeiro início do banco vazio, preencha `BOOTSTRAP_ADMIN_NAME`, `BOOTSTRAP_ADMIN_EMAIL`, `BOOTSTRAP_ADMIN_USERNAME` e `BOOTSTRAP_ADMIN_PASSWORD` com as credenciais do responsável (senha de pelo menos 12 caracteres);
+6. defina `PORTAL_PORT=3000` ou outra porta livre e selecione **Deploy the stack**;
+7. entre em `/admin/login` e remova as variáveis `BOOTSTRAP_ADMIN_*` da stack. Atualizações posteriores preservam as contas existentes.
+
+A imagem prepara as tabelas de autenticação antes de iniciar o servidor. As tabelas do catálogo são preparadas pela aplicação. Não há usuário ou senha predefinidos. Sem as variáveis obrigatórias, a stack falha com uma mensagem de configuração em vez de iniciar um admin inacessível. Use valores hexadecimais para a senha do banco, pois ela compõe `DATABASE_URL`.
+
+Antes de atualizar uma stack existente, faça backup e preserve o volume do PostgreSQL. A nova stack contém dois serviços; atualize também o YAML no Portainer. Apenas baixar a imagem nova com o YAML antigo não configura o banco nem a autenticação. O procedimento completo está em [docs/portainer.md](docs/portainer.md).
 
 Se o pacote GHCR estiver privado, cadastre `ghcr.io` em **Registries** usando o usuário GitHub e um token com permissão `read:packages`. Para uma imagem pública, não é necessária autenticação.
 

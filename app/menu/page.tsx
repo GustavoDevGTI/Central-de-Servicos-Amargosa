@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import siteContent from "../../content/site.json";
 import AccessibilityPreferences from "../accessibility-preferences";
 import PortalFooter from "../portal-footer";
-import { services } from "../service-catalog";
+import { runtimeCatalog } from "../../lib/runtime-catalog";
 import VlibrasControl from "../vlibras-control";
 
 export const metadata: Metadata = {
@@ -33,14 +33,17 @@ const audiences = (segments.find((segment) => segment.type === "audiences")?.ite
   });
 const safeId = (value = "grupo") => value.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-zA-Z0-9_-]+/g, "-").replace(/^-|-$/g, "").toLowerCase();
 
-function servicesFor(audienceId: string) {
+function servicesFor(services: Awaited<ReturnType<typeof runtimeCatalog>>["services"], audienceId: string) {
   return services
     .filter((service) => (service.audienceIds?.length ? service.audienceIds : [service.audienceId]).includes(audienceId))
     .sort((first, second) => (first.title || "").localeCompare(second.title || "", "pt-BR"));
 }
 
-export default function AccessibilityMenu() {
-  const groups = audiences.map((audience) => ({ audience, services: servicesFor(audience.id) })).filter((group) => group.services.length);
+export const dynamic = "force-dynamic";
+
+export default async function AccessibilityMenu() {
+  const { services } = await runtimeCatalog();
+  const groups = audiences.map((audience) => ({ audience, services: servicesFor(services, audience.id) })).filter((group) => group.services.length);
   const knownAudienceIds = new Set(audiences.map((audience) => audience.id));
   const unassigned = services.filter((service) => !(service.audienceIds?.length ? service.audienceIds : [service.audienceId]).some((id) => knownAudienceIds.has(id || "")));
   if (unassigned.length) groups.push({ audience: { id: "outros", type: "audience", label: "Outros públicos" }, services: unassigned.sort((first, second) => (first.title || "").localeCompare(second.title || "", "pt-BR")) });

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { PortalHeader } from "../../internal-portal";
 import PortalFooter from "../../portal-footer";
 
@@ -50,9 +51,9 @@ export default function PlatformHelpPage() {
               informações sobre um serviço específico, consulte a página desse
               serviço na Central.
             </p>
-            <a href="/servicos">
+            <Link href="/servicos">
               Consultar os serviços <span aria-hidden="true">→</span>
-            </a>
+            </Link>
           </section>
         </div>
       </article>

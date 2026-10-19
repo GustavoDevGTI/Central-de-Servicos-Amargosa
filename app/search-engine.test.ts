@@ -43,7 +43,7 @@ test("classifica os sistemas de solicitação cadastrados", () => {
       .map((item) => item.id) || [],
   );
 
-  assert.equal(nonSeiServiceIds.size, 11);
+  assert.equal(nonSeiServiceIds.size, 18);
   assert.ok([...nonSeiServiceIds].every((serviceId) => catalogIds.has(serviceId)));
   assert.ok(
     [...nonSeiServiceIds].every(
@@ -84,7 +84,7 @@ test("pesquisa o conteúdo explicativo", () => {
 
 test("gera tags invisíveis para todos os serviços do catálogo", () => {
   const catalog = siteContent.pages[0].segments.find((segment) => segment.type === "catalog");
-  const catalogServices = catalog?.items.filter((item) => item.type === "service") || [];
+  const catalogServices = catalog?.items.filter((item): item is Extract<typeof item, { title: string; category: string; department: string }> => item.type === "service") || [];
   assert.ok(catalogServices.length > 0);
   assert.ok(catalogServices.every((service) => serviceSearchTags(service).length >= 3));
 });

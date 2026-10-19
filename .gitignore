@@ -38,3 +38,8 @@ next-env.d.ts
 /.wrangler/
 /outputs/
 /work/
+/tmp/
+/output/
+**/__pycache__/
+*.tsbuildinfo
+/.migration-directory-references.json

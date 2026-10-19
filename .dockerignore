@@ -12,6 +12,16 @@ node_modules
 outputs
 release-desktop
 work
+tmp
+output
+.migration-directory-references.json
+**/__pycache__
+**/*.tsbuildinfo
+**/*.test.*
+**/local-*-test.*
+scripts/local-admin-smoke.mjs
+pnpm-lock.yaml
+pnpm-workspace.yaml
 
 .env
 .env.*

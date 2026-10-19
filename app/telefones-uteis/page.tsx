@@ -8,7 +8,7 @@ export const metadata: Metadata = {
     "Contatos telefônicos de órgãos e serviços públicos de Amargosa.",
 };
 
-const publicContacts = [
+const publicContacts: { group: string; contacts: { name: string; detail?: string; address?: string; phones: { label: string; href: string }[] }[] }[] = [
   {
     group: "Atendimento municipal",
     contacts: [

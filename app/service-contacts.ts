@@ -199,8 +199,22 @@ function responsibleSector(raw: string, currentDepartment: string): string | und
 type ServiceContactSource = {
   id: string;
   department: string;
+  workbookCells?: Record<string, string>;
   channels?: { label: string; value: string; url?: string }[];
+  contactOverride?: { sector?: string; secretariat?: string; phone?: string; extension?: string; email?: string };
 };
+
+function sourceForService(service: ServiceContactSource): SpreadsheetContact | undefined {
+  if (!service.contactOverride) return spreadsheetContacts[service.id];
+  return {
+    sourceRow: 0,
+    sector: service.contactOverride.sector || "",
+    secretariat: service.contactOverride.secretariat || "",
+    phone: service.contactOverride.phone,
+    extension: service.contactOverride.extension,
+    email: service.contactOverride.email,
+  };
+}
 
 function sectorForService(service: ServiceContactSource, source?: SpreadsheetContact): string | undefined {
   const row = source?.sourceRow
@@ -212,7 +226,7 @@ function sectorForService(service: ServiceContactSource, source?: SpreadsheetCon
 }
 
 function officeKeyForService(service: ServiceContactSource): OfficeKey {
-  const source = spreadsheetContacts[service.id];
+  const source = sourceForService(service);
   const sector = sectorForService(service, source);
   return officeByServiceId[service.id] ||
     (sector && officeForDepartment(sector)) ||
@@ -227,7 +241,19 @@ export function organizationForService(service: ServiceContactSource) {
 }
 
 export function contactForService(service: ServiceContactSource): ServiceContact {
-  const source = spreadsheetContacts[service.id];
+  if (service.workbookCells) {
+    const cells = service.workbookCells;
+    return {
+      name: cells["Setor/Unidade responsável no SEI"] || "",
+      officeName: cells["Secretaria responsável"] || undefined,
+      phone: cells["Telefone"] || "",
+      address: "",
+      email: cells["E-mail do setor/unidade"] || undefined,
+      emailLabel: "E-mail do setor/unidade",
+      officialUrl: "",
+    };
+  }
+  const source = sourceForService(service);
   const sector = sectorForService(service, source);
   const officeKey = officeKeyForService(service);
   const office = offices[officeKey];

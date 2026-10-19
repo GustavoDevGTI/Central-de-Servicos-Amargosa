@@ -1,10 +1,13 @@
 import type { Metadata } from 'next';
-import AmandaWidget from './amanda-widget';
+import PortalWidgets from './portal-widgets';
+import { CatalogProvider } from './catalog-provider';
+import { runtimeCatalog } from '../lib/runtime-catalog';
 import GoogleTagManager from './google-tag-manager';
-import VlibrasWidget from './vlibras-widget';
 import './globals.css';
 
 const GOOGLE_TAG_MANAGER_ID = 'GTM-MRBCP7K8';
+
+export const dynamic = 'force-dynamic';
 
 const ACCESSIBILITY_PREFERENCES_SCRIPT = `
   (function () {
@@ -48,11 +51,12 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const catalog = await runtimeCatalog();
   return (
     <html lang="pt-BR" suppressHydrationWarning>
       <head>
@@ -69,9 +73,10 @@ export default function RootLayout({
           />
         </noscript>
         <GoogleTagManager id={GOOGLE_TAG_MANAGER_ID} />
-        <VlibrasWidget />
-        {children}
-        <AmandaWidget />
+        <CatalogProvider initialServices={catalog.services}>
+          {children}
+          <PortalWidgets />
+        </CatalogProvider>
       </body>
     </html>
   );

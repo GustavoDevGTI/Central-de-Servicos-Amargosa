@@ -13,9 +13,6 @@ const audiences = (audienceSegment?.items || [])
   .flatMap((item) =>
     item.id && item.label ? [{ id: item.id, label: item.label }] : [],
   );
-const categories = [...new Set(services.map((service) => service.category))].map(
-  (label) => ({ id: normalize(label).replace(/\s+/g, "-"), label }),
-);
 
 const missingInformationPattern =
   /(?:será adicionado em breve|informação a ser adicionada|não informad[oa]|ainda não (?:foi|foram) (?:definid|informad|confirmad))/i;
@@ -93,7 +90,7 @@ function internalServiceUrl(service: Service) {
 }
 
 export function serviceCard(service: Service): AgentServiceCard {
-  const approved = approvedServiceIds.has(service.id);
+  const approved = approvedServiceIds.has(service.id) || Boolean(service.publishedFromWorkbook);
   return {
     id: service.id,
     title: service.title,
@@ -118,10 +115,10 @@ export type AgentServiceDetail = AgentServiceCard & {
   collectionSchedule: typeof collectionSchedule | null;
 };
 
-export function getServiceById(id: string): AgentServiceDetail | null {
-  const service = services.find((entry) => entry.id === id);
+export function getServiceById(id: string, catalog: Service[] = services): AgentServiceDetail | null {
+  const service = catalog.find((entry) => entry.id === id);
   if (!service) return null;
-  const approved = approvedServiceIds.has(service.id);
+  const approved = approvedServiceIds.has(service.id) || Boolean(service.publishedFromWorkbook);
   const card = serviceCard(service);
 
   if (!approved) {
@@ -157,7 +154,10 @@ export function getServiceById(id: string): AgentServiceDetail | null {
   };
 }
 
-export function findServices(term: string, audienceId?: string, limit = 5) {
+export function findServices(term: string, audienceId?: string, limit = 5, catalog: Service[] = services) {
+  const categories = [...new Set(catalog.map((service) => service.category))].map(
+    (label) => ({ id: normalize(label).replace(/\s+/g, "-"), label }),
+  );
   const candidates = new Map<
     string,
     { service: Service; score: number; matchedField: string }
@@ -165,7 +165,7 @@ export function findServices(term: string, audienceId?: string, limit = 5) {
 
   for (const [variantIndex, variant] of expandServiceSearchTerms(term).entries()) {
     const results = rankSearchSuggestions(
-      services,
+      catalog,
       variant,
       audiences,
       categories,

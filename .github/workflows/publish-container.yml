@@ -23,6 +23,21 @@ jobs:
       - name: Baixar o repositório
         uses: actions/checkout@v6
 
+      - name: Preparar Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: '22.23.1'
+          cache: npm
+
+      - name: Instalar dependências
+        run: npm ci
+
+      - name: Verificar código e catálogo
+        run: |
+          npm run lint
+          npx tsc --noEmit
+          npm run test:release
+
       - name: Preparar Docker Buildx
         uses: docker/setup-buildx-action@v4
 

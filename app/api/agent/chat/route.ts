@@ -20,6 +20,7 @@ import type {
   AgentChatResponse,
   AgentErrorResponse,
 } from "../../../agent/types";
+import { runtimeCatalog } from "../../../../lib/runtime-catalog";
 
 export const dynamic = "force-dynamic";
 
@@ -116,10 +117,12 @@ export async function POST(request: Request) {
   }
 
   try {
+    const catalog = await runtimeCatalog();
     const answer = await answerWithAgent(
       sanitizedMessage.text,
       sanitizedHistory.history,
       createAiProvider(),
+      catalog.services,
     );
     const estimatedCostBrl = await recordAgentUsage(answer.provider, answer.usage);
     console.info(

@@ -262,7 +262,7 @@ test("entende frases indiretas de IPTU e abertura de estabelecimento", () => {
 test("encontra a coleta de lixo e disponibiliza as rotas à Amanda", () => {
   const found = findServices("coleta de lixo na Minguara");
   assert.equal(found[0]?.id, "1doc-limpeza-publica");
-  assert.equal(found[0]?.title, "Coleta de Lixo");
+  assert.equal(found[0]?.title, "Limpeza Pública");
 
   const detail = getServiceById("1doc-limpeza-publica");
   assert.equal(detail?.collectionSchedule?.sourceUrl, "https://acesso.amargosa.ba.gov.br/coletalixo");
@@ -279,7 +279,7 @@ test("encontra a coleta de lixo e disponibiliza as rotas à Amanda", () => {
 
 test("distingue limpeza pública, iluminação e transferência de corpos nas buscas", () => {
   assert.equal(findServices("limpeza pública na praça")[0]?.id, "ba-gov-limpeza-publica");
-  assert.equal(findServices("troca de lâmpadas")[0]?.title, "Iluminação pública");
+  assert.equal(findServices("troca de lâmpadas")[0]?.title, "Serviços de Manutenção Pública");
   assert.equal(findServices("transferência de corpos")[0]?.id, "ba-gov-transferencia-de-corpos");
   assert.equal(getServiceById("ba-gov-limpeza-publica")?.collectionSchedule, null);
 });
