@@ -3,7 +3,7 @@ import { PortalHeader } from "../internal-portal";
 import PortalFooter from "../portal-footer";
 
 const supportEmail = "seafi.gti@amargosa.ba.gov.br";
-const informationEmail = "seafi@amargosa.ba.gov.br";
+const informationEmail = "seafi.simp@amargosa.ba.gov.br";
 
 const bugMailto = `mailto:${supportEmail}?subject=${encodeURIComponent(
   "Relato de bug na Central de Serviços",
@@ -154,8 +154,10 @@ export default function ReportProblemPage() {
             </section>
 
             <p className="report-problem-email-fallback">
-              Se o seu aplicativo de e-mail não abrir, envie a mensagem para{" "}
-              <a href={`mailto:${supportEmail}`}>{supportEmail}</a>.
+              Se o seu aplicativo de e-mail não abrir, envie falhas técnicas para{" "}
+              <a href={`mailto:${supportEmail}`}>{supportEmail}</a> e correções de
+              informações para{" "}
+              <a href={`mailto:${informationEmail}`}>{informationEmail}</a>.
             </p>
           </div>
         </div>
