@@ -77,7 +77,7 @@ export function initializeCatalogDatabase(): Promise<void> {
 
 export type CatalogSnapshot = {
   services: import("../app/service-catalog").Service[];
-  rows: Record<string, { excelRow: number; cells: Record<string, string>; excluded: boolean; removed?: boolean }>;
+  rows: Record<string, { excelRow: number; cells: Record<string, string>; excluded: boolean; removed?: boolean; markedRed?: boolean }>;
   headers: string[];
 };
 

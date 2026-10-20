@@ -10,9 +10,9 @@ export function draftServiceList(snapshot: import("./catalog-db").CatalogSnapsho
 export async function draftCatalog(bytes: Buffer, filename: string, userId: string) {
   const current = await activeCatalog();
   const { sha256, snapshot, report } = await analyzeWorkbook(bytes, current?.snapshot);
-  if (current && report.blockers.length === 0 && (report.changes.length === 0 || sha256 === (await catalogPool().query<{ source_sha256: string }>(
-    "SELECT source_sha256 FROM catalog_publications WHERE id = $1", [current.id],
-  )).rows[0]?.source_sha256)) {
+  // Reanalyse even the same file: new import rules can reveal state changes
+  // (for example a red row previously imported as active).
+  if (current && report.blockers.length === 0 && report.changes.length === 0) {
     return { identical: true, sha256, report: { ...report, changes: [] } };
   }
   const draftId = randomUUID();

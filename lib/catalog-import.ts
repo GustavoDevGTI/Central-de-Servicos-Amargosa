@@ -4,6 +4,7 @@ import { services as builtInServices, excludedSpreadsheetServiceRows, type Servi
 import { applyWorkbookCells } from "../app/workbook-service";
 import spreadsheetServiceData from "../app/spreadsheet-service-data.json" with { type: "json" };
 import { searchSlug } from "../app/search-url";
+import { redExclusionMarker } from "./workbook-exclusion";
 import type { CatalogChange, CatalogReport, CatalogSnapshot } from "./catalog-db";
 
 export const CATALOG_SHEET = "Catálogo consolidado";
@@ -89,6 +90,7 @@ export async function analyzeWorkbook(bytes: Buffer, previous?: CatalogSnapshot)
   const columnsAdded = headers.filter((header) => !knownColumnSet.has(header));
   const blockers = columnsAdded.map((name) => `Mapear a nova coluna “${name}” antes de publicar.`);
   const rows: CatalogSnapshot["rows"] = {};
+  const hasRedFill = redExclusionMarker(workbook);
   for (let rowNumber = 2; rowNumber <= sheet.rowCount; rowNumber++) {
     const row = sheet.getRow(rowNumber);
     const rawId = row.getCell(index.get("ID")!).value;
@@ -101,10 +103,12 @@ export async function analyzeWorkbook(bytes: Buffer, previous?: CatalogSnapshot)
     const cells: Record<string, string> = {};
     for (const [header, column] of index) cells[header] = textOf(row.getCell(column).value);
     const old = previous?.rows[String(rawId)];
-    // Keep pre-existing exclusions during migration. New exclusions depend on
-    // missing IDs, never cell colors; a returning archived ID becomes active.
-    const excluded = old ? old.excluded && !old.removed : excludedSpreadsheetServiceRows.has(rawId);
-    rows[String(rawId)] = { excelRow: rowNumber, cells, excluded };
+    // The ID/title identify the row's exclusion color. Other columns contain
+    // red editorial notes even on active services in the official workbook.
+    const markedRed = hasRedFill(row.getCell(index.get("ID")!)) || hasRedFill(titleCell);
+    const legacyExcluded = old ? old.excluded && !old.removed && !old.markedRed : excludedSpreadsheetServiceRows.has(rawId);
+    const excluded = markedRed || legacyExcluded;
+    rows[String(rawId)] = { excelRow: rowNumber, cells, excluded, markedRed };
   }
   if (Object.keys(rows).length < 1 && !previous) throw new Error("A planilha não contém serviços.");
   const previousRows = previous?.rows || {};
@@ -149,9 +153,14 @@ export async function analyzeWorkbook(bytes: Buffer, previous?: CatalogSnapshot)
     const serviceId = base?.id || `planilha-${id}`;
     const title = row.cells["Nome do serviço consolidado"];
     if (!old && !base && !row.excluded) changes.push({ serviceId, serviceTitle: title, kind: "created", sourceRow: Number(id) });
+    if (!old && !base && row.markedRed && !excludedSpreadsheetServiceRows.has(Number(id))) {
+      changes.push({ serviceId, serviceTitle: title, kind: "deactivated", sourceRow: Number(id), column: "Marcação de exclusão",
+        before: null, after: "Linha vermelha; página oculta e preservada para retorno" });
+    }
     if (old && ((row.removed && !old.removed) || old.excluded !== row.excluded)) {
       changes.push({ serviceId, serviceTitle: title, kind: row.excluded ? "deactivated" : "reactivated", sourceRow: Number(id),
-        ...(row.removed || old.removed ? { column: "Presença na planilha", before: old.removed ? "Linha ausente; página oculta" : "Linha presente", after: row.removed ? "Linha removida; página oculta e preservada para retorno" : "Linha reincluída; página reativada" } : {}),
+        ...(row.removed || old.removed ? { column: "Presença na planilha", before: old.removed ? "Linha ausente; página oculta" : "Linha presente", after: row.removed ? "Linha removida; página oculta e preservada para retorno" : row.excluded ? "Linha reincluída em vermelho; página permanece oculta" : "Linha reincluída; página reativada" } :
+          row.markedRed || old.markedRed ? { column: "Marcação de exclusão", before: old.markedRed ? "Linha vermelha; página oculta" : "Linha sem marcação vermelha", after: row.markedRed ? "Linha vermelha; página oculta e preservada para retorno" : "Marcação vermelha removida; página reativada" } : {}),
       });
     }
     if (!old && base && row.excluded && !base.inactive) changes.push({ serviceId, serviceTitle: title, kind: "deactivated", sourceRow: Number(id) });
