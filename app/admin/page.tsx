@@ -186,7 +186,7 @@ export default function AdminPage() {
           </form>
           <form className="admin-upload-form" onSubmit={analyze}>
             <h3>Enviar arquivo</h3>
-            <label htmlFor="admin-file">Arquivo XLSX da aba “Catálogo consolidado”</label>
+            <label htmlFor="admin-file">Arquivo XLSX</label>
             <input id="admin-file" type="file" accept=".xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" required onChange={(event) => { setFile(event.target.files?.[0] || null); setPreview(null); }} />
             <button type="submit" disabled={busy || !file}>{busy ? "Analisando…" : "Analisar arquivo"}</button>
           </form>
