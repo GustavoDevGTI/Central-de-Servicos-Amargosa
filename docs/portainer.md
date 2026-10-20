@@ -10,7 +10,8 @@ A stack agora precisa de PostgreSQL, além do portal. Substitua o YAML antigo pe
 
 | Variável | Configuração |
 | --- | --- |
-| `BETTER_AUTH_URL` | Origem HTTPS exata do portal, por exemplo `https://servicos.amargosa.ba.gov.br`, sem caminho |
+| `BETTER_AUTH_URL` | Origem HTTPS exata do portal, por exemplo `https://maisdigital.amargosa.ba.gov.br`, sem caminho |
+| `VINEXT_TRUSTED_HOSTS` | Host público autorizado, por exemplo `maisdigital.amargosa.ba.gov.br`, sem protocolo nem caminho. Permite ao Vinext reconstruir a origem HTTPS encaminhada pelo proxy |
 | `BETTER_AUTH_SECRET` | Segredo aleatório com pelo menos 32 caracteres; mantenha-o nas atualizações |
 | `POSTGRES_PASSWORD` | Senha aleatória hexadecimal, sem senha padrão; mantenha-a para reutilizar o volume |
 | `BOOTSTRAP_ADMIN_NAME` | Nome do primeiro administrador geral |
@@ -22,7 +23,9 @@ A stack agora precisa de PostgreSQL, além do portal. Substitua o YAML antigo pe
 
 Gere dois valores distintos com `openssl rand -hex 32`, um para o segredo de autenticação e outro para a senha do PostgreSQL. Nunca adicione os valores reais ao repositório. Após o primeiro acesso, remova as variáveis `BOOTSTRAP_ADMIN_*`: elas só são usadas quando não existe nenhuma conta no banco e não redefinem senhas em reinicializações.
 
-Configure também as variáveis `AI_*` e a chave do provedor já utilizada pela Amanda. Sem chave, a busca tradicional continua disponível. O domínio do proxy e `BETTER_AUTH_URL` precisam coincidir; a sessão administrativa usa cookies seguros em HTTPS. O proxy deve encaminhar `Host` e os cabeçalhos de protocolo adequados.
+Configure também as variáveis `AI_*` e a chave do provedor já utilizada pela Amanda. Sem chave, a busca tradicional continua disponível. O domínio do proxy, `VINEXT_TRUSTED_HOSTS` e `BETTER_AUTH_URL` precisam coincidir; a sessão administrativa usa cookies seguros em HTTPS. O proxy deve encaminhar `Host`, `X-Forwarded-Host` e `X-Forwarded-Proto: https`. Restrinja o acesso direto à porta do portal ao proxy confiável.
+
+Sem essa configuração de confiança, o Vinext interpreta a conexão interna como HTTP e as operações administrativas enviadas pelo navegador em HTTPS falham com “Origem inválida”. Preserve a validação de origem: não libere origens arbitrárias para contornar o erro.
 
 ## Atualização e conferência
 
@@ -34,6 +37,8 @@ Configure também as variáveis `AI_*` e a chave do provedor já utilizada pela 
 6. Confira `/api/health`, `/`, `/servicos` e uma página de serviço; depois entre em `/admin/login`.
 7. Confira catálogo e diagnóstico com os dois perfis. Apenas o administrador geral deve ver Usuários.
 8. Antes de publicar conteúdo, importe a planilha oficial, confira as diferenças e as prévias. O banco novo começa com o catálogo original da imagem e histórico vazio.
+
+Valide também uma busca da planilha oficial e uma análise por upload sem publicar. Login e consultas GET não exercitam a proteção de origem das operações POST. Solicitações sem origem ou com origem externa devem continuar recebendo HTTP 403.
 
 A inicialização prepara o esquema da mesma versão do Better Auth utilizada pelo portal. A migração é coordenada por trava do PostgreSQL e recusa alterações classificadas como inseguras. O primeiro administrador só é criado em banco sem contas. As tabelas do catálogo são preparadas automaticamente; o healthcheck falha se o catálogo não estiver acessível.
 
