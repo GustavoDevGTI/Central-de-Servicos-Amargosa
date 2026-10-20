@@ -15,7 +15,14 @@ import "./admin.css";
 type Change = { serviceId: string; serviceTitle: string; kind: string; column?: string; before?: string | null; after?: string | null; sourceRow?: number };
 type Report = { created: number; updated: number; deactivated: number; reactivated: number; columnsAdded: string[]; blockers: string[]; changes: Change[] };
 type Preview = { draftId?: string; identical?: boolean; report: Report; services?: PreviewService[] };
-type Version = { id: string; source_filename: string; published_at: string; author_name: string | null; active: boolean; reverted_from?: string | null; report: Report };
+type Version = { id: string; source_filename: string; published_at: string; author_name: string | null; author_username: string | null; active: boolean; reverted_from?: string | null; report: Report };
+
+function responsibleAccount(version: Version) {
+  const name = version.author_name;
+  const username = version.author_username;
+  if (!username) return name || "Conta não disponível";
+  return name && name.toLocaleLowerCase("pt-BR") !== username.toLocaleLowerCase("pt-BR") ? `${name} (@${username})` : name || username;
+}
 
 const kindName: Record<string, string> = {
   created: "Criado", updated: "Alterado", deactivated: "Excluído (página oculta)",
@@ -200,14 +207,14 @@ export default function AdminPage() {
         <ul className="admin-history">{versions.map((version) => <li key={version.id}>
           <button type="button" className="admin-history-toggle" aria-expanded={selected?.id === version.id} aria-controls="admin-history-detail" onClick={() => setSelected(selected?.id === version.id ? null : version)}>
             <strong>Versão {version.id}{version.active ? " · atual" : ""}{version.reverted_from ? ` · restauração da ${version.reverted_from}` : ""}</strong>
-            <span>{version.source_filename} · {new Date(version.published_at).toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo" })}</span>
+            <span className="admin-history-meta">{version.source_filename} · {new Date(version.published_at).toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo" })}<small className="admin-history-author">Responsável: {responsibleAccount(version)}</small></span>
             <small>{version.report.created} criados · {version.report.updated} alterados · {version.report.deactivated} excluídos</small>
           </button>
         </li>)}</ul>
         </div>
         {selectedVersion && <div id="admin-history-detail" ref={historyDetailRef} className="admin-history-detail">
           <h3>Versão {selectedVersion.id}{selectedVersion.active ? " · atual" : ""}</h3>
-          <p className="admin-history-author">Autor: {selectedVersion.author_name || "Autor não disponível"}</p>
+          <p className="admin-history-author">Responsável: {responsibleAccount(selectedVersion)}</p>
           <HistoryBrowser key={selectedVersion.id} versionId={String(selectedVersion.id)} changedRows={[...new Set(selectedVersion.report.changes.flatMap((change) => change.sourceRow ? [change.sourceRow] : []))]} />
           <details className="admin-change-details"><summary>Ver diferenças por coluna ({selectedVersion.report.changes.length})</summary><ChangesTable changes={selectedVersion.report.changes} /></details>
           {!selectedVersion.active && <button type="button" className="admin-restore" disabled={busy} onClick={() => void restore(selectedVersion)}>Restaurar esta versão</button>}

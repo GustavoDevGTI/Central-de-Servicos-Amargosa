@@ -10,7 +10,7 @@ export async function GET(request: Request) {
     await initializeCatalogDatabase();
     const result = await catalogPool().query(
       `SELECT p.id, p.source_filename, p.source_sha256, p.published_at, p.published_by,
-        u.name AS author_name, p.report, p.reverted_from, p.id = a.publication_id AS active
+        u.name AS author_name, u.username AS author_username, p.report, p.reverted_from, p.id = a.publication_id AS active
        FROM catalog_publications p LEFT JOIN "user" u ON u.id = p.published_by
        CROSS JOIN catalog_active a ORDER BY p.id DESC LIMIT $1`, [CATALOG_HISTORY_LIMIT],
     );

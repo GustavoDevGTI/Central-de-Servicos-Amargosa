@@ -42,6 +42,8 @@
 .admin-history-toggle{display:flex;flex-wrap:wrap;align-items:baseline;gap:.5rem 1.5rem;width:100%;padding:1rem .3rem;text-align:left;font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .admin-history-toggle:hover{background:#edf5ef}
 .admin-history-toggle span{flex:1}
+.admin-history-meta{min-width:0}
+.admin-history-meta .admin-history-author{display:block;margin-top:.25rem}
 .admin-history-toggle small{color:#526e5f}
 .admin-history-detail{padding:0 .3rem 1rem}
 .admin-history-detail .admin-restore{width:auto;padding:.7rem 1rem;background:#fff;border:1px solid #075397;border-radius:5px;color:#075397;font:inherit;font-weight:700;cursor:pointer}
