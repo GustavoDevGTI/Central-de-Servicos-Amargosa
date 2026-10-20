@@ -198,7 +198,7 @@ export default function AdminPage() {
         {preview.identical && <p>Esta planilha já corresponde à versão publicada.</p>}
         {!!preview.report.blockers.length && <div className="admin-blockers"><strong>Publicação pendente</strong><ul>{preview.report.blockers.map((item) => <li key={item}>{item}</li>)}</ul></div>}
         {preview.draftId && preview.services && <DraftBrowser key={preview.draftId} draftId={preview.draftId} services={preview.services} changedRows={[...new Set(preview.report.changes.flatMap((change) => change.sourceRow ? [change.sourceRow] : []))]} />}
-        <details className="admin-change-details"><summary>Ver diferenças por coluna ({preview.report.changes.length})</summary><ChangesTable changes={preview.report.changes} /></details>
+        <details className="admin-change-details" open><summary>Ver diferenças por coluna ({preview.report.changes.length})</summary><ChangesTable changes={preview.report.changes} /></details>
         <button type="button" className="admin-publish" onClick={() => void publish()} disabled={busy || !preview.draftId || !!preview.report.blockers.length || !preview.report.changes.length}>Publicar esta versão</button>
       </section>}
       <section className="admin-section" aria-labelledby="history-title"><h2 id="history-title">Histórico de publicações</h2>
@@ -216,7 +216,7 @@ export default function AdminPage() {
           <h3>Versão {selectedVersion.id}{selectedVersion.active ? " · atual" : ""}</h3>
           <p className="admin-history-author">Responsável: {responsibleAccount(selectedVersion)}</p>
           <HistoryBrowser key={selectedVersion.id} versionId={String(selectedVersion.id)} changedRows={[...new Set(selectedVersion.report.changes.flatMap((change) => change.sourceRow ? [change.sourceRow] : []))]} />
-          <details className="admin-change-details"><summary>Ver diferenças por coluna ({selectedVersion.report.changes.length})</summary><ChangesTable changes={selectedVersion.report.changes} /></details>
+          <details key={selectedVersion.id} className="admin-change-details" open><summary>Ver diferenças por coluna ({selectedVersion.report.changes.length})</summary><ChangesTable changes={selectedVersion.report.changes} /></details>
           {!selectedVersion.active && <button type="button" className="admin-restore" disabled={busy} onClick={() => void restore(selectedVersion)}>Restaurar esta versão</button>}
         </div>}
       </section>
