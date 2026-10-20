@@ -50,6 +50,9 @@ try {
   const sheet = workbook.getWorksheet("Catálogo consolidado");
   const target = sheet.getRows(2, sheet.rowCount - 1).find((r) => r.getCell(1).value === 22);
   assert.ok(target);
+  // Loaded Excel cells can share a style object. Clone before editing the
+  // fixture so marking one title cannot recolor other services as well.
+  target.getCell(3).style = structuredClone(target.getCell(3).style);
   target.getCell(3).fill = { type: "pattern", pattern: "solid", fgColor: { argb: "FFFF0000" } };
   const redBytes = Buffer.from(await workbook.xlsx.writeBuffer());
   // Model an older importer that stored this exact red file as still active.
