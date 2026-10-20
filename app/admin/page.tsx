@@ -155,7 +155,16 @@ export default function AdminPage() {
 
   return <main className="admin-shell">
     <header className="admin-topbar">
-      <Link href="/"><Image src="/prefeitura-amargosa-logo-preta.png" alt="Prefeitura de Amargosa" width={210} height={52} unoptimized /></Link>
+      <Link
+        href={section === "catalog" ? "/" : "/admin"}
+        aria-label={section === "catalog" ? "Ir para a página inicial da Central" : "Voltar ao início do admin"}
+        onClick={(event) => {
+          if (section === "catalog" || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
+          event.preventDefault();
+          setSection("catalog");
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        }}
+      ><Image src="/prefeitura-amargosa-logo-preta.png" alt="Prefeitura de Amargosa" width={210} height={52} unoptimized /></Link>
       <nav aria-label="Administração"><a href="/" target="_blank" rel="noreferrer">Ver a Central</a><button type="button" onClick={() => void adminAuthClient.signOut().then(() => window.location.assign("/admin/login"))}>Sair</button></nav>
     </header>
     <div className="admin-content">
