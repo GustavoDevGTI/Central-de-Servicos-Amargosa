@@ -2,6 +2,7 @@ import { answerWithAgent } from "../../../agent/agent-service";
 import {
   checkAgentRateLimit,
   isAgentBudgetAvailable,
+  recordAgentAttempt,
   recordAgentUsage,
 } from "../../../agent/agent-store";
 import {
@@ -14,6 +15,7 @@ import {
   AiProviderRequestError,
 } from "../../../agent/providers/ai-provider";
 import { createAiProvider } from "../../../agent/providers/chat-completions-provider";
+import { runtimeEnv } from "../../../agent/runtime-env";
 import { isAllowedRequestOrigin } from "../../../request-origin";
 import type {
   AgentChatRequest,
@@ -25,6 +27,24 @@ import { runtimeCatalog } from "../../../../lib/runtime-catalog";
 export const dynamic = "force-dynamic";
 
 const SESSION_PATTERN = /^[a-zA-Z0-9_-]{16,80}$/;
+
+function configuredProvider() {
+  return runtimeEnv("AI_PROVIDER")?.toLocaleLowerCase("en-US") === "openai"
+    ? "openai" as const
+    : "deepseek" as const;
+}
+
+function configuredModel(provider: "deepseek" | "openai") {
+  return runtimeEnv("AI_MODEL") || (provider === "openai" ? "gpt-5.4-nano" : "deepseek-flash");
+}
+
+async function recordAttemptSafely(input: Parameters<typeof recordAgentAttempt>[0]) {
+  try {
+    await recordAgentAttempt(input);
+  } catch (error) {
+    console.error("[amanda-usage-storage-error]", error);
+  }
+}
 
 function json(
   data: AgentChatResponse | AgentErrorResponse,
@@ -57,6 +77,9 @@ async function clientKey(request: Request, sessionId: string) {
 
 export async function POST(request: Request) {
   const requestId = crypto.randomUUID();
+  const startedAt = Date.now();
+  const provider = configuredProvider();
+  const model = configuredModel(provider);
   if (!isSameOrigin(request)) {
     return json({ error: "Origem não permitida.", requestId }, 403);
   }
@@ -93,8 +116,13 @@ export async function POST(request: Request) {
 
   const sanitizedMessage = removePersonalData(rawMessage);
   const sanitizedHistory = sanitizeAgentHistory(body.history);
+  const personalDataRemoved = sanitizedMessage.removed || sanitizedHistory.personalDataRemoved;
   const limit = await checkAgentRateLimit(await clientKey(request, sessionId));
   if (limit.limited) {
+    await recordAttemptSafely({
+      requestId, provider, model, status: "rate_limited", personalDataRemoved,
+      durationMs: Date.now() - startedAt,
+    });
     return json(
       {
         error: "Muitas mensagens foram enviadas. Aguarde para tentar novamente.",
@@ -106,6 +134,10 @@ export async function POST(request: Request) {
     );
   }
   if (!(await isAgentBudgetAvailable())) {
+    await recordAttemptSafely({
+      requestId, provider, model, status: "budget_exceeded", personalDataRemoved,
+      durationMs: Date.now() - startedAt,
+    });
     return json(
       {
         error:
@@ -124,7 +156,19 @@ export async function POST(request: Request) {
       createAiProvider(),
       catalog.services,
     );
-    const estimatedCostBrl = await recordAgentUsage(answer.provider, answer.usage);
+    const estimatedCostBrl = await recordAgentUsage(answer.provider, answer.usage, {
+      requestId,
+      model,
+      providerCalls: answer.providerCalls,
+      toolCalls: answer.toolCalls,
+      services: answer.services.map((service) => ({
+        id: service.id,
+        title: service.title,
+        category: service.category,
+      })),
+      personalDataRemoved,
+      durationMs: Date.now() - startedAt,
+    });
     console.info(
       "[amanda-usage]",
       JSON.stringify({
@@ -138,8 +182,7 @@ export async function POST(request: Request) {
         estimatedCostBrl: Number(estimatedCostBrl.toFixed(6)),
         serviceIds: answer.services.map((service) => service.id),
         detailStatuses: answer.services.map((service) => service.detailsStatus),
-        personalDataRemoved:
-          sanitizedMessage.removed || sanitizedHistory.personalDataRemoved,
+        personalDataRemoved,
       }),
     );
     return json(
@@ -148,8 +191,7 @@ export async function POST(request: Request) {
         services: answer.services,
         sessionId,
         requestId,
-        personalDataRemoved:
-          sanitizedMessage.removed || sanitizedHistory.personalDataRemoved || undefined,
+        personalDataRemoved: personalDataRemoved || undefined,
       },
       200,
       {
@@ -163,6 +205,10 @@ export async function POST(request: Request) {
     );
   } catch (error) {
     if (error instanceof AiProviderConfigurationError) {
+      await recordAttemptSafely({
+        requestId, provider, model, status: "configuration_error", personalDataRemoved,
+        durationMs: Date.now() - startedAt,
+      });
       return json(
         {
           error:
@@ -173,6 +219,10 @@ export async function POST(request: Request) {
       );
     }
     if (error instanceof AiProviderRequestError) {
+      await recordAttemptSafely({
+        requestId, provider, model, status: "provider_error", personalDataRemoved,
+        durationMs: Date.now() - startedAt,
+      });
       return json(
         {
           error:
@@ -182,6 +232,10 @@ export async function POST(request: Request) {
         502,
       );
     }
+    await recordAttemptSafely({
+      requestId, provider, model, status: "internal_error", personalDataRemoved,
+      durationMs: Date.now() - startedAt,
+    });
     return json(
       {
         error:

@@ -18,8 +18,14 @@ O teste `scripts/local-admin-exclusion-test.mjs` verifica a publicação e reati
 
 O histórico mantém no máximo **20 publicações com mudanças**, incluindo a edição ativa. As antigas, seus arquivos e suas diferenças são excluídos automaticamente. A limpeza não remove as páginas inativas preservadas na edição atual. Operações sem diferenças não geram publicação. A restauração com mudanças gera uma edição nova e não altera os registros anteriores retidos.
 
-A lista tem rolagem. Selecione uma edição e abra a comparação para conferir o antes e o depois. O aviso verde identifica a edição atual em uso; rascunhos não publicados usam aviso amarelo. As páginas de serviços, inclusive prévias e histórico, mantêm acessibilidade, VLibras e assistência por IA. A tela de gestão não exibe os widgets do portal.
+O histórico e as diferenças por coluna exibem 10 itens por página. Selecione uma edição e abra a comparação para conferir o antes e o depois. O aviso verde identifica a edição atual em uso; rascunhos não publicados usam aviso amarelo. As páginas de serviços, inclusive prévias e histórico, mantêm acessibilidade, VLibras e assistência por IA. A tela de gestão não exibe os widgets do portal.
 
 ## Diagnóstico
 
 A seção fica disponível para os dois perfis e incorpora o relatório Google Data Studio configurado em `lib/admin-diagnostics.ts`. A incorporação deve estar habilitada no Google. O acesso também depende das permissões do relatório na conta Google; o login do admin não concede acesso ao relatório externo.
+
+## Uso da Amanda
+
+A seção fica disponível para os dois perfis e apresenta requisições, tokens, taxa de sucesso, falhas, serviços identificados e histórico recente. É possível consultar intervalos rápidos, todo o histórico ou um período personalizado. A lista detalhada exibe 10 requisições por página e permite navegar por todo o resultado filtrado. Os eventos são persistidos no mesmo PostgreSQL do admin a partir da implantação desta versão; os logs antigos do contêiner não são importados automaticamente.
+
+Não são armazenados pergunta, resposta, endereço IP ou identificação do cidadão. A lista de requisições exibe somente o identificador técnico, o uso do provedor e os serviços que a Amanda identificou. O painel não apresenta estimativas financeiras.

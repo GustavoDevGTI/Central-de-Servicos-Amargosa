@@ -8,6 +8,7 @@ import { OFFICIAL_CATALOG_LINK } from "../../lib/catalog-source-url";
 import { DraftBrowser, type PreviewService } from "./draft-browser";
 import { HistoryBrowser } from "./history-browser";
 import { DiagnosticsPanel } from "./diagnostics-panel";
+import { AiUsagePanel } from "./ai-usage-panel";
 import { UsersPanel } from "./users-panel";
 import { canManageUsers, type AdminRole } from "../../lib/admin-permissions";
 import "./admin.css";
@@ -29,6 +30,35 @@ const kindName: Record<string, string> = {
   reactivated: "Reativado", column: "Coluna nova",
 };
 
+const CATALOG_PAGE_SIZE = 10;
+
+function visiblePages(current: number, total: number) {
+  const count = Math.min(5, total);
+  const start = Math.max(1, Math.min(current - 2, total - count + 1));
+  return Array.from({ length: count }, (_, index) => start + index);
+}
+
+function PaginationControls({ page, totalItems, itemName, onPageChange }: {
+  page: number;
+  totalItems: number;
+  itemName: string;
+  onPageChange: (page: number) => void;
+}) {
+  const totalPages = Math.max(1, Math.ceil(totalItems / CATALOG_PAGE_SIZE));
+  const currentPage = Math.min(page, totalPages);
+  if (!totalItems) return null;
+  return <nav className="admin-pagination" aria-label={`Paginação de ${itemName}`}>
+    <p>Exibindo {(currentPage - 1) * CATALOG_PAGE_SIZE + 1}–{Math.min(currentPage * CATALOG_PAGE_SIZE, totalItems)} de {totalItems} {itemName}</p>
+    <div>
+      <button type="button" disabled={currentPage === 1} onClick={() => onPageChange(currentPage - 1)}>Anterior</button>
+      {visiblePages(currentPage, totalPages).map((value) => <button type="button" key={value}
+        aria-label={`Página ${value}`} aria-current={value === currentPage ? "page" : undefined}
+        onClick={() => onPageChange(value)}>{value}</button>)}
+      <button type="button" disabled={currentPage === totalPages} onClick={() => onPageChange(currentPage + 1)}>Próxima</button>
+    </div>
+  </nav>;
+}
+
 async function responseJson<T>(response: Response): Promise<T> {
   const body = await response.json() as T & { error?: string };
   if (!response.ok) throw new Error(body.error || "A operação falhou.");
@@ -36,35 +66,43 @@ async function responseJson<T>(response: Response): Promise<T> {
 }
 
 function ChangesTable({ changes }: { changes: Change[] }) {
+  const [page, setPage] = useState(1);
   if (!changes.length) return <p>Nenhuma alteração identificada.</p>;
-  return <div className="admin-table-scroll"><table className="admin-changes-table">
+  const totalPages = Math.max(1, Math.ceil(changes.length / CATALOG_PAGE_SIZE));
+  const currentPage = Math.min(page, totalPages);
+  const visibleChanges = changes.slice((currentPage - 1) * CATALOG_PAGE_SIZE, currentPage * CATALOG_PAGE_SIZE);
+  return <><div className="admin-table-scroll"><table className="admin-changes-table">
     <thead><tr><th>Serviço</th><th>Tipo</th><th>Coluna</th><th>Antes</th><th>Depois</th></tr></thead>
-    <tbody>{changes.map((change, index) => <tr key={`${change.serviceId}-${change.column}-${index}`}>
+    <tbody>{visibleChanges.map((change, index) => <tr key={`${change.serviceId}-${change.column}-${(currentPage - 1) * CATALOG_PAGE_SIZE + index}`}>
       <td><strong>{change.serviceTitle}</strong><small>ID {change.sourceRow || change.serviceId}</small></td>
       <td>{kindName[change.kind] || change.kind}</td>
       <td>{change.column || "—"}</td>
       <td className="admin-value">{change.before ?? "—"}</td>
       <td className="admin-value">{change.after ?? "—"}</td>
     </tr>)}</tbody>
-  </table></div>;
+  </table></div><PaginationControls page={currentPage} totalItems={changes.length} itemName="alterações" onPageChange={setPage} /></>;
 }
 
 export default function AdminPage() {
   const [ready, setReady] = useState(false);
   const [currentUser, setCurrentUser] = useState<{ id: string; name: string; role: AdminRole } | null>(null);
-  const [section, setSection] = useState<"catalog" | "diagnostics" | "users">("catalog");
+  const [section, setSection] = useState<"catalog" | "diagnostics" | "ai-usage" | "users">("catalog");
   const [file, setFile] = useState<File | null>(null);
   const [sourceUrl, setSourceUrl] = useState(OFFICIAL_CATALOG_LINK);
   const [officialSource, setOfficialSource] = useState<{ url: string; embedUrl: string } | null>(null);
   const [showWorkbook, setShowWorkbook] = useState(false);
   const [preview, setPreview] = useState<Preview | null>(null);
   const [versions, setVersions] = useState<Version[]>([]);
+  const [historyPage, setHistoryPage] = useState(1);
   const [selected, setSelected] = useState<Version | null>(null);
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
   const historyDetailRef = useRef<HTMLDivElement>(null);
   const selectedVersion = versions.find((version) => version.id === selected?.id);
+  const historyTotalPages = Math.max(1, Math.ceil(versions.length / CATALOG_PAGE_SIZE));
+  const currentHistoryPage = Math.min(historyPage, historyTotalPages);
+  const visibleVersions = versions.slice((currentHistoryPage - 1) * CATALOG_PAGE_SIZE, currentHistoryPage * CATALOG_PAGE_SIZE);
 
   useEffect(() => {
     if (selected?.id) historyDetailRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -130,7 +168,7 @@ export default function AdminPage() {
         body: JSON.stringify({ draftId: preview.draftId }),
       }));
       setMessage(`Versão ${result.version} publicada.`);
-      setPreview(null); setFile(null); await loadHistory();
+      setPreview(null); setFile(null); setHistoryPage(1); await loadHistory();
     } catch (reason) {
       setError(reason instanceof Error ? reason.message : "Falha ao publicar.");
     } finally { setBusy(false); }
@@ -145,7 +183,7 @@ export default function AdminPage() {
         body: JSON.stringify({ versionId: Number(version.id) }),
       }));
       setMessage(result.identical ? "Esta versão já corresponde ao catálogo atual." : `Versão ${result.version} publicada com o conteúdo da versão ${version.id}.`);
-      setPreview(null); setSelected(null); await loadHistory();
+      setPreview(null); setSelected(null); setHistoryPage(1); await loadHistory();
     } catch (reason) {
       setError(reason instanceof Error ? reason.message : "Falha ao restaurar.");
     } finally { setBusy(false); }
@@ -168,13 +206,15 @@ export default function AdminPage() {
       <nav aria-label="Administração"><a href="/" target="_blank" rel="noreferrer">Ver a Central</a><button type="button" onClick={() => void adminAuthClient.signOut().then(() => window.location.assign("/admin/login"))}>Sair</button></nav>
     </header>
     <div className="admin-content">
-      <header className="admin-page-heading"><span className="admin-kicker">Administração</span><h1>{section === "catalog" ? "Catálogo de serviços" : section === "diagnostics" ? "Diagnóstico" : "Usuários"}</h1></header>
+      <header className="admin-page-heading"><span className="admin-kicker">Administração</span><h1>{section === "catalog" ? "Catálogo de serviços" : section === "diagnostics" ? "Diagnóstico" : section === "ai-usage" ? "Uso da Amanda" : "Usuários"}</h1></header>
       <nav className="admin-section-nav admin-preview-actions" aria-label="Seções do admin">
         <button type="button" aria-pressed={section === "catalog"} onClick={() => setSection("catalog")}>Catálogo</button>
         <button type="button" aria-pressed={section === "diagnostics"} onClick={() => setSection("diagnostics")}>Diagnóstico</button>
+        <button type="button" aria-pressed={section === "ai-usage"} onClick={() => setSection("ai-usage")}>Uso da Amanda</button>
         {canManageUsers(currentUser?.role) && <button type="button" aria-pressed={section === "users"} onClick={() => setSection("users")}>Usuários</button>}
       </nav>
       {section === "diagnostics" && <DiagnosticsPanel />}
+      {section === "ai-usage" && <AiUsagePanel />}
       {section === "users" && currentUser && canManageUsers(currentUser.role) && <UsersPanel currentUserId={currentUser.id} />}
       {section === "catalog" && <>
       {message && <p className="admin-success" role="status">{message}</p>}
@@ -213,7 +253,7 @@ export default function AdminPage() {
       <section className="admin-section" aria-labelledby="history-title"><h2 id="history-title">Histórico de publicações</h2>
         {!versions.length && <p>Nenhuma planilha publicada ainda.</p>}
         <div className="admin-history-scroll" role="region" aria-labelledby="history-title" tabIndex={0}>
-        <ul className="admin-history">{versions.map((version) => <li key={version.id}>
+        <ul className="admin-history">{visibleVersions.map((version) => <li key={version.id}>
           <button type="button" className="admin-history-toggle" aria-expanded={selected?.id === version.id} aria-controls="admin-history-detail" onClick={() => setSelected(selected?.id === version.id ? null : version)}>
             <strong>Versão {version.id}{version.active ? " · atual" : ""}{version.reverted_from ? ` · restauração da ${version.reverted_from}` : ""}</strong>
             <span className="admin-history-meta">{version.source_filename} · {new Date(version.published_at).toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo" })}<small className="admin-history-author">Atualizado por: {responsibleAccount(version)}</small></span>
@@ -221,6 +261,7 @@ export default function AdminPage() {
           </button>
         </li>)}</ul>
         </div>
+        <PaginationControls page={currentHistoryPage} totalItems={versions.length} itemName="publicações" onPageChange={(value) => { setHistoryPage(value); setSelected(null); }} />
         {selectedVersion && <div id="admin-history-detail" ref={historyDetailRef} className="admin-history-detail">
           <h3>Versão {selectedVersion.id}{selectedVersion.active ? " · atual" : ""}</h3>
           <p className="admin-history-author">Atualizado por: {responsibleAccount(selectedVersion)}</p>
