@@ -1,12 +1,14 @@
 # Conteúdo da planilha no design existente
 
-A planilha é a fonte prioritária das fichas que têm espelho. Um registro novo ou alterado deve atualizar todas as páginas correspondentes. A regra permanente está em `AGENTS.md`: atualizar conteúdo nunca autoriza mudar o design.
+Este documento registra a carga histórica da planilha e sua cobertura de regressão. Desde 28/10/2026, o admin usa edição direta dos serviços, conforme `AGENTS.md` e [admin.md](admin.md). O conteúdo editorial salvo prevalece sobre as células arquivadas. A comparação XLSX/HTML abaixo verifica a base sem edições; edições diretas são conferidas contra seus campos salvos. Atualizar conteúdo nunca autoriza mudar o design.
 
 Fonte: aba Catálogo consolidado, planilha de 22/09/2026. SHA-256 da cópia utilizada: `a4202d2e236326bb7acec8ee412291d7488c1614529faa7f63035f50e2fbe61c`.
 
 São 150 registros: oito excluídos pela legenda, 142 ativos e 145 páginas com espelho. Os 16 serviços sem correspondência abaixo permanecem publicados por orientação do responsável.
 
 ## Apresentação
+
+Desde 28/10/2026, por autorização do usuário, os títulos seguem a nomenclatura BA.GOV e as fichas incluem “Quer saber mais?” com informações do próprio serviço. Valores inteiramente vazios ou “A preencher” são exibidos como “Não informado.”; para Prazo, “Indeterminado.”. Essa exceção é apenas visual: valores preenchidos, células originais, JSON e XLSX permanecem intactos. Custo desconhecido não significa gratuidade. Os verificadores independentes conferem essas equivalências e a igualdade literal dos demais valores.
 
 Os modelos de página e estilos existentes foram preservados. Título, descrição, requisitos, documentos, passos, atendimento, custo, prazo, contatos e links vêm das células originais. As etapas são repartidas apenas nos marcadores numerados, sem modificar o texto, e exibidas na lista existente com os números em destaque. Os documentos obrigatórios e opcionais ocupam a lista original. A documentação consolidada é usada somente se essas duas colunas estiverem vazias, evitando duplicação.
 

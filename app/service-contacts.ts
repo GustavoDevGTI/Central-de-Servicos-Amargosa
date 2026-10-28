@@ -197,6 +197,7 @@ function responsibleSector(raw: string, currentDepartment: string): string | und
 }
 
 type ServiceContactSource = {
+  directEdit?: import("./service-edit-fields").DirectServiceEdit;
   id: string;
   department: string;
   workbookCells?: Record<string, string>;
@@ -270,13 +271,17 @@ export function contactForService(service: ServiceContactSource): ServiceContact
   const basePhone = source?.phone || channelPhone?.match(/\(\d{2}\)\s*\d{4,5}-\d{4}/)?.[0] || office.phone.match(/\(\d{2}\)\s*\d{4,5}-\d{4}/)?.[0] || office.phone;
   const channelExtension = channelPhone?.match(/ramal\s*(\d+)/i)?.[1];
   const extension = source?.extension || channelExtension || office.phone.match(/ramal\s*(\d+)/i)?.[1];
+  const directPhone = service.directEdit?.fields.phone ?? basePhone;
+  const directExtension = service.directEdit?.fields.extension ?? extension;
   return {
-    name,
-    officeName: name === office.name ? undefined : office.name,
-    phone: extension ? `${basePhone}, ramal ${extension}` : basePhone,
+    name: service.directEdit?.fields.department ?? name,
+    officeName: service.directEdit?.fields.secretariat ?? (name === office.name ? undefined : office.name),
+    phone: service.directEdit?.fields.phone !== undefined || service.directEdit?.fields.extension !== undefined
+      ? directPhone ? `${directPhone}${directExtension ? `, ramal ${directExtension}` : ""}` : ""
+      : extension ? `${basePhone}, ramal ${extension}` : basePhone,
     extensionLabel: extension ? (source?.extension || channelExtension ? "ramal do setor" : name === office.name ? "ramal" : "ramal da secretaria") : undefined,
     address: office.address,
-    email: source?.email || channelEmail || office.email,
+    email: service.directEdit?.fields.email ?? (source?.email || channelEmail || office.email),
     emailLabel: source?.email || channelEmail || name === office.name ? "E-mail" : "E-mail da secretaria",
     officialUrl: office.officialUrl,
   };

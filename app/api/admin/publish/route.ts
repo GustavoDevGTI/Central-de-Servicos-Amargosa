@@ -21,8 +21,9 @@ export async function POST(request: Request) {
       }>("SELECT * FROM catalog_drafts WHERE id = $1 FOR UPDATE", [body.draftId]);
       const item = draft.rows[0];
       if (!item || item.created_by !== session.user.id) throw new Error("Prévia não encontrada");
+      if (item.snapshot.mode !== "direct") throw new Error("Esta prévia antiga não pode ser salva. Abra o serviço no editor e compare novamente.");
       if (Number(item.base_publication_id || 0) !== Number(current.rows[0]?.publication_id || 0)) {
-        throw new Error("O catálogo mudou depois da prévia. Envie a planilha novamente.");
+        throw new Error("O catálogo mudou depois da comparação. Recarregue o serviço e compare novamente.");
       }
       if (item.report.blockers.length) throw new Error("Resolva as pendências indicadas antes de publicar.");
       if (!item.report.changes.length) throw new Error("Nenhuma alteração para publicar.");

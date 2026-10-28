@@ -20,6 +20,7 @@ import {
 } from "./service-request-system";
 
 export type Service = {
+  directEdit?: import("./service-edit-fields").DirectServiceEdit;
   id: string;
   type?: string;
   role?: string;

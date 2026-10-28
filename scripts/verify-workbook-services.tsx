@@ -101,6 +101,6 @@ assert.equal(fresh.summary, "  Descrição nova.\nExatamente como na fonte!  ");
 assert.equal(fresh.detailLayout, "rich");
 const freshHtml = renderToStaticMarkup(<ServiceDetail slug={fresh.slug!} initialService={fresh} />);
 assert.match(freshHtml, /class="service-steps"/);
-assert.match(freshHtml, /<section id="documentos"><h2>Documentos necessários<\/h2><ul>/);
+assert.match(freshHtml, /<section id="documentos"><h2>Pré requisitos e documentos necessários<\/h2><ul>/);
 console.log(JSON.stringify({ activeWorkbookRows: expectedIds.length, matchedPages: matched.length, comparisons,
   extraPages: services.filter((service) => !service.workbookCells).length, importRegression: "passed" }));

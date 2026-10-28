@@ -6,8 +6,8 @@ import { ServiceDetail } from "../internal-portal";
 import type { Service } from "../service-catalog";
 import "./admin.css";
 
-export function DraftServicePreview({ draftId, slug }: { draftId: string; slug: string }) {
-  return <ServiceSnapshotPreview apiUrl={`/api/admin/drafts/${encodeURIComponent(draftId)}`} slug={slug} banner="Prévia privada · conteúdo ainda não publicado" />;
+export function DraftServicePreview({ draftId, slug, before = false }: { draftId: string; slug: string; before?: boolean }) {
+  return <ServiceSnapshotPreview apiUrl={`/api/admin/drafts/${encodeURIComponent(draftId)}${before ? "?view=before" : ""}`} slug={slug} banner={before ? "Antes da edição" : "Prévia privada · conteúdo ainda não publicado"} />;
 }
 
 export function VersionServicePreview({ versionId, slug }: { versionId: string; slug: string }) {

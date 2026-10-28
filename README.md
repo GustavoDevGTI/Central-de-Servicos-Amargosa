@@ -1,6 +1,6 @@
 # Central de Serviços de Amargosa
 
-Portal municipal em React para localizar serviços públicos e encaminhar cada pessoa ao canal oficial responsável. A consulta pública não exige login. A área administrativa usa autenticação e PostgreSQL para manter usuários, planilhas, publicações e histórico.
+Portal municipal em React para localizar serviços públicos e encaminhar cada pessoa ao canal oficial responsável. A consulta pública não exige login. A área administrativa usa autenticação e PostgreSQL para manter usuários, conteúdo dos serviços, publicações e histórico.
 
 ## Funcionalidades
 
@@ -15,7 +15,7 @@ Portal municipal em React para localizar serviços públicos e encaminhar cada p
 - suporte a DeepSeek por padrão e OpenAI como provedor alternativo;
 - remoção preventiva de CPF, e-mail e telefone antes do envio ao provedor;
 - limite de mensagens, orçamento mensal estimado e fallback para a busca tradicional.
-- painel administrativo com importação de planilha, prévia, comparação e histórico das últimas 20 publicações com mudanças;
+- painel administrativo com busca e edição direta de serviços, comparação antes de salvar e histórico das últimas 20 publicações com mudanças;
 - dois perfis administrativos, controle de usuários e diagnóstico com relatório Data Studio.
 
 ## Stack
@@ -39,6 +39,8 @@ npm install
 ```
 
 ## Desenvolvimento local
+
+Para reproduzir o admin desta branch com PostgreSQL e criação automática da conta inicial em outra máquina, siga [docs/localhost.md](docs/localhost.md). A configuração Docker local compila o checkout atual e preserva os dados em um volume próprio.
 
 ```bash
 npm run dev

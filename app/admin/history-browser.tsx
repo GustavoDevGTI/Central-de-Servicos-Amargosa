@@ -6,7 +6,7 @@ import { ServicePicker, useServiceSelection } from "./service-picker";
 
 type HistoryPreview = { versionId: string; previousVersionId: string | null; services: PreviewService[]; previousServices: PreviewService[] };
 
-export function HistoryBrowser({ versionId, changedRows }: { versionId: string; changedRows: number[] }) {
+export function HistoryBrowser({ versionId, changedRows, changedIds = [] }: { versionId: string; changedRows: number[]; changedIds?: string[] }) {
   const [open, setOpen] = useState(false);
   const [data, setData] = useState<HistoryPreview | null>(null);
   const [error, setError] = useState("");
@@ -28,7 +28,7 @@ export function HistoryBrowser({ versionId, changedRows }: { versionId: string; 
   }, [open, versionId]);
   // Retain services removed by a restoration, and match pages by their explicit catalog ID.
   const available = [...new Map([...(data?.previousServices || []), ...(data?.services || [])].map((service) => [service.id, service])).values()]
-    .filter((service) => !onlyChanged || changedRows.includes(service.sourceRow || 0));
+    .filter((service) => !onlyChanged || changedRows.includes(service.sourceRow || 0) || changedIds.includes(service.id));
   const selection = useServiceSelection(available);
   const { selected, query } = selection;
   const before = data?.previousServices.find((service) => service.id === selected?.id && !service.inactive);

@@ -4,7 +4,7 @@ import sys
 from html.parser import HTMLParser
 from pathlib import Path
 from openpyxl import load_workbook
-from workbook_presentation_audit import verify_where_when, COLUMN
+from workbook_presentation_audit import verify_where_when, COLUMN, displayed_value
 
 root = Path(__file__).resolve().parents[1]
 folder = root / "tmp/workbook-audit"
@@ -74,16 +74,17 @@ for service_id, html in pages.items():
         assert set(page.fields) == set(expected), f"Missing/extra displayed fields: {service_id}: {set(page.fields) ^ set(expected)}"
     for column in expected:
         for value in page.fields[column]:
-            assert "".join(value) == cells[column], f"Changed visible text: {service_id}: {column}: {''.join(value)!r}"
+            expected_value = cells[column] if column == "Onde e quando solicitar2" else displayed_value(cells[column], column)
+            assert "".join(value) == expected_value, f"Changed visible text: {service_id}: {column}: {''.join(value)!r}"
             count += 1
     assert "legislacao" not in page.ids, f"Extra legislation: {service_id}"
     for css in ["service-steps"]:
         assert css in page.classes, f"Original component missing: {service_id}: {css}"
     assert "service-channel-list" in page.classes or "service-request-presencial" in page.classes, f"Contact card missing: {service_id}"
     assert '<section id="documentos"><h2>' in html
-    assert '<section id="documentos"><h2>Documentos necessários</h2><ul>' in html or service_id == "planilha-27-comunicacao-de-animais-soltos"
+    assert '<section id="documentos"><h2>Pré requisitos e documentos necessários</h2><ul>' in html or service_id == "planilha-27-comunicacao-de-animais-soltos"
     assert "Documentação necessária</h3>" not in html, f"Duplicated document section: {service_id}"
 result = {"sourceRows": len(original), "fullPages": len(pages), "visibleFieldOccurrences": count,
-    "differences": 0, "originalComponents": "preserved"}
+    "differences": 0, "originalComponents": "preserved", "sourceCells": "intact", "pendingPresentation": "authorized BA.GOV labels"}
 (folder / f"render{variant}-verification.json").write_text(json.dumps(result), encoding="utf8")
 print(json.dumps(result))

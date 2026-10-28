@@ -1,5 +1,6 @@
 import type { Service } from "./service-catalog";
 import { workbookFieldProps, type WorkbookCells } from "./workbook-service";
+import { isPendingServiceValue, serviceDisplayValue } from "./service-presentation";
 
 export const whereWhenColumn = "Onde e quando solicitar2";
 export type WhereWhenPart = {
@@ -55,13 +56,15 @@ function SourceParts({ service, placement }: { service: Service; placement: "int
   return <>{workbookWhereWhenParts(cells).filter(part => part.placement === placement).map(part => (
     <span key={part.start} {...workbookFieldProps(service, whereWhenColumn)}
       data-workbook-start={part.start} data-workbook-end={part.end}>
-      {cells[whereWhenColumn].slice(part.start, part.end)}
+      {cells[whereWhenColumn].slice(part.start, part.end).trim() && isPendingServiceValue(cells[whereWhenColumn])
+        ? serviceDisplayValue(cells[whereWhenColumn]) : cells[whereWhenColumn].slice(part.start, part.end)}
     </span>
   ))}</>;
 }
 
 export function WorkbookWhereWhenIntro({ service, className }: { service: Service; className?: string }) {
   const source = service.workbookCells![whereWhenColumn];
+  if (!source?.trim()) return <p className={className}>Não informado.</p>;
   const hasIntro = workbookWhereWhenParts(service.workbookCells!).some(part => part.placement === "intro" && source.slice(part.start, part.end).trim());
   return hasIntro ? <p className={className}><SourceParts service={service} placement="intro" /></p> : null;
 }

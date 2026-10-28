@@ -46,7 +46,7 @@ export function ServicePicker({ id, selection, totalCount }: { id: string; selec
     <div className="admin-service-combobox" onBlur={(event) => {
       if (!event.currentTarget.contains(event.relatedTarget)) { setOpen(false); setQuery(""); }
     }}>
-      <input ref={inputRef} id={id} type="text" role="combobox" value={open ? query : selected ? serviceLabel(selected) : ""} placeholder="Nome, URL ou ID da planilha" autoComplete="off"
+      <input ref={inputRef} id={id} type="text" role="combobox" value={open ? query : selected ? serviceLabel(selected) : ""} placeholder="Nome, URL ou ID do serviço" autoComplete="off"
         aria-expanded={open} aria-autocomplete="list" aria-controls={`${id}-options`} aria-activedescendant={open ? highlightedId : undefined} aria-describedby={`${id}-count`}
         onFocus={() => { setOpen(true); setHighlight(Math.max(0, choices.findIndex((service) => service.id === selected?.id))); }}
         onClick={() => setOpen(true)}

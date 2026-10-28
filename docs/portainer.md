@@ -36,9 +36,9 @@ Sem essa configuração de confiança, o Vinext interpreta a conexão interna co
 5. Aguarde `catalog-db` ficar saudável e confira os logs de inicialização do portal.
 6. Confira `/api/health`, `/`, `/servicos` e uma página de serviço; depois entre em `/admin/login`.
 7. Confira catálogo e diagnóstico com os dois perfis. Apenas o administrador geral deve ver Usuários.
-8. Antes de publicar conteúdo, importe a planilha oficial, confira as diferenças e as prévias. O banco novo começa com o catálogo original da imagem e histórico vazio.
+8. Busque um serviço no editor, altere um campo e confira a comparação antes/depois antes de salvar. O banco novo começa com o catálogo original da imagem e histórico vazio.
 
-Valide também uma busca da planilha oficial e uma análise por upload sem publicar. Login e consultas GET não exercitam a proteção de origem das operações POST. Solicitações sem origem ou com origem externa devem continuar recebendo HTTP 403.
+Valide também a comparação de uma edição sem salvar: o catálogo público deve permanecer inalterado. Login e consultas GET não exercitam a proteção de origem das operações POST. Solicitações sem origem ou com origem externa devem continuar recebendo HTTP 403. Nesta versão, importações administrativas de planilhas foram substituídas pela edição direta.
 
 A inicialização prepara o esquema da mesma versão do Better Auth utilizada pelo portal. A migração é coordenada por trava do PostgreSQL e recusa alterações classificadas como inseguras. O primeiro administrador só é criado em banco sem contas. As tabelas do catálogo são preparadas automaticamente; o healthcheck falha se o catálogo não estiver acessível.
 

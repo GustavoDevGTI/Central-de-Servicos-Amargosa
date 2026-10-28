@@ -1,0 +1,56 @@
+name: central-servicos-local
+
+services:
+  portal:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_SITE_URL: http://127.0.0.1:${LOCAL_PORT:-3100}
+    image: central-servicos-local:checkout
+    restart: unless-stopped
+    init: true
+    depends_on:
+      catalog-db:
+        condition: service_healthy
+    ports:
+      - "127.0.0.1:${LOCAL_PORT:-3100}:3000"
+    environment:
+      NODE_ENV: production
+      HOST: 0.0.0.0
+      PORT: 3000
+      VINEXT_TRUSTED_HOSTS: 127.0.0.1
+      NEXT_PUBLIC_SITE_URL: http://127.0.0.1:${LOCAL_PORT:-3100}
+      BETTER_AUTH_URL: http://127.0.0.1:${LOCAL_PORT:-3100}
+      BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET:?Execute node scripts/setup-local.mjs}
+      DATABASE_URL: postgresql://central:${POSTGRES_PASSWORD:?Execute node scripts/setup-local.mjs}@catalog-db:5432/central_catalog
+      BOOTSTRAP_ADMIN_NAME: ${BOOTSTRAP_ADMIN_NAME:-GTI}
+      BOOTSTRAP_ADMIN_EMAIL: ${BOOTSTRAP_ADMIN_EMAIL:-gti@localhost.invalid}
+      BOOTSTRAP_ADMIN_USERNAME: ${BOOTSTRAP_ADMIN_USERNAME:-GTI}
+      BOOTSTRAP_ADMIN_PASSWORD: ${BOOTSTRAP_ADMIN_PASSWORD:?Configure a senha local inicial}
+      AI_PROVIDER: ${AI_PROVIDER:-deepseek}
+      AI_MODEL: ${AI_MODEL:-deepseek-flash}
+      DEEPSEEK_API_KEY: ${DEEPSEEK_API_KEY:-}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+    security_opt:
+      - no-new-privileges:true
+
+  catalog-db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: central
+      POSTGRES_DB: central_catalog
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Execute node scripts/setup-local.mjs}
+    volumes:
+      - catalog-data:/var/lib/postgresql/data
+    security_opt:
+      - no-new-privileges:true
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U central -d central_catalog"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  catalog-data:

@@ -2,6 +2,8 @@ import { adminResponse, adminSession, sameOrigin } from "../../../../lib/admin-s
 import { initializeCatalogDatabase, withCatalogTransaction, type CatalogSnapshot } from "../../../../lib/catalog-db";
 import { compareCatalogSnapshots } from "../../../../lib/catalog-import";
 import { pruneCatalogHistory } from "../../../../lib/catalog-history";
+import { restoreServiceContent } from "../../../../lib/service-editor";
+import { createHash } from "node:crypto";
 
 export const dynamic = "force-dynamic";
 
@@ -24,14 +26,15 @@ export async function POST(request: Request) {
       }>("SELECT id, source_sha256, source_file, source_filename, snapshot FROM catalog_publications WHERE id = $1", [versionId]);
       if (!active.rows[0] || !target.rows[0]) throw new Error("Versão não encontrada");
       if (Number(active.rows[0].id) === versionId) throw new Error("Esta versão já está ativa");
-      const report = compareCatalogSnapshots(active.rows[0].snapshot, target.rows[0].snapshot);
+      const restoredSnapshot = restoreServiceContent(active.rows[0].snapshot, target.rows[0].snapshot);
+      const report = compareCatalogSnapshots(active.rows[0].snapshot, restoredSnapshot);
       if (!report.changes.length) return { version: Number(active.rows[0].id), identical: true };
       const result = await db.query<{ id: string }>(
         `INSERT INTO catalog_publications
          (source_sha256, source_file, source_filename, snapshot, report, published_by, reverted_from)
          VALUES ($1,$2,$3,$4,$5,$6,$7) RETURNING id`,
-        [target.rows[0].source_sha256, target.rows[0].source_file, target.rows[0].source_filename,
-          JSON.stringify(target.rows[0].snapshot), JSON.stringify(report), session.user.id, versionId],
+        [createHash("sha256").update(JSON.stringify(restoredSnapshot)).digest("hex"), Buffer.from(JSON.stringify(restoredSnapshot)), `Restauração de conteúdo · versão ${versionId}`,
+          JSON.stringify(restoredSnapshot), JSON.stringify(report), session.user.id, versionId],
       );
       const id = Number(result.rows[0].id);
       for (const change of report.changes) {

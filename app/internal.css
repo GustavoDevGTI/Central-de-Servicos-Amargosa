@@ -145,3 +145,5 @@
 .service-back-button:focus-visible,.service-share-button:focus-visible{outline:3px solid #f2c94c;outline-offset:3px}
 @media(max-width:760px){.service-detail-rich>header{padding-top:18px}}
 @media(prefers-reduced-motion:reduce){.service-back-button,.service-share-button{transition:none}}
+
+.service-more-expansion{border:1px solid var(--line);background:#fff;padding:18px 20px}.service-more-expansion summary{cursor:pointer;color:var(--ink);font-weight:700}.service-more-expansion>summary{font-size:1.25rem}.service-more-content{padding-top:16px}.service-more-content>details{padding:16px 0;border-top:1px solid var(--line)}.service-more-content h4{margin:16px 0 6px;font-size:1rem}.service-more-content p{white-space:pre-wrap;overflow-wrap:anywhere;margin:6px 0 14px}

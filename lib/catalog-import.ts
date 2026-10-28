@@ -5,6 +5,7 @@ import { applyWorkbookCells } from "../app/workbook-service";
 import spreadsheetServiceData from "../app/spreadsheet-service-data.json" with { type: "json" };
 import { searchSlug } from "../app/search-url";
 import { redExclusionMarker } from "./workbook-exclusion";
+import { compareServiceContent } from "./service-editor";
 import type { CatalogChange, CatalogReport, CatalogSnapshot } from "./catalog-db";
 
 export const CATALOG_SHEET = "Catálogo consolidado";
@@ -187,6 +188,7 @@ export async function analyzeWorkbook(bytes: Buffer, previous?: CatalogSnapshot)
 
 /** Audit a restoration against the currently published workbook. */
 export function compareCatalogSnapshots(previous: CatalogSnapshot, next: CatalogSnapshot): CatalogReport {
+  if (previous.mode === "direct" || next.mode === "direct") return compareServiceContent(previous, next);
   const changes: CatalogChange[] = [];
   for (const id of new Set([...Object.keys(previous.rows), ...Object.keys(next.rows)])) {
     const before = previous.rows[id];

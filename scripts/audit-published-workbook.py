@@ -9,7 +9,7 @@ from html.parser import HTMLParser
 from pathlib import Path
 
 from openpyxl import load_workbook
-from workbook_presentation_audit import verify_where_when, COLUMN
+from workbook_presentation_audit import verify_where_when, COLUMN, displayed_value
 
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE = Path(sys.argv[1])
@@ -69,7 +69,8 @@ def audit(service):
         if not result["hasMirror"]: return result
         cells = rows[str(service["sourceRow"])]
         def compare(column, actual):
-            equal = bool(actual) and all(value == cells[column] for value in actual)
+            expected = cells[column] if column == COLUMN else displayed_value(cells[column], column)
+            equal = bool(actual) and all(value == expected for value in actual)
             result["checks"].append({"column": column, "expected": cells[column], "actual": actual, "equal": equal})
             if not equal: result["differences"].append(column)
         def section(id):

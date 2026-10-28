@@ -1,8 +1,19 @@
 # Instruções para agentes do projeto
 
+## Edição direta no admin — regra vigente desde 28/10/2026
+
+Por solicitação do usuário, o fluxo administrativo passa a ser a busca e edição direta do conteúdo de cada serviço. Esta regra substitui a prioridade operacional da planilha descrita na seção histórica abaixo. Use o catálogo publicado como ponto de partida e aplique os campos editoriais por último; não sobrescreva edições diretas com o XLSX arquivado. A planilha, as células e os vínculos antigos permanecem como origem histórica e cobertura de regressão, sem importação administrativa ativa.
+
+- Permita apenas os campos de conteúdo definidos em `app/service-edit-fields.ts`. IDs, URLs das páginas, destino e texto dos botões de início e ajuda, plataforma de solicitação, layout, estilos, componentes e visibilidade não são editáveis por este fluxo. A validação é obrigatória no servidor, inclusive para requisições manuais.
+- A comparação prepara uma prévia privada antes/depois, usando o mesmo modelo das páginas públicas. Só o salvamento de uma comparação válida altera a Central. Qualquer edição posterior exige nova comparação; mudanças concorrentes no catálogo exigem recarregar o serviço.
+- Preserve texto, pontuação, espaços e quebras de linha digitados. Campos vazios seguem as equivalências de apresentação autorizadas abaixo. Mantenha acessibilidade, VLibras e assistência por IA nas páginas e nas prévias.
+- Serviços vinculados explicitamente ao mesmo registro continuam recebendo o mesmo conteúdo em todos os espelhos, com seus IDs e URLs preservados. Páginas inativas e dados de origem ficam arquivados.
+- Registre autor, data e diferenças por campo no PostgreSQL. Mantenha no máximo 20 publicações com mudanças, preservando a ativa; salvar sem diferenças não cria versão. A restauração recupera o conteúdo editável, preservando ações, estrutura, URLs e visibilidade atuais.
+- Valide o fluxo autenticado com banco local descartável, comparação sem publicação, salvamento, histórico, restauração, concorrência e rejeição de campos fixos. Execute testes do catálogo e editor, TypeScript, lint e build. A auditoria XLSX/HTML continua verificando a base histórica sem edições diretas; a fidelidade de uma edição deve ser comparada com os campos salvos, não com a antiga planilha.
+
 ## Planilha e páginas de serviços
 
-A planilha oficial é a fonte prioritária dos serviços que têm espelho no portal. Esta regra vale para qualquer agente que altere o catálogo, importe planilhas ou mantenha as páginas de serviços.
+As regras desta seção documentam a carga histórica e seus verificadores. Para edição administrativa, prevalece a seção de edição direta acima.
 
 Regra atual das importações administrativas: quando um ID deixa de existir na planilha OU sua linha é marcada em vermelho, registre a exclusão no relatório e oculte todos os seus espelhos ao publicar. Reconheça o preenchimento vermelho nas células de ID ou nome do serviço; células vermelhas isoladas de observação não excluem o serviço. Preserve no snapshot o ID, as células originais e as páginas inativas para permitir retorno pelo mesmo ID ou restauração do histórico. Não bloqueie a publicação por ausência de ID e não exija marcação vermelha para linhas removidas. Mantenha as exclusões históricas já registradas; reincluir um ID removido sem vermelho ou retirar uma marcação vermelha reconhecida reativa suas páginas com as células recebidas e as URLs preservadas.
 
@@ -19,6 +30,8 @@ O histórico administrativo mantém no máximo 20 publicações com mudanças. A
 - Se a conferência encontrar diferenças no projeto local, corrija-as e repita a comparação antes de concluir. Não entregue apenas um levantamento de divergências que podem ser corrigidas no código. Valide também a importação administrativa e todos os espelhos de uma mesma linha; não substitua textos, links ou campos vazios por dados antigos do site.
 
 ## Preservação obrigatória do design
+
+Apresentação autorizada em 28/10/2026: use os títulos de seção do modelo BA.GOV e a expansão “Quer saber mais?” com os grupos de consulta/comunicação, tempos de espera, contato/legislação e informações adicionais. As respostas vêm exclusivamente dos dados do próprio serviço; não replique conteúdo de uma ficha externa em outras páginas. Células vazias ou cujo conteúdo inteiro seja “A preencher” são apresentadas como “Não informado.”; no campo Prazo, use “Indeterminado.”. Preserve as células, o JSON, os snapshots e o XLSX originais. Não trate custo desconhecido como gratuito. Os verificadores devem conferir essas equivalências autorizadas e continuar exigindo igualdade literal de todo conteúdo preenchido.
 
 As páginas de serviços atuais, novas e alteradas devem manter os recursos de acessibilidade, VLibras e assistência por IA, inclusive nas prévias administrativas e no histórico. A ocultação desses recursos na área de gestão do admin não se aplica às visualizações das páginas de serviço.
 

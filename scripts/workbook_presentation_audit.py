@@ -5,6 +5,11 @@ import re
 COLUMN = "Onde e quando solicitar2"
 LABELS = {"telefone": "Telefone", "e-mail": "E-mail do setor/unidade", "ramal": "Ramal", "canal": "Plataforma", "plataforma": "Plataforma"}
 
+def displayed_value(value, column=None):
+    """Authorized placeholder presentation; substantive cells remain literal."""
+    pending = not value.strip() or re.fullmatch(r"a preencher[.!]?|\*?\s*informa[çc][aã]o a ser adicionada[.!]?|\*?\s*ser[aá] adicionado em breve[.!]?", value.strip(), re.I)
+    return ("Indeterminado." if column == "Prazo" else "Não informado.") if pending else value
+
 def verify_where_when(cells, partitions, visible_slices, visible_fields):
     parts = json.loads(partitions)
     source = cells[COLUMN]
@@ -22,12 +27,12 @@ def verify_where_when(cells, partitions, visible_slices, visible_fields):
             value = match[2].strip().removesuffix(".").removesuffix(";").rstrip()
             column = part["column"]
             assert cells[column].strip() and value == cells[column].strip(), "Different contact discarded"
-            assert cells[column] in visible_fields.get(column, []), "Contact has no visible equivalent"
+            assert displayed_value(cells[column], column) in visible_fields.get(column, []), "Contact has no visible equivalent"
         else:
             assert part["placement"] in {"intro", "hours"}
             if part["placement"] == "hours":
                 assert re.match(r"Horários?(?: de atendimento)?:|Horário e atendimento presencial devem ser confirmados com a unidade responsável\.", raw, re.I), "Unknown schedule extraction"
-            if raw.strip(): expected_slices.append((str(start), str(end), raw, part["placement"]))
+            if raw.strip(): expected_slices.append((str(start), str(end), displayed_value(raw), part["placement"]))
         cursor = end
     assert cursor == source_length, "Source information lost"
     actual = [tuple(item) for item in visible_slices if item[2].strip()]
