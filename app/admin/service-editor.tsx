@@ -124,7 +124,7 @@ export function ServiceEditor({ onSaved, onDirtyChange }: { onSaved: () => Promi
   return <>
     <div className="admin-preview-actions admin-editor-layout-switch" role="group" aria-label="Organização do editor">
       <button type="button" aria-pressed={sideBySide} onClick={() => chooseLayout(true)}>Lado a lado</button>
-      <button type="button" aria-pressed={!sideBySide} onClick={() => chooseLayout(false)}>Formato anterior</button>
+      <button type="button" aria-pressed={!sideBySide} onClick={() => chooseLayout(false)}>Vertical</button>
     </div>
     <div ref={workspaceRef} className={`admin-editor-workspace${sideBySide && loaded ? " admin-editor-workspace-parallel" : ""}`}>
     <section className="admin-section" aria-labelledby="edit-service-title">

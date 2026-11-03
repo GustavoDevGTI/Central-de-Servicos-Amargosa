@@ -6,7 +6,7 @@ O admin tem exatamente 34 campos com os nomes do PDF. Em “Ordem dos campos”,
 
 Na interface, os nomes são apresentados com a primeira letra maiúscula e o restante minúsculo, preservando BA.GOV, SIMP e WhatsApp. A caixa alta da tabela abaixo reproduz os nomes na fonte apenas para facilitar a conferência; não define a aparência do site.
 
-A troca Central/BA.GOV reorganiza apenas o editor para facilitar o preenchimento e a consulta dos dados na ordem desejada. Os mesmos campos aparecem uma única vez em ambos os modos. Respostas, itens em edição, diferenças e comparação válida são preservados; nenhuma publicação é criada e a página pública não muda de ordem. A preferência fica neste navegador, separada da opção “Lado a lado / Formato anterior”. O modo BA.GOV prepara a consulta na ordem da Carta para transcrição/exportação; não envia dados a outro portal nem gera arquivo automaticamente.
+A troca Central/BA.GOV reorganiza apenas o editor para facilitar o preenchimento e a consulta dos dados na ordem desejada. Os mesmos campos aparecem uma única vez em ambos os modos. Respostas, itens em edição, diferenças e comparação válida são preservados; nenhuma publicação é criada e a página pública não muda de ordem. A preferência fica neste navegador, separada da opção “Lado a lado / Vertical”. O modo BA.GOV prepara a consulta na ordem da Carta para transcrição/exportação; não envia dados a outro portal nem gera arquivo automaticamente.
 
 | Campo do PDF | Equivalente anterior | Apresentação |
 | --- | --- | --- |
@@ -57,7 +57,7 @@ As listas públicas de documentos, nas duas etapas, usam os mesmos limites de t�
 
 A segunda etapa fica imediatamente abaixo da primeira e deixa a gaveta “Quer saber mais?”. Seus documentos aparecem dentro da própria seção, sem o subtítulo público “Documentos necessários”. Sem descrição e documentos preenchidos, não aparece na ficha nem na navegação. Se apenas um dos campos tiver resposta, exiba somente esse conteúdo. Campos vazios, “A preencher” ou “Não informado.” não tornam a etapa visível. Os dois campos continuam disponíveis no editor, inclusive para remoção do conteúdo.
 
-O editor oferece a organização experimental “Lado a lado”: edição à esquerda e comparação à direita, com rolagens independentes em telas grandes. A prévia permite alternar Antes, Depois ou ambos. “Formato anterior” recupera a edição acima da comparação e mantém o conteúdo não salvo e a comparação válida; a preferência fica neste navegador. Em telas menores, os blocos se empilham. Alterar a organização não publica nada, e uma nova edição continua exigindo outra comparação antes de salvar.
+O editor oferece a organização experimental “Lado a lado”: edição à esquerda e comparação à direita, com rolagens independentes em telas grandes. A prévia permite alternar Antes, Depois ou ambos. “Vertical” coloca a edição acima da comparação e mantém o conteúdo não salvo e a comparação válida; a preferência fica neste navegador. Em telas menores, os blocos se empilham. Alterar a organização não publica nada, e uma nova edição continua exigindo outra comparação antes de salvar.
 
 Comparar e descartar ficam ao final dos campos, sem posição fixa ou persistente durante a rolagem. O único botão “Salvar alterações” fica fora da área de edição, no painel de comparação, e só é habilitado após uma comparação válida com mudanças.
 
