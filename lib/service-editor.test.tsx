@@ -16,6 +16,24 @@ function page(snapshot: CatalogSnapshot, id: string) {
 }
 const actions = (html: string) => [...html.matchAll(/<a\b[^>]*class="service-(?:reference-notice|sei-guide)[^"]*"[\s\S]*?<\/a>/g)].map((m) => m[0]);
 
+test("access link changes only the main start destinations, without an extra URL row or help changes", () => {
+  const snapshot = initialEditorSnapshot();
+  const selected = [snapshot.services.find((s) => s.slug === "parcelamento-de-debito-do-iptu")!, snapshot.services.find((s) => !s.workbookCells && s.slug && s.url)!];
+  for (const service of selected) {
+    const before = page(snapshot, service.id);
+    const url = "https://example.invalid/novo-acesso";
+    const result = editService(snapshot, service.id, { accessUrl: url });
+    const html = page(result.snapshot, service.id);
+    const startActions = actions(html).filter((a) => a.includes('class="service-reference-notice'));
+    assert.ok(startActions.length > 0);
+    if (service.slug === "parcelamento-de-debito-do-iptu") assert.equal(startActions.length, 2);
+    for (const action of startActions) { assert.ok(action.includes(`href="${url}"`)); assert.ok(action.includes("INICIAR")); }
+    assert.ok(!html.includes("Site / link de acesso"));
+    assert.ok(!html.includes(`>${url}</a>`));
+    assert.deepEqual(actions(html).filter((a) => a.includes('class="service-sei-guide')), actions(before).filter((a) => a.includes('class="service-sei-guide')));
+  }
+});
+
 test("direct edits update every mirror, preserve archived cells and URLs and render the exact edited text", () => {
   const before = initialEditorSnapshot();
   const original = structuredClone(before);

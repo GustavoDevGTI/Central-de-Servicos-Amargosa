@@ -10,6 +10,15 @@ def displayed_value(value, column=None):
     pending = not value.strip() or re.fullmatch(r"a preencher[.!]?|\*?\s*informa[çc][aã]o a ser adicionada[.!]?|\*?\s*ser[aá] adicionado em breve[.!]?", value.strip(), re.I)
     return ("Indeterminado." if column == "Prazo" else "Não informado.") if pending else value
 
+def verify_access_links(cells, targets):
+    """The access URL belongs to the main/repeated Iniciar buttons, not a separate text row."""
+    source = cells["Link de acesso"]
+    if re.match(r"https?://", source, re.I):
+        assert targets and all(target == source for target in targets), "Start buttons differ from the source access URL"
+    else:
+        assert not targets, "Unexpected start button for a missing access URL"
+    return len(targets)
+
 def verify_where_when(cells, partitions, visible_slices, visible_fields):
     parts = json.loads(partitions)
     source = cells[COLUMN]

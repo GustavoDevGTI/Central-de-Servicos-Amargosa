@@ -1189,7 +1189,6 @@ function ServiceContactSection({ service }: { service: Service }) {
     const phoneHref = /\d/.test(phone) ? `tel:+55${phone.replace(/\D/g, "")}` : undefined;
     const email = cells["E-mail do setor/unidade"];
     const validEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-    const link = cells["Link de acesso"];
     return (
       <section id="canais" className="service-contact-section">
         <h2>{serviceEditGroups[2].slice(3)}</h2>
@@ -1229,12 +1228,6 @@ function ServiceContactSection({ service }: { service: Service }) {
                 <span>{serviceFieldLabel("hours")}</span>
                 <strong><WorkbookWhereWhenHours service={service} /></strong>
               </div>}
-              <div>
-                <span>{serviceFieldLabel("accessUrl")}</span>
-                {/^https?:\/\//i.test(link)
-                  ? <a href={link} target="_blank" rel="noreferrer" {...workbookFieldProps(service, "Link de acesso")}>{serviceDisplayValue(link, "Link de acesso")}</a>
-                  : <strong {...workbookFieldProps(service, "Link de acesso")}>{serviceDisplayValue(link, "Link de acesso")}</strong>}
-              </div>
             </div>
           </div>
         </div>
@@ -1404,9 +1397,6 @@ function ServiceWhereWhenSection({ service, mergeContact = false }: { service: S
                     : <span {...workbookFieldProps(service, "E-mail do setor/unidade")}>{serviceDisplayValue(cells["E-mail do setor/unidade"], "E-mail do setor/unidade")}</span>}
                 </dd></div>
                 <div><dt>Plataforma</dt><dd {...workbookFieldProps(service, "Plataforma")}>{serviceDisplayValue(cells["Plataforma"], "Plataforma")}</dd></div>
-                <div><dt>{serviceFieldLabel("accessUrl")}</dt><dd>{/^https?:\/\//i.test(service.url)
-                  ? <a href={service.url} target="_blank" rel="noreferrer" {...workbookFieldProps(service, "Link de acesso")}>{serviceDisplayValue(cells["Link de acesso"], "Link de acesso")}</a>
-                  : <span {...workbookFieldProps(service, "Link de acesso")}>{serviceDisplayValue(cells["Link de acesso"], "Link de acesso")}</span>}</dd></div>
               </>}
             </dl></div>
           </div>}

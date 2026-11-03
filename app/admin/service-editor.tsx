@@ -5,6 +5,7 @@ import type { PreviewService } from "./draft-browser";
 import { serviceEditFields, serviceEditGroups, type ServiceEditValues, type ServiceEditField } from "../service-edit-fields";
 import type { CatalogReport } from "../../lib/catalog-db";
 import { ChangesTable } from "./change-table";
+import { TopicEditor } from "./topic-editor";
 
 type Loaded = { version: number | null; service: { id: string; slug: string; title: string; fields: ServiceEditValues } };
 type Comparison = { draftId?: string; identical?: boolean; report: CatalogReport; affectedIds?: string[] };
@@ -24,6 +25,7 @@ export function ServiceEditor({ onSaved, onDirtyChange }: { onSaved: () => Promi
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
   const [mobile, setMobile] = useState(false);
+  const [editorRevision, setEditorRevision] = useState(0);
   const compareRef = useRef<HTMLDivElement>(null);
   const dirtyKeys = fields && loaded ? serviceEditFields.filter((f) => fields[f.key] !== loaded.service.fields[f.key]).map((f) => f.key) : [];
   const dirty = dirtyKeys.length > 0;
@@ -44,7 +46,7 @@ export function ServiceEditor({ onSaved, onDirtyChange }: { onSaved: () => Promi
     setBusy(true); setError(""); setMessage("");
     try {
       const data = await json<Loaded>(await fetch(`/api/admin/services/${encodeURIComponent(selection.selected.id)}`, { cache: "no-store" }));
-      setLoaded(data); setFields(data.service.fields); setComparison(null);
+      setLoaded(data); setFields(data.service.fields); setEditorRevision((revision) => revision + 1); setComparison(null);
     } catch (reason) { setError(reason instanceof Error ? reason.message : "Serviço indisponível."); }
     finally { setBusy(false); }
   }
@@ -66,7 +68,7 @@ export function ServiceEditor({ onSaved, onDirtyChange }: { onSaved: () => Promi
     try {
       await json(await fetch("/api/admin/publish", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ draftId: comparison.draftId }) }));
       const data = await json<Loaded>(await fetch(`/api/admin/services/${encodeURIComponent(loaded.service.id)}`, { cache: "no-store" }));
-      setLoaded(data); setFields(data.service.fields); setComparison(null); setMessage("Alterações salvas na Central.");
+      setLoaded(data); setFields(data.service.fields); setEditorRevision((revision) => revision + 1); setComparison(null); setMessage("Alterações salvas na Central.");
       const affected = new Set(comparison.affectedIds || [data.service.id]);
       setServices((old) => old.map((s) => affected.has(s.id) ? { ...s, title: data.service.title, inactive: data.service.fields.status === "Inativo" } : s));
       await onSaved();
@@ -77,6 +79,7 @@ export function ServiceEditor({ onSaved, onDirtyChange }: { onSaved: () => Promi
     if (!fields) return null;
     const id = `edit-${field.key}`;
     const name = "stage" in field ? `${field.stage} · ${field.label}` : field.label;
+    if ("list" in field) return <TopicEditor key={`${editorRevision}:${field.key}`} id={id} label={field.label} name={name} value={fields[field.key]} mode={field.list} onChange={(value) => change(field.key, value)} />;
     if ("multiple" in field) return <fieldset className="admin-editor-modalities" key={field.key}><legend>{field.label}</legend>{field.multiple.map((option) => <label key={option}><input type="checkbox" checked={fields[field.key].split("\n").includes(option)} onChange={(event) => { const selected = new Set(fields[field.key].split("\n").filter(Boolean)); if (event.target.checked) selected.add(option); else selected.delete(option); change(field.key, field.multiple.filter((value) => selected.has(value)).join("\n")); }} />{option}</label>)}</fieldset>;
     return <label key={field.key} htmlFor={id}><span>{field.label}</span>{"options" in field
       ? <select id={id} aria-label={name} value={fields[field.key]} onChange={(event) => change(field.key, event.target.value)}>{field.options.map((option) => <option key={option} value={option}>{option || "Não informado."}</option>)}</select>
@@ -108,7 +111,7 @@ export function ServiceEditor({ onSaved, onDirtyChange }: { onSaved: () => Promi
         <div className="admin-preview-actions">
           <button type="button" disabled={busy || !dirty} onClick={() => void compare()}>{busy ? "Aguarde…" : "Comparar antes e depois"}</button>
           <button type="button" disabled={busy || !dirty || !comparison?.draftId} onClick={() => void save()}>Salvar alterações</button>
-          <button type="button" disabled={busy || !dirty} onClick={() => { setFields(loaded.service.fields); setComparison(null); setError(""); }}>Descartar edição</button>
+          <button type="button" disabled={busy || !dirty} onClick={() => { setFields(loaded.service.fields); setEditorRevision((revision) => revision + 1); setComparison(null); setError(""); }}>Descartar edição</button>
         </div>
       </div>}
     </section>

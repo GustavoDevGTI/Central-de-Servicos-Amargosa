@@ -97,6 +97,10 @@ try {
   const publicPage = await (await fetch(`${base}/servicos/${mirrors[0].slug}`)).text();
   for (const value of Object.values(privateValues)) assert.ok(!publicPage.includes(value), "Controle interno vazou na renderização pública");
   assert.ok(publicPage.includes(accessUrl));
+  const starts = [...publicPage.matchAll(/<a\b[^>]*class="service-reference-notice[^\"]*"[^>]*>/g)].map((match) => match[0]);
+  assert.ok(starts.length > 0);
+  for (const start of starts) assert.ok(start.includes(`href="${accessUrl}"`), "Todos os botões Iniciar usam o acesso editado");
+  assert.ok(!publicPage.includes("Site / link de acesso"), "O link não cria uma linha adicional na ficha");
   assert.ok(publicPage.includes("Analisar e informar o resultado."));
   assert.ok(publicPdf.services.filter((s) => s.sourceRow === 22).every((s) => s.url === accessUrl));
   const currentHide = await request(`/api/admin/services/${mirrors[0].id}`);

@@ -9,7 +9,7 @@ from html.parser import HTMLParser
 from pathlib import Path
 
 from openpyxl import load_workbook
-from workbook_presentation_audit import verify_where_when, COLUMN, displayed_value
+from workbook_presentation_audit import verify_where_when, verify_access_links, COLUMN, displayed_value
 
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE = Path(sys.argv[1])
@@ -68,6 +68,13 @@ def audit(service):
         result["markedFields"] = sum("data-workbook-column" in n.attrs for n in nodes)
         if not result["hasMirror"]: return result
         cells = rows[str(service["sourceRow"])]
+        try:
+            targets = [n.attrs.get("href") for n in nodes if n.tag == "a" and "service-reference-notice" in n.attrs.get("class", "").split()]
+            verify_access_links(cells, targets)
+            result["checks"].append({"column": "Link de acesso", "equal": True, "presentation": "main start button destinations verified", "actual": targets})
+        except AssertionError as error:
+            result["differences"].append("Link de acesso")
+            result["checks"].append({"column": "Link de acesso", "equal": False, "error": str(error)})
         def compare(column, actual):
             expected = cells[column] if column == COLUMN else displayed_value(cells[column], column)
             equal = bool(actual) and all(value == expected for value in actual)
@@ -77,7 +84,7 @@ def audit(service):
             return next((n for n in nodes if n.attrs.get("id") == id), Element())
         fields = ["Nome do serviço consolidado", "O que é", "Quem pode solicitar2", "Como solicitar - etapas",
             "Onde e quando solicitar2", "Custo", "Prazo", "Setor/Unidade responsável no SEI", "Telefone",
-            "E-mail do setor/unidade", "Plataforma", "Link de acesso"]
+            "E-mail do setor/unidade", "Plataforma"]
         docs = [c for c in ["Documentos obrigatórios", "Documentos opcionais"] if cells[c]]
         if not docs and cells["Documentação necessária"]: docs = ["Documentação necessária"]
         fields += docs + [c for c in ["Secretaria responsável", "Ramal"] if cells[c]]

@@ -8,7 +8,7 @@ export function ServiceMoreInformation({ service, hasHoursCard = false, hasManif
   const values = serviceEditValues(service);
   const fields = service.directEdit?.fields;
   const text = (key: ServiceEditField, value = values[key]) => <><h4>{serviceFieldLabel(key)}</h4><p>{serviceDisplayValue(value, ["waitingTime", "duration"].includes(key) ? "Prazo" : undefined)}</p></>;
-  const link = (key: "accessUrl" | "baGovUrl" | "ombudsman") => <><h4>{serviceFieldLabel(key)}</h4><p>{/^https?:\/\/\S+$/i.test(values[key]) ? <a href={values[key]} target="_blank" rel="noreferrer">{values[key]}</a> : serviceDisplayValue(values[key])}</p></>;
+  const link = (key: "baGovUrl" | "ombudsman") => <><h4>{serviceFieldLabel(key)}</h4><p>{/^https?:\/\/\S+$/i.test(values[key]) ? <a href={values[key]} target="_blank" rel="noreferrer">{values[key]}</a> : serviceDisplayValue(values[key])}</p></>;
   const additional = fields?.additional ?? (service.directEdit && service.directEdit.schema !== "carta-1-2026" ? values.additional : service.notice || "");
   const hasLegalSection = Boolean(service.legislation?.length || service.legislationNotice);
   return <section id="quer-saber-mais" className="service-more-information">
@@ -24,7 +24,6 @@ export function ServiceMoreInformation({ service, hasHoursCard = false, hasManif
         <details open><summary>{serviceEditGroups[2].slice(3)}</summary>
           {service.workbookCells && text("address")}
           {!service.workbookCells && !hasHoursCard && text("hours")}
-          {!service.workbookCells && link("accessUrl")}
           {text("consultation")}{link("baGovUrl")}
         </details>
         <details open><summary>Etapa 2 - análise e conclusão</summary>

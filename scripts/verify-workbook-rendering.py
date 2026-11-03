@@ -4,7 +4,7 @@ import sys
 from html.parser import HTMLParser
 from pathlib import Path
 from openpyxl import load_workbook
-from workbook_presentation_audit import verify_where_when, COLUMN, displayed_value
+from workbook_presentation_audit import verify_where_when, verify_access_links, COLUMN, displayed_value
 
 root = Path(__file__).resolve().parents[1]
 folder = root / "tmp/workbook-audit"
@@ -24,8 +24,10 @@ class Page(HTMLParser):
         self.stack = []; self.fields = {}; self.ids = []; self.classes = []; self.headings = []
         self.in_service = False
         self.partitions = []; self.source_slices = []
+        self.start_targets = []
     def handle_starttag(self, tag, attrs):
         attrs = dict(attrs)
+        if tag == "a" and "service-reference-notice" in attrs.get("class", "").split(): self.start_targets.append(attrs.get("href"))
         if "data-workbook-where-when-parts" in attrs: self.partitions.append(attrs["data-workbook-where-when-parts"])
         self.classes.extend(attrs.get("class", "").split())
         if attrs.get("id"): self.ids.append(attrs["id"])
@@ -59,7 +61,8 @@ for service_id, html in pages.items():
     cells = original[str(catalog[service_id]["sourceRow"])]
     expected = ["Nome do serviço consolidado", "Público", "O que é", "Quem pode solicitar2", "Como solicitar - etapas",
         "Onde e quando solicitar2", "Custo", "Prazo", "Setor/Unidade responsável no SEI", "Telefone",
-        "E-mail do setor/unidade", "Plataforma", "Link de acesso"]
+        "E-mail do setor/unidade", "Plataforma"]
+    count += verify_access_links(cells, page.start_targets)
     documents = [c for c in ["Documentos obrigatórios", "Documentos opcionais"] if cells[c]]
     if not documents and cells["Documentação necessária"]: documents = ["Documentação necessária"]
     expected += documents

@@ -26,7 +26,7 @@ Na interface, os nomes são apresentados com a primeira letra maiúscula e o res
 | HORÁRIO DE ATENDIMENTO | Horário extraído do atendimento | Cartão existente; na gaveta quando não há cartão correspondente |
 | TELEFONE / WHATSAPP | Telefone e ramal do cartão | Campo existente renomeado; valores completos preservados |
 | E-MAIL OFICIAL | E-mail do setor/unidade | Campo existente renomeado |
-| SITE / LINK DE ACESSO | Link de acesso / destino de solicitação | Editável no admin; atualiza link exibido e botão Iniciar, mantendo texto e formato |
+| SITE / LINK DE ACESSO | Link de acesso / destino de solicitação | Editável no admin; controla o destino dos botões Iniciar, mantendo texto e formato, sem linha adicional de URL na ficha |
 | MECANISMOS DE CONSULTA E ACOMPANHAMENTO | Consulta ou acesso | Campo da gaveta renomeado; sem inventar consulta por protocolo |
 | LINK ATUAL DO SERVIÇO NO BA.GOV | URL BA.GOV já cadastrada, quando disponível | Campo próprio novo na gaveta; não substitui automaticamente o link de solicitação |
 | REQUISITOS PARA SOLICITAR O SERVIÇO | Quem Pode Solicitar? | Bloco atual renomeado |
@@ -48,3 +48,5 @@ As quatro respostas internas ficam no snapshot e nas diferenças autenticadas, m
 Campos antigos que não existem no PDF deixam de ser entradas do formulário. Seus dados arquivados continuam legíveis e são preservados ao abrir/restaurar versões: documentação antiga permanece na primeira etapa e respostas adicionais antigas são conservadas em informações adicionais. A origem XLSX, os snapshots e as páginas inativas não são apagados. Campos vazios continuam como “Não informado.”; prazos sem informação usam “Indeterminado.”.
 
 O editor não permite alterar HTML, CSS, IDs, rotas, texto/formato dos botões ou o destino da ajuda. Links editáveis aceitam apenas HTTP/HTTPS completos e sem usuário/senha embutidos; o campo BA.GOV exige domínio BA.GOV. Requisições manuais passam pela mesma validação do formulário.
+
+Documentos necessários e descrições das duas etapas são editados em listas de itens, com inclusão, remoção e ordenação. A abertura do editor conserva os separadores, a numeração, os espaços e as quebras de linha originais; editar um item não reescreve os demais. A comparação continua obrigatória antes de salvar.
