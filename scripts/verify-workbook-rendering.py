@@ -4,7 +4,7 @@ import sys
 from html.parser import HTMLParser
 from pathlib import Path
 from openpyxl import load_workbook
-from workbook_presentation_audit import verify_where_when, verify_access_links, COLUMN, displayed_value
+from workbook_presentation_audit import verify_where_when, verify_access_links, verify_document_topics, COLUMN, displayed_value
 
 root = Path(__file__).resolve().parents[1]
 folder = root / "tmp/workbook-audit"
@@ -25,6 +25,7 @@ class Page(HTMLParser):
         self.in_service = False
         self.partitions = []; self.source_slices = []
         self.start_targets = []
+        self.document_slices = {}
     def handle_starttag(self, tag, attrs):
         attrs = dict(attrs)
         if tag == "a" and "service-reference-notice" in attrs.get("class", "").split(): self.start_targets.append(attrs.get("href"))
@@ -37,6 +38,8 @@ class Page(HTMLParser):
             field = "Público"
         value = [] if field else None
         if field: self.fields.setdefault(field, []).append(value)
+        if field and "data-workbook-topic-start" in attrs:
+            self.document_slices.setdefault(field, []).append((attrs["data-workbook-topic-start"], attrs["data-workbook-topic-end"], value))
         if field == COLUMN and "data-workbook-start" in attrs:
             placement = "hours" if any(frame[3].get("id") == "canais" or "service-request-presencial" in frame[3].get("class", "").split() for frame in self.stack) else "intro"
             self.source_slices.append((attrs["data-workbook-start"], attrs["data-workbook-end"], value, placement))
@@ -76,6 +79,9 @@ for service_id, html in pages.items():
     else:
         assert set(page.fields) == set(expected), f"Missing/extra displayed fields: {service_id}: {set(page.fields) ^ set(expected)}"
     for column in expected:
+        if column in documents:
+            count += verify_document_topics(cells[column], [(start, end, "".join(value)) for start, end, value in page.document_slices.get(column, [])])
+            continue
         for value in page.fields[column]:
             expected_value = cells[column] if column == "Onde e quando solicitar2" else displayed_value(cells[column], column)
             assert "".join(value) == expected_value, f"Changed visible text: {service_id}: {column}: {''.join(value)!r}"

@@ -37,7 +37,8 @@ import { serviceFieldLabel, serviceEditGroups } from "./service-edit-fields";
 import { servicePageCopy } from "./service-page-copy";
 import { serviceDisplayValue, serviceSectionLabels } from "./service-presentation";
 import { ServiceMoreInformation } from "./service-more-information";
-import { workbookDocumentColumns, workbookFieldProps, workbookStepParts } from "./workbook-service";
+import { workbookFieldProps, workbookStepParts } from "./workbook-service";
+import { ServiceDocumentItems } from "./service-documents";
 import { WorkbookWhereWhenIntro, WorkbookWhereWhenHours, workbookHasHours, workbookWhereWhenPresentationProps } from "./workbook-where-when";
 import { CollectionScheduleSection } from "./coleta-cronograma";
 import ShareServiceButton from "./share-service-button";
@@ -1630,14 +1631,7 @@ function RichServiceDetail({ service }: { service: Service }) {
             <section id="documentos">
               <h2>{serviceSectionLabels.documents}</h2>
               <ul>
-                {service.workbookCells && workbookDocumentColumns(service.workbookCells).length === 0 && <li>Não informado.</li>}
-                {service.workbookCells
-                  ? workbookDocumentColumns(service.workbookCells).map((column) => (
-                    <li key={column} {...workbookFieldProps(service, column)}>{serviceDisplayValue(service.workbookCells![column], column)}</li>
-                  ))
-                  : (service.documents?.length ? service.documents : [PENDING_SERVICE_INFORMATION]).map((entry) => (
-                    <li className={entry.startsWith("*") ? "service-pending-information" : undefined} key={entry}>{serviceDisplayValue(entry)}</li>
-                  ))}
+                <ServiceDocumentItems service={service} />
               </ul>
             </section>
             <section id="como-solicitar">
@@ -1833,9 +1827,7 @@ export function ServiceDetail({ slug, initialService }: { slug: string; initialS
               </h2>
               {service.documents?.length ? (
                 <ul>
-                  {service.documents.map((entry) => (
-                    <li className={entry.startsWith("*") ? "service-pending-information" : undefined} key={entry}>{serviceDisplayValue(entry)}</li>
-                  ))}
+                  <ServiceDocumentItems service={service} />
                 </ul>
               ) : (
                 <p className="service-pending-information">{serviceDisplayValue(PENDING_SERVICE_INFORMATION)}</p>

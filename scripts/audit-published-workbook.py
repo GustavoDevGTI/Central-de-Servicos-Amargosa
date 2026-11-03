@@ -9,7 +9,7 @@ from html.parser import HTMLParser
 from pathlib import Path
 
 from openpyxl import load_workbook
-from workbook_presentation_audit import verify_where_when, verify_access_links, COLUMN, displayed_value
+from workbook_presentation_audit import verify_where_when, verify_access_links, verify_document_topics, COLUMN, displayed_value
 
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE = Path(sys.argv[1])
@@ -89,6 +89,15 @@ def audit(service):
         if not docs and cells["Documentação necessária"]: docs = ["Documentação necessária"]
         fields += docs + [c for c in ["Secretaria responsável", "Ramal"] if cells[c]]
         for column in fields:
+            topic_nodes = [n for n in nodes if n.attrs.get("data-workbook-column") == column and "data-workbook-topic-start" in n.attrs]
+            if column in docs and topic_nodes:
+                try:
+                    verify_document_topics(cells[column], [(n.attrs["data-workbook-topic-start"], n.attrs["data-workbook-topic-end"], n.text()) for n in topic_nodes])
+                    result["checks"].append({"column": column, "equal": True, "presentation": "literal document topics in source order"})
+                except AssertionError as error:
+                    result["differences"].append(column)
+                    result["checks"].append({"column": column, "equal": False, "error": str(error)})
+                continue
             presentations = [n.attrs["data-workbook-where-when-parts"] for n in nodes if "data-workbook-where-when-parts" in n.attrs]
             if column == COLUMN and presentations:
                 try:

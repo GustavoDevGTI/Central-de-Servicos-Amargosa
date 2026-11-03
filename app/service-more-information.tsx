@@ -2,6 +2,7 @@ import type { Service } from "./service-catalog";
 import { serviceEditValues } from "./direct-service-content";
 import { serviceFieldLabel, serviceEditGroups, type ServiceEditField } from "./service-edit-fields";
 import { serviceDisplayValue } from "./service-presentation";
+import { documentTopicParts } from "./service-topics";
 
 /** Existing sections keep their content; unmatched public fields use this drawer. */
 export function ServiceMoreInformation({ service, hasHoursCard = false, hasManifestationSection = false }: { service: Service; contactAnchor?: string; hasHoursCard?: boolean; hasManifestationSection?: boolean }) {
@@ -27,7 +28,8 @@ export function ServiceMoreInformation({ service, hasHoursCard = false, hasManif
           {text("consultation")}{link("baGovUrl")}
         </details>
         <details open><summary>Etapa 2 - análise e conclusão</summary>
-          {text("stage2Description")}{text("stage2Documents")}
+          {text("stage2Description")}<h4>{serviceFieldLabel("stage2Documents")}</h4>
+          <ul>{documentTopicParts(values.stage2Documents).map((part, index) => <li key={index} style={{ whiteSpace: "pre-wrap", overflowWrap: "anywhere" }}>{serviceDisplayValue(part.text)}</li>)}</ul>
         </details>
         <details open><summary>{serviceEditGroups[4].slice(3)}</summary>
           {!hasLegalSection && text("legislation")}{text("priorities")}

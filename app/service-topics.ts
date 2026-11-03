@@ -26,6 +26,20 @@ export function writeTopics(list: TopicList): string {
   return list.prefix + list.items.map((text, index) => text + (list.separators[index] ?? "")).join("");
 }
 
+/** Public document items use the same boundaries as the editor; source strings stay intact. */
+export function documentTopicParts(value: string) {
+  const list = readTopics(value, "bulleted");
+  let cursor = 0;
+  const parts = list.items.map((text, index) => {
+    const start = cursor;
+    cursor += text.length;
+    const end = cursor;
+    cursor += list.separators[index]?.length ?? 0;
+    return { text, start, end };
+  }).filter((part) => part.text.trim());
+  return parts.length ? parts : [{ text: value, start: 0, end: value.length }];
+}
+
 export function changeTopic(list: TopicList, index: number, value: string): TopicList {
   return { ...list, items: list.items.map((text, i) => i === index ? value : text) };
 }

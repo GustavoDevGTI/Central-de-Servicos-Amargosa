@@ -19,6 +19,19 @@ def verify_access_links(cells, targets):
         assert not targets, "Unexpected start button for a missing access URL"
     return len(targets)
 
+def verify_document_topics(source, visible_slices):
+    """Only semicolons/newlines separate topics; every item stays literal and in order."""
+    spans = []
+    cursor = 0
+    for delimiter in re.finditer(r";[ \t]*(?:\r?\n[ \t]*)?|\r?\n+", source):
+        spans.append((cursor, delimiter.start()))
+        cursor = delimiter.end()
+    spans.append((cursor, len(source)))
+    spans = [(start, end) for start, end in spans if source[start:end].strip()] or [(0, len(source))]
+    expected = [(str(len(source[:start].encode("utf-16-le")) // 2), str(len(source[:end].encode("utf-16-le")) // 2), displayed_value(source[start:end])) for start, end in spans]
+    assert visible_slices == expected, "Document topics missing, combined, reordered or rewritten"
+    return len(expected)
+
 def verify_where_when(cells, partitions, visible_slices, visible_fields):
     parts = json.loads(partitions)
     source = cells[COLUMN]

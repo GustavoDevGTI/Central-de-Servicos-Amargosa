@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { renderToStaticMarkup } from "react-dom/server";
-import { readTopics, writeTopics, changeTopic, arrangeTopics } from "./topic-list";
+import { readTopics, writeTopics, changeTopic, arrangeTopics } from "../service-topics";
 import { TopicEditor } from "./topic-editor";
 import { services } from "../service-catalog";
 import { serviceEditValues } from "../direct-service-content";

@@ -89,7 +89,8 @@ try {
   const currentPdf = await request(`/api/admin/services/${mirrors[0].id}`);
   assert.equal(Object.keys(currentPdf.service.fields).length, 34);
   const accessUrl = "https://example.invalid/solicitar-servico";
-  const pdfDraft = await request("/api/admin/services", edit({ ...privateValues, accessUrl, stage2Description: "Analisar e informar o resultado.", stage2Documents: "Documento complementar da análise." }, currentPdf.version));
+  const requiredDocuments = "Identificação; CPF\nProcuração (se necessário).";
+  const pdfDraft = await request("/api/admin/services", edit({ ...privateValues, accessUrl, requiredDocuments, stage2Description: "Analisar e informar o resultado.", stage2Documents: "Documento complementar da análise.; Comprovante." }, currentPdf.version));
   assert.equal((await request(`/api/admin/drafts/${pdfDraft.draftId}`)).services.find((s) => s.id === mirrors[0].id).url, accessUrl);
   await request("/api/admin/publish", { draftId: pdfDraft.draftId });
   const publicPdf = await request("/api/catalog", undefined, {});
@@ -102,6 +103,10 @@ try {
   for (const start of starts) assert.ok(start.includes(`href="${accessUrl}"`), "Todos os botões Iniciar usam o acesso editado");
   assert.ok(!publicPage.includes("Site / link de acesso"), "O link não cria uma linha adicional na ficha");
   assert.ok(publicPage.includes("Analisar e informar o resultado."));
+  const documentsSection = publicPage.match(/<section id="documentos">([\s\S]*?)<\/section>/)[1];
+  assert.deepEqual([...documentsSection.matchAll(/<li\b[^>]*>([\s\S]*?)<\/li>/g)].map((match) => match[1]), ["Identificação", "CPF", "Procuração (se necessário)."]);
+  assert.match(publicPage, /<li\b[^>]*>Documento complementar da análise\.<\/li><li\b[^>]*>Comprovante\.<\/li>/);
+  assert.equal((await request(`/api/admin/services/${mirrors[0].id}`)).service.fields.requiredDocuments, requiredDocuments);
   assert.ok(publicPdf.services.filter((s) => s.sourceRow === 22).every((s) => s.url === accessUrl));
   const currentHide = await request(`/api/admin/services/${mirrors[0].id}`);
   const hiddenDraft = await request("/api/admin/services", edit({ status: "Inativo" }, currentHide.version));

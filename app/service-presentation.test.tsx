@@ -7,6 +7,56 @@ import { services } from "./service-catalog";
 import { applyWorkbookCells } from "./workbook-service";
 import { ServiceDetail } from "./internal-portal";
 import { CatalogPreviewProvider } from "./catalog-provider";
+import { serviceEditValues } from "./direct-service-content";
+import { readTopics, documentTopicParts } from "./service-topics";
+import { editService, initialEditorSnapshot, restoreServiceContent } from "../lib/service-editor";
+import { snapshotServices } from "../lib/catalog-preview";
+
+function documentItems(html: string) {
+  const section = html.match(/<section id="documentos">([\s\S]*?)<\/section>/)![1];
+  return [...section.matchAll(/<li\b[^>]*>([\s\S]*?)<\/li>/g)].map((match) => match[1]);
+}
+
+test("public and preview document lists match the editor's six IPTU topics without changing stored content", () => {
+  const service = services.find((s) => s.slug === "parcelamento-de-debito-do-iptu")!;
+  const source = structuredClone(service);
+  const expected = readTopics(serviceEditValues(service).requiredDocuments, "bulleted").items;
+  assert.equal(expected.length, 6);
+  for (const detailLayout of ["rich", "standard"] as const) {
+    const selected = { ...service, detailLayout };
+    const html = renderToStaticMarkup(<CatalogPreviewProvider services={[selected]}><ServiceDetail slug={selected.slug!} initialService={selected} /></CatalogPreviewProvider>);
+    assert.deepEqual(documentItems(html), expected);
+  }
+  assert.deepEqual(service, source);
+});
+
+test("edited document order and stage-two topics appear in every mirror and restoration", () => {
+  const snapshot = initialEditorSnapshot();
+  const selected = snapshot.services.find((s) => s.sourceRow === 22)!;
+  const result = editService(snapshot, selected.id, { requiredDocuments: "Procuração;  CPF\r\nIdentificação", stage2Documents: "Parecer; Autorização" });
+  for (const service of snapshotServices(result.snapshot).filter((s) => s.sourceRow === 22)) {
+    const html = renderToStaticMarkup(<CatalogPreviewProvider services={[service]}><ServiceDetail slug={service.slug!} initialService={service} /></CatalogPreviewProvider>);
+    assert.deepEqual(documentItems(html), ["Procuração", "CPF", "Identificação"]);
+    assert.match(html, /<h4>Documentos necessários<\/h4><ul><li\b[^>]*>Parecer<\/li><li\b[^>]*>Autorização<\/li><\/ul>/);
+    assert.equal(serviceEditValues(service).requiredDocuments, "Procuração;  CPF\r\nIdentificação");
+  }
+  const restored = restoreServiceContent(result.snapshot, snapshot);
+  assert.deepEqual(restored.rows, snapshot.rows);
+  for (const service of snapshotServices(restored).filter((s) => s.sourceRow === 22)) {
+    const html = renderToStaticMarkup(<CatalogPreviewProvider services={[service]}><ServiceDetail slug={service.slug!} initialService={service} /></CatalogPreviewProvider>);
+    assert.deepEqual(documentItems(html), readTopics(serviceEditValues(service).requiredDocuments, "bulleted").items);
+  }
+});
+
+test("document boundaries preserve punctuation, spaces, unicode and original source offsets", () => {
+  const text = "  RG (frente e verso);\r\nCPF: titular.\n📄 Procuração, se aplicável.  ";
+  const untouched = text;
+  const parts = documentTopicParts(text);
+  assert.deepEqual(parts.map((part) => part.text), readTopics(text, "bulleted").items);
+  for (const part of parts) assert.equal(text.slice(part.start, part.end), part.text);
+  assert.equal(text, untouched);
+  assert.deepEqual(documentTopicParts(""), [{ text: "", start: 0, end: 0 }]);
+});
 
 test("missing values are presented without changing substantive costs, dates, links or cells", () => {
   for (const value of [undefined, null, "", "  ", "A preencher", " a PREENCHER. ", "* Informação a ser adicionada."]) {

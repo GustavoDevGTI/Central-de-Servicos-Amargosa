@@ -50,3 +50,5 @@ Campos antigos que não existem no PDF deixam de ser entradas do formulário. Se
 O editor não permite alterar HTML, CSS, IDs, rotas, texto/formato dos botões ou o destino da ajuda. Links editáveis aceitam apenas HTTP/HTTPS completos e sem usuário/senha embutidos; o campo BA.GOV exige domínio BA.GOV. Requisições manuais passam pela mesma validação do formulário.
 
 Documentos necessários e descrições das duas etapas são editados em listas de itens, com inclusão, remoção e ordenação. A abertura do editor conserva os separadores, a numeração, os espaços e as quebras de linha originais; editar um item não reescreve os demais. A comparação continua obrigatória antes de salvar.
+
+As listas públicas de documentos, nas duas etapas, usam os mesmos limites de tópicos do editor: ponto e vírgula e quebras de linha. Cada documento ocupa um item na ficha, na comparação e no histórico. Os separadores deixam de ser texto corrido; as respostas armazenadas e o texto de cada documento permanecem intactos.

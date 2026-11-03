@@ -1,6 +1,6 @@
 "use client";
 import { useRef, useState } from "react";
-import { arrangeTopics, changeTopic, readTopics, writeTopics, type TopicList, type TopicMode } from "./topic-list";
+import { arrangeTopics, changeTopic, readTopics, writeTopics, type TopicList, type TopicMode } from "../service-topics";
 
 /** The parent remounts this editor when a service is loaded, saved or discarded. */
 export function TopicEditor({ id, label, name, value, mode, onChange }: {
