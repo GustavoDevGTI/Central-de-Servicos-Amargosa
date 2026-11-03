@@ -57,4 +57,6 @@ A segunda etapa fica imediatamente abaixo da primeira e deixa a gaveta “Quer s
 
 O editor oferece a organização experimental “Lado a lado”: edição à esquerda e comparação à direita, com rolagens independentes em telas grandes. A prévia permite alternar Antes, Depois ou ambos. “Formato anterior” recupera a edição acima da comparação e mantém o conteúdo não salvo e a comparação válida; a preferência fica neste navegador. Em telas menores, os blocos se empilham. Alterar a organização não publica nada, e uma nova edição continua exigindo outra comparação antes de salvar.
 
+Comparar e descartar ficam ao final dos campos, sem posição fixa ou persistente durante a rolagem. O único botão “Salvar alterações” fica fora da área de edição, no painel de comparação, e só é habilitado após uma comparação válida com mudanças.
+
 Ao carregar um serviço, Antes e Depois já abrem juntos, mostrando a mesma versão atual. Essas prévias são leituras autenticadas vinculadas à versão do editor, sem criar rascunho ou histórico, inclusive para registros inativos. Após comparar uma edição, Depois passa a mostrar o rascunho privado. Editar novamente invalida o salvamento, retorna as prévias à versão base e sinaliza que as alterações ainda não foram comparadas. Uma publicação concorrente exige recarregar o serviço. Os controles internos são excluídos dessa resposta de prévia visual.

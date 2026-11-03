@@ -104,9 +104,8 @@ export function ServiceEditor({ onSaved, onDirtyChange }: { onSaved: () => Promi
   const currentPreviewUrl = loaded ? `/admin/preview/current/${encodeURIComponent(loaded.service.id)}?version=${loaded.version ?? "initial"}` : "";
   const beforeUrl = comparison?.draftId && loaded ? `/admin/preview/${comparison.draftId}/${encodeURIComponent(loaded.service.slug)}/before` : currentPreviewUrl;
   const afterUrl = comparison?.draftId && loaded ? `/admin/preview/${comparison.draftId}/${encodeURIComponent(loaded.service.slug)}` : currentPreviewUrl;
-  const actions = <div className="admin-preview-actions admin-editor-save-actions">
+  const actions = <div className="admin-preview-actions admin-editor-actions">
     <button type="button" disabled={busy || !dirty} onClick={() => void compare()}>{busy ? "Aguarde…" : "Comparar antes e depois"}</button>
-    <button type="button" disabled={busy || !dirty || !comparison?.draftId} onClick={() => void save()}>Salvar alterações</button>
     <button type="button" disabled={busy || !dirty} onClick={() => { if (!loaded) return; setFields(loaded.service.fields); setEditorRevision((revision) => revision + 1); setComparison(null); setError(""); }}>Descartar edição</button>
   </div>;
   return <>
@@ -124,7 +123,6 @@ export function ServiceEditor({ onSaved, onDirtyChange }: { onSaved: () => Promi
       {loaded && fields && <div className="admin-service-editor">
         <h3>{loaded.service.title}</h3>
         <p className="admin-editor-fixed">Os textos e o formato dos botões são fixos.</p>
-        {sideBySide && <div className="admin-editor-parallel-actions">{actions}</div>}
         <fieldset disabled={busy} className="admin-editor-fields">
           <legend className="sr-only">Campos do serviço</legend>
           {serviceEditGroups.map((group, index) => <details className="admin-editor-group" key={group} open>
@@ -137,7 +135,7 @@ export function ServiceEditor({ onSaved, onDirtyChange }: { onSaved: () => Promi
             {serviceEditFields.filter((field) => field.group === index && field.key === "additional").map(fieldControl)}
           </details>)}
         </fieldset>
-        <div className="admin-editor-bottom-actions">{actions}</div>
+        {actions}
       </div>}
     </section>
     {loaded && <section ref={compareRef} className="admin-section" aria-labelledby="editor-compare-title">
@@ -154,8 +152,8 @@ export function ServiceEditor({ onSaved, onDirtyChange }: { onSaved: () => Promi
         {(!sideBySide || previewView !== "after") && <div><h3>Antes</h3><iframe className={`admin-service-frame${mobile ? " admin-frame-mobile" : ""}`} src={beforeUrl} title={`Antes: ${loaded.service.title}`} /></div>}
         {(!sideBySide || previewView !== "before") && <div><h3>Depois</h3><iframe className={`admin-service-frame${mobile ? " admin-frame-mobile" : ""}`} src={afterUrl} title={`Depois: ${loaded.service.title}`} /></div>}
       </div>
-      {comparison?.draftId && <><details className="admin-change-details" open><summary>Ver diferenças por campo ({comparison.report.changes.length})</summary><ChangesTable changes={comparison.report.changes} /></details>
-      <div className="admin-preview-actions"><button type="button" disabled={busy || !dirty} onClick={() => void save()}>Salvar alterações</button></div></>}
+      {comparison?.draftId && <details className="admin-change-details" open><summary>Ver diferenças por campo ({comparison.report.changes.length})</summary><ChangesTable changes={comparison.report.changes} /></details>}
+      <div className="admin-preview-actions admin-editor-publish-actions"><button type="button" disabled={busy || !dirty || !comparison?.draftId} onClick={() => void save()}>Salvar alterações</button></div>
     </section>}
     </div>
   </>;
