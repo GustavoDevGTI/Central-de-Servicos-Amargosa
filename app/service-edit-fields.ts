@@ -1,4 +1,4 @@
-/** The labels and grouping follow Carta de Serviço SEI nº 1/2026. */
+/** Carta de Serviço SEI nº 1/2026 fields plus the editable platform label. */
 export const serviceEditGroups = [
   "1. Informações gerais do serviço", "2. Prazos, custos e atendimento",
   "3. Canais de acesso, contato e acompanhamento", "4. Requisitos, documentos e etapas do serviço",
@@ -9,7 +9,7 @@ export const serviceEditFields = [
   { key: "popularNames", label: "Nome(s) popular(es)", group: 0, rows: 2 },
   { key: "secretariat", label: "Órgão / secretaria / setor", group: 0, column: "Secretaria responsável", rows: 2 },
   { key: "category", label: "Categoria(s)", group: 0, column: "Categoria", rows: 2 },
-  { key: "audience", label: "Público-alvo / usuário", group: 0, column: "Público", rows: 2 },
+  { key: "audience", label: "Público-alvo / usuário", group: 0, column: "Público", rows: 1 },
   { key: "deliveryChannel", label: "Canal de prestação", group: 0, options: ["", "Presencial", "Digital", "Híbrido"], rows: 2 },
   { key: "status", label: "Status do serviço", group: 0, options: ["Ativo", "Inativo", "Em manutenção"], rows: 2 },
   { key: "department", label: "Área responsável", group: 0, column: "Setor/Unidade responsável no SEI", rows: 2 },
@@ -23,10 +23,11 @@ export const serviceEditFields = [
   { key: "hours", label: "Horário de atendimento", group: 2, rows: 3 },
   { key: "phone", label: "Telefone / WhatsApp", group: 2, column: "Telefone", rows: 2 },
   { key: "email", label: "E-mail oficial", group: 2, column: "E-mail do setor/unidade", rows: 2 },
+  { key: "platform", label: "Plataforma", group: 2, column: "Plataforma", rows: 2 },
   { key: "accessUrl", label: "Site / link de acesso", group: 2, column: "Link de acesso", url: true, rows: 2 },
   { key: "consultation", label: "Mecanismos de consulta e acompanhamento", group: 2, rows: 4 },
   { key: "baGovUrl", label: "Link atual do serviço no BA.GOV", group: 2, url: true, rows: 2 },
-  { key: "eligibility", label: "Requisitos para solicitar o serviço", group: 3, column: "Quem pode solicitar2", rows: 4 },
+  { key: "eligibility", label: "Requisitos para solicitar o serviço", group: 3, column: "Quem pode solicitar2", rows: 2 },
   { key: "steps", label: "Descrição da etapa", group: 3, stage: "Etapa 1 - solicitação", column: "Como solicitar - etapas", list: "numbered", rows: 6 },
   { key: "requiredDocuments", label: "Documentos necessários", group: 3, stage: "Etapa 1 - solicitação", column: "Documentos obrigatórios", list: "bulleted", rows: 5 },
   { key: "stage2Description", label: "Descrição da etapa", group: 3, stage: "Etapa 2 - análise e conclusão", list: "numbered", rows: 5 },

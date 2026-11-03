@@ -1296,6 +1296,7 @@ function ServiceContactSection({ service }: { service: Service }) {
             )}
           </div>
           <div className="service-contact-column">
+            {service.directEdit?.fields.platform !== undefined && <div><span>{serviceFieldLabel("platform")}</span><strong>{serviceValue(service.destination)}</strong></div>}
             <div>
               <span>{serviceFieldLabel("address")}</span>
               <address>{serviceValue(contact.address)}</address>
@@ -1490,7 +1491,8 @@ function ServiceWhereWhenSection({ service, mergeContact = false }: { service: S
                     ))}</dd></div>
                   ) : service.directEdit?.fields.email !== undefined && <div><dt className="contact-label"><ContactIcon kind="email" /> {emailLabel}</dt><dd>{serviceValue(undefined)}</dd></div>}
                   {mergeContact && (
-                    <div><dt>Mais informações</dt><dd><a href={contact.officialUrl} target="_blank" rel="noreferrer">Ver contatos no site da Prefeitura ↗</a></dd></div>
+                    <>{service.directEdit?.fields.platform !== undefined && <div><dt>{serviceFieldLabel("platform")}</dt><dd>{serviceValue(service.destination)}</dd></div>}
+                    <div><dt>Mais informações</dt><dd><a href={contact.officialUrl} target="_blank" rel="noreferrer">Ver contatos no site da Prefeitura ↗</a></dd></div></>
                   )}
                   </dl>
                 </div>

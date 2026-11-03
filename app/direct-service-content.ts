@@ -35,7 +35,7 @@ export function serviceEditValues(original: Service): ServiceEditValues {
     cost: service.cost || "", duration: service.duration || "",
     department: cells?.["Setor/Unidade responsável no SEI"] ?? contact.name,
     secretariat: cells?.["Secretaria responsável"] ?? contact.officeName ?? "", phone: fullPhone,
-    email: emails, category: service.category,
+    email: emails, category: service.category, platform: cells?.Plataforma ?? service.destination,
     address: cells ? location.address : contact.address, hours: rawHours || "",
     accessUrl: service.url, baGovUrl: isBaGovUrl(service.url) ? service.url : "",
     consultation: "", waitingTime: "", stage2Description: "", stage2Documents: "",
@@ -92,6 +92,7 @@ export function applyDirectServiceContent(service: Service): Service {
     if (fields.requiredDocuments !== undefined || fields.optionalDocuments !== undefined) next.documents = [fields.requiredDocuments ?? (service.documents || []).join("\n"), edit.schema === "carta-1-2026" ? "" : fields.optionalDocuments || ""].filter(Boolean).flatMap((text) => text.split(/\r?\n/));
     if (fields.steps !== undefined) next.steps = fields.steps ? fields.steps.split(/\r?\n/) : [];
     if (fields.accessUrl !== undefined) next.url = fields.accessUrl;
+    if (fields.platform !== undefined) next.destination = fields.platform;
   }
   if (fields.status !== undefined) next.inactive = fields.status === "Inativo";
   if (fields.popularNames !== undefined) next.searchTerms = [...new Set([...(service.searchTerms || []), fields.popularNames].filter(Boolean))];

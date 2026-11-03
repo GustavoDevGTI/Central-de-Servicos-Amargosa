@@ -132,12 +132,58 @@ test("documents of stage two do not replace or duplicate existing stage-one docu
   assert.equal(serviceEditValues(snapshotServices(again.snapshot).find((s) => s.id === selected.id)!).requiredDocuments, original);
 });
 
-test("the editor mirrors all 34 PDF fields in six groups, with scoped stage labels and no obsolete inputs", () => {
+test("the editor mirrors all 34 PDF fields plus platform in six groups, with scoped stage labels", () => {
   const expected = ["NOME DO SERVIÇO", "NOME(S) POPULAR(ES)", "ÓRGÃO / SECRETARIA / SETOR", "CATEGORIA(S)", "PÚBLICO-ALVO / USUÁRIO", "CANAL DE PRESTAÇÃO", "STATUS DO SERVIÇO", "ÁREA RESPONSÁVEL", "RESPONSÁVEL PELO PREENCHIMENTO", "DESCRIÇÃO DETALHADA", "PREVISÃO DE ESPERA PARA ATENDIMENTO", "PRAZO MÁXIMO PARA CONCLUSÃO", "CUSTO / TAXA", "MODALIDADES DE ATENDIMENTO", "ENDEREÇO PRESENCIAL", "HORÁRIO DE ATENDIMENTO", "TELEFONE / WHATSAPP", "E-MAIL OFICIAL", "SITE / LINK DE ACESSO", "MECANISMOS DE CONSULTA E ACOMPANHAMENTO", "LINK ATUAL DO SERVIÇO NO BA.GOV", "REQUISITOS PARA SOLICITAR O SERVIÇO", "DESCRIÇÃO DA ETAPA", "DOCUMENTOS NECESSÁRIOS", "DESCRIÇÃO DA ETAPA", "DOCUMENTOS NECESSÁRIOS", "OUTRAS ETAPAS / INFORMAÇÕES ADICIONAIS", "BASE LEGAL", "PRIORIDADES DE ATENDIMENTO", "CANAL DA OUVIDORIA", "PROCEDIMENTOS PARA REGISTRO DE MANIFESTAÇÕES", "DATA DO PREENCHIMENTO / ATUALIZAÇÃO", "CONTATO DO RESPONSÁVEL", "OBSERVAÇÕES PARA A SIMP"];
-  assert.deepEqual(serviceEditFields.map((field) => field.label.toLocaleUpperCase("pt-BR")), expected);
+  assert.deepEqual(serviceEditFields.filter((field) => field.key !== "platform").map((field) => field.label.toLocaleUpperCase("pt-BR")), expected);
+  assert.equal(serviceEditFields.find((field) => field.key === "platform")!.label, "Plataforma");
   assert.equal(serviceEditGroups.length, 6);
-  assert.equal(new Set(serviceEditFields.map((field) => field.key)).size, expected.length);
+  assert.equal(new Set(serviceEditFields.map((field) => field.key)).size, expected.length + 1);
   for (const field of ["whereWhen", "extension", "optionalDocuments", "communication", "maximumTime", "contactMeans"]) assert.throws(() => validateServicePatch({ [field]: "novo valor" }));
+});
+
+test("platform edits update public contact cards and mirrors, preserve actions, and restore exactly", () => {
+  const before = initialEditorSnapshot();
+  const selected = [before.services.find((s) => s.sourceRow === 22)!, before.services.find((s) => !s.workbookCells && s.slug && s.url)!];
+  for (const original of selected) {
+    const platform = "  Canal revisado / SEI\nAtendimento digital.  ";
+    const result = editService(before, original.id, { platform });
+    assert.equal(result.report.changes.length, 1);
+    assert.equal(result.report.changes[0].column, "Plataforma");
+    assert.equal(result.report.changes[0].before, serviceEditValues(original).platform);
+    assert.equal(result.report.changes[0].after, platform);
+    for (const id of result.affectedIds) {
+      const service = snapshotServices(result.snapshot).find((entry) => entry.id === id)!;
+      assert.equal(serviceEditValues(service).platform, platform);
+      assert.equal(service.destination, platform);
+      if (service.workbookCells) assert.equal(service.workbookCells.Plataforma, platform);
+      const html = page(result.snapshot, id);
+      assert.ok(html.includes(platform));
+      assert.deepEqual(actions(html), actions(page(before, id)));
+      assert.equal(service.requestSystem, before.services.find((entry) => entry.id === id)!.requestSystem);
+    }
+    assert.deepEqual(result.snapshot.rows, before.rows);
+    assert.equal(editService(result.snapshot, original.id, { platform }).report.changes.length, 0);
+    const restored = restoreServiceContent(result.snapshot, before);
+    assert.equal(serviceEditValues(snapshotServices(restored).find((entry) => entry.id === original.id)!).platform, serviceEditValues(original).platform);
+    if (!original.workbookCells) assert.ok(!page(restored, original.id).includes("<span>Plataforma</span>"));
+    assert.equal(compareServiceContent(before, restored).changes.length, 0);
+    const empty = editService(result.snapshot, original.id, { platform: "" });
+    assert.equal(serviceEditValues(snapshotServices(empty.snapshot).find((entry) => entry.id === original.id)!).platform, "");
+    assert.match(page(empty.snapshot, original.id), /Plataforma[\s\S]*?Informações a serem adicionadas/);
+  }
+  assert.throws(() => validateServicePatch({ platform: "x".repeat(20001) }), /limite/);
+  const script = editService(before, selected[0].id, { platform: "<script>alert(1)</script>" });
+  assert.ok(page(script.snapshot, selected[0].id).includes("&lt;script&gt;"));
+  assert.ok(!page(script.snapshot, selected[0].id).includes("<script>alert(1)</script>"));
+});
+
+test("audience and eligibility are public: audience labels the header and eligibility fills its own section", () => {
+  const before = initialEditorSnapshot();
+  const selected = before.services.find((s) => s.slug === "abastecimento-de-agua")!;
+  const result = editService(before, selected.id, { audience: "Público confirmado", eligibility: "Requisito confirmado para a solicitação." });
+  const html = page(result.snapshot, selected.id);
+  assert.match(html, /<small>Público confirmado<\/small>/);
+  assert.match(html, /<section id="quem-pode">[\s\S]*?Requisito confirmado para a solicitação\./);
 });
 
 test("access links change in every mirror and restore without changing button text, guides, page URLs or source rows", () => {

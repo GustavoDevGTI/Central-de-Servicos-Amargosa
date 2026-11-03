@@ -63,19 +63,22 @@ test("admin topic controls expose separate accessible items and ordering actions
   assert.match(html, /Remover item 3/);
 });
 
-test("both arrangements expose each of the 34 editable fields exactly once", () => {
+test("both arrangements expose the Carta fields and platform exactly once", () => {
   const allowed = serviceEditFields.map((field) => field.key).sort();
   for (const order of ["central", "bagov"] as const) for (const workbookSource of [true, false]) for (const mainLegislation of [true, false]) {
     const groups = editorFieldGroups(order, { workbookSource, mainLegislation });
     const keys = groups.flatMap((group) => group.blocks.flatMap((block) => block.fields));
-    assert.equal(keys.length, 34);
-    assert.equal(new Set(keys).size, 34);
+    assert.equal(keys.length, 35);
+    assert.equal(new Set(keys).size, 35);
     assert.deepEqual([...keys].sort(), allowed);
     for (const group of groups) assert.equal(new Set(group.blocks.map((block) => block.key)).size, group.blocks.length);
     if (order === "central") {
       assert.deepEqual(groups.find((group) => group.key === "central-controls")!.blocks.flatMap((block) => block.fields), privateServiceEditFields);
       assert.ok(groups.find((group) => group.key === "central-more")!.blocks[0].fields.includes("popularNames"));
       assert.ok(groups.find((group) => group.key === (workbookSource ? "central-more" : "central-channels"))!.blocks[0].fields.includes("address"));
+      assert.ok(groups.find((group) => group.key === "central-channels")!.blocks[0].fields.includes("platform"));
+      const paired = groups[0].blocks.find((block) => block.paired)!;
+      assert.deepEqual(paired.fields, ["audience", "eligibility"]);
     }
   }
 });
@@ -88,6 +91,8 @@ test("Central follows the page while BA.GOV keeps the Carta order with popular n
   assert.deepEqual(bagov.map((group) => group.label), [...serviceEditGroups]);
   assert.deepEqual(bagov[0].blocks[0].fields.slice(0, 2), ["title", "popularNames"]);
   assert.deepEqual(bagov[3].blocks.find((block) => block.key === "stage-1")!.fields, ["steps", "requiredDocuments"]);
+  const contacts = bagov[2].blocks[0].fields;
+  assert.equal(contacts.indexOf("platform"), contacts.indexOf("email") + 1);
 });
 
 test("changing arrangement preserves canonical text and topic models and does not produce publication changes", () => {

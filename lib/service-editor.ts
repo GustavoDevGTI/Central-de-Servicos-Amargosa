@@ -131,6 +131,10 @@ export function restoreServiceContent(current: CatalogSnapshot, target: CatalogS
         for (const field of serviceEditFields) {
           if (!("column" in field) && !["status", "additional", "attendanceModes"].includes(field.key) && original?.directEdit?.fields[field.key] === undefined) delete fields[field.key];
         }
+        if (!entry.workbookCells && original && original.directEdit?.fields.platform === undefined) {
+          delete fields.platform;
+          return { ...entry, destination: original.destination, directEdit: { ...entry.directEdit, fields } };
+        }
         return { ...entry, directEdit: { ...entry.directEdit, fields } };
       });
     }

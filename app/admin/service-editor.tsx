@@ -147,7 +147,7 @@ export function ServiceEditor({ onSaved, onDirtyChange }: { onSaved: () => Promi
             <summary>{group.label}</summary>
             {group.blocks.map((block) => {
               const controls = block.fields.map((key) => fieldControl(serviceEditFields.find((field) => field.key === key)!));
-              return block.legend ? <fieldset className="admin-editor-stage" key={block.key}><legend>{block.legend}</legend>{controls}</fieldset> : <Fragment key={block.key}>{controls}</Fragment>;
+              return block.legend ? <fieldset className="admin-editor-stage" key={block.key}><legend>{block.legend}</legend>{controls}</fieldset> : block.paired ? <div className="admin-editor-paired-fields" key={block.key}>{controls}</div> : <Fragment key={block.key}>{controls}</Fragment>;
             })}
           </details>)}
         </fieldset>

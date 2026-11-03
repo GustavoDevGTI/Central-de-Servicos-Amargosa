@@ -106,10 +106,14 @@ try {
   assert.equal((await request("/api/admin/history")).versions.length, 3);
   const privateValues = { filledBy: "Responsável interno da QA", responsibleContact: "reservado-qa@example.invalid", simpNotes: "Nota interna exclusiva para a SIMP", updatedDate: "31/12/2099" };
   const currentPdf = await request(`/api/admin/services/${mirrors[0].id}`);
-  assert.equal(Object.keys(currentPdf.service.fields).length, 34);
+  assert.equal(Object.keys(currentPdf.service.fields).length, 35);
+  assert.equal(currentPdf.service.fields.platform, mirrors[0].destination);
   const accessUrl = "https://example.invalid/solicitar-servico";
   const requiredDocuments = "Identificação; CPF\nProcuração (se necessário).";
-  const pdfDraft = await request("/api/admin/services", edit({ ...privateValues, accessUrl, requiredDocuments, stage2Description: "Analisar e informar o resultado.", stage2Documents: "Documento complementar da análise.; Comprovante." }, currentPdf.version));
+  const platform = "Canal digital revisado na QA";
+  const pdfDraft = await request("/api/admin/services", edit({ ...privateValues, accessUrl, platform, requiredDocuments, stage2Description: "Analisar e informar o resultado.", stage2Documents: "Documento complementar da análise.; Comprovante." }, currentPdf.version));
+  assert.ok(pdfDraft.report.changes.some((change) => change.column === "Plataforma" && change.after === platform));
+  assert.ok((await request("/api/catalog", undefined, {})).services.filter((s) => s.sourceRow === 22).every((s) => s.destination === mirrors[0].destination), "Comparar a plataforma não publica");
   assert.equal((await request(`/api/admin/drafts/${pdfDraft.draftId}`)).services.find((s) => s.id === mirrors[0].id).url, accessUrl);
   const privateStageResponse = await fetch(`${base}/admin/preview/${pdfDraft.draftId}/${mirrors[0].slug}`, { headers: owner });
   assert.equal(privateStageResponse.status, 200);
@@ -117,7 +121,7 @@ try {
   const privateStageService = (await request(`/api/admin/drafts/${pdfDraft.draftId}`)).services.find((s) => s.id === mirrors[0].id);
   assert.equal(privateStageService.directEdit.fields.stage2Description, "Analisar e informar o resultado.");
   assert.ok(!(await (await fetch(`${base}/servicos/${mirrors[0].slug}`)).text()).includes('<section id="etapa-2">'), "Comparar não deve publicar a segunda etapa");
-  await request("/api/admin/publish", { draftId: pdfDraft.draftId });
+  const pdfPublication = await request("/api/admin/publish", { draftId: pdfDraft.draftId });
   const publicPdf = await request("/api/catalog", undefined, {});
   const currentWithPrivateControls = await request(`/api/admin/services/${mirrors[0].id}`);
   const safeCurrentPreview = await request(currentPreviewUrl(mirrors[0].id, currentWithPrivateControls.version));
@@ -140,6 +144,12 @@ try {
   assert.match(publicPage, /<li\b[^>]*>Documento complementar da análise\.<\/li><li\b[^>]*>Comprovante\.<\/li>/);
   assert.equal((await request(`/api/admin/services/${mirrors[0].id}`)).service.fields.requiredDocuments, requiredDocuments);
   assert.ok(publicPdf.services.filter((s) => s.sourceRow === 22).every((s) => s.url === accessUrl));
+  assert.ok(publicPdf.services.filter((s) => s.sourceRow === 22).every((s) => s.destination === platform));
+  for (const mirror of mirrors) assert.ok((await (await fetch(`${base}/servicos/${mirror.slug}`)).text()).includes(platform));
+  await request("/api/admin/restore", { versionId: first.version });
+  assert.equal((await request(`/api/admin/services/${mirrors[0].id}`)).service.fields.platform, mirrors[0].destination, "Restaurar recupera a plataforma anterior");
+  await request("/api/admin/restore", { versionId: pdfPublication.version });
+  assert.equal((await request(`/api/admin/services/${mirrors[0].id}`)).service.fields.platform, platform, "Restaurar recupera a plataforma editada");
   const currentHide = await request(`/api/admin/services/${mirrors[0].id}`);
   const hiddenDraft = await request("/api/admin/services", edit({ status: "Inativo" }, currentHide.version));
   assert.equal(hiddenDraft.report.deactivated, 1);
@@ -169,5 +179,5 @@ try {
   assert.equal((await pool.query("SELECT count(*)::int AS n FROM catalog_publications WHERE id=$1", [first.version])).rows[0].n, 0);
   const active = (await pool.query("SELECT p.snapshot FROM catalog_publications p JOIN catalog_active a ON a.publication_id=p.id")).rows[0].snapshot;
   assert.deepEqual(active.rows["22"].cells, mirrors[0].workbookCells);
-  console.log(JSON.stringify({ authenticatedDirectEditing: true, privateComparison: true, mirrors: 3, protectedActions: true, staleComparisonRejected: true, catalogAdminAllowed: true, draftOwnership: true, authorship: true, restored: true, meaningfulHistoryOnly: true, retained: 20, sourcePreserved: true, pdfFields: 34, linkEditable: true, internalControlsPrivate: true, inactiveRoutesHidden: 3, maintenanceVisible: true }));
+  console.log(JSON.stringify({ authenticatedDirectEditing: true, privateComparison: true, mirrors: 3, protectedActions: true, staleComparisonRejected: true, catalogAdminAllowed: true, draftOwnership: true, authorship: true, restored: true, meaningfulHistoryOnly: true, retained: 20, sourcePreserved: true, pdfFields: 34, editableFields: 35, platformEditable: true, linkEditable: true, internalControlsPrivate: true, inactiveRoutesHidden: 3, maintenanceVisible: true }));
 } finally { await pool.end(); }

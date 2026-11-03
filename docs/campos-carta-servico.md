@@ -2,11 +2,11 @@
 
 Fonte conferida visualmente: Carta de Serviço SEI nº 1/2026 - SEAFI.SIMP, documento 00000567657, três páginas, fornecido pelo responsável em 03/11/2026. O PDF é um modelo de perguntas: seus exemplos de respostas, assinatura e instruções de preenchimento não são conteúdo dos serviços.
 
-O admin tem exatamente 34 campos com os nomes do PDF. Em “Ordem dos campos”, BA.GOV mantém os seis grupos da Carta, com nome popular logo após o nome do serviço. Central organiza o preenchimento pelos blocos da ficha: informações principais, documentos e etapas, atendimento, prazos/custos, “Quer saber mais?”, ouvidoria e controles internos. Os dois pares “DESCRIÇÃO DA ETAPA” e “DOCUMENTOS NECESSÁRIOS” são distinguidos pelo grupo Etapa 1 ou Etapa 2, inclusive na comparação. O formulário usa opções para status e canal, e seleção múltipla para as modalidades previstas no documento. IDs e URLs internas são identificadores fixos, sem campo de edição.
+O admin tem os 34 campos da Carta com os nomes do PDF e o campo adicional “Plataforma”, cuja edição foi autorizada em 03/11/2026. Em “Ordem dos campos”, BA.GOV mantém os seis grupos da Carta, com nome popular logo após o nome do serviço. Central organiza o preenchimento pelos blocos da ficha: informações principais, documentos e etapas, atendimento, prazos/custos, “Quer saber mais?”, ouvidoria e controles internos. Os dois pares “DESCRIÇÃO DA ETAPA” e “DOCUMENTOS NECESSÁRIOS” são distinguidos pelo grupo Etapa 1 ou Etapa 2, inclusive na comparação. O formulário usa opções para status e canal, e seleção múltipla para as modalidades previstas no documento. IDs e URLs internas são identificadores fixos, sem campo de edição.
 
 Na interface, os nomes são apresentados com a primeira letra maiúscula e o restante minúsculo, preservando BA.GOV, SIMP e WhatsApp. A caixa alta da tabela abaixo reproduz os nomes na fonte apenas para facilitar a conferência; não define a aparência do site.
 
-A troca Central/BA.GOV reorganiza apenas o editor para facilitar o preenchimento e a consulta dos dados na ordem desejada. Os mesmos campos aparecem uma única vez em ambos os modos. Respostas, itens em edição, diferenças e comparação válida são preservados; nenhuma publicação é criada e a página pública não muda de ordem. A preferência fica neste navegador, separada da opção “Lado a lado / Vertical”. O modo BA.GOV prepara a consulta na ordem da Carta para transcrição/exportação; não envia dados a outro portal nem gera arquivo automaticamente.
+A troca Central/BA.GOV reorganiza apenas o editor para facilitar o preenchimento e a consulta dos dados na ordem desejada. Os mesmos 35 campos aparecem uma única vez em ambos os modos. Respostas, itens em edição, diferenças e comparação válida são preservados; nenhuma publicação é criada e a página pública não muda de ordem. A preferência fica neste navegador, separada da opção “Lado a lado / Vertical”. O modo BA.GOV prepara a consulta na ordem da Carta para transcrição/exportação; não envia dados a outro portal nem gera arquivo automaticamente.
 
 | Campo do PDF | Equivalente anterior | Apresentação |
 | --- | --- | --- |
@@ -28,6 +28,7 @@ A troca Central/BA.GOV reorganiza apenas o editor para facilitar o preenchimento
 | HORÁRIO DE ATENDIMENTO | Horário extraído do atendimento | Cartão existente; na gaveta quando não há cartão correspondente |
 | TELEFONE / WHATSAPP | Telefone e ramal do cartão | Campo existente renomeado; valores completos preservados |
 | E-MAIL OFICIAL | E-mail do setor/unidade | Campo existente renomeado |
+| Plataforma (campo adicional autorizado) | Plataforma / destino no catálogo | Editável nos dois modos após E-mail oficial; altera o texto do cartão, preservando sistema de solicitação, links, ajuda e botões |
 | SITE / LINK DE ACESSO | Link de acesso / destino de solicitação | Editável no admin; controla o destino dos botões Iniciar, mantendo texto e formato, sem linha adicional de URL na ficha |
 | MECANISMOS DE CONSULTA E ACOMPANHAMENTO | Consulta ou acesso | Campo da gaveta renomeado; sem inventar consulta por protocolo |
 | LINK ATUAL DO SERVIÇO NO BA.GOV | URL BA.GOV já cadastrada, quando disponível | Campo próprio novo na gaveta; não substitui automaticamente o link de solicitação |
@@ -50,6 +51,8 @@ As quatro respostas internas ficam no snapshot e nas diferenças autenticadas, m
 Campos antigos que não existem no PDF deixam de ser entradas do formulário. Seus dados arquivados continuam legíveis e são preservados ao abrir/restaurar versões: documentação antiga permanece na primeira etapa e respostas adicionais antigas são conservadas em informações adicionais. A origem XLSX, os snapshots e as páginas inativas não são apagados. Em “Quer saber mais?”, respostas vazias ficam em branco. Nos campos principais, inclusive custo e prazo, lacunas exibem “* Informações a serem adicionadas.” em itálico e amarelo.
 
 O editor não permite alterar HTML, CSS, IDs, rotas, texto/formato dos botões ou o destino da ajuda. Links editáveis aceitam apenas HTTP/HTTPS completos e sem usuário/senha embutidos; o campo BA.GOV exige domínio BA.GOV. Requisições manuais passam pela mesma validação do formulário.
+
+Plataforma controla apenas o texto apresentado no atendimento, com comparação, publicação, autoria e restauração iguais aos demais campos. Não altera o sistema usado pelo botão Iniciar nem seu destino. No modo Central, Público-alvo / usuário e Requisitos para solicitar o serviço usam controles compactos lado a lado (empilhados em celulares). Ambos são públicos: o primeiro identifica o público no cabeçalho e nas listagens, e o segundo é o bloco de requisitos da ficha. No modo BA.GOV, mantêm as posições originais da Carta.
 
 Documentos necessários e descrições das duas etapas são editados em listas de itens, com inclusão, remoção e ordenação. A abertura do editor conserva os separadores, a numeração, os espaços e as quebras de linha originais; editar um item não reescreve os demais. A comparação continua obrigatória antes de salvar.
 
