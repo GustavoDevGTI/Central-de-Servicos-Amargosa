@@ -1818,7 +1818,7 @@ export function ServiceDetail({ slug, initialService }: { slug: string; initialS
             <a href="#como-fazer">
               {serviceSectionLabels.steps}
             </a>
-            <a href="#informacoes">PRAZOS, CUSTOS E ATENDIMENTO</a>
+            <a href="#informacoes">Prazos, custos e atendimento</a>
             <a href="#canais">{serviceEditGroups[2].slice(3)}</a>
             <a href="#quer-saber-mais">Quer saber mais?</a>
           </nav>

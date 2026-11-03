@@ -116,7 +116,7 @@ test("documents of stage two do not replace or duplicate existing stage-one docu
 
 test("the editor mirrors all 34 PDF fields in six groups, with scoped stage labels and no obsolete inputs", () => {
   const expected = ["NOME DO SERVIÇO", "NOME(S) POPULAR(ES)", "ÓRGÃO / SECRETARIA / SETOR", "CATEGORIA(S)", "PÚBLICO-ALVO / USUÁRIO", "CANAL DE PRESTAÇÃO", "STATUS DO SERVIÇO", "ÁREA RESPONSÁVEL", "RESPONSÁVEL PELO PREENCHIMENTO", "DESCRIÇÃO DETALHADA", "PREVISÃO DE ESPERA PARA ATENDIMENTO", "PRAZO MÁXIMO PARA CONCLUSÃO", "CUSTO / TAXA", "MODALIDADES DE ATENDIMENTO", "ENDEREÇO PRESENCIAL", "HORÁRIO DE ATENDIMENTO", "TELEFONE / WHATSAPP", "E-MAIL OFICIAL", "SITE / LINK DE ACESSO", "MECANISMOS DE CONSULTA E ACOMPANHAMENTO", "LINK ATUAL DO SERVIÇO NO BA.GOV", "REQUISITOS PARA SOLICITAR O SERVIÇO", "DESCRIÇÃO DA ETAPA", "DOCUMENTOS NECESSÁRIOS", "DESCRIÇÃO DA ETAPA", "DOCUMENTOS NECESSÁRIOS", "OUTRAS ETAPAS / INFORMAÇÕES ADICIONAIS", "BASE LEGAL", "PRIORIDADES DE ATENDIMENTO", "CANAL DA OUVIDORIA", "PROCEDIMENTOS PARA REGISTRO DE MANIFESTAÇÕES", "DATA DO PREENCHIMENTO / ATUALIZAÇÃO", "CONTATO DO RESPONSÁVEL", "OBSERVAÇÕES PARA A SIMP"];
-  assert.deepEqual(serviceEditFields.map((field) => field.label), expected);
+  assert.deepEqual(serviceEditFields.map((field) => field.label.toLocaleUpperCase("pt-BR")), expected);
   assert.equal(serviceEditGroups.length, 6);
   assert.equal(new Set(serviceEditFields.map((field) => field.key)).size, expected.length);
   for (const field of ["whereWhen", "extension", "optionalDocuments", "communication", "maximumTime", "contactMeans"]) assert.throws(() => validateServicePatch({ [field]: "novo valor" }));

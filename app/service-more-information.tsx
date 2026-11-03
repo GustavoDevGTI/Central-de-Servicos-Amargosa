@@ -27,7 +27,7 @@ export function ServiceMoreInformation({ service, hasHoursCard = false, hasManif
           {!service.workbookCells && link("accessUrl")}
           {text("consultation")}{link("baGovUrl")}
         </details>
-        <details open><summary>ETAPA 2 - ANÁLISE E CONCLUSÃO</summary>
+        <details open><summary>Etapa 2 - análise e conclusão</summary>
           {text("stage2Description")}{text("stage2Documents")}
         </details>
         <details open><summary>{serviceEditGroups[4].slice(3)}</summary>

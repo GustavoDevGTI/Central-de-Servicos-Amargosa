@@ -82,7 +82,7 @@ for service_id, html in pages.items():
         assert css in page.classes, f"Original component missing: {service_id}: {css}"
     assert "service-channel-list" in page.classes or "service-request-presencial" in page.classes, f"Contact card missing: {service_id}"
     assert '<section id="documentos"><h2>' in html
-    assert '<section id="documentos"><h2>DOCUMENTOS NECESSÁRIOS</h2><ul>' in html
+    assert '<section id="documentos"><h2>Documentos necessários</h2><ul>' in html
     assert "Documentação necessária</h3>" not in html, f"Duplicated document section: {service_id}"
 result = {"sourceRows": len(original), "fullPages": len(pages), "visibleFieldOccurrences": count,
     "differences": 0, "originalComponents": "preserved", "sourceCells": "intact", "pendingPresentation": "authorized BA.GOV labels"}

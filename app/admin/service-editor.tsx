@@ -98,7 +98,7 @@ export function ServiceEditor({ onSaved, onDirtyChange }: { onSaved: () => Promi
           {serviceEditGroups.map((group, index) => <details className="admin-editor-group" key={group} open>
             <summary>{group}</summary>
             {serviceEditFields.filter((field) => field.group === index && !("stage" in field) && field.key !== "additional").map(fieldControl)}
-            {["ETAPA 1 - SOLICITAÇÃO", "ETAPA 2 - ANÁLISE E CONCLUSÃO"].map((stage) => {
+            {["Etapa 1 - solicitação", "Etapa 2 - análise e conclusão"].map((stage) => {
               const items = serviceEditFields.filter((field) => field.group === index && "stage" in field && field.stage === stage);
               return items.length ? <fieldset className="admin-editor-stage" key={stage}><legend>{stage}</legend>{items.map(fieldControl)}</fieldset> : null;
             })}

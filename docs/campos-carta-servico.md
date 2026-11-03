@@ -4,6 +4,8 @@ Fonte conferida visualmente: Carta de Serviço SEI nº 1/2026 - SEAFI.SIMP, docu
 
 O admin passa a ter exatamente 34 campos, nos seis grupos e com os nomes do PDF. Os dois pares “DESCRIÇÃO DA ETAPA” e “DOCUMENTOS NECESSÁRIOS” são distinguidos pelo grupo Etapa 1 ou Etapa 2, inclusive na comparação. O formulário usa opções para status e canal, e seleção múltipla para as modalidades previstas no documento. IDs e URLs internas são identificadores fixos, sem campo de edição.
 
+Na interface, os nomes são apresentados com a primeira letra maiúscula e o restante minúsculo, preservando BA.GOV, SIMP e WhatsApp. A caixa alta da tabela abaixo reproduz os nomes na fonte apenas para facilitar a conferência; não define a aparência do site.
+
 | Campo do PDF | Equivalente anterior | Apresentação |
 | --- | --- | --- |
 | NOME DO SERVIÇO | Nome do serviço | Título atual, sem mudar a URL da página |
