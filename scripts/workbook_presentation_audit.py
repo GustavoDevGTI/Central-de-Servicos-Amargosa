@@ -7,8 +7,8 @@ LABELS = {"telefone": "Telefone", "e-mail": "E-mail do setor/unidade", "ramal": 
 
 def displayed_value(value, column=None):
     """Authorized placeholder presentation; substantive cells remain literal."""
-    pending = not value.strip() or re.fullmatch(r"a preencher[.!]?|\*?\s*informa[çc][aã]o a ser adicionada[.!]?|\*?\s*ser[aá] adicionado em breve[.!]?", value.strip(), re.I)
-    return ("Indeterminado." if column == "Prazo" else "Não informado.") if pending else value
+    pending = not value.strip() or re.fullmatch(r"a preencher[.!]?|\*?\s*informa[çc][aã]o a ser adicionada[.!]?|\*?\s*informa[çc][oõ]es a serem adicionadas[.!]?|\*?\s*ser[aá] adicionado em breve[.!]?", value.strip(), re.I)
+    return "* Informações a serem adicionadas." if pending else value
 
 def verify_access_links(cells, targets):
     """The access URL belongs to the main/repeated Iniciar buttons, not a separate text row."""

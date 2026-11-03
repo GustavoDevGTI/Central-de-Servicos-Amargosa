@@ -45,7 +45,7 @@ Na interface, os nomes são apresentados com a primeira letra maiúscula e o res
 
 As quatro respostas internas ficam no snapshot e nas diferenças autenticadas, mas são removidas antes da serialização pública, tanto da API como da renderização do servidor e das ferramentas de busca/IA. A conta que publica é registrada separadamente e não pode ser forjada pelo campo de responsável.
 
-Campos antigos que não existem no PDF deixam de ser entradas do formulário. Seus dados arquivados continuam legíveis e são preservados ao abrir/restaurar versões: documentação antiga permanece na primeira etapa e respostas adicionais antigas são conservadas em informações adicionais. A origem XLSX, os snapshots e as páginas inativas não são apagados. Campos vazios continuam como “Não informado.”; prazos sem informação usam “Indeterminado.”.
+Campos antigos que não existem no PDF deixam de ser entradas do formulário. Seus dados arquivados continuam legíveis e são preservados ao abrir/restaurar versões: documentação antiga permanece na primeira etapa e respostas adicionais antigas são conservadas em informações adicionais. A origem XLSX, os snapshots e as páginas inativas não são apagados. Em “Quer saber mais?”, respostas vazias ficam em branco. Nos campos principais, inclusive custo e prazo, lacunas exibem “* Informações a serem adicionadas.” em itálico e amarelo.
 
 O editor não permite alterar HTML, CSS, IDs, rotas, texto/formato dos botões ou o destino da ajuda. Links editáveis aceitam apenas HTTP/HTTPS completos e sem usuário/senha embutidos; o campo BA.GOV exige domínio BA.GOV. Requisições manuais passam pela mesma validação do formulário.
 

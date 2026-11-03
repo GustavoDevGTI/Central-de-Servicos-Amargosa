@@ -1,14 +1,15 @@
 import type { Service } from "./service-catalog";
 import { serviceEditValues } from "./direct-service-content";
 import { serviceFieldLabel, serviceEditGroups, type ServiceEditField } from "./service-edit-fields";
-import { serviceDisplayValue } from "./service-presentation";
+import { isPendingServiceValue } from "./service-presentation";
 
 /** Existing sections keep their content; unmatched public fields use this drawer. */
 export function ServiceMoreInformation({ service, hasHoursCard = false, hasManifestationSection = false }: { service: Service; contactAnchor?: string; hasHoursCard?: boolean; hasManifestationSection?: boolean }) {
   const values = serviceEditValues(service);
   const fields = service.directEdit?.fields;
-  const text = (key: ServiceEditField, value = values[key]) => <><h4>{serviceFieldLabel(key)}</h4><p>{serviceDisplayValue(value, ["waitingTime", "duration"].includes(key) ? "Prazo" : undefined)}</p></>;
-  const link = (key: "baGovUrl" | "ombudsman") => <><h4>{serviceFieldLabel(key)}</h4><p>{/^https?:\/\/\S+$/i.test(values[key]) ? <a href={values[key]} target="_blank" rel="noreferrer">{values[key]}</a> : serviceDisplayValue(values[key])}</p></>;
+  const display = (value: string) => isPendingServiceValue(value) ? "" : value;
+  const text = (key: ServiceEditField, value = values[key]) => <><h4>{serviceFieldLabel(key)}</h4><p>{display(value)}</p></>;
+  const link = (key: "baGovUrl" | "ombudsman") => <><h4>{serviceFieldLabel(key)}</h4><p>{/^https?:\/\/\S+$/i.test(values[key]) ? <a href={values[key]} target="_blank" rel="noreferrer">{values[key]}</a> : display(values[key])}</p></>;
   const additional = fields?.additional ?? (service.directEdit && service.directEdit.schema !== "carta-1-2026" ? values.additional : service.notice || "");
   const hasLegalSection = Boolean(service.legislation?.length || service.legislationNotice);
   return <section id="quer-saber-mais" className="service-more-information">
@@ -31,7 +32,7 @@ export function ServiceMoreInformation({ service, hasHoursCard = false, hasManif
           {!hasManifestationSection && link("ombudsman")}
           {text("procedures")}
         </details>
-        <details open><summary>{serviceFieldLabel("additional")}</summary><p>{serviceDisplayValue(additional)}</p></details>
+        <details open><summary>{serviceFieldLabel("additional")}</summary><p>{display(additional)}</p></details>
       </div>
     </details>
   </section>;

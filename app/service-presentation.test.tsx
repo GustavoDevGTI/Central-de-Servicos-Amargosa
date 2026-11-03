@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { renderToStaticMarkup } from "react-dom/server";
-import { serviceDisplayValue } from "./service-presentation";
+import { serviceDisplayValue, missingServiceInformation } from "./service-presentation";
 import { ServiceMoreInformation } from "./service-more-information";
 import { services } from "./service-catalog";
 import { applyWorkbookCells } from "./workbook-service";
@@ -102,8 +102,8 @@ test("the optional second stage follows stage one in both templates and never re
 
 test("missing values are presented without changing substantive costs, dates, links or cells", () => {
   for (const value of [undefined, null, "", "  ", "A preencher", " a PREENCHER. ", "* Informação a ser adicionada."]) {
-    assert.equal(serviceDisplayValue(value), "Não informado.");
-    assert.equal(serviceDisplayValue(value, "Prazo"), "Indeterminado.");
+    assert.equal(serviceDisplayValue(value), missingServiceInformation);
+    assert.equal(serviceDisplayValue(value, "Prazo"), missingServiceInformation);
   }
   for (const value of ["R$ 10,00", "Não se aplica (R$ 0,00)", "  5 dias úteis.\n", "Enviar a preencher depois", "https://example.com"]) {
     assert.equal(serviceDisplayValue(value), value);
@@ -119,7 +119,10 @@ test("more information uses each service's own data and does not invent waiting 
   assert.match(html, /<summary>Quer saber mais\?<\/summary>/);
   for (const label of ["Mecanismos de consulta e acompanhamento", "Previsão de espera para atendimento", "Modalidades de atendimento", "Base legal", "Prioridades de atendimento", "Procedimentos para registro de manifestações", "Outras etapas / informações adicionais"]) assert.ok(html.includes(label), label);
   assert.ok(!html.includes("Etapa 2 - análise e conclusão"));
-  assert.ok(html.includes("Não informado."));
+  assert.ok(!html.includes("Não informado."));
+  assert.ok(!html.includes(missingServiceInformation));
+  assert.match(html, /<h4>Nome\(s\) popular\(es\)<\/h4><p><\/p>/);
+  assert.match(html, /<h4>Previsão de espera para atendimento<\/h4><p><\/p>/);
   assert.ok(!html.includes("sac@amargosa.ba.gov.br"));
   assert.ok(!html.includes("10.048"));
   assert.ok(!html.includes("A preencher"));
@@ -133,8 +136,14 @@ test("empty imported fields use the same presentation in service pages and priva
   const service = applyWorkbookCells({ ...original, id: "planilha-900001", slug: "ficha-de-conferencia", detailLayout: "rich" }, cells, 900001);
   const html = renderToStaticMarkup(<CatalogPreviewProvider services={[service]}><ServiceDetail slug={service.slug!} initialService={service} /></CatalogPreviewProvider>);
   for (const title of ["Descrição detalhada", "Requisitos para solicitar o serviço", "Documentos necessários", "Etapa 1 - solicitação", "Prazo máximo para conclusão", "Custo / taxa", "Quer saber mais?"]) assert.ok(html.includes(title), title);
-  assert.ok(html.includes('<section id="documentos"><h2>Documentos necessários</h2><ul><li>Não informado.</li>'));
-  assert.ok(html.includes("Indeterminado."));
+  assert.ok(html.includes('<section id="documentos"><h2>Documentos necessários</h2><ul><li><em class="service-pending-information">' + missingServiceInformation + '</em></li>'));
+  for (const id of ["o-que-e", "quem-pode", "como-solicitar", "informacoes", "canais"]) {
+    const section = html.match(new RegExp(`<section id="${id}"[^>]*>([\\s\\S]*?)<\\/section>`))![1];
+    assert.ok(section.includes('<em class="service-pending-information">' + missingServiceInformation + '</em>'), id);
+  }
+  const drawer = html.match(/<section id="quer-saber-mais"[^>]*>([\s\S]*?)<\/section>/)![1];
+  assert.ok(!drawer.includes(missingServiceInformation));
+  assert.ok(!html.includes("Indeterminado."));
   assert.ok(!html.includes("A preencher"));
   assert.equal(service.workbookCells!.Custo, "A preencher");
   assert.equal(service.workbookCells!.Prazo, "A preencher");

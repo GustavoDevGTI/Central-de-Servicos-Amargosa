@@ -1,6 +1,7 @@
 import type { Service } from "./service-catalog";
 import { workbookFieldProps, type WorkbookCells } from "./workbook-service";
-import { isPendingServiceValue, serviceDisplayValue } from "./service-presentation";
+import { isPendingServiceValue } from "./service-presentation";
+import { serviceValue } from "./service-value";
 
 export const whereWhenColumn = "Onde e quando solicitar2";
 export type WhereWhenPart = {
@@ -61,7 +62,7 @@ function SourceParts({ service, placement }: { service: Service; placement: "int
     <span key={part.start} {...workbookFieldProps(service, whereWhenColumn)}
       data-workbook-start={part.start} data-workbook-end={part.end}>
       {cells[whereWhenColumn].slice(part.start, part.end).trim() && isPendingServiceValue(cells[whereWhenColumn])
-        ? serviceDisplayValue(cells[whereWhenColumn]) : cells[whereWhenColumn].slice(part.start, part.end)}
+        ? serviceValue(cells[whereWhenColumn]) : cells[whereWhenColumn].slice(part.start, part.end)}
     </span>
   ))}</>;
 }
@@ -69,13 +70,13 @@ function SourceParts({ service, placement }: { service: Service; placement: "int
 export function WorkbookWhereWhenIntro({ service, className }: { service: Service; className?: string }) {
   if (service.directEdit?.schema === "carta-1-2026" && service.directEdit.fields.additional !== undefined) return null;
   const source = service.workbookCells![whereWhenColumn];
-  if (!source?.trim()) return <p className={className}>Não informado.</p>;
+  if (!source?.trim()) return <p className={className}>{serviceValue(undefined)}</p>;
   const hasIntro = serviceWhereWhenParts(service).some(part => part.placement === "intro" && source.slice(part.start, part.end).trim());
   return hasIntro ? <p className={className}><SourceParts service={service} placement="intro" /></p> : null;
 }
 
 export function WorkbookWhereWhenHours({ service }: { service: Service }) {
-  if (service.directEdit?.fields.hours !== undefined) return <span style={{ whiteSpace: "pre-wrap", overflowWrap: "anywhere" }}>{serviceDisplayValue(service.directEdit.fields.hours)}</span>;
+  if (service.directEdit?.fields.hours !== undefined) return <span style={{ whiteSpace: "pre-wrap", overflowWrap: "anywhere" }}>{serviceValue(service.directEdit.fields.hours)}</span>;
   return <SourceParts service={service} placement="hours" />;
 }
 

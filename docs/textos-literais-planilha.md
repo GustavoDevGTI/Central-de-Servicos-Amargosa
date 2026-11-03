@@ -8,7 +8,7 @@ São 150 registros: oito excluídos pela legenda, 142 ativos e 145 páginas com 
 
 ## Apresentação
 
-Desde 28/10/2026, por autorização do usuário, os títulos seguem a nomenclatura BA.GOV e as fichas incluem “Quer saber mais?” com informações do próprio serviço. Valores inteiramente vazios ou “A preencher” são exibidos como “Não informado.”; para Prazo, “Indeterminado.”. Essa exceção é apenas visual: valores preenchidos, células originais, JSON e XLSX permanecem intactos. Custo desconhecido não significa gratuidade. Os verificadores independentes conferem essas equivalências e a igualdade literal dos demais valores.
+Desde 28/10/2026, por autorização do usuário, os títulos seguem a nomenclatura BA.GOV e as fichas incluem “Quer saber mais?” com informações do próprio serviço. Por atualização autorizada em 03/11/2026, valores inteiramente vazios ou pendentes ficam em branco em “Quer saber mais?”. Nos campos principais, inclusive prazo, são exibidos como “* Informações a serem adicionadas.” em itálico e amarelo. Essa exceção é apenas visual: valores preenchidos, células originais, JSON e XLSX permanecem intactos. Custo desconhecido não significa gratuidade. Os verificadores independentes conferem essas equivalências e a igualdade literal dos demais valores.
 
 Os modelos de página e estilos existentes foram preservados. Título, descrição, requisitos, documentos, passos, atendimento, custo, prazo, contatos e links vêm das células originais. As etapas são repartidas apenas nos marcadores numerados, sem modificar o texto, e exibidas na lista existente com os números em destaque. Os documentos obrigatórios e opcionais ocupam a lista original. A documentação consolidada é usada somente se essas duas colunas estiverem vazias, evitando duplicação.
 

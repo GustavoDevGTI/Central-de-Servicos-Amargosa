@@ -70,7 +70,7 @@ test("editing attendance or clearing fields retains the page structure and prote
   const html = page(after.snapshot, service.id);
   assert.match(html, /Primeira etapa/);
   assert.match(html, /id="onde-quando"/);
-  assert.match(html, /Não informado/);
+  assert.match(html, /<em class="service-pending-information">\* Informações a serem adicionadas\.<\/em>/);
   assert.equal(snapshotServices(after.snapshot).find((s) => s.id === service.id)!.directEdit?.layout.mergeContact, true);
 });
 

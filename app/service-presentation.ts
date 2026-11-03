@@ -9,9 +9,12 @@ export const serviceSectionLabels = {
 } as const;
 
 export function isPendingServiceValue(value: string | undefined | null) {
-  return !value?.trim() || /^(?:a preencher[.!]?|\*?\s*informa[çc][aã]o a ser adicionada[.!]?|\*?\s*ser[aá] adicionado em breve[.!]?)$/i.test(value.trim());
+  return !value?.trim() || /^(?:a preencher[.!]?|\*?\s*informa[çc][aã]o a ser adicionada[.!]?|\*?\s*informa[çc][oõ]es a serem adicionadas[.!]?|\*?\s*ser[aá] adicionado em breve[.!]?)$/i.test(value.trim());
 }
 
+export const missingServiceInformation = "* Informações a serem adicionadas.";
 export function serviceDisplayValue(value: string | undefined | null, column?: string) {
-  return isPendingServiceValue(value) ? (column === "Prazo" ? "Indeterminado." : "Não informado.") : value!;
+  // Keep the historical column argument for existing callers and audit contexts.
+  void column;
+  return isPendingServiceValue(value) ? missingServiceInformation : value!;
 }

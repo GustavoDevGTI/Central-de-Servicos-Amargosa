@@ -58,7 +58,7 @@
 .service-detail-content .service-manifestation-notice{margin-top:8px;padding:28px 30px;border-left:4px solid var(--segment-accent,var(--green));background:#fff}.service-manifestation-notice h2{margin-bottom:10px}.service-manifestation-notice p{margin:0}.service-manifestation-notice p+p{margin-top:14px}.service-manifestation-notice a{color:var(--green);font-weight:900;text-decoration:underline;text-underline-offset:3px}.service-manifestation-notice a:hover,.service-manifestation-notice a:active,.service-manifestation-notice a:visited{color:var(--green)}@media(max-width:620px){.service-detail-content .service-manifestation-notice{padding:22px 20px}}
 
 /* Lacunas assumidas nas fichas: o asterisco permanece no texto para leitores de tela. */
-.service-pending-information{color:#765800;font-style:italic;font-weight:800}
+.service-pending-information{color:#8a6500;font-style:italic;font-weight:600}
 
 /* O aviso contextual continua clicável, com a ação destacada como botão. */
 .service-reference-notice:not(.service-reference-notice-centered):not(.service-reference-notice-pending){min-height:72px;gap:16px;padding:12px 16px 12px 19px;border-radius:9px;text-decoration:none}
