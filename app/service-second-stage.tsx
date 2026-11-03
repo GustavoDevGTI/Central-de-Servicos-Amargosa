@@ -1,7 +1,6 @@
 import type { Service } from "./service-catalog";
 import { isPendingServiceValue } from "./service-presentation";
 import { documentTopicParts, readTopics } from "./service-topics";
-import { serviceFieldLabel } from "./service-edit-fields";
 
 export const secondStageTitle = "Etapa 2 - análise e conclusão";
 function hasAnswer(value: string | undefined) {
@@ -25,8 +24,8 @@ export function ServiceSecondStage({ service }: { service: Service }) {
         <span style={{ whiteSpace: "pre-wrap", overflowWrap: "anywhere" }}>{text}</span>
       </li>)}
     </ol>}
-    {hasAnswer(documents) && <><h3>{serviceFieldLabel("stage2Documents")}</h3><ul>
+    {hasAnswer(documents) && <ul>
       {documentTopicParts(documents!).map((part, index) => <li key={index} style={{ whiteSpace: "pre-wrap", overflowWrap: "anywhere" }}>{part.text}</li>)}
-    </ul></>}
+    </ul>}
   </section>;
 }

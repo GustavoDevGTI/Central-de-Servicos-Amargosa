@@ -37,7 +37,7 @@ test("edited document order and stage-two topics appear in every mirror and rest
   for (const service of snapshotServices(result.snapshot).filter((s) => s.sourceRow === 22)) {
     const html = renderToStaticMarkup(<CatalogPreviewProvider services={[service]}><ServiceDetail slug={service.slug!} initialService={service} /></CatalogPreviewProvider>);
     assert.deepEqual(documentItems(html), ["Procuração", "CPF", "Identificação"]);
-    assert.match(html, /<section id="etapa-2"><h2>Etapa 2 - análise e conclusão<\/h2><h3>Documentos necessários<\/h3><ul><li\b[^>]*>Parecer<\/li><li\b[^>]*>Autorização<\/li><\/ul>/);
+    assert.match(html, /<section id="etapa-2"><h2>Etapa 2 - análise e conclusão<\/h2><ul><li\b[^>]*>Parecer<\/li><li\b[^>]*>Autorização<\/li><\/ul>/);
     assert.equal(serviceEditValues(service).requiredDocuments, "Procuração;  CPF\r\nIdentificação");
   }
   const restored = restoreServiceContent(result.snapshot, snapshot);
@@ -85,7 +85,9 @@ test("the optional second stage follows stage one in both templates and never re
       const stage = html.match(/<section id="etapa-2">([\s\S]*?)<\/section>/)![1];
       assert.ok(!stage.includes("Não informado."));
       assert.equal(stage.includes('<ol class="service-steps">'), Boolean(fields.stage2Description));
-      assert.equal(stage.includes("Documentos necessários"), Boolean(fields.stage2Documents));
+      assert.ok(!stage.includes("Documentos necessários"));
+      assert.ok(!stage.includes("<h3>"));
+      assert.equal(stage.includes("Parecer"), Boolean(fields.stage2Documents));
       if (fields.stage2Description) {
         assert.match(stage, /<b>1\.<\/b><span[^>]*>Conferir os documentos\.<\/span>/);
         assert.match(stage, /<b>2\.<\/b><span[^>]*>Comunicar o resultado!<\/span>/);
