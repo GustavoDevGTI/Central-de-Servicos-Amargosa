@@ -2,7 +2,7 @@ import { createHash, randomUUID } from "node:crypto";
 import { activeCatalog, catalogPool } from "./catalog-db";
 import { snapshotServices } from "./catalog-preview";
 import { editService, initialEditorSnapshot, ServiceEditorError } from "./service-editor";
-import { serviceEditValues, serviceRecordSourceRow } from "../app/direct-service-content";
+import { publicServiceContent, serviceEditValues, serviceRecordSourceRow } from "../app/direct-service-content";
 
 export async function serviceEditorCatalog() {
   const active = await activeCatalog();
@@ -14,6 +14,19 @@ export async function readServiceForEditing(serviceId: string) {
   const service = snapshotServices(catalog.snapshot).find((s) => s.id === serviceId);
   if (!service) throw new ServiceEditorError("Serviço não encontrado.", 404);
   return { version: catalog.version, service: { id: service.id, title: service.title, slug: service.slug || service.id, sourceRow: serviceRecordSourceRow(service), fields: serviceEditValues(service) } };
+}
+
+/** Read-only preview of the exact version opened by the editor, including inactive records. */
+export async function readServicePreview(serviceId: string, version: string | null) {
+  if (version !== "initial" && (!version || !/^[1-9]\d*$/.test(version) || !Number.isSafeInteger(Number(version)))) throw new ServiceEditorError("Versão de prévia inválida.");
+  const expected = version === "initial" ? null : Number(version);
+  const catalog = await serviceEditorCatalog();
+  if (catalog.version !== expected) throw new ServiceEditorError("O catálogo mudou. Recarregue o serviço e confira novamente.", 409);
+  const services = snapshotServices(catalog.snapshot);
+  const service = services.find((entry) => entry.id === serviceId);
+  if (!service) throw new ServiceEditorError("Serviço não encontrado.", 404);
+  // Keep the active catalog context so related services and internal links match the public page.
+  return { version: catalog.version, services: services.filter((entry) => !entry.inactive || entry.id === serviceId).map(publicServiceContent), active: true };
 }
 
 export async function draftServiceEdit(body: unknown, userId: string) {

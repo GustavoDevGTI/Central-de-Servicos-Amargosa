@@ -14,7 +14,11 @@ export function VersionServicePreview({ versionId, slug }: { versionId: string; 
   return <ServiceSnapshotPreview apiUrl={`/api/admin/history/${encodeURIComponent(versionId)}/preview`} slug={slug} banner={`Histórico privado · versão ${versionId}`} />;
 }
 
-function ServiceSnapshotPreview({ apiUrl, slug, banner }: { apiUrl: string; slug: string; banner: string }) {
+export function CurrentServicePreview({ serviceId, version }: { serviceId: string; version: string }) {
+  return <ServiceSnapshotPreview apiUrl={`/api/admin/services/${encodeURIComponent(serviceId)}?preview=1&version=${encodeURIComponent(version)}`} serviceId={serviceId} banner="Edição atual em uso" />;
+}
+
+function ServiceSnapshotPreview({ apiUrl, slug, serviceId, banner }: { apiUrl: string; slug?: string; serviceId?: string; banner: string }) {
   const [services, setServices] = useState<Service[] | null>(null);
   const [active, setActive] = useState(false);
   const [error, setError] = useState("");
@@ -32,13 +36,13 @@ function ServiceSnapshotPreview({ apiUrl, slug, banner }: { apiUrl: string; slug
       .catch((reason: unknown) => { if (!controller.signal.aborted) setError(reason instanceof Error ? reason.message : "Prévia indisponível."); });
     return () => controller.abort();
   }, [apiUrl]);
-  const service = services?.find((entry) => (entry.slug || entry.id) === slug);
+  const service = services?.find((entry) => serviceId ? entry.id === serviceId : (entry.slug || entry.id) === slug);
   return <>
     <div className={`admin-preview-banner${active ? " admin-preview-banner-current" : ""}`} role="status">{active ? "Edição atual em uso" : banner}</div>
     {service?.inactive && <p className="admin-preview-banner" role="status">Serviço inativo · página oculta na Central</p>}
     {error ? <p className="admin-error" role="alert">{error} <a href="/admin" target="_top">Voltar ao admin</a></p>
       : !services ? <p role="status">Carregando página…</p>
       : !service ? <p role="alert">Serviço não encontrado nesta prévia.</p>
-      : <CatalogPreviewProvider services={services}><ServiceDetail slug={slug} initialService={service} /></CatalogPreviewProvider>}
+      : <CatalogPreviewProvider services={services}><ServiceDetail slug={service.slug || service.id} initialService={service} /></CatalogPreviewProvider>}
   </>;
 }

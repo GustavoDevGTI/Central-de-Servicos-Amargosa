@@ -30,7 +30,7 @@ export function ServiceEditor({ onSaved, onDirtyChange }: { onSaved: () => Promi
     try { return typeof window === "undefined" || window.localStorage.getItem("admin-service-editor-layout") !== "stacked"; }
     catch { return true; }
   });
-  const [previewView, setPreviewView] = useState<"before" | "after" | "both">("after");
+  const [previewView, setPreviewView] = useState<"before" | "after" | "both">("both");
   const workspaceRef = useRef<HTMLDivElement>(null);
   const compareRef = useRef<HTMLElement>(null);
   const dirtyKeys = fields && loaded ? serviceEditFields.filter((f) => fields[f.key] !== loaded.service.fields[f.key]).map((f) => f.key) : [];
@@ -57,6 +57,7 @@ export function ServiceEditor({ onSaved, onDirtyChange }: { onSaved: () => Promi
     try {
       const data = await json<Loaded>(await fetch(`/api/admin/services/${encodeURIComponent(selection.selected.id)}`, { cache: "no-store" }));
       setLoaded(data); setFields(data.service.fields); setEditorRevision((revision) => revision + 1); setComparison(null);
+      setPreviewView("both");
       if (sideBySide) requestAnimationFrame(() => workspaceRef.current?.scrollIntoView({ block: "start" }));
     } catch (reason) { setError(reason instanceof Error ? reason.message : "Serviço indisponível."); }
     finally { setBusy(false); }
@@ -100,6 +101,9 @@ export function ServiceEditor({ onSaved, onDirtyChange }: { onSaved: () => Promi
       : "url" in field ? <input id={id} aria-label={name} type="url" value={fields[field.key]} maxLength={2048} onChange={(event) => change(field.key, event.target.value)} />
         : <textarea id={id} aria-label={name} value={fields[field.key]} rows={field.rows} maxLength={field.key === "title" ? 300 : 20000} required={field.key === "title"} onChange={(event) => change(field.key, event.target.value)} />}</label>;
   }
+  const currentPreviewUrl = loaded ? `/admin/preview/current/${encodeURIComponent(loaded.service.id)}?version=${loaded.version ?? "initial"}` : "";
+  const beforeUrl = comparison?.draftId && loaded ? `/admin/preview/${comparison.draftId}/${encodeURIComponent(loaded.service.slug)}/before` : currentPreviewUrl;
+  const afterUrl = comparison?.draftId && loaded ? `/admin/preview/${comparison.draftId}/${encodeURIComponent(loaded.service.slug)}` : currentPreviewUrl;
   const actions = <div className="admin-preview-actions admin-editor-save-actions">
     <button type="button" disabled={busy || !dirty} onClick={() => void compare()}>{busy ? "Aguarde…" : "Comparar antes e depois"}</button>
     <button type="button" disabled={busy || !dirty || !comparison?.draftId} onClick={() => void save()}>Salvar alterações</button>
@@ -136,10 +140,10 @@ export function ServiceEditor({ onSaved, onDirtyChange }: { onSaved: () => Promi
         <div className="admin-editor-bottom-actions">{actions}</div>
       </div>}
     </section>
-    {loaded && (sideBySide || comparison?.draftId) && <section ref={compareRef} className="admin-section" aria-labelledby="editor-compare-title">
+    {loaded && <section ref={compareRef} className="admin-section" aria-labelledby="editor-compare-title">
       <h2 id="editor-compare-title">Comparação antes de salvar</h2>
-      {comparison?.draftId ? <>
-      {(comparison.affectedIds?.length || 0) > 1 && <p>Esta edição atualiza {comparison.affectedIds!.length} páginas vinculadas ao mesmo serviço.</p>}
+      {!comparison?.draftId && dirty && <p role="status">Alterações ainda não comparadas.</p>}
+      {(comparison?.affectedIds?.length || 0) > 1 && <p>Esta edição atualiza {comparison!.affectedIds!.length} páginas vinculadas ao mesmo serviço.</p>}
       <div className="admin-preview-actions"><button type="button" aria-pressed={!mobile} onClick={() => setMobile(false)}>Computador</button><button type="button" aria-pressed={mobile} onClick={() => setMobile(true)}>Celular</button></div>
       {sideBySide && <div className="admin-preview-actions" role="group" aria-label="Visualização da comparação">
         <button type="button" aria-pressed={previewView === "before"} onClick={() => setPreviewView("before")}>Antes</button>
@@ -147,12 +151,11 @@ export function ServiceEditor({ onSaved, onDirtyChange }: { onSaved: () => Promi
         <button type="button" aria-pressed={previewView === "both"} onClick={() => setPreviewView("both")}>Antes e depois</button>
       </div>}
       <div className={`admin-preview-pages admin-preview-compare${sideBySide && previewView !== "both" ? " admin-preview-pages-single" : ""}`}>
-        {(!sideBySide || previewView !== "after") && <div><h3>Antes</h3><iframe className={`admin-service-frame${mobile ? " admin-frame-mobile" : ""}`} src={`/admin/preview/${comparison.draftId}/${encodeURIComponent(loaded.service.slug)}/before`} title={`Antes: ${loaded.service.title}`} /></div>}
-        {(!sideBySide || previewView !== "before") && <div><h3>Depois</h3><iframe className={`admin-service-frame${mobile ? " admin-frame-mobile" : ""}`} src={`/admin/preview/${comparison.draftId}/${encodeURIComponent(loaded.service.slug)}`} title={`Depois: ${loaded.service.title}`} /></div>}
+        {(!sideBySide || previewView !== "after") && <div><h3>Antes</h3><iframe className={`admin-service-frame${mobile ? " admin-frame-mobile" : ""}`} src={beforeUrl} title={`Antes: ${loaded.service.title}`} /></div>}
+        {(!sideBySide || previewView !== "before") && <div><h3>Depois</h3><iframe className={`admin-service-frame${mobile ? " admin-frame-mobile" : ""}`} src={afterUrl} title={`Depois: ${loaded.service.title}`} /></div>}
       </div>
-      <details className="admin-change-details" open><summary>Ver diferenças por campo ({comparison.report.changes.length})</summary><ChangesTable changes={comparison.report.changes} /></details>
-      <div className="admin-preview-actions"><button type="button" disabled={busy || !dirty} onClick={() => void save()}>Salvar alterações</button></div>
-      </> : <p className="admin-editor-comparison-empty">Compare as alterações para ver a prévia.</p>}
+      {comparison?.draftId && <><details className="admin-change-details" open><summary>Ver diferenças por campo ({comparison.report.changes.length})</summary><ChangesTable changes={comparison.report.changes} /></details>
+      <div className="admin-preview-actions"><button type="button" disabled={busy || !dirty} onClick={() => void save()}>Salvar alterações</button></div></>}
     </section>}
     </div>
   </>;

@@ -33,6 +33,21 @@ try {
   const mirrors = initial.services.filter((s) => s.sourceRow === 22);
   assert.equal(mirrors.length, 3);
   const selected = await request(`/api/admin/services/${mirrors[0].id}`);
+  const currentPreviewUrl = (id, version) => `/api/admin/services/${encodeURIComponent(id)}?preview=1&version=${version ?? "initial"}`;
+  await request(currentPreviewUrl(mirrors[0].id, selected.version), undefined, {}, 401);
+  const previewResponse = await fetch(base + currentPreviewUrl(mirrors[0].id, selected.version), { headers: owner });
+  assert.equal(previewResponse.status, 200);
+  assert.equal(previewResponse.headers.get("cache-control"), "no-store");
+  const currentPreview = await previewResponse.json();
+  assert.equal(currentPreview.version, selected.version);
+  assert.equal(currentPreview.services.length, initial.services.length, "A prévia mantém o contexto dos serviços relacionados");
+  assert.equal(currentPreview.services.find((s) => s.id === mirrors[0].id).summary, mirrors[0].summary);
+  assert.equal(currentPreview.active, true);
+  assert.deepEqual(await request(currentPreviewUrl(mirrors[0].id, selected.version)), currentPreview, "As duas páginas iniciais são iguais");
+  assert.equal((await pool.query("SELECT count(*)::int AS n FROM catalog_drafts")).rows[0].n, 0, "Abrir as prévias não cria rascunhos");
+  assert.equal((await request("/api/admin/history")).versions.length, 0, "Abrir as prévias não cria histórico");
+  await request(currentPreviewUrl("servico-inexistente", selected.version), undefined, owner, 404);
+  for (const version of ["0", "-1", "invalida", "9007199254740992"]) await request(`/api/admin/services/${mirrors[0].id}?preview=1&version=${version}`, undefined, owner, 400);
   const edit = (fields, baseVersion = selected.version) => ({ serviceId: mirrors[0].id, baseVersion, fields });
   await request("/api/admin/services", edit({ url: "https://invalid.example" }), owner, 400);
   await request("/api/admin/services", edit({ summary: "Mudança recusada" }), { ...owner, Origin: "https://invalid.example" }, 403);
@@ -59,10 +74,14 @@ try {
   await request("/api/admin/users", { action: "create", name: "Editor de conferência", email: "editorqa@example.invalid", username: "editorqa", password: catalogPassword, role: "catalog_admin" });
   const catalogUser = await login("editorqa", catalogPassword);
   await request("/api/admin/services", undefined, catalogUser);
+  await request(currentPreviewUrl(mirrors[0].id, selected.version), undefined, catalogUser);
   await request(`/api/admin/drafts/${draft.draftId}`, undefined, catalogUser, 404);
   await request("/api/admin/publish", { draftId: draft.draftId }, catalogUser, 400);
   const stale = await request("/api/admin/services", edit({ cost: "Comparação concorrente" }), catalogUser);
   const first = await request("/api/admin/publish", { draftId: draft.draftId });
+  await request(currentPreviewUrl(mirrors[0].id, selected.version), undefined, owner, 409);
+  const refreshedPreview = await request(currentPreviewUrl(mirrors[0].id, first.version));
+  assert.equal(refreshedPreview.services.find((s) => s.id === mirrors[0].id).summary, "Descrição revisada na conferência local.");
   const published = await request("/api/catalog", undefined, {});
   for (const original of mirrors) {
     const service = published.services.find((s) => s.id === original.id);
@@ -100,6 +119,9 @@ try {
   assert.ok(!(await (await fetch(`${base}/servicos/${mirrors[0].slug}`)).text()).includes('<section id="etapa-2">'), "Comparar não deve publicar a segunda etapa");
   await request("/api/admin/publish", { draftId: pdfDraft.draftId });
   const publicPdf = await request("/api/catalog", undefined, {});
+  const currentWithPrivateControls = await request(`/api/admin/services/${mirrors[0].id}`);
+  const safeCurrentPreview = await request(currentPreviewUrl(mirrors[0].id, currentWithPrivateControls.version));
+  for (const value of Object.values(privateValues)) assert.ok(!JSON.stringify(safeCurrentPreview).includes(value), "A prévia visual não precisa dos controles internos");
   for (const value of Object.values(privateValues)) assert.ok(!JSON.stringify(publicPdf).includes(value), "Controle interno vazou no catálogo público");
   const publicPage = await (await fetch(`${base}/servicos/${mirrors[0].slug}`)).text();
   for (const value of Object.values(privateValues)) assert.ok(!publicPage.includes(value), "Controle interno vazou na renderização pública");
@@ -127,6 +149,9 @@ try {
   for (const mirror of mirrors) assert.equal((await fetch(`${base}/servicos/${mirror.slug}`)).status, 404);
   assert.ok((await request("/api/admin/services")).services.filter((s) => s.sourceRow === 22).every((s) => s.inactive));
   const hiddenEditor = await request(`/api/admin/services/${mirrors[0].id}`);
+  const hiddenPreview = await request(currentPreviewUrl(mirrors[0].id, hiddenEditor.version));
+  assert.equal(hiddenPreview.services.find((s) => s.id === mirrors[0].id).inactive, true, "O registro oculto continua disponível na prévia autenticada");
+  assert.equal(hiddenPreview.services.filter((s) => s.inactive).length, 1, "Os demais registros ocultos não reaparecem como serviços relacionados");
   const maintenanceDraft = await request("/api/admin/services", edit({ status: "Em manutenção" }, hiddenEditor.version));
   await request("/api/admin/publish", { draftId: maintenanceDraft.draftId });
   assert.equal((await request("/api/catalog", undefined, {})).services.filter((s) => s.sourceRow === 22).length, 3);
