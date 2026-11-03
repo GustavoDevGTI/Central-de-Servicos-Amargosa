@@ -21,9 +21,9 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
       const base = item.base_publication_id ? (await catalogPool().query<{ snapshot: CatalogSnapshot }>("SELECT snapshot FROM catalog_publications WHERE id=$1", [item.base_publication_id])).rows[0]?.snapshot : initialEditorSnapshot();
       if (!base) return adminResponse({ error: "A versão anterior expirou. Compare a edição novamente." }, 409);
       const active = await catalogPool().query("SELECT publication_id FROM catalog_active WHERE singleton=true");
-      return adminResponse({ services: snapshotServices(base).filter((s) => !s.inactive), active: String(active.rows[0]?.publication_id ?? "") === String(item.base_publication_id ?? "") });
+      return adminResponse({ services: snapshotServices(base), active: String(active.rows[0]?.publication_id ?? "") === String(item.base_publication_id ?? "") });
     }
-    return adminResponse({ services: snapshotServices(item.snapshot).filter((service) => !service.inactive) });
+    return adminResponse({ services: snapshotServices(item.snapshot) });
   } catch {
     return adminResponse({ error: "Não foi possível carregar a prévia." }, 503);
   }

@@ -2,7 +2,7 @@ import { createHash, randomUUID } from "node:crypto";
 import { activeCatalog, catalogPool } from "./catalog-db";
 import { snapshotServices } from "./catalog-preview";
 import { editService, initialEditorSnapshot, ServiceEditorError } from "./service-editor";
-import { serviceEditValues } from "../app/direct-service-content";
+import { serviceEditValues, serviceRecordSourceRow } from "../app/direct-service-content";
 
 export async function serviceEditorCatalog() {
   const active = await activeCatalog();
@@ -11,9 +11,9 @@ export async function serviceEditorCatalog() {
 
 export async function readServiceForEditing(serviceId: string) {
   const catalog = await serviceEditorCatalog();
-  const service = snapshotServices(catalog.snapshot).find((s) => s.id === serviceId && !s.inactive);
+  const service = snapshotServices(catalog.snapshot).find((s) => s.id === serviceId);
   if (!service) throw new ServiceEditorError("Serviço não encontrado.", 404);
-  return { version: catalog.version, service: { id: service.id, title: service.title, slug: service.slug || service.id, sourceRow: service.sourceRow, fields: serviceEditValues(service) } };
+  return { version: catalog.version, service: { id: service.id, title: service.title, slug: service.slug || service.id, sourceRow: serviceRecordSourceRow(service), fields: serviceEditValues(service) } };
 }
 
 export async function draftServiceEdit(body: unknown, userId: string) {

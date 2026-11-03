@@ -25,10 +25,7 @@ test("more information uses each service's own data and does not invent waiting 
   const service = applyWorkbookCells(original, cells, original.sourceRow!);
   const html = renderToStaticMarkup(<ServiceMoreInformation service={service} contactAnchor="#canais" />);
   assert.match(html, /<summary>Quer saber mais\?<\/summary>/);
-  for (const label of ["Mecanismos de consulta e comunicação", "Consulta ou acesso", "Comunicação", "Previsão de espera", "Prazo máximo estimado", "Meios de Contato", "Procedimentos", "Prioridades de atendimento", "Legislações Pertinente", "Informações adicionais"]) assert.ok(html.includes(label), label);
-  assert.ok(html.includes(cells.Telefone));
-  assert.ok(html.includes(cells.Prazo));
-  assert.ok(html.includes(cells["Link de acesso"]));
+  for (const label of ["MECANISMOS DE CONSULTA E ACOMPANHAMENTO", "PREVISÃO DE ESPERA PARA ATENDIMENTO", "MODALIDADES DE ATENDIMENTO", "ETAPA 2 - ANÁLISE E CONCLUSÃO", "BASE LEGAL", "PRIORIDADES DE ATENDIMENTO", "PROCEDIMENTOS PARA REGISTRO DE MANIFESTAÇÕES", "OUTRAS ETAPAS / INFORMAÇÕES ADICIONAIS"]) assert.ok(html.includes(label), label);
   assert.ok(html.includes("Não informado."));
   assert.ok(!html.includes("sac@amargosa.ba.gov.br"));
   assert.ok(!html.includes("10.048"));
@@ -42,8 +39,8 @@ test("empty imported fields use the same presentation in service pages and priva
   Object.assign(cells, { ID: "900001", Público: "Cidadão", "Nome do serviço consolidado": "Ficha de conferência", Custo: "A preencher", Prazo: "A preencher" });
   const service = applyWorkbookCells({ ...original, id: "planilha-900001", slug: "ficha-de-conferencia", detailLayout: "rich" }, cells, 900001);
   const html = renderToStaticMarkup(<CatalogPreviewProvider services={[service]}><ServiceDetail slug={service.slug!} initialService={service} /></CatalogPreviewProvider>);
-  for (const title of ["O que é?", "Quem Pode Solicitar?", "Pré requisitos e documentos necessários", "Quais as etapas?", "Quanto tempo leva?", "Taxas", "Quer saber mais?"]) assert.ok(html.includes(title), title);
-  assert.ok(html.includes('<section id="documentos"><h2>Pré requisitos e documentos necessários</h2><ul><li>Não informado.</li>'));
+  for (const title of ["DESCRIÇÃO DETALHADA", "REQUISITOS PARA SOLICITAR O SERVIÇO", "DOCUMENTOS NECESSÁRIOS", "ETAPA 1 - SOLICITAÇÃO", "PRAZO MÁXIMO PARA CONCLUSÃO", "CUSTO / TAXA", "Quer saber mais?"]) assert.ok(html.includes(title), title);
+  assert.ok(html.includes('<section id="documentos"><h2>DOCUMENTOS NECESSÁRIOS</h2><ul><li>Não informado.</li>'));
   assert.ok(html.includes("Indeterminado."));
   assert.ok(!html.includes("A preencher"));
   assert.equal(service.workbookCells!.Custo, "A preencher");

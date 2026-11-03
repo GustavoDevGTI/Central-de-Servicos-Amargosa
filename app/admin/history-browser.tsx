@@ -31,8 +31,8 @@ export function HistoryBrowser({ versionId, changedRows, changedIds = [] }: { ve
     .filter((service) => !onlyChanged || changedRows.includes(service.sourceRow || 0) || changedIds.includes(service.id));
   const selection = useServiceSelection(available);
   const { selected, query } = selection;
-  const before = data?.previousServices.find((service) => service.id === selected?.id && !service.inactive);
-  const after = data?.services.find((service) => service.id === selected?.id && !service.inactive);
+  const before = data?.previousServices.find((service) => service.id === selected?.id);
+  const after = data?.services.find((service) => service.id === selected?.id);
   const url = (id: string, service: PreviewService) => `/admin/history/${encodeURIComponent(id)}/${encodeURIComponent(service.slug || service.id)}`;
   const frameClass = `admin-service-frame${mobile ? " admin-frame-mobile" : ""}`;
   return <div className="admin-history-browser">

@@ -2,7 +2,7 @@
 import { useEffect, useRef, useState } from "react";
 import { ServicePicker, useServiceSelection } from "./service-picker";
 import type { PreviewService } from "./draft-browser";
-import { serviceEditFields, type ServiceEditValues, type ServiceEditField } from "../service-edit-fields";
+import { serviceEditFields, serviceEditGroups, type ServiceEditValues, type ServiceEditField } from "../service-edit-fields";
 import type { CatalogReport } from "../../lib/catalog-db";
 import { ChangesTable } from "./change-table";
 
@@ -68,10 +68,20 @@ export function ServiceEditor({ onSaved, onDirtyChange }: { onSaved: () => Promi
       const data = await json<Loaded>(await fetch(`/api/admin/services/${encodeURIComponent(loaded.service.id)}`, { cache: "no-store" }));
       setLoaded(data); setFields(data.service.fields); setComparison(null); setMessage("Alterações salvas na Central.");
       const affected = new Set(comparison.affectedIds || [data.service.id]);
-      setServices((old) => old.map((s) => affected.has(s.id) ? { ...s, title: data.service.title } : s));
+      setServices((old) => old.map((s) => affected.has(s.id) ? { ...s, title: data.service.title, inactive: data.service.fields.status === "Inativo" } : s));
       await onSaved();
     } catch (reason) { setError(reason instanceof Error ? reason.message : "Falha ao salvar."); }
     finally { setBusy(false); }
+  }
+  function fieldControl(field: typeof serviceEditFields[number]) {
+    if (!fields) return null;
+    const id = `edit-${field.key}`;
+    const name = "stage" in field ? `${field.stage} · ${field.label}` : field.label;
+    if ("multiple" in field) return <fieldset className="admin-editor-modalities" key={field.key}><legend>{field.label}</legend>{field.multiple.map((option) => <label key={option}><input type="checkbox" checked={fields[field.key].split("\n").includes(option)} onChange={(event) => { const selected = new Set(fields[field.key].split("\n").filter(Boolean)); if (event.target.checked) selected.add(option); else selected.delete(option); change(field.key, field.multiple.filter((value) => selected.has(value)).join("\n")); }} />{option}</label>)}</fieldset>;
+    return <label key={field.key} htmlFor={id}><span>{field.label}</span>{"options" in field
+      ? <select id={id} aria-label={name} value={fields[field.key]} onChange={(event) => change(field.key, event.target.value)}>{field.options.map((option) => <option key={option} value={option}>{option || "Não informado."}</option>)}</select>
+      : "url" in field ? <input id={id} aria-label={name} type="url" value={fields[field.key]} maxLength={2048} onChange={(event) => change(field.key, event.target.value)} />
+        : <textarea id={id} aria-label={name} value={fields[field.key]} rows={field.rows} maxLength={field.key === "title" ? 300 : 20000} required={field.key === "title"} onChange={(event) => change(field.key, event.target.value)} />}</label>;
   }
   return <>
     <section className="admin-section" aria-labelledby="edit-service-title">
@@ -82,15 +92,17 @@ export function ServiceEditor({ onSaved, onDirtyChange }: { onSaved: () => Promi
       {message && <p className="admin-success" role="status">{message}</p>}
       {loaded && fields && <div className="admin-service-editor">
         <h3>{loaded.service.title}</h3>
-        <p className="admin-editor-fixed">Os botões de início e ajuda são fixos.</p>
+        <p className="admin-editor-fixed">Os textos e o formato dos botões são fixos.</p>
         <fieldset disabled={busy} className="admin-editor-fields">
           <legend className="sr-only">Campos do serviço</legend>
-          {["Informações do serviço", "Atendimento", "Quer saber mais?"].map((group) => <details className="admin-editor-group" key={group} open>
+          {serviceEditGroups.map((group, index) => <details className="admin-editor-group" key={group} open>
             <summary>{group}</summary>
-            {serviceEditFields.filter((f) => f.group === group).map((field) => <label key={field.key} htmlFor={`edit-${field.key}`}>
-              <span>{field.label}</span>
-              <textarea id={`edit-${field.key}`} value={fields[field.key]} rows={field.rows} maxLength={field.key === "title" ? 300 : 20000} required={field.key === "title"} onChange={(e) => change(field.key, e.target.value)} />
-            </label>)}
+            {serviceEditFields.filter((field) => field.group === index && !("stage" in field) && field.key !== "additional").map(fieldControl)}
+            {["ETAPA 1 - SOLICITAÇÃO", "ETAPA 2 - ANÁLISE E CONCLUSÃO"].map((stage) => {
+              const items = serviceEditFields.filter((field) => field.group === index && "stage" in field && field.stage === stage);
+              return items.length ? <fieldset className="admin-editor-stage" key={stage}><legend>{stage}</legend>{items.map(fieldControl)}</fieldset> : null;
+            })}
+            {serviceEditFields.filter((field) => field.group === index && field.key === "additional").map(fieldControl)}
           </details>)}
         </fieldset>
         <div className="admin-preview-actions">

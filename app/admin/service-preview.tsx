@@ -25,7 +25,7 @@ function ServiceSnapshotPreview({ apiUrl, slug, banner }: { apiUrl: string; slug
         const body = await response.json() as { services?: Service[]; active?: boolean; error?: string };
         if (!response.ok || !Array.isArray(body.services)) throw new Error(body.error || "Prévia indisponível.");
         if (!controller.signal.aborted) {
-          setServices(body.services.filter((service) => !service.inactive));
+          setServices(body.services);
           setActive(body.active === true);
         }
       })
@@ -35,9 +35,10 @@ function ServiceSnapshotPreview({ apiUrl, slug, banner }: { apiUrl: string; slug
   const service = services?.find((entry) => (entry.slug || entry.id) === slug);
   return <>
     <div className={`admin-preview-banner${active ? " admin-preview-banner-current" : ""}`} role="status">{active ? "Edição atual em uso" : banner}</div>
+    {service?.inactive && <p className="admin-preview-banner" role="status">Serviço inativo · página oculta na Central</p>}
     {error ? <p className="admin-error" role="alert">{error} <a href="/admin" target="_top">Voltar ao admin</a></p>
       : !services ? <p role="status">Carregando página…</p>
-      : !service ? <p role="alert">Este serviço não está ativo nesta prévia.</p>
+      : !service ? <p role="alert">Serviço não encontrado nesta prévia.</p>
       : <CatalogPreviewProvider services={services}><ServiceDetail slug={slug} initialService={service} /></CatalogPreviewProvider>}
   </>;
 }

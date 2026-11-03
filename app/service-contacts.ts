@@ -248,7 +248,7 @@ export function contactForService(service: ServiceContactSource): ServiceContact
       name: cells["Setor/Unidade responsável no SEI"] || "",
       officeName: cells["Secretaria responsável"] || undefined,
       phone: cells["Telefone"] || "",
-      address: "",
+      address: service.directEdit?.fields.address ?? "",
       email: cells["E-mail do setor/unidade"] || undefined,
       emailLabel: "E-mail do setor/unidade",
       officialUrl: "",
@@ -272,7 +272,7 @@ export function contactForService(service: ServiceContactSource): ServiceContact
   const channelExtension = channelPhone?.match(/ramal\s*(\d+)/i)?.[1];
   const extension = source?.extension || channelExtension || office.phone.match(/ramal\s*(\d+)/i)?.[1];
   const directPhone = service.directEdit?.fields.phone ?? basePhone;
-  const directExtension = service.directEdit?.fields.extension ?? extension;
+  const directExtension = service.directEdit?.schema === "carta-1-2026" && service.directEdit.fields.phone !== undefined ? undefined : service.directEdit?.fields.extension ?? extension;
   return {
     name: service.directEdit?.fields.department ?? name,
     officeName: service.directEdit?.fields.secretariat ?? (name === office.name ? undefined : office.name),
@@ -280,7 +280,7 @@ export function contactForService(service: ServiceContactSource): ServiceContact
       ? directPhone ? `${directPhone}${directExtension ? `, ramal ${directExtension}` : ""}` : ""
       : extension ? `${basePhone}, ramal ${extension}` : basePhone,
     extensionLabel: extension ? (source?.extension || channelExtension ? "ramal do setor" : name === office.name ? "ramal" : "ramal da secretaria") : undefined,
-    address: office.address,
+    address: service.directEdit?.fields.address ?? office.address,
     email: service.directEdit?.fields.email ?? (source?.email || channelEmail || office.email),
     emailLabel: source?.email || channelEmail || name === office.name ? "E-mail" : "E-mail da secretaria",
     officialUrl: office.officialUrl,

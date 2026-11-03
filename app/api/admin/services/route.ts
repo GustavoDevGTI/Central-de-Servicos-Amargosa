@@ -2,13 +2,14 @@ import { adminResponse, adminSession, sameOrigin } from "../../../../lib/admin-s
 import { draftServiceEdit, readEditorBody, serviceEditorCatalog } from "../../../../lib/service-editor-db";
 import { ServiceEditorError } from "../../../../lib/service-editor";
 import { snapshotServices } from "../../../../lib/catalog-preview";
+import { serviceRecordSourceRow } from "../../../../app/direct-service-content";
 
 export const dynamic = "force-dynamic";
 export async function GET(request: Request) {
   try {
     if (!await adminSession(request)) return adminResponse({ error: "Acesso negado." }, 401);
     const current = await serviceEditorCatalog();
-    return adminResponse({ version: current.version, services: snapshotServices(current.snapshot).filter((s) => !s.inactive).map((s) => ({ id: s.id, slug: s.slug || s.id, title: s.title, sourceRow: s.sourceRow, inactive: false })) });
+    return adminResponse({ version: current.version, services: snapshotServices(current.snapshot).map((s) => ({ id: s.id, slug: s.slug || s.id, title: s.title, sourceRow: serviceRecordSourceRow(s), inactive: Boolean(s.inactive) })) });
   } catch { return adminResponse({ error: "Não foi possível carregar os serviços." }, 503); }
 }
 export async function POST(request: Request) {

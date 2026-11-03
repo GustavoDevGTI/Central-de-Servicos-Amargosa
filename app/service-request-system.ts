@@ -1,5 +1,10 @@
 export type ServiceRequestSystem = "sei" | "other";
 
+export function serviceRequestNoticeText(service: { url: string; id: string; notice?: string }, repeated = false) {
+  const generic = service.notice?.startsWith("Consulte as informações disponíveis nesta página") || service.notice?.startsWith("Consulte as orientações desta página");
+  return isBaGovUrl(service.url) && service.id !== "1doc-limpeza-publica" ? "Consulte as informações oficiais e acesse este serviço." : repeated || !service.notice || generic ? "Clique aqui para iniciar a solicitação deste serviço." : service.notice;
+}
+
 export const isBaGovUrl = (value?: string) =>
   Boolean(
     value &&

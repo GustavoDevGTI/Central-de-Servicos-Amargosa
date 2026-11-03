@@ -47,13 +47,17 @@ export function workbookWhereWhenParts(cells: WorkbookCells): WhereWhenPart[] {
   return parts;
 }
 
-export function workbookWhereWhenPresentationProps(cells: WorkbookCells) {
-  return { "data-workbook-where-when-parts": JSON.stringify(workbookWhereWhenParts(cells)) };
+export function serviceWhereWhenParts(service: Service) {
+  return service.directEdit?.layout.whereWhenParts ?? workbookWhereWhenParts(service.workbookCells!);
+}
+
+export function workbookWhereWhenPresentationProps(cells: WorkbookCells, service?: Service) {
+  return { "data-workbook-where-when-parts": JSON.stringify(service ? serviceWhereWhenParts(service) : workbookWhereWhenParts(cells)) };
 }
 
 function SourceParts({ service, placement }: { service: Service; placement: "intro" | "hours" }) {
   const cells = service.workbookCells!;
-  return <>{workbookWhereWhenParts(cells).filter(part => part.placement === placement).map(part => (
+  return <>{serviceWhereWhenParts(service).filter(part => part.placement === placement).map(part => (
     <span key={part.start} {...workbookFieldProps(service, whereWhenColumn)}
       data-workbook-start={part.start} data-workbook-end={part.end}>
       {cells[whereWhenColumn].slice(part.start, part.end).trim() && isPendingServiceValue(cells[whereWhenColumn])
@@ -63,16 +67,18 @@ function SourceParts({ service, placement }: { service: Service; placement: "int
 }
 
 export function WorkbookWhereWhenIntro({ service, className }: { service: Service; className?: string }) {
+  if (service.directEdit?.schema === "carta-1-2026" && service.directEdit.fields.additional !== undefined) return null;
   const source = service.workbookCells![whereWhenColumn];
   if (!source?.trim()) return <p className={className}>Não informado.</p>;
-  const hasIntro = workbookWhereWhenParts(service.workbookCells!).some(part => part.placement === "intro" && source.slice(part.start, part.end).trim());
+  const hasIntro = serviceWhereWhenParts(service).some(part => part.placement === "intro" && source.slice(part.start, part.end).trim());
   return hasIntro ? <p className={className}><SourceParts service={service} placement="intro" /></p> : null;
 }
 
 export function WorkbookWhereWhenHours({ service }: { service: Service }) {
+  if (service.directEdit?.fields.hours !== undefined) return <span style={{ whiteSpace: "pre-wrap", overflowWrap: "anywhere" }}>{serviceDisplayValue(service.directEdit.fields.hours)}</span>;
   return <SourceParts service={service} placement="hours" />;
 }
 
 export function workbookHasHours(service: Service) {
-  return Boolean(service.workbookCells && workbookWhereWhenParts(service.workbookCells).some(part => part.placement === "hours"));
+  return service.directEdit?.fields.hours !== undefined || Boolean(service.workbookCells && serviceWhereWhenParts(service).some(part => part.placement === "hours"));
 }

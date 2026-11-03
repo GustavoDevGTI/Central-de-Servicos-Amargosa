@@ -85,6 +85,33 @@ try {
   assert.equal((await request(`/api/admin/services/${mirrors[0].id}`)).service.fields.summary, "Descrição revisada na conferência local.");
   assert.equal((await request("/api/admin/restore", { versionId: first.version })).identical, true);
   assert.equal((await request("/api/admin/history")).versions.length, 3);
+  const privateValues = { filledBy: "Responsável interno da QA", responsibleContact: "reservado-qa@example.invalid", simpNotes: "Nota interna exclusiva para a SIMP", updatedDate: "31/12/2099" };
+  const currentPdf = await request(`/api/admin/services/${mirrors[0].id}`);
+  assert.equal(Object.keys(currentPdf.service.fields).length, 34);
+  const accessUrl = "https://example.invalid/solicitar-servico";
+  const pdfDraft = await request("/api/admin/services", edit({ ...privateValues, accessUrl, stage2Description: "Analisar e informar o resultado.", stage2Documents: "Documento complementar da análise." }, currentPdf.version));
+  assert.equal((await request(`/api/admin/drafts/${pdfDraft.draftId}`)).services.find((s) => s.id === mirrors[0].id).url, accessUrl);
+  await request("/api/admin/publish", { draftId: pdfDraft.draftId });
+  const publicPdf = await request("/api/catalog", undefined, {});
+  for (const value of Object.values(privateValues)) assert.ok(!JSON.stringify(publicPdf).includes(value), "Controle interno vazou no catálogo público");
+  const publicPage = await (await fetch(`${base}/servicos/${mirrors[0].slug}`)).text();
+  for (const value of Object.values(privateValues)) assert.ok(!publicPage.includes(value), "Controle interno vazou na renderização pública");
+  assert.ok(publicPage.includes(accessUrl));
+  assert.ok(publicPage.includes("Analisar e informar o resultado."));
+  assert.ok(publicPdf.services.filter((s) => s.sourceRow === 22).every((s) => s.url === accessUrl));
+  const currentHide = await request(`/api/admin/services/${mirrors[0].id}`);
+  const hiddenDraft = await request("/api/admin/services", edit({ status: "Inativo" }, currentHide.version));
+  assert.equal(hiddenDraft.report.deactivated, 1);
+  assert.ok((await request(`/api/admin/drafts/${hiddenDraft.draftId}`)).services.filter((s) => s.sourceRow === 22).every((s) => s.inactive));
+  await request("/api/admin/publish", { draftId: hiddenDraft.draftId });
+  assert.equal((await request("/api/catalog", undefined, {})).services.some((s) => s.sourceRow === 22), false);
+  for (const mirror of mirrors) assert.equal((await fetch(`${base}/servicos/${mirror.slug}`)).status, 404);
+  assert.ok((await request("/api/admin/services")).services.filter((s) => s.sourceRow === 22).every((s) => s.inactive));
+  const hiddenEditor = await request(`/api/admin/services/${mirrors[0].id}`);
+  const maintenanceDraft = await request("/api/admin/services", edit({ status: "Em manutenção" }, hiddenEditor.version));
+  await request("/api/admin/publish", { draftId: maintenanceDraft.draftId });
+  assert.equal((await request("/api/catalog", undefined, {})).services.filter((s) => s.sourceRow === 22).length, 3);
+  assert.equal((await fetch(`${base}/servicos/${mirrors[0].slug}`)).status, 200);
   for (let i = 0; i < 20; i++) {
     const current = await request(`/api/admin/services/${mirrors[0].id}`);
     const draft = await request("/api/admin/services", edit({ summary: `Edição local de retenção ${i}.` }, current.version));
@@ -98,5 +125,5 @@ try {
   assert.equal((await pool.query("SELECT count(*)::int AS n FROM catalog_publications WHERE id=$1", [first.version])).rows[0].n, 0);
   const active = (await pool.query("SELECT p.snapshot FROM catalog_publications p JOIN catalog_active a ON a.publication_id=p.id")).rows[0].snapshot;
   assert.deepEqual(active.rows["22"].cells, mirrors[0].workbookCells);
-  console.log(JSON.stringify({ authenticatedDirectEditing: true, privateComparison: true, mirrors: 3, protectedActions: true, staleComparisonRejected: true, catalogAdminAllowed: true, draftOwnership: true, authorship: true, restored: true, meaningfulHistoryOnly: true, retained: 20, sourcePreserved: true }));
+  console.log(JSON.stringify({ authenticatedDirectEditing: true, privateComparison: true, mirrors: 3, protectedActions: true, staleComparisonRejected: true, catalogAdminAllowed: true, draftOwnership: true, authorship: true, restored: true, meaningfulHistoryOnly: true, retained: 20, sourcePreserved: true, pdfFields: 34, linkEditable: true, internalControlsPrivate: true, inactiveRoutesHidden: 3, maintenanceVisible: true }));
 } finally { await pool.end(); }

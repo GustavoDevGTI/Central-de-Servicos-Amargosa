@@ -1,11 +1,11 @@
 /** Presentation only: original workbook cells and catalog properties stay intact. */
 export const serviceSectionLabels = {
-  about: "O que é?",
-  audience: "Quem Pode Solicitar?",
-  documents: "Pré requisitos e documentos necessários",
-  steps: "Quais as etapas?",
-  cost: "Taxas",
-  duration: "Quanto tempo leva?",
+  about: "DESCRIÇÃO DETALHADA",
+  audience: "REQUISITOS PARA SOLICITAR O SERVIÇO",
+  documents: "DOCUMENTOS NECESSÁRIOS",
+  steps: "ETAPA 1 - SOLICITAÇÃO",
+  cost: "CUSTO / TAXA",
+  duration: "PRAZO MÁXIMO PARA CONCLUSÃO",
 } as const;
 
 export function isPendingServiceValue(value: string | undefined | null) {

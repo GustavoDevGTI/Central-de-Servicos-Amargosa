@@ -3,7 +3,8 @@ import test from "node:test";
 import { renderToStaticMarkup } from "react-dom/server";
 import { editService, initialEditorSnapshot, validateServicePatch, compareServiceContent, restoreServiceContent } from "./service-editor";
 import { snapshotServices } from "./catalog-preview";
-import { serviceEditValues } from "../app/direct-service-content";
+import { serviceEditValues, publicServiceContent } from "../app/direct-service-content";
+import { serviceEditFields, serviceEditGroups } from "../app/service-edit-fields";
 import { ServiceDetail } from "../app/internal-portal";
 import { CatalogPreviewProvider } from "../app/catalog-provider";
 import type { CatalogSnapshot } from "./catalog-db";
@@ -19,7 +20,7 @@ test("direct edits update every mirror, preserve archived cells and URLs and ren
   const before = initialEditorSnapshot();
   const original = structuredClone(before);
   const selected = before.services.find((s) => s.sourceRow === 22)!;
-  const result = editService(before, selected.id, { title: "Certidão revisada", summary: "  Texto literal\nCom pontuação!  ", requiredDocuments: "Documento novo", optionalDocuments: "", cost: "" });
+  const result = editService(before, selected.id, { title: "Certidão revisada", summary: "  Texto literal\nCom pontuação!  ", requiredDocuments: "Documento novo", stage2Documents: "Documento complementar", cost: "" });
   assert.equal(result.report.updated, 1);
   assert.equal(result.report.changes.length, 5);
   assert.equal(result.affectedIds.length, 3);
@@ -46,7 +47,7 @@ test("URLs, action text, identifiers, layout, styles and publication state canno
 test("editing attendance or clearing fields retains the page structure and protected start/help actions", () => {
   const before = initialEditorSnapshot();
   const service = before.services.find((s) => s.slug === "parcelamento-de-debito-do-iptu")!;
-  const after = editService(before, service.id, { whereWhen: "", department: "Outro setor", summary: "", phone: "", email: "", steps: "1. Primeira etapa.\n2. Segunda etapa." });
+  const after = editService(before, service.id, { hours: "", department: "Outro setor", summary: "", phone: "", email: "", steps: "1. Primeira etapa.\n2. Segunda etapa." });
   assert.deepEqual(actions(page(before, service.id)), actions(page(after.snapshot, service.id)));
   const html = page(after.snapshot, service.id);
   assert.match(html, /Primeira etapa/);
@@ -74,7 +75,7 @@ test("clearing legacy content preserves its template and edited attendance and l
   const before = initialEditorSnapshot();
   const selected = before.services.find((s) => s.id === "1doc-isencao-de-iptu")!;
   const oldHtml = page(before, selected.id);
-  const result = editService(before, selected.id, { requiredDocuments: "", steps: "", whereWhen: "Agendar o atendimento previamente.", legislation: "Legislação revisada", phone: "", email: "" });
+  const result = editService(before, selected.id, { requiredDocuments: "", steps: "", additional: "Agendar o atendimento previamente.", legislation: "Legislação revisada", phone: "", email: "" });
   const html = page(result.snapshot, selected.id);
   assert.match(html, /Agendar o atendimento previamente/);
   assert.match(html, /Legislação revisada/);
@@ -100,15 +101,114 @@ test("new information fields are editable without turning text into HTML or modi
   assert.equal(compareServiceContent(before, restored).changes.length, 0);
 });
 
-test("optional documents retain the original list and are never duplicated when content is resolved again", () => {
+test("documents of stage two do not replace or duplicate existing stage-one documents", () => {
   const before = initialEditorSnapshot();
   const selected = before.services.find((s) => s.id === "1doc-isencao-de-iptu")!;
   const original = serviceEditValues(selected).requiredDocuments;
-  const result = editService(before, selected.id, { optionalDocuments: "Documento opcional revisado" });
+  const result = editService(before, selected.id, { stage2Documents: "Documento complementar revisado" });
   const service = snapshotServices(result.snapshot).find((s) => s.id === selected.id)!;
   assert.equal(serviceEditValues(service).requiredDocuments, original);
-  assert.equal(serviceEditValues(service).optionalDocuments, "Documento opcional revisado");
-  assert.equal(service.documents?.filter((value) => value === "Documento opcional revisado").length, 1);
+  assert.equal(serviceEditValues(service).stage2Documents, "Documento complementar revisado");
+  assert.equal(service.documents?.includes("Documento complementar revisado"), false);
   const again = editService(result.snapshot, selected.id, { summary: "Uma outra informação." });
-  assert.equal(snapshotServices(again.snapshot).find((s) => s.id === selected.id)!.documents?.filter((value) => value === "Documento opcional revisado").length, 1);
+  assert.equal(serviceEditValues(snapshotServices(again.snapshot).find((s) => s.id === selected.id)!).requiredDocuments, original);
+});
+
+test("the editor mirrors all 34 PDF fields in six groups, with scoped stage labels and no obsolete inputs", () => {
+  const expected = ["NOME DO SERVIÇO", "NOME(S) POPULAR(ES)", "ÓRGÃO / SECRETARIA / SETOR", "CATEGORIA(S)", "PÚBLICO-ALVO / USUÁRIO", "CANAL DE PRESTAÇÃO", "STATUS DO SERVIÇO", "ÁREA RESPONSÁVEL", "RESPONSÁVEL PELO PREENCHIMENTO", "DESCRIÇÃO DETALHADA", "PREVISÃO DE ESPERA PARA ATENDIMENTO", "PRAZO MÁXIMO PARA CONCLUSÃO", "CUSTO / TAXA", "MODALIDADES DE ATENDIMENTO", "ENDEREÇO PRESENCIAL", "HORÁRIO DE ATENDIMENTO", "TELEFONE / WHATSAPP", "E-MAIL OFICIAL", "SITE / LINK DE ACESSO", "MECANISMOS DE CONSULTA E ACOMPANHAMENTO", "LINK ATUAL DO SERVIÇO NO BA.GOV", "REQUISITOS PARA SOLICITAR O SERVIÇO", "DESCRIÇÃO DA ETAPA", "DOCUMENTOS NECESSÁRIOS", "DESCRIÇÃO DA ETAPA", "DOCUMENTOS NECESSÁRIOS", "OUTRAS ETAPAS / INFORMAÇÕES ADICIONAIS", "BASE LEGAL", "PRIORIDADES DE ATENDIMENTO", "CANAL DA OUVIDORIA", "PROCEDIMENTOS PARA REGISTRO DE MANIFESTAÇÕES", "DATA DO PREENCHIMENTO / ATUALIZAÇÃO", "CONTATO DO RESPONSÁVEL", "OBSERVAÇÕES PARA A SIMP"];
+  assert.deepEqual(serviceEditFields.map((field) => field.label), expected);
+  assert.equal(serviceEditGroups.length, 6);
+  assert.equal(new Set(serviceEditFields.map((field) => field.key)).size, expected.length);
+  for (const field of ["whereWhen", "extension", "optionalDocuments", "communication", "maximumTime", "contactMeans"]) assert.throws(() => validateServicePatch({ [field]: "novo valor" }));
+});
+
+test("access links change in every mirror and restore without changing button text, guides, page URLs or source rows", () => {
+  const before = initialEditorSnapshot();
+  const selected = before.services.find((s) => s.sourceRow === 22)!;
+  const url = "https://www.ba.gov.br/servico/pm-amargosa/servico-revisado";
+  const result = editService(before, selected.id, { accessUrl: url, baGovUrl: url });
+  for (const service of snapshotServices(result.snapshot).filter((s) => s.sourceRow === 22)) {
+    assert.equal(service.url, url);
+    const updated = actions(page(result.snapshot, service.id)).map((html) => html.replaceAll(url, before.services.find((s) => s.id === service.id)!.url));
+    assert.deepEqual(updated, actions(page(before, service.id)));
+    assert.equal(service.slug, before.services.find((s) => s.id === service.id)!.slug);
+  }
+  assert.deepEqual(result.snapshot.rows, before.rows);
+  const restored = restoreServiceContent(result.snapshot, before);
+  assert.equal(snapshotServices(restored).find((s) => s.id === selected.id)!.url, selected.url);
+  assert.equal(compareServiceContent(before, restored).changes.length, 0);
+  for (const accessUrl of ["javascript:alert(1)", "data:text/html,x", "ftp://example.com", "https://a:b@example.com", " https://example.com", "https://example.com\nx"]) assert.throws(() => validateServicePatch({ accessUrl }), /endereço/);
+  assert.throws(() => validateServicePatch({ baGovUrl: "https://example.com" }), /BA.GOV/);
+});
+
+test("inactive services remain editable and can be reactivated with their aliases and history", () => {
+  const before = initialEditorSnapshot();
+  const selected = before.services.find((s) => s.sourceRow === 22)!;
+  const hidden = editService(before, selected.id, { status: "Inativo" });
+  assert.equal(hidden.report.deactivated, 1);
+  assert.ok(snapshotServices(hidden.snapshot).filter((s) => s.sourceRow === 22).every((s) => s.inactive));
+  const maintained = editService(hidden.snapshot, selected.id, { status: "Em manutenção" });
+  assert.equal(maintained.report.reactivated, 1);
+  assert.ok(snapshotServices(maintained.snapshot).filter((s) => s.sourceRow === 22).every((s) => !s.inactive));
+  const restored = restoreServiceContent(hidden.snapshot, before);
+  assert.ok(snapshotServices(restored).filter((s) => s.sourceRow === 22).every((s) => !s.inactive));
+  assert.deepEqual(hidden.snapshot.rows, before.rows);
+  assert.throws(() => validateServicePatch({ status: "publicado" }), /opção válida/);
+});
+
+test("private filling controls are stored and compared but absent from public serialization and service HTML", () => {
+  const before = initialEditorSnapshot();
+  const selected = before.services.find((s) => s.sourceRow === 22)!;
+  const secret = { filledBy: "Responsável interno de conferência", responsibleContact: "interno-conferencia@example.invalid", simpNotes: "Observação interna exclusiva", updatedDate: "31/12/2099" };
+  const result = editService(before, selected.id, secret);
+  const service = snapshotServices(result.snapshot).find((s) => s.id === selected.id)!;
+  for (const [key, value] of Object.entries(secret)) {
+    assert.equal(service.directEdit!.fields[key as keyof typeof secret], value);
+    assert.ok(!JSON.stringify(publicServiceContent(service)).includes(value));
+    assert.ok(!page(result.snapshot, selected.id).includes(value));
+  }
+  assert.equal(result.report.changes.length, 4);
+});
+
+test("new PDF answers use existing attendance cards and the drawer, never the PDF example answers", () => {
+  const before = initialEditorSnapshot();
+  const selected = before.services.find((s) => s.slug === "parcelamento-de-debito-do-iptu")!;
+  const result = editService(before, selected.id, { hours: "Segundas, 10h às 12h.", address: "Endereço confirmado pela unidade", popularNames: "Parcelamento municipal", stage2Description: "Conferir a documentação e comunicar o resultado.", stage2Documents: "Comprovante complementar", procedures: "Registrar manifestação e guardar o protocolo.", deliveryChannel: "Híbrido", attendanceModes: "Presencial\nSite ou sistema" });
+  const html = page(result.snapshot, selected.id);
+  for (const value of ["Segundas, 10h às 12h.", "Endereço confirmado pela unidade", "Parcelamento municipal", "Conferir a documentação e comunicar o resultado.", "Comprovante complementar", "Registrar manifestação e guardar o protocolo."]) assert.ok(html.includes(value), value);
+  assert.equal((html.match(/Segundas, 10h às 12h\./g) || []).length, 1);
+  assert.deepEqual(actions(page(before, selected.id)), actions(html));
+});
+
+test("historical optional documents and drawer answers survive migration without obsolete writable fields", () => {
+  const before = initialEditorSnapshot();
+  const selected = before.services.find((s) => s.sourceRow === 22)!;
+  const legacy = editService(before, selected.id, { summary: "Descrição histórica" }).snapshot;
+  legacy.services = legacy.services.map((service) => service.sourceRow !== 22 ? service : { ...service, directEdit: { layout: service.directEdit!.layout, fields: { summary: "Descrição histórica", requiredDocuments: "Documento exigido", optionalDocuments: "Documento opcional antigo", communication: "Comunicação histórica", contactMeans: "Meio de contato histórico", maximumTime: "45 dias" } } });
+  const changed = editService(legacy, selected.id, { summary: "Descrição atualizada" });
+  const values = serviceEditValues(snapshotServices(changed.snapshot).find((s) => s.id === selected.id)!);
+  assert.equal(values.requiredDocuments, "Documento exigido\nDocumento opcional antigo");
+  assert.equal(values.stage2Documents, "");
+  for (const text of ["Comunicação histórica", "Meio de contato histórico", "45 dias"]) assert.ok(values.additional.includes(text));
+  assert.equal(compareServiceContent(legacy, changed.snapshot).changes.length, 1);
+});
+
+test("an inherited source number never couples an unlinked service to workbook mirrors", () => {
+  const before = initialEditorSnapshot();
+  const selected = before.services.find((s) => !s.workbookCells)!;
+  before.services = before.services.map((s) => s.id === selected.id ? { ...s, sourceRow: 22 } : s);
+  const result = editService(before, selected.id, { title: "Nome independente" });
+  assert.deepEqual(result.affectedIds, [selected.id]);
+  assert.equal(result.report.changes[0].sourceRow, undefined);
+  for (const service of snapshotServices(result.snapshot).filter((s) => s.workbookCells && s.sourceRow === 22)) assert.notEqual(service.title, "Nome independente");
+});
+
+test("editing the PDF phone and hours does not leave stale duplicates in the attendance introduction", () => {
+  const before = initialEditorSnapshot();
+  const selected = before.services.find((s) => s.slug === "parcelamento-de-debito-do-iptu")!;
+  const result = editService(before, selected.id, { phone: "(75) 99999-8888", hours: "Quintas, 9h às 11h." });
+  const html = page(result.snapshot, selected.id);
+  assert.ok(html.includes("(75) 99999-8888"));
+  assert.ok(!html.includes("Telefone: (75) 3512-7811."));
+  assert.equal((html.match(/Quintas, 9h às 11h\./g) || []).length, 1);
 });

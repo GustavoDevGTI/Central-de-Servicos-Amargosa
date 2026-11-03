@@ -2,7 +2,7 @@ import type { Service } from "./service-catalog";
 import { PENDING_SERVICE_INFORMATION } from "./pending-information";
 import { whatsappHref } from "./contact-links";
 
-type ServiceLocation = Pick<Service, "accessMode" | "url" | "whereWhen" | "whereWhenItems" | "channels">;
+type ServiceLocation = Pick<Service, "accessMode" | "url" | "whereWhen" | "whereWhenItems" | "channels" | "directEdit">;
 
 type ContactLocation = {
   name: string;
@@ -93,13 +93,13 @@ export function serviceWhereWhen(
     /\bwhatsapp\b/i.test(channel.label) && whatsappHref(channel.value),
   )?.value;
   return {
-    digital,
-    presencial,
+    digital: service.directEdit?.layout.digital ?? digital,
+    presencial: service.directEdit?.layout.presencial ?? presencial,
     local,
-    address,
-    hours,
-    phone: facts.get("telefone")?.[0] || (presencial ? contact.phone : undefined),
-    whatsapp: facts.get("whatsapp")?.[0] || channelWhatsapp,
-    emails,
+    address: service.directEdit?.fields.address ?? address,
+    hours: service.directEdit?.fields.hours ?? hours,
+    phone: service.directEdit?.fields.phone ?? (facts.get("telefone")?.[0] || (presencial ? contact.phone : undefined)),
+    whatsapp: service.directEdit?.schema === "carta-1-2026" && service.directEdit.fields.phone !== undefined ? undefined : facts.get("whatsapp")?.[0] || channelWhatsapp,
+    emails: service.directEdit?.schema === "carta-1-2026" && service.directEdit.fields.email !== undefined ? extractEmailAddresses(service.directEdit.fields.email) : emails,
   };
 }
