@@ -7,6 +7,8 @@ import { services } from "../service-catalog";
 import { serviceEditValues } from "../direct-service-content";
 import { serviceEditFields } from "../service-edit-fields";
 import { editService, initialEditorSnapshot } from "../../lib/service-editor";
+import { editorFieldGroups, type ServiceFieldOrder } from "./service-field-order";
+import { privateServiceEditFields, serviceEditGroups } from "../service-edit-fields";
 
 test("opening every existing topic field preserves every character and creates no publication changes", () => {
   const fields = serviceEditFields.filter((field) => "list" in field);
@@ -59,4 +61,47 @@ test("admin topic controls expose separate accessible items and ordering actions
   assert.match(html, /Mover item 2 para cima/);
   assert.match(html, /Adicionar item/);
   assert.match(html, /Remover item 3/);
+});
+
+test("both arrangements expose each of the 34 editable fields exactly once", () => {
+  const allowed = serviceEditFields.map((field) => field.key).sort();
+  for (const order of ["central", "bagov"] as const) for (const workbookSource of [true, false]) for (const mainLegislation of [true, false]) {
+    const groups = editorFieldGroups(order, { workbookSource, mainLegislation });
+    const keys = groups.flatMap((group) => group.blocks.flatMap((block) => block.fields));
+    assert.equal(keys.length, 34);
+    assert.equal(new Set(keys).size, 34);
+    assert.deepEqual([...keys].sort(), allowed);
+    for (const group of groups) assert.equal(new Set(group.blocks.map((block) => block.key)).size, group.blocks.length);
+    if (order === "central") {
+      assert.deepEqual(groups.find((group) => group.key === "central-controls")!.blocks.flatMap((block) => block.fields), privateServiceEditFields);
+      assert.ok(groups.find((group) => group.key === "central-more")!.blocks[0].fields.includes("popularNames"));
+      assert.ok(groups.find((group) => group.key === (workbookSource ? "central-more" : "central-channels"))!.blocks[0].fields.includes("address"));
+    }
+  }
+});
+
+test("Central follows the page while BA.GOV keeps the Carta order with popular names immediately after the title", () => {
+  const central = editorFieldGroups("central");
+  assert.deepEqual(central.slice(0, 4).map((group) => group.key), ["central-main", "central-stages", "central-channels", "central-time-cost"]);
+  assert.deepEqual(central[1].blocks[0].fields, ["requiredDocuments", "steps"]);
+  const bagov = editorFieldGroups("bagov");
+  assert.deepEqual(bagov.map((group) => group.label), [...serviceEditGroups]);
+  assert.deepEqual(bagov[0].blocks[0].fields.slice(0, 2), ["title", "popularNames"]);
+  assert.deepEqual(bagov[3].blocks.find((block) => block.key === "stage-1")!.fields, ["steps", "requiredDocuments"]);
+});
+
+test("changing arrangement preserves canonical text and topic models and does not produce publication changes", () => {
+  const snapshot = initialEditorSnapshot();
+  const service = snapshot.services.find((entry) => entry.slug === "parcelamento-de-debito-do-iptu")!;
+  const values = serviceEditValues(service);
+  const source = structuredClone(values);
+  for (const order of ["central", "bagov", "central"] as ServiceFieldOrder[]) {
+    const reordered = Object.fromEntries(editorFieldGroups(order).flatMap((group) => group.blocks.flatMap((block) => block.fields.map((key) => [key, values[key]]))));
+    assert.deepEqual(reordered, source);
+    assert.equal(editService(snapshot, service.id, reordered).report.changes.length, 0);
+  }
+  const model = changeTopic(readTopics("RG; CPF", "bulleted"), 0, "RG; frente e verso");
+  const controlled = renderToStaticMarkup(<TopicEditor id="preserved-docs" label="Documentos necessários" name="Etapa 1 · Documentos necessários" value={writeTopics(model)} model={model} mode="bulleted" onChange={() => {}} />);
+  assert.equal((controlled.match(/<textarea\b/g) || []).length, 2, "Moving between groups must not reparse an item being edited");
+  assert.ok(controlled.includes("RG; frente e verso"));
 });

@@ -2,9 +2,11 @@
 
 Fonte conferida visualmente: Carta de Serviço SEI nº 1/2026 - SEAFI.SIMP, documento 00000567657, três páginas, fornecido pelo responsável em 03/11/2026. O PDF é um modelo de perguntas: seus exemplos de respostas, assinatura e instruções de preenchimento não são conteúdo dos serviços.
 
-O admin passa a ter exatamente 34 campos, nos seis grupos e com os nomes do PDF. Os dois pares “DESCRIÇÃO DA ETAPA” e “DOCUMENTOS NECESSÁRIOS” são distinguidos pelo grupo Etapa 1 ou Etapa 2, inclusive na comparação. O formulário usa opções para status e canal, e seleção múltipla para as modalidades previstas no documento. IDs e URLs internas são identificadores fixos, sem campo de edição.
+O admin tem exatamente 34 campos com os nomes do PDF. Em “Ordem dos campos”, BA.GOV mantém os seis grupos da Carta, com nome popular logo após o nome do serviço. Central organiza o preenchimento pelos blocos da ficha: informações principais, documentos e etapas, atendimento, prazos/custos, “Quer saber mais?”, ouvidoria e controles internos. Os dois pares “DESCRIÇÃO DA ETAPA” e “DOCUMENTOS NECESSÁRIOS” são distinguidos pelo grupo Etapa 1 ou Etapa 2, inclusive na comparação. O formulário usa opções para status e canal, e seleção múltipla para as modalidades previstas no documento. IDs e URLs internas são identificadores fixos, sem campo de edição.
 
 Na interface, os nomes são apresentados com a primeira letra maiúscula e o restante minúsculo, preservando BA.GOV, SIMP e WhatsApp. A caixa alta da tabela abaixo reproduz os nomes na fonte apenas para facilitar a conferência; não define a aparência do site.
+
+A troca Central/BA.GOV reorganiza apenas o editor para facilitar o preenchimento e a consulta dos dados na ordem desejada. Os mesmos campos aparecem uma única vez em ambos os modos. Respostas, itens em edição, diferenças e comparação válida são preservados; nenhuma publicação é criada e a página pública não muda de ordem. A preferência fica neste navegador, separada da opção “Lado a lado / Formato anterior”. O modo BA.GOV prepara a consulta na ordem da Carta para transcrição/exportação; não envia dados a outro portal nem gera arquivo automaticamente.
 
 | Campo do PDF | Equivalente anterior | Apresentação |
 | --- | --- | --- |

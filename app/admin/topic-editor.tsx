@@ -3,16 +3,17 @@ import { useRef, useState } from "react";
 import { arrangeTopics, changeTopic, readTopics, writeTopics, type TopicList, type TopicMode } from "../service-topics";
 
 /** The parent remounts this editor when a service is loaded, saved or discarded. */
-export function TopicEditor({ id, label, name, value, mode, onChange }: {
-  id: string; label: string; name: string; value: string; mode: TopicMode; onChange: (value: string) => void;
+export function TopicEditor({ id, label, name, value, mode, model, onModelChange, onChange }: {
+  id: string; label: string; name: string; value: string; mode: TopicMode; model?: TopicList; onModelChange?: (model: TopicList) => void; onChange: (value: string) => void;
 }) {
-  const [list, setList] = useState(() => readTopics(value, mode));
+  const [localList, setList] = useState(() => readTopics(value, mode));
+  const list = model ?? localList;
   const [error, setError] = useState("");
   const container = useRef<HTMLFieldSetElement>(null);
   function update(next: TopicList, focus?: number) {
     const text = writeTopics(next);
     if (text.length > 20000) { setError("O campo deve ter no máximo 20.000 caracteres."); return; }
-    setError(""); setList(next); onChange(text);
+    setError(""); setList(next); onModelChange?.(next); onChange(text);
     if (focus !== undefined) requestAnimationFrame(() => container.current?.querySelectorAll("textarea")[focus]?.focus());
   }
   const List = mode === "numbered" ? "ol" : "ul";

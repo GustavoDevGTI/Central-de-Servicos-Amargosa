@@ -1,13 +1,15 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import { ServicePicker, useServiceSelection } from "./service-picker";
 import type { PreviewService } from "./draft-browser";
-import { serviceEditFields, serviceEditGroups, type ServiceEditValues, type ServiceEditField } from "../service-edit-fields";
+import { serviceEditFields, type ServiceEditValues, type ServiceEditField } from "../service-edit-fields";
 import type { CatalogReport } from "../../lib/catalog-db";
 import { ChangesTable } from "./change-table";
 import { TopicEditor } from "./topic-editor";
+import { editorFieldGroups, type ServiceFieldOrder } from "./service-field-order";
+import type { TopicList } from "../service-topics";
 
-type Loaded = { version: number | null; service: { id: string; slug: string; title: string; fields: ServiceEditValues } };
+type Loaded = { version: number | null; service: { id: string; slug: string; title: string; sourceRow?: number; fields: ServiceEditValues } };
 type Comparison = { draftId?: string; identical?: boolean; report: CatalogReport; affectedIds?: string[] };
 async function json<T>(response: Response): Promise<T> {
   const body = await response.json() as T & { error?: string };
@@ -26,6 +28,11 @@ export function ServiceEditor({ onSaved, onDirtyChange }: { onSaved: () => Promi
   const [message, setMessage] = useState("");
   const [mobile, setMobile] = useState(false);
   const [editorRevision, setEditorRevision] = useState(0);
+  const [topicModels, setTopicModels] = useState<Partial<Record<ServiceEditField, TopicList>>>({});
+  const [fieldOrder, setFieldOrder] = useState<ServiceFieldOrder>(() => {
+    try { return typeof window !== "undefined" && window.localStorage.getItem("admin-service-editor-field-order") === "bagov" ? "bagov" : "central"; }
+    catch { return "central"; }
+  });
   const [sideBySide, setSideBySide] = useState(() => {
     try { return typeof window === "undefined" || window.localStorage.getItem("admin-service-editor-layout") !== "stacked"; }
     catch { return true; }
@@ -35,6 +42,10 @@ export function ServiceEditor({ onSaved, onDirtyChange }: { onSaved: () => Promi
   const compareRef = useRef<HTMLElement>(null);
   const dirtyKeys = fields && loaded ? serviceEditFields.filter((f) => fields[f.key] !== loaded.service.fields[f.key]).map((f) => f.key) : [];
   const dirty = dirtyKeys.length > 0;
+  function chooseFieldOrder(order: ServiceFieldOrder) {
+    setFieldOrder(order);
+    try { window.localStorage.setItem("admin-service-editor-field-order", order); } catch { /* Keep the selection for this session. */ }
+  }
   function chooseLayout(parallel: boolean) {
     setSideBySide(parallel);
     try { window.localStorage.setItem("admin-service-editor-layout", parallel ? "parallel" : "stacked"); } catch { /* The layout can still be switched for this session. */ }
@@ -57,6 +68,7 @@ export function ServiceEditor({ onSaved, onDirtyChange }: { onSaved: () => Promi
     try {
       const data = await json<Loaded>(await fetch(`/api/admin/services/${encodeURIComponent(selection.selected.id)}`, { cache: "no-store" }));
       setLoaded(data); setFields(data.service.fields); setEditorRevision((revision) => revision + 1); setComparison(null);
+      setTopicModels({});
       setPreviewView("both");
       if (sideBySide) requestAnimationFrame(() => workspaceRef.current?.scrollIntoView({ block: "start" }));
     } catch (reason) { setError(reason instanceof Error ? reason.message : "Serviço indisponível."); }
@@ -84,6 +96,7 @@ export function ServiceEditor({ onSaved, onDirtyChange }: { onSaved: () => Promi
       await json(await fetch("/api/admin/publish", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ draftId: comparison.draftId }) }));
       const data = await json<Loaded>(await fetch(`/api/admin/services/${encodeURIComponent(loaded.service.id)}`, { cache: "no-store" }));
       setLoaded(data); setFields(data.service.fields); setEditorRevision((revision) => revision + 1); setComparison(null); setMessage("Alterações salvas na Central.");
+      setTopicModels({});
       const affected = new Set(comparison.affectedIds || [data.service.id]);
       setServices((old) => old.map((s) => affected.has(s.id) ? { ...s, title: data.service.title, inactive: data.service.fields.status === "Inativo" } : s));
       await onSaved();
@@ -94,7 +107,7 @@ export function ServiceEditor({ onSaved, onDirtyChange }: { onSaved: () => Promi
     if (!fields) return null;
     const id = `edit-${field.key}`;
     const name = "stage" in field ? `${field.stage} · ${field.label}` : field.label;
-    if ("list" in field) return <TopicEditor key={`${editorRevision}:${field.key}`} id={id} label={field.label} name={name} value={fields[field.key]} mode={field.list} onChange={(value) => change(field.key, value)} />;
+    if ("list" in field) return <TopicEditor key={`${editorRevision}:${field.key}`} id={id} label={field.label} name={name} value={fields[field.key]} mode={field.list} model={topicModels[field.key]} onModelChange={(model) => setTopicModels((old) => ({ ...old, [field.key]: model }))} onChange={(value) => change(field.key, value)} />;
     if ("multiple" in field) return <fieldset className="admin-editor-modalities" key={field.key}><legend>{field.label}</legend>{field.multiple.map((option) => <label key={option}><input type="checkbox" checked={fields[field.key].split("\n").includes(option)} onChange={(event) => { const selected = new Set(fields[field.key].split("\n").filter(Boolean)); if (event.target.checked) selected.add(option); else selected.delete(option); change(field.key, field.multiple.filter((value) => selected.has(value)).join("\n")); }} />{option}</label>)}</fieldset>;
     return <label key={field.key} htmlFor={id}><span>{field.label}</span>{"options" in field
       ? <select id={id} aria-label={name} value={fields[field.key]} onChange={(event) => change(field.key, event.target.value)}>{field.options.map((option) => <option key={option} value={option}>{option || "Não informado."}</option>)}</select>
@@ -106,7 +119,7 @@ export function ServiceEditor({ onSaved, onDirtyChange }: { onSaved: () => Promi
   const afterUrl = comparison?.draftId && loaded ? `/admin/preview/${comparison.draftId}/${encodeURIComponent(loaded.service.slug)}` : currentPreviewUrl;
   const actions = <div className="admin-preview-actions admin-editor-actions">
     <button type="button" disabled={busy || !dirty} onClick={() => void compare()}>{busy ? "Aguarde…" : "Comparar antes e depois"}</button>
-    <button type="button" disabled={busy || !dirty} onClick={() => { if (!loaded) return; setFields(loaded.service.fields); setEditorRevision((revision) => revision + 1); setComparison(null); setError(""); }}>Descartar edição</button>
+    <button type="button" disabled={busy || !dirty} onClick={() => { if (!loaded) return; setFields(loaded.service.fields); setTopicModels({}); setEditorRevision((revision) => revision + 1); setComparison(null); setError(""); }}>Descartar edição</button>
   </div>;
   return <>
     <div className="admin-preview-actions admin-editor-layout-switch" role="group" aria-label="Organização do editor">
@@ -122,17 +135,20 @@ export function ServiceEditor({ onSaved, onDirtyChange }: { onSaved: () => Promi
       {message && <p className="admin-success" role="status">{message}</p>}
       {loaded && fields && <div className="admin-service-editor">
         <h3>{loaded.service.title}</h3>
+        <div className="admin-preview-actions admin-editor-field-order" role="group" aria-label="Ordem dos campos">
+          <span>Ordem dos campos</span>
+          <button type="button" aria-pressed={fieldOrder === "central"} onClick={() => chooseFieldOrder("central")}>Central</button>
+          <button type="button" aria-pressed={fieldOrder === "bagov"} onClick={() => chooseFieldOrder("bagov")}>BA.GOV</button>
+        </div>
         <p className="admin-editor-fixed">Os textos e o formato dos botões são fixos.</p>
         <fieldset disabled={busy} className="admin-editor-fields">
           <legend className="sr-only">Campos do serviço</legend>
-          {serviceEditGroups.map((group, index) => <details className="admin-editor-group" key={group} open>
-            <summary>{group}</summary>
-            {serviceEditFields.filter((field) => field.group === index && !("stage" in field) && field.key !== "additional").map(fieldControl)}
-            {["Etapa 1 - solicitação", "Etapa 2 - análise e conclusão"].map((stage) => {
-              const items = serviceEditFields.filter((field) => field.group === index && "stage" in field && field.stage === stage);
-              return items.length ? <fieldset className="admin-editor-stage" key={stage}><legend>{stage}</legend>{items.map(fieldControl)}</fieldset> : null;
+          {editorFieldGroups(fieldOrder, { workbookSource: loaded.service.sourceRow !== undefined, mainLegislation: Boolean(loaded.service.fields.legislation) }).map((group) => <details className="admin-editor-group" key={group.key} open>
+            <summary>{group.label}</summary>
+            {group.blocks.map((block) => {
+              const controls = block.fields.map((key) => fieldControl(serviceEditFields.find((field) => field.key === key)!));
+              return block.legend ? <fieldset className="admin-editor-stage" key={block.key}><legend>{block.legend}</legend>{controls}</fieldset> : <Fragment key={block.key}>{controls}</Fragment>;
             })}
-            {serviceEditFields.filter((field) => field.group === index && field.key === "additional").map(fieldControl)}
           </details>)}
         </fieldset>
         {actions}
