@@ -37,6 +37,7 @@ jobs:
           npm run lint
           npx tsc --noEmit
           npm run test:release
+          npm run audit:services
 
       - name: Preparar Docker Buildx
         uses: docker/setup-buildx-action@v4

@@ -1,0 +1,46 @@
+import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
+import { renderToStaticMarkup } from "react-dom/server";
+import { services as builtInServices } from "../app/service-catalog";
+import { ServiceDetail } from "../app/internal-portal";
+import { CatalogPreviewProvider } from "../app/catalog-provider";
+import { publicServiceContent, serviceEditValues } from "../app/direct-service-content";
+import { serviceEditFields, privateServiceEditFields } from "../app/service-edit-fields";
+import { serviceSectionLabels } from "../app/service-presentation";
+import { hasServiceSecondStage } from "../app/service-second-stage";
+import { audienceSelection } from "../app/service-audiences";
+import { snapshotServices } from "../lib/catalog-preview";
+import type { CatalogSnapshot } from "../lib/catalog-db";
+
+const input = process.argv[2] ? JSON.parse(readFileSync(process.argv[2], "utf8")) as { snapshot: CatalogSnapshot } : undefined;
+const snapshot = input?.snapshot;
+const untouchedSnapshot = structuredClone(snapshot);
+const services = snapshot ? snapshotServices(snapshot) : builtInServices;
+const untouched = structuredClone(services);
+const publicServices = services.filter((service) => !service.inactive).map(publicServiceContent);
+const ids = new Set<string>(), routes = new Set<string>();
+let rendered = 0;
+for (const service of services) {
+  assert.ok(!ids.has(service.id), `ID repetido: ${service.id}`);
+  ids.add(service.id);
+  const route = service.slug || service.id;
+  assert.ok(!routes.has(route), `URL repetida: ${route}`);
+  routes.add(route);
+  const values = serviceEditValues(service);
+  assert.equal(Object.keys(values).length, serviceEditFields.length, `${service.id}: campos da Carta`);
+  for (const field of serviceEditFields) assert.equal(typeof values[field.key], "string", `${service.id}: ${field.key}`);
+  assert.ok(audienceSelection(values.audience).valid, `${service.id}: público fora das opções da Central`);
+  const publicService = publicServiceContent(service);
+  for (const key of privateServiceEditFields) assert.equal(publicService.directEdit?.fields[key], undefined, `${service.id}: campo interno exposto`);
+  if (service.inactive) continue;
+  const html = renderToStaticMarkup(<CatalogPreviewProvider services={publicServices}><ServiceDetail slug={route} initialService={publicService} /></CatalogPreviewProvider>);
+  for (const label of Object.values(serviceSectionLabels)) assert.ok(html.includes(label), `${service.id}: ${label}`);
+  assert.ok(html.includes('<summary>Quer saber mais?</summary>'), `${service.id}: gaveta ausente`);
+  assert.equal(html.includes('id="etapa-2"'), hasServiceSecondStage(service), `${service.id}: etapa 2 condicional`);
+  for (const key of privateServiceEditFields) assert.ok(!html.includes(serviceEditFields.find((field) => field.key === key)!.label), `${service.id}: rótulo interno exposto`);
+  assert.ok(!/teste local|admin-workflow-fixture|TESTE LOCAL/i.test(html), `${service.id}: referência de teste`);
+  rendered++;
+}
+assert.deepEqual(services, untouched, "A aplicação do padrão não pode reescrever respostas");
+if (snapshot) assert.deepEqual(snapshot, untouchedSnapshot, "A auditoria não pode alterar o snapshot");
+console.log(JSON.stringify({ source: snapshot ? "published-snapshot" : "built-in", services: services.length, rendered, inactivePreserved: services.length - rendered, editableFields: serviceEditFields.length, standards: true, sourcePreserved: true }));

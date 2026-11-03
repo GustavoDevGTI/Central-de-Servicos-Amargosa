@@ -12,6 +12,19 @@ import { privateServiceEditFields, serviceEditGroups } from "../service-edit-fie
 import { AudienceSelector } from "./audience-selector";
 import { audienceSelection, audienceSelectionValue, serviceAudienceOptions } from "../service-audiences";
 import { audiences } from "../internal-portal";
+import { ChangesTable } from "./change-table";
+import { PaginationControls } from "./pagination-controls";
+
+test("direct editing keeps production pagination for long reports and history", () => {
+  const changes = Array.from({ length: 21 }, (_, index) => ({ serviceId: `id-${index}`, serviceTitle: `Serviço ${index}`, kind: "updated" as const, column: "Descrição detalhada", before: "Antes", after: "Depois" }));
+  const report = renderToStaticMarkup(<ChangesTable changes={changes} />);
+  assert.equal((report.match(/<tbody>[\s\S]*?<\/tbody>/)?.[0].match(/<tr\b/g) || []).length, 10);
+  assert.ok(report.includes("de 21 alterações"));
+  assert.ok(!report.includes("Serviço 10"));
+  const history = renderToStaticMarkup(<PaginationControls page={2} totalItems={20} itemName="publicações" onPageChange={() => {}} />);
+  assert.ok(history.includes("11–20 de 20 publicações"));
+  assert.ok(history.includes('aria-current="page"'));
+});
 
 test("opening every existing topic field preserves every character and creates no publication changes", () => {
   const fields = serviceEditFields.filter((field) => "list" in field);

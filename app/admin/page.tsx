@@ -9,6 +9,8 @@ import { ChangesTable } from "./change-table";
 import type { CatalogReport as Report } from "../../lib/catalog-db";
 import { HistoryBrowser } from "./history-browser";
 import { DiagnosticsPanel } from "./diagnostics-panel";
+import { AiUsagePanel } from "./ai-usage-panel";
+import { PaginationControls, CATALOG_PAGE_SIZE } from "./pagination-controls";
 import { UsersPanel } from "./users-panel";
 import { canManageUsers, type AdminRole } from "../../lib/admin-permissions";
 import "./admin.css";
@@ -31,16 +33,19 @@ async function responseJson<T>(response: Response): Promise<T> {
 export default function AdminPage() {
   const [ready, setReady] = useState(false);
   const [currentUser, setCurrentUser] = useState<{ id: string; name: string; role: AdminRole } | null>(null);
-  const [section, setSection] = useState<"catalog" | "diagnostics" | "users">("catalog");
+  const [section, setSection] = useState<"catalog" | "diagnostics" | "ai-usage" | "users">("catalog");
   const [editorRevision, setEditorRevision] = useState(0);
   const [hasUnsaved, setHasUnsaved] = useState(false);
   const [versions, setVersions] = useState<Version[]>([]);
+  const [historyPage, setHistoryPage] = useState(1);
   const [selected, setSelected] = useState<Version | null>(null);
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
   const historyDetailRef = useRef<HTMLDivElement>(null);
   const selectedVersion = versions.find((version) => version.id === selected?.id);
+  const currentHistoryPage = Math.min(historyPage, Math.max(1, Math.ceil(versions.length / CATALOG_PAGE_SIZE)));
+  const visibleVersions = versions.slice((currentHistoryPage - 1) * CATALOG_PAGE_SIZE, currentHistoryPage * CATALOG_PAGE_SIZE);
 
   useEffect(() => {
     if (selected?.id) historyDetailRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -48,7 +53,7 @@ export default function AdminPage() {
 
   async function loadHistory() {
     const body = await responseJson<{ versions: Version[] }>(await fetch("/api/admin/history", { cache: "no-store" }));
-    setVersions(body.versions);
+    setVersions(body.versions); setHistoryPage(1);
   }
 
   useEffect(() => {
@@ -84,7 +89,7 @@ export default function AdminPage() {
     } finally { setBusy(false); }
   }
 
-  function navigateSection(next: "catalog" | "diagnostics" | "users") {
+  function navigateSection(next: "catalog" | "diagnostics" | "ai-usage" | "users") {
     if (hasUnsaved && next !== section && !window.confirm("Descartar as alterações não salvas?")) return;
     setSection(next);
   }
@@ -107,13 +112,15 @@ export default function AdminPage() {
       <nav aria-label="Administração"><a href="/" target="_blank" rel="noreferrer">Ver a Central</a><button type="button" onClick={() => { if (hasUnsaved && !window.confirm("Descartar as alterações não salvas e sair?")) return; void adminAuthClient.signOut().then(() => window.location.assign("/admin/login")); }}>Sair</button></nav>
     </header>
     <div className="admin-content">
-      <header className="admin-page-heading"><span className="admin-kicker">Administração</span><h1>{section === "catalog" ? "Catálogo de serviços" : section === "diagnostics" ? "Diagnóstico" : "Usuários"}</h1></header>
+      <header className="admin-page-heading"><span className="admin-kicker">Administração</span><h1>{section === "catalog" ? "Catálogo de serviços" : section === "diagnostics" ? "Diagnóstico" : section === "ai-usage" ? "Uso da Amanda" : "Usuários"}</h1></header>
       <nav className="admin-section-nav admin-preview-actions" aria-label="Seções do admin">
         <button type="button" aria-pressed={section === "catalog"} onClick={() => navigateSection("catalog")}>Catálogo</button>
         <button type="button" aria-pressed={section === "diagnostics"} onClick={() => navigateSection("diagnostics")}>Diagnóstico</button>
+        <button type="button" aria-pressed={section === "ai-usage"} onClick={() => navigateSection("ai-usage")}>Uso da Amanda</button>
         {canManageUsers(currentUser?.role) && <button type="button" aria-pressed={section === "users"} onClick={() => navigateSection("users")}>Usuários</button>}
       </nav>
       {section === "diagnostics" && <DiagnosticsPanel />}
+      {section === "ai-usage" && <AiUsagePanel />}
       {section === "users" && currentUser && canManageUsers(currentUser.role) && <UsersPanel currentUserId={currentUser.id} />}
       {section === "catalog" && <>
       {message && <p className="admin-success" role="status">{message}</p>}
@@ -122,7 +129,7 @@ export default function AdminPage() {
       <section className="admin-section" aria-labelledby="history-title"><h2 id="history-title">Histórico de publicações</h2>
         {!versions.length && <p>Nenhuma edição salva ainda.</p>}
         <div className="admin-history-scroll" role="region" aria-labelledby="history-title" tabIndex={0}>
-        <ul className="admin-history">{versions.map((version) => <li key={version.id}>
+        <ul className="admin-history">{visibleVersions.map((version) => <li key={version.id}>
           <button type="button" className="admin-history-toggle" aria-expanded={selected?.id === version.id} aria-controls="admin-history-detail" onClick={() => setSelected(selected?.id === version.id ? null : version)}>
             <strong>Versão {version.id}{version.active ? " · atual" : ""}{version.reverted_from ? ` · restauração da ${version.reverted_from}` : ""}</strong>
             <span className="admin-history-meta">{version.source_filename} · {new Date(version.published_at).toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo" })}<small className="admin-history-author">Atualizado por: {responsibleAccount(version)}</small></span>
@@ -130,6 +137,7 @@ export default function AdminPage() {
           </button>
         </li>)}</ul>
         </div>
+        <PaginationControls page={currentHistoryPage} totalItems={versions.length} itemName="publicações" onPageChange={(value) => { setHistoryPage(value); setSelected(null); }} />
         {selectedVersion && <div id="admin-history-detail" ref={historyDetailRef} className="admin-history-detail">
           <h3>Versão {selectedVersion.id}{selectedVersion.active ? " · atual" : ""}</h3>
           <p className="admin-history-author">Atualizado por: {responsibleAccount(selectedVersion)}</p>

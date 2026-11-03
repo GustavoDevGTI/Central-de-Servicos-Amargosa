@@ -14,6 +14,7 @@
     "sync:coleta": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/sync-coleta-cronograma.ps1",
     "test:search": "node --experimental-strip-types --test app/search-engine.test.ts",
     "test:catalog-link": "tsx --test lib/catalog-link-download.test.ts",
+    "audit:services": "tsx scripts/audit-service-standard.tsx",
     "test:release": "tsx --test app/agent/agent.test.ts app/search-engine.test.ts app/service-catalog.test.ts app/catalog-provider.test.tsx app/workbook-where-when.test.tsx app/service-presentation.test.tsx app/admin/topic-list.test.tsx lib/service-editor.test.tsx lib/admin-permissions.test.ts lib/catalog-import.test.ts lib/catalog-link-download.test.ts"
   },
   "dependencies": {

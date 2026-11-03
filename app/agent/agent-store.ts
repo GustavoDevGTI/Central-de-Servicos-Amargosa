@@ -1,5 +1,12 @@
 import { runtimeNumber } from "./runtime-env";
 import type { AgentUsage } from "./types";
+import {
+  currentMonthAiCost,
+  recordAiUsageEvent,
+  type AiUsageEvent,
+  type AiUsageService,
+  type AiUsageStatus,
+} from "../../lib/ai-usage";
 
 type MemoryWindow = { count: number; resetAt: number };
 const memoryLimits = new Map<string, MemoryWindow>();
@@ -143,6 +150,7 @@ export async function isAgentBudgetAvailable() {
   const budget = runtimeNumber("AI_MONTHLY_BUDGET_BRL", 100);
   if (budget <= 0) return true;
   const month = new Date().toISOString().slice(0, 7);
+  if (process.env.DATABASE_URL) return (await currentMonthAiCost()) < budget;
   const database = await optionalDatabase();
   if (database) {
     await ensureSchema(database);
@@ -157,12 +165,61 @@ export async function isAgentBudgetAvailable() {
   return (memoryUsage.get(month) || 0) < budget;
 }
 
+export type AgentUsageContext = {
+  requestId: string;
+  model: string;
+  providerCalls: number;
+  toolCalls: number;
+  services: AiUsageService[];
+  personalDataRemoved: boolean;
+  durationMs: number;
+};
+
+export async function recordAgentAttempt(input: {
+  requestId: string;
+  provider: "deepseek" | "openai";
+  model: string;
+  status: Exclude<AiUsageStatus, "success">;
+  personalDataRemoved?: boolean;
+  durationMs: number;
+}) {
+  if (!process.env.DATABASE_URL) return;
+  await recordAiUsageEvent({
+    ...input,
+    usage: { inputTokens: 0, cachedInputTokens: 0, outputTokens: 0 },
+    estimatedCostBrl: 0,
+    providerCalls: 0,
+    toolCalls: 0,
+    services: [],
+    personalDataRemoved: Boolean(input.personalDataRemoved),
+  });
+}
+
 export async function recordAgentUsage(
   provider: "deepseek" | "openai",
   usage: AgentUsage,
+  context?: AgentUsageContext,
 ) {
   const month = new Date().toISOString().slice(0, 7);
   const cost = estimateCostBrl(provider, usage);
+  if (process.env.DATABASE_URL) {
+    if (context) {
+      const event: AiUsageEvent = {
+        ...context,
+        provider,
+        status: "success",
+        usage,
+        estimatedCostBrl: cost,
+      };
+      try {
+        await recordAiUsageEvent(event);
+      } catch (error) {
+        // Uma falha de telemetria não deve descartar uma resposta já produzida.
+        console.error("[amanda-usage-storage-error]", error);
+      }
+    }
+    return cost;
+  }
   const database = await optionalDatabase();
   if (database) {
     await ensureSchema(database);

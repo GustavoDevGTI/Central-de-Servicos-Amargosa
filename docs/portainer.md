@@ -25,6 +25,8 @@ Gere dois valores distintos com `openssl rand -hex 32`, um para o segredo de aut
 
 Configure também as variáveis `AI_*` e a chave do provedor já utilizada pela Amanda. Sem chave, a busca tradicional continua disponível. O domínio do proxy, `VINEXT_TRUSTED_HOSTS` e `BETTER_AUTH_URL` precisam coincidir; a sessão administrativa usa cookies seguros em HTTPS. O proxy deve encaminhar `Host`, `X-Forwarded-Host` e `X-Forwarded-Proto: https`. Restrinja o acesso direto à porta do portal ao proxy confiável.
 
+Atualize as tarifas `AI_INPUT_USD_PER_MILLION`, `AI_CACHED_INPUT_USD_PER_MILLION` e `AI_OUTPUT_USD_PER_MILLION` conforme o modelo contratado. O painel administrativo usa esses valores junto com `AI_USD_TO_BRL` para estimar o custo; ele não substitui a fatura do provedor. O histórico de uso da Amanda passa a ser gravado no volume PostgreSQL após a implantação e não é reconstruído a partir dos logs anteriores do contêiner.
+
 Sem essa configuração de confiança, o Vinext interpreta a conexão interna como HTTP e as operações administrativas enviadas pelo navegador em HTTPS falham com “Origem inválida”. Preserve a validação de origem: não libere origens arbitrárias para contornar o erro.
 
 ## Atualização e conferência
@@ -39,6 +41,8 @@ Sem essa configuração de confiança, o Vinext interpreta a conexão interna co
 8. Busque um serviço no editor, altere um campo e confira a comparação antes/depois antes de salvar. O banco novo começa com o catálogo original da imagem e histórico vazio.
 
 Valide também a comparação de uma edição sem salvar: o catálogo público deve permanecer inalterado. Login e consultas GET não exercitam a proteção de origem das operações POST. Solicitações sem origem ou com origem externa devem continuar recebendo HTTP 403. Nesta versão, importações administrativas de planilhas foram substituídas pela edição direta.
+
+A Carta de Serviço e a organização em tópicos são aplicadas pelos componentes compartilhados a todas as fichas, inclusive aos snapshots já publicados. Não importe o XLSX antigo nem substitua o catálogo do banco para ativar o novo padrão. Respostas, IDs, URLs e registros inativos permanecem preservados. `npm run audit:services` confere a base embutida; `npm run audit:services -- caminho/backup.json` confere um backup JSON com `{ "snapshot": ... }`, sem gravar alterações. Nunca adicione backups reais ou credenciais ao repositório.
 
 A inicialização prepara o esquema da mesma versão do Better Auth utilizada pelo portal. A migração é coordenada por trava do PostgreSQL e recusa alterações classificadas como inseguras. O primeiro administrador só é criado em banco sem contas. As tabelas do catálogo são preparadas automaticamente; o healthcheck falha se o catálogo não estiver acessível.
 
