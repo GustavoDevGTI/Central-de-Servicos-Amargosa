@@ -39,6 +39,7 @@ import { serviceDisplayValue, serviceSectionLabels } from "./service-presentatio
 import { ServiceMoreInformation } from "./service-more-information";
 import { workbookFieldProps, workbookStepParts } from "./workbook-service";
 import { ServiceDocumentItems } from "./service-documents";
+import { ServiceSecondStage, hasServiceSecondStage, secondStageTitle } from "./service-second-stage";
 import { WorkbookWhereWhenIntro, WorkbookWhereWhenHours, workbookHasHours, workbookWhereWhenPresentationProps } from "./workbook-where-when";
 import { CollectionScheduleSection } from "./coleta-cronograma";
 import ShareServiceButton from "./share-service-button";
@@ -1606,6 +1607,7 @@ function RichServiceDetail({ service }: { service: Service }) {
             <a href="#quem-pode">{serviceSectionLabels.audience}</a>
             <a href="#documentos">{serviceSectionLabels.documents}</a>
             <a href="#como-solicitar">{serviceSectionLabels.steps}</a>
+            {hasServiceSecondStage(service) && <a href="#etapa-2">{secondStageTitle}</a>}
             {hasWhereWhen && (
               <a href="#onde-quando">{service.id === "1doc-limpeza-publica" ? "Dias e horários da coleta" : serviceEditGroups[2].slice(3)}</a>
             )}
@@ -1656,6 +1658,7 @@ function RichServiceDetail({ service }: { service: Service }) {
                 </ol>
               ) : <p className="service-pending-information">{serviceDisplayValue(PENDING_SERVICE_INFORMATION)}</p>}
             </section>
+            <ServiceSecondStage service={service} />
             {service.id === "1doc-limpeza-publica"
               ? <CollectionScheduleSection service={service} />
               : hasWhereWhen && <ServiceWhereWhenSection service={service} mergeContact={mergeContact} />}
@@ -1802,6 +1805,7 @@ export function ServiceDetail({ slug, initialService }: { slug: string; initialS
             <a href="#como-fazer">
               {serviceSectionLabels.steps}
             </a>
+            {hasServiceSecondStage(service) && <a href="#etapa-2">{secondStageTitle}</a>}
             <a href="#informacoes">Prazos, custos e atendimento</a>
             <a href="#canais">{serviceEditGroups[2].slice(3)}</a>
             <a href="#quer-saber-mais">Quer saber mais?</a>
@@ -1849,6 +1853,7 @@ export function ServiceDetail({ slug, initialService }: { slug: string; initialS
                 <p className="service-pending-information">{serviceDisplayValue(PENDING_SERVICE_INFORMATION)}</p>
               )}
             </section>
+            <ServiceSecondStage service={service} />
             <section id="informacoes" className="service-facts">
               <div>
                 <span>

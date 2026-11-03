@@ -37,7 +37,7 @@ test("edited document order and stage-two topics appear in every mirror and rest
   for (const service of snapshotServices(result.snapshot).filter((s) => s.sourceRow === 22)) {
     const html = renderToStaticMarkup(<CatalogPreviewProvider services={[service]}><ServiceDetail slug={service.slug!} initialService={service} /></CatalogPreviewProvider>);
     assert.deepEqual(documentItems(html), ["Procuração", "CPF", "Identificação"]);
-    assert.match(html, /<h4>Documentos necessários<\/h4><ul><li\b[^>]*>Parecer<\/li><li\b[^>]*>Autorização<\/li><\/ul>/);
+    assert.match(html, /<section id="etapa-2"><h2>Etapa 2 - análise e conclusão<\/h2><h3>Documentos necessários<\/h3><ul><li\b[^>]*>Parecer<\/li><li\b[^>]*>Autorização<\/li><\/ul>/);
     assert.equal(serviceEditValues(service).requiredDocuments, "Procuração;  CPF\r\nIdentificação");
   }
   const restored = restoreServiceContent(result.snapshot, snapshot);
@@ -58,6 +58,46 @@ test("document boundaries preserve punctuation, spaces, unicode and original sou
   assert.deepEqual(documentTopicParts(""), [{ text: "", start: 0, end: 0 }]);
 });
 
+test("the optional second stage follows stage one in both templates and never remains in the drawer", () => {
+  const snapshot = initialEditorSnapshot();
+  const selected = snapshot.services.find((s) => s.slug === "parcelamento-de-debito-do-iptu")!;
+  const cases = [
+    { stage2Description: "", stage2Documents: "", visible: false },
+    { stage2Description: " \r\n ", stage2Documents: "A preencher", visible: false },
+    { stage2Description: "Não informado.", stage2Documents: "* Informação a ser adicionada.", visible: false },
+    { stage2Description: "1. Conferir os documentos.\n2. Comunicar o resultado!", stage2Documents: "", visible: true },
+    { stage2Description: "", stage2Documents: "Parecer; Autorização", visible: true },
+    { stage2Description: "Conferir os documentos.\nComunicar o resultado!", stage2Documents: "Parecer; Autorização", visible: true },
+  ];
+  for (const { visible, ...fields } of cases) {
+    const result = editService(snapshot, selected.id, fields);
+    const current = snapshotServices(result.snapshot).find((s) => s.id === selected.id)!;
+    for (const detailLayout of ["rich", "standard"] as const) {
+      const service = { ...current, detailLayout };
+      const html = renderToStaticMarkup(<CatalogPreviewProvider services={[service]}><ServiceDetail slug={service.slug!} initialService={service} /></CatalogPreviewProvider>);
+      assert.equal(html.includes('<section id="etapa-2">'), visible);
+      assert.equal(html.includes('href="#etapa-2"'), visible);
+      const drawer = html.match(/<section id="quer-saber-mais"[^>]*>([\s\S]*?)<\/section>/)![1];
+      assert.ok(!drawer.includes("Etapa 2 - análise e conclusão"));
+      if (!visible) continue;
+      const firstId = detailLayout === "rich" ? "como-solicitar" : "como-fazer";
+      assert.match(html, new RegExp(`<section id="${firstId}">[\\s\\S]*?<\\/section><section id="etapa-2">`));
+      const stage = html.match(/<section id="etapa-2">([\s\S]*?)<\/section>/)![1];
+      assert.ok(!stage.includes("Não informado."));
+      assert.equal(stage.includes('<ol class="service-steps">'), Boolean(fields.stage2Description));
+      assert.equal(stage.includes("Documentos necessários"), Boolean(fields.stage2Documents));
+      if (fields.stage2Description) {
+        assert.match(stage, /<b>1\.<\/b><span[^>]*>Conferir os documentos\.<\/span>/);
+        assert.match(stage, /<b>2\.<\/b><span[^>]*>Comunicar o resultado!<\/span>/);
+      }
+    }
+  }
+  const filled = editService(snapshot, selected.id, { stage2Description: "Analisar o pedido." }).snapshot;
+  const cleared = editService(filled, selected.id, { stage2Description: "" });
+  const restored = restoreServiceContent(cleared.snapshot, filled);
+  assert.equal(snapshotServices(restored).find((s) => s.id === selected.id)!.directEdit!.fields.stage2Description, "Analisar o pedido.");
+});
+
 test("missing values are presented without changing substantive costs, dates, links or cells", () => {
   for (const value of [undefined, null, "", "  ", "A preencher", " a PREENCHER. ", "* Informação a ser adicionada."]) {
     assert.equal(serviceDisplayValue(value), "Não informado.");
@@ -75,7 +115,8 @@ test("more information uses each service's own data and does not invent waiting 
   const service = applyWorkbookCells(original, cells, original.sourceRow!);
   const html = renderToStaticMarkup(<ServiceMoreInformation service={service} contactAnchor="#canais" />);
   assert.match(html, /<summary>Quer saber mais\?<\/summary>/);
-  for (const label of ["Mecanismos de consulta e acompanhamento", "Previsão de espera para atendimento", "Modalidades de atendimento", "Etapa 2 - análise e conclusão", "Base legal", "Prioridades de atendimento", "Procedimentos para registro de manifestações", "Outras etapas / informações adicionais"]) assert.ok(html.includes(label), label);
+  for (const label of ["Mecanismos de consulta e acompanhamento", "Previsão de espera para atendimento", "Modalidades de atendimento", "Base legal", "Prioridades de atendimento", "Procedimentos para registro de manifestações", "Outras etapas / informações adicionais"]) assert.ok(html.includes(label), label);
+  assert.ok(!html.includes("Etapa 2 - análise e conclusão"));
   assert.ok(html.includes("Não informado."));
   assert.ok(!html.includes("sac@amargosa.ba.gov.br"));
   assert.ok(!html.includes("10.048"));

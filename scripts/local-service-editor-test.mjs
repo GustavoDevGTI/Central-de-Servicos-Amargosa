@@ -92,6 +92,12 @@ try {
   const requiredDocuments = "Identificação; CPF\nProcuração (se necessário).";
   const pdfDraft = await request("/api/admin/services", edit({ ...privateValues, accessUrl, requiredDocuments, stage2Description: "Analisar e informar o resultado.", stage2Documents: "Documento complementar da análise.; Comprovante." }, currentPdf.version));
   assert.equal((await request(`/api/admin/drafts/${pdfDraft.draftId}`)).services.find((s) => s.id === mirrors[0].id).url, accessUrl);
+  const privateStageResponse = await fetch(`${base}/admin/preview/${pdfDraft.draftId}/${mirrors[0].slug}`, { headers: owner });
+  assert.equal(privateStageResponse.status, 200);
+  assert.ok((await privateStageResponse.text()).includes("Prévia privada · conteúdo ainda não publicado"));
+  const privateStageService = (await request(`/api/admin/drafts/${pdfDraft.draftId}`)).services.find((s) => s.id === mirrors[0].id);
+  assert.equal(privateStageService.directEdit.fields.stage2Description, "Analisar e informar o resultado.");
+  assert.ok(!(await (await fetch(`${base}/servicos/${mirrors[0].slug}`)).text()).includes('<section id="etapa-2">'), "Comparar não deve publicar a segunda etapa");
   await request("/api/admin/publish", { draftId: pdfDraft.draftId });
   const publicPdf = await request("/api/catalog", undefined, {});
   for (const value of Object.values(privateValues)) assert.ok(!JSON.stringify(publicPdf).includes(value), "Controle interno vazou no catálogo público");
@@ -103,6 +109,10 @@ try {
   for (const start of starts) assert.ok(start.includes(`href="${accessUrl}"`), "Todos os botões Iniciar usam o acesso editado");
   assert.ok(!publicPage.includes("Site / link de acesso"), "O link não cria uma linha adicional na ficha");
   assert.ok(publicPage.includes("Analisar e informar o resultado."));
+  assert.match(publicPage, /<section id="como-(?:solicitar|fazer)">[\s\S]*?<\/section><section id="etapa-2">/);
+  const optionalStage = publicPage.match(/<section id="etapa-2">([\s\S]*?)<\/section>/)[1];
+  assert.ok(optionalStage.includes('class="service-steps"'));
+  assert.ok(!optionalStage.includes("Não informado."));
   const documentsSection = publicPage.match(/<section id="documentos">([\s\S]*?)<\/section>/)[1];
   assert.deepEqual([...documentsSection.matchAll(/<li\b[^>]*>([\s\S]*?)<\/li>/g)].map((match) => match[1]), ["Identificação", "CPF", "Procuração (se necessário)."]);
   assert.match(publicPage, /<li\b[^>]*>Documento complementar da análise\.<\/li><li\b[^>]*>Comprovante\.<\/li>/);

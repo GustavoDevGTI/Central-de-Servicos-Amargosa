@@ -32,8 +32,8 @@ Na interface, os nomes são apresentados com a primeira letra maiúscula e o res
 | REQUISITOS PARA SOLICITAR O SERVIÇO | Quem Pode Solicitar? | Bloco atual renomeado |
 | ETAPA 1 - SOLICITAÇÃO · DESCRIÇÃO DA ETAPA | Quais as etapas? | Lista numerada atual, com todo o texto antigo; sem classificação automática em etapas novas |
 | ETAPA 1 - SOLICITAÇÃO · DOCUMENTOS NECESSÁRIOS | Documentos obrigatórios e opcionais / documentação consolidada de alternativa | Lista atual preservada; formulário consolida os textos sem duplicar documentos |
-| ETAPA 2 - ANÁLISE E CONCLUSÃO · DESCRIÇÃO DA ETAPA | Sem equivalente separado | Novo na gaveta; começa sem resposta, sem copiar exemplos do PDF |
-| ETAPA 2 - ANÁLISE E CONCLUSÃO · DOCUMENTOS NECESSÁRIOS | Sem equivalente separado | Novo na gaveta; não recebe automaticamente os antigos documentos opcionais |
+| ETAPA 2 - ANÁLISE E CONCLUSÃO · DESCRIÇÃO DA ETAPA | Sem equivalente separado | Seção abaixo da Etapa 1, com o mesmo título e lista numerada; só aparece quando preenchida, sem copiar exemplos do PDF |
+| ETAPA 2 - ANÁLISE E CONCLUSÃO · DOCUMENTOS NECESSÁRIOS | Sem equivalente separado | Documentos na seção da Etapa 2; não recebe automaticamente os antigos documentos opcionais |
 | OUTRAS ETAPAS / INFORMAÇÕES ADICIONAIS | Informações adicionais e orientações livres de atendimento | Gaveta; preserva respostas antigas e permite edição das orientações sem campo próprio |
 | BASE LEGAL | Legislação pertinente / legislação relacionada | Bloco existente quando há legislação; gaveta nos demais casos |
 | PRIORIDADES DE ATENDIMENTO | Prioridades de atendimento | Campo da gaveta com o nome do PDF |
@@ -52,3 +52,5 @@ O editor não permite alterar HTML, CSS, IDs, rotas, texto/formato dos botões o
 Documentos necessários e descrições das duas etapas são editados em listas de itens, com inclusão, remoção e ordenação. A abertura do editor conserva os separadores, a numeração, os espaços e as quebras de linha originais; editar um item não reescreve os demais. A comparação continua obrigatória antes de salvar.
 
 As listas públicas de documentos, nas duas etapas, usam os mesmos limites de tópicos do editor: ponto e vírgula e quebras de linha. Cada documento ocupa um item na ficha, na comparação e no histórico. Os separadores deixam de ser texto corrido; as respostas armazenadas e o texto de cada documento permanecem intactos.
+
+A segunda etapa fica imediatamente abaixo da primeira e deixa a gaveta “Quer saber mais?”. Sem descrição e documentos preenchidos, não aparece na ficha nem na navegação. Se apenas um dos campos tiver resposta, exiba somente esse conteúdo. Campos vazios, “A preencher” ou “Não informado.” não tornam a etapa visível. Os dois campos continuam disponíveis no editor, inclusive para remoção do conteúdo.
