@@ -6,6 +6,7 @@ import { serviceEditFields, type ServiceEditValues, type ServiceEditField } from
 import type { CatalogReport } from "../../lib/catalog-db";
 import { ChangesTable } from "./change-table";
 import { TopicEditor } from "./topic-editor";
+import { AudienceSelector } from "./audience-selector";
 import { editorFieldGroups, type ServiceFieldOrder } from "./service-field-order";
 import type { TopicList } from "../service-topics";
 
@@ -107,6 +108,7 @@ export function ServiceEditor({ onSaved, onDirtyChange }: { onSaved: () => Promi
     if (!fields) return null;
     const id = `edit-${field.key}`;
     const name = "stage" in field ? `${field.stage} · ${field.label}` : field.label;
+    if (field.key === "audience") return <AudienceSelector key={field.key} value={fields.audience} onChange={(value) => change("audience", value)} />;
     if ("list" in field) return <TopicEditor key={`${editorRevision}:${field.key}`} id={id} label={field.label} name={name} value={fields[field.key]} mode={field.list} model={topicModels[field.key]} onModelChange={(model) => setTopicModels((old) => ({ ...old, [field.key]: model }))} onChange={(value) => change(field.key, value)} />;
     if ("multiple" in field) return <fieldset className="admin-editor-modalities" key={field.key}><legend>{field.label}</legend>{field.multiple.map((option) => <label key={option}><input type="checkbox" checked={fields[field.key].split("\n").includes(option)} onChange={(event) => { const selected = new Set(fields[field.key].split("\n").filter(Boolean)); if (event.target.checked) selected.add(option); else selected.delete(option); change(field.key, field.multiple.filter((value) => selected.has(value)).join("\n")); }} />{option}</label>)}</fieldset>;
     return <label key={field.key} htmlFor={id}><span>{field.label}</span>{"options" in field
@@ -147,7 +149,7 @@ export function ServiceEditor({ onSaved, onDirtyChange }: { onSaved: () => Promi
             <summary>{group.label}</summary>
             {group.blocks.map((block) => {
               const controls = block.fields.map((key) => fieldControl(serviceEditFields.find((field) => field.key === key)!));
-              return block.legend ? <fieldset className="admin-editor-stage" key={block.key}><legend>{block.legend}</legend>{controls}</fieldset> : block.paired ? <div className="admin-editor-paired-fields" key={block.key}>{controls}</div> : <Fragment key={block.key}>{controls}</Fragment>;
+              return block.legend ? <fieldset className="admin-editor-stage" key={block.key}><legend>{block.legend}</legend>{controls}</fieldset> : <Fragment key={block.key}>{controls}</Fragment>;
             })}
           </details>)}
         </fieldset>

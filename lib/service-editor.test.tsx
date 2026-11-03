@@ -180,10 +180,32 @@ test("platform edits update public contact cards and mirrors, preserve actions, 
 test("audience and eligibility are public: audience labels the header and eligibility fills its own section", () => {
   const before = initialEditorSnapshot();
   const selected = before.services.find((s) => s.slug === "abastecimento-de-agua")!;
-  const result = editService(before, selected.id, { audience: "Público confirmado", eligibility: "Requisito confirmado para a solicitação." });
+  const result = editService(before, selected.id, { audience: "Cidadãos, Empresas", eligibility: "Requisito confirmado para a solicitação." });
   const html = page(result.snapshot, selected.id);
-  assert.match(html, /<small>Público confirmado<\/small>/);
+  assert.match(html, /<small>Cidadãos, Empresas<\/small>/);
   assert.match(html, /<section id="quem-pode">[\s\S]*?Requisito confirmado para a solicitação\./);
+});
+
+test("audience selections update header and filter IDs in mirrors and independent records and restore", () => {
+  const before = initialEditorSnapshot();
+  const selected = [before.services.find((s) => s.sourceRow === 22)!, before.services.find((s) => !s.workbookCells && s.slug)!];
+  for (const original of selected) {
+    const result = editService(before, original.id, { audience: "Servidores, Órgãos Públicos e ONGs, Ouvidoria" });
+    for (const id of result.affectedIds) {
+      const service = snapshotServices(result.snapshot).find((s) => s.id === id)!;
+      assert.deepEqual(service.audienceIds, ["servidor", "orgaos-publicos-ongs", "ouvidoria"]);
+      assert.equal(service.audienceId, "servidor");
+      assert.equal(serviceEditValues(service).audience, "Servidores, Órgãos Públicos e ONGs, Ouvidoria");
+      assert.match(page(result.snapshot, id), /<small>Servidores, Órgãos Públicos e ONGs, Ouvidoria<\/small>/);
+    }
+    assert.deepEqual(result.snapshot.rows, before.rows);
+    const restored = restoreServiceContent(result.snapshot, before);
+    assert.equal(serviceEditValues(snapshotServices(restored).find((s) => s.id === original.id)!).audience, serviceEditValues(original).audience);
+    const cleared = editService(result.snapshot, original.id, { audience: "" });
+    assert.deepEqual(snapshotServices(cleared.snapshot).find((s) => s.id === original.id)!.audienceIds, []);
+  }
+  for (const audience of ["Público inventado", "Cidadãos, Empresas, Qualquer outro", "Cidadãos, Cidadãos", "Empresa inventada", "e"]) assert.throws(() => validateServicePatch({ audience }), /públicos/);
+  assert.throws(() => validateServicePatch({ audience: ["cidadao"] }), /Texto inválido/);
 });
 
 test("access links change in every mirror and restore without changing button text, guides, page URLs or source rows", () => {

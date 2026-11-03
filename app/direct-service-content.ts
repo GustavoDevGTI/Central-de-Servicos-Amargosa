@@ -7,6 +7,7 @@ import { servicePageCopy } from "./service-page-copy";
 import { serviceWhereWhenParts } from "./workbook-where-when";
 import { isBaGovUrl } from "./service-request-system";
 import { isPendingServiceValue } from "./service-presentation";
+import { audienceSelection } from "./service-audiences";
 
 /** Only explicit workbook links identify mirrors; inherited legacy numbers do not. */
 export function serviceRecordSourceRow(service: Service) { return service.workbookCells || service.publishedFromWorkbook ? service.sourceRow : undefined; }
@@ -85,7 +86,7 @@ export function applyDirectServiceContent(service: Service): Service {
     if (fields.whereWhen !== undefined) next.whereWhen = fields.whereWhen;
     if (fields.audience !== undefined) {
       next.audienceLabel = fields.audience;
-      next.audienceIds = [/cidad/i.test(fields.audience) && "cidadao", /empresa/i.test(fields.audience) && "empresa", /servidor/i.test(fields.audience) && "servidor", /órgãos públicos|ongs/i.test(fields.audience) && "orgaos-publicos-ongs"].filter((id): id is string => Boolean(id));
+      next.audienceIds = audienceSelection(fields.audience).ids;
       next.audienceId = next.audienceIds[0];
     }
     if (fields.category !== undefined) next.subject = fields.category;
@@ -93,6 +94,10 @@ export function applyDirectServiceContent(service: Service): Service {
     if (fields.steps !== undefined) next.steps = fields.steps ? fields.steps.split(/\r?\n/) : [];
     if (fields.accessUrl !== undefined) next.url = fields.accessUrl;
     if (fields.platform !== undefined) next.destination = fields.platform;
+  }
+  if (fields.audience !== undefined && service.workbookCells) {
+    next.audienceIds = audienceSelection(fields.audience).ids;
+    next.audienceId = next.audienceIds[0];
   }
   if (fields.status !== undefined) next.inactive = fields.status === "Inativo";
   if (fields.popularNames !== undefined) next.searchTerms = [...new Set([...(service.searchTerms || []), fields.popularNames].filter(Boolean))];

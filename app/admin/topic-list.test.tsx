@@ -9,6 +9,9 @@ import { serviceEditFields } from "../service-edit-fields";
 import { editService, initialEditorSnapshot } from "../../lib/service-editor";
 import { editorFieldGroups, type ServiceFieldOrder } from "./service-field-order";
 import { privateServiceEditFields, serviceEditGroups } from "../service-edit-fields";
+import { AudienceSelector } from "./audience-selector";
+import { audienceSelection, audienceSelectionValue, serviceAudienceOptions } from "../service-audiences";
+import { audiences } from "../internal-portal";
 
 test("opening every existing topic field preserves every character and creates no publication changes", () => {
   const fields = serviceEditFields.filter((field) => "list" in field);
@@ -77,10 +80,29 @@ test("both arrangements expose the Carta fields and platform exactly once", () =
       assert.ok(groups.find((group) => group.key === "central-more")!.blocks[0].fields.includes("popularNames"));
       assert.ok(groups.find((group) => group.key === (workbookSource ? "central-more" : "central-channels"))!.blocks[0].fields.includes("address"));
       assert.ok(groups.find((group) => group.key === "central-channels")!.blocks[0].fields.includes("platform"));
-      const paired = groups[0].blocks.find((block) => block.paired)!;
-      assert.deepEqual(paired.fields, ["audience", "eligibility"]);
+      assert.deepEqual(groups[0].blocks[0].fields, ["title", "audience", "summary", "accessUrl", "eligibility"]);
     }
   }
+});
+
+test("audience checkboxes use the same options as the Central and preserve historical text on open", () => {
+  assert.deepEqual(serviceAudienceOptions, audiences.map(({ id, label }) => ({ id, label })));
+  assert.equal(serviceAudienceOptions.length, 5);
+  for (const service of services) {
+    const value = serviceEditValues(service).audience;
+    assert.ok(audienceSelection(value).valid, `${service.id}: ${value}`);
+    assert.equal(serviceEditValues(service).audience, value);
+  }
+  const html = renderToStaticMarkup(<AudienceSelector value="Cidadão, empresa e ONG" onChange={() => {}} />);
+  assert.equal((html.match(/type="checkbox"/g) || []).length, serviceAudienceOptions.length);
+  assert.equal((html.match(/checked=""/g) || []).length, 3);
+  assert.ok(!html.includes("<textarea"));
+  for (const { label } of serviceAudienceOptions) assert.ok(html.includes(label));
+  assert.deepEqual(audienceSelection("Cidadão e empresa").ids, ["cidadao", "empresa"]);
+  assert.equal(audienceSelectionValue(["empresa", "cidadao"]), "Cidadãos, Empresas");
+  assert.deepEqual(audienceSelection(audienceSelectionValue(serviceAudienceOptions.map((option) => option.id))).ids, serviceAudienceOptions.map((option) => option.id));
+  for (const value of ["", " "]) assert.ok(audienceSelection(value).valid);
+  for (const value of ["Público desconhecido", "Cidadãos, Público inventado", "Cidadão, Cidadãos", ",", "e"]) assert.ok(!audienceSelection(value).valid, value);
 });
 
 test("Central follows the page while BA.GOV keeps the Carta order with popular names immediately after the title", () => {

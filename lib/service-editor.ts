@@ -9,6 +9,7 @@ import type { CatalogSnapshot, CatalogReport, CatalogChange } from "./catalog-db
 import workbook from "../app/workbook-service-data.json";
 import { isBaGovUrl, serviceRequestNoticeText } from "../app/service-request-system";
 import { serviceWhereWhenParts } from "../app/workbook-where-when";
+import { audienceSelection } from "../app/service-audiences";
 
 export class ServiceEditorError extends Error {
   constructor(message: string, readonly status = 400) { super(message); }
@@ -31,6 +32,7 @@ export function validateServicePatch(input: unknown): Partial<ServiceEditValues>
     if (!allowed.has(key)) throw new ServiceEditorError("Este campo é fixo ou não pode ser editado.");
     if (typeof value !== "string" || value.length > (key === "title" ? 300 : 20000) || value.includes("\0")) throw new ServiceEditorError("Texto inválido ou acima do limite permitido.");
     if (key === "title" && !value.trim()) throw new ServiceEditorError("Informe o nome do serviço.");
+    if (key === "audience" && !audienceSelection(value).valid) throw new ServiceEditorError("Selecione apenas os públicos disponíveis na Central, sem repetições.");
     const field = serviceEditFields.find((item) => item.key === key)!;
     if ("options" in field && !(field.options as readonly string[]).includes(value)) throw new ServiceEditorError(`Selecione uma opção válida para ${field.label}.`);
     if ("multiple" in field && value && (value.split("\n").some((item) => !(field.multiple as readonly string[]).includes(item)) || new Set(value.split("\n")).size !== value.split("\n").length)) throw new ServiceEditorError("Selecione modalidades de atendimento válidas.");

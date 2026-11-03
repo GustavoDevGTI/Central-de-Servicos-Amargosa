@@ -50,6 +50,7 @@ try {
   for (const version of ["0", "-1", "invalida", "9007199254740992"]) await request(`/api/admin/services/${mirrors[0].id}?preview=1&version=${version}`, undefined, owner, 400);
   const edit = (fields, baseVersion = selected.version) => ({ serviceId: mirrors[0].id, baseVersion, fields });
   await request("/api/admin/services", edit({ url: "https://invalid.example" }), owner, 400);
+  for (const audience of ["Público inventado", "Cidadãos, Cidadãos", ["cidadao"]]) await request("/api/admin/services", edit({ audience }), owner, 400);
   await request("/api/admin/services", edit({ summary: "Mudança recusada" }), { ...owner, Origin: "https://invalid.example" }, 403);
   const oversized = await fetch(base + "/api/admin/services", { method: "POST", headers: { ...owner, "Content-Type": "application/json" }, body: JSON.stringify(edit({ summary: "x".repeat(140000) })) });
   assert.equal(oversized.status, 413);
@@ -111,7 +112,8 @@ try {
   const accessUrl = "https://example.invalid/solicitar-servico";
   const requiredDocuments = "Identificação; CPF\nProcuração (se necessário).";
   const platform = "Canal digital revisado na QA";
-  const pdfDraft = await request("/api/admin/services", edit({ ...privateValues, accessUrl, platform, requiredDocuments, stage2Description: "Analisar e informar o resultado.", stage2Documents: "Documento complementar da análise.; Comprovante." }, currentPdf.version));
+  const audience = "Cidadãos, Empresas, Órgãos Públicos e ONGs";
+  const pdfDraft = await request("/api/admin/services", edit({ ...privateValues, accessUrl, platform, audience, requiredDocuments, stage2Description: "Analisar e informar o resultado.", stage2Documents: "Documento complementar da análise.; Comprovante." }, currentPdf.version));
   assert.ok(pdfDraft.report.changes.some((change) => change.column === "Plataforma" && change.after === platform));
   assert.ok((await request("/api/catalog", undefined, {})).services.filter((s) => s.sourceRow === 22).every((s) => s.destination === mirrors[0].destination), "Comparar a plataforma não publica");
   assert.equal((await request(`/api/admin/drafts/${pdfDraft.draftId}`)).services.find((s) => s.id === mirrors[0].id).url, accessUrl);
@@ -145,6 +147,11 @@ try {
   assert.equal((await request(`/api/admin/services/${mirrors[0].id}`)).service.fields.requiredDocuments, requiredDocuments);
   assert.ok(publicPdf.services.filter((s) => s.sourceRow === 22).every((s) => s.url === accessUrl));
   assert.ok(publicPdf.services.filter((s) => s.sourceRow === 22).every((s) => s.destination === platform));
+  for (const mirror of publicPdf.services.filter((s) => s.sourceRow === 22)) {
+    assert.equal(mirror.audienceLabel, audience);
+    assert.deepEqual(mirror.audienceIds, ["cidadao", "empresa", "orgaos-publicos-ongs"]);
+  }
+  assert.ok(publicPage.includes(`<small>${audience}</small>`));
   for (const mirror of mirrors) assert.ok((await (await fetch(`${base}/servicos/${mirror.slug}`)).text()).includes(platform));
   await request("/api/admin/restore", { versionId: first.version });
   assert.equal((await request(`/api/admin/services/${mirrors[0].id}`)).service.fields.platform, mirrors[0].destination, "Restaurar recupera a plataforma anterior");
