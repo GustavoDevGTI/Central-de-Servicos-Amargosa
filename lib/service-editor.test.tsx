@@ -195,6 +195,8 @@ test("audience selections update header and filter IDs in mirrors and independen
       const service = snapshotServices(result.snapshot).find((s) => s.id === id)!;
       assert.deepEqual(service.audienceIds, ["servidor", "orgaos-publicos-ongs", "ouvidoria"]);
       assert.equal(service.audienceId, "servidor");
+      assert.equal(service.category, before.services.find((s) => s.id === id)!.category);
+      assert.equal(service.subject, before.services.find((s) => s.id === id)!.subject);
       assert.equal(serviceEditValues(service).audience, "Servidores, Órgãos Públicos e ONGs, Ouvidoria");
       assert.match(page(result.snapshot, id), /<small>Servidores, Órgãos Públicos e ONGs, Ouvidoria<\/small>/);
     }

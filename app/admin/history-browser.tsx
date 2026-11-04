@@ -3,6 +3,7 @@
 import { useEffect, useId, useState } from "react";
 import type { PreviewService } from "./draft-browser";
 import { ServicePicker, useServiceSelection } from "./service-picker";
+import { ServicePreviewFrame } from "./service-preview-frame";
 
 type HistoryPreview = { versionId: string; previousVersionId: string | null; services: PreviewService[]; previousServices: PreviewService[] };
 
@@ -34,7 +35,6 @@ export function HistoryBrowser({ versionId, changedRows, changedIds = [] }: { ve
   const before = data?.previousServices.find((service) => service.id === selected?.id);
   const after = data?.services.find((service) => service.id === selected?.id);
   const url = (id: string, service: PreviewService) => `/admin/history/${encodeURIComponent(id)}/${encodeURIComponent(service.slug || service.id)}`;
-  const frameClass = `admin-service-frame${mobile ? " admin-frame-mobile" : ""}`;
   return <div className="admin-history-browser">
     <div className="admin-preview-actions"><button type="button" aria-expanded={open} aria-controls={controlId} onClick={() => { setError(""); setOpen(!open); }}>{open ? "Ocultar comparação visual" : "Visualizar páginas e comparar"}</button></div>
     {open && <section id={controlId} className="admin-draft-browser" aria-label={`Comparação visual da versão ${versionId}`}>
@@ -52,9 +52,9 @@ export function HistoryBrowser({ versionId, changedRows, changedIds = [] }: { ve
         </div>
         {!selected ? <p>{query.trim() ? "Nenhum serviço encontrado. Tente outro nome, URL ou ID, ou desmarque o filtro de alterações." : "Nenhuma página neste filtro. Desmarque o filtro para conferir todos os serviços."}</p> : <div className={`admin-preview-pages${compare ? " admin-preview-compare" : ""}`}>
           {compare && <div><h4>Antes{data.previousVersionId ? ` · versão ${data.previousVersionId}` : ""}</h4>
-            {!data.previousVersionId ? <p>Sem versão anterior.</p> : !before ? <p>Serviço não publicado na versão anterior.</p> : <><p className="admin-preview-path">/servicos/{before.slug}</p><iframe key={url(data.previousVersionId, before)} className={frameClass} src={url(data.previousVersionId, before)} title={`Antes · versão ${data.previousVersionId}: ${before.title}`} /></>}
+            {!data.previousVersionId ? <p>Sem versão anterior.</p> : !before ? <p>Serviço não publicado na versão anterior.</p> : <><p className="admin-preview-path">/servicos/{before.slug}</p><ServicePreviewFrame key={url(data.previousVersionId, before)} mobile={mobile} src={url(data.previousVersionId, before)} title={`Antes · versão ${data.previousVersionId}: ${before.title}`} /></>}
           </div>}
-          <div><h4>Depois · versão {versionId}</h4>{!after ? <p>Serviço não publicado nesta versão.</p> : <><p className="admin-preview-path">/servicos/{after.slug}</p><iframe key={url(versionId, after)} className={frameClass} src={url(versionId, after)} title={`Depois · versão ${versionId}: ${after.title}`} /></>}</div>
+          <div><h4>Depois · versão {versionId}</h4>{!after ? <p>Serviço não publicado nesta versão.</p> : <><p className="admin-preview-path">/servicos/{after.slug}</p><ServicePreviewFrame key={url(versionId, after)} mobile={mobile} src={url(versionId, after)} title={`Depois · versão ${versionId}: ${after.title}`} /></>}</div>
         </div>}
       </>}
     </section>}

@@ -7,6 +7,7 @@ import type { CatalogReport } from "../../lib/catalog-db";
 import { ChangesTable } from "./change-table";
 import { TopicEditor } from "./topic-editor";
 import { AudienceSelector } from "./audience-selector";
+import { ServicePreviewFrame } from "./service-preview-frame";
 import { editorFieldGroups, type ServiceFieldOrder } from "./service-field-order";
 import type { TopicList } from "../service-topics";
 
@@ -167,8 +168,8 @@ export function ServiceEditor({ onSaved, onDirtyChange }: { onSaved: () => Promi
         <button type="button" aria-pressed={previewView === "both"} onClick={() => setPreviewView("both")}>Antes e depois</button>
       </div>}
       <div className={`admin-preview-pages admin-preview-compare${sideBySide && previewView !== "both" ? " admin-preview-pages-single" : ""}`}>
-        {(!sideBySide || previewView !== "after") && <div><h3>Antes</h3><iframe className={`admin-service-frame${mobile ? " admin-frame-mobile" : ""}`} src={beforeUrl} title={`Antes: ${loaded.service.title}`} /></div>}
-        {(!sideBySide || previewView !== "before") && <div><h3>Depois</h3><iframe className={`admin-service-frame${mobile ? " admin-frame-mobile" : ""}`} src={afterUrl} title={`Depois: ${loaded.service.title}`} /></div>}
+        {(!sideBySide || previewView !== "after") && <div><h3>Antes</h3><ServicePreviewFrame mobile={mobile} src={beforeUrl} title={`Antes: ${loaded.service.title}`} /></div>}
+        {(!sideBySide || previewView !== "before") && <div><h3>Depois</h3><ServicePreviewFrame mobile={mobile} src={afterUrl} title={`Depois: ${loaded.service.title}`} /></div>}
       </div>
       {comparison?.draftId && <details className="admin-change-details" open><summary>Ver diferenças por campo ({comparison.report.changes.length})</summary><ChangesTable changes={comparison.report.changes} /></details>}
       <div className="admin-preview-actions admin-editor-publish-actions"><button type="button" disabled={busy || !dirty || !comparison?.draftId} onClick={() => void save()}>Salvar alterações</button></div>

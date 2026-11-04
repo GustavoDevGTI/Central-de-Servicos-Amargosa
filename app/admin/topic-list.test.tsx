@@ -14,6 +14,22 @@ import { audienceSelection, audienceSelectionValue, serviceAudienceOptions } fro
 import { audiences } from "../internal-portal";
 import { ChangesTable } from "./change-table";
 import { PaginationControls } from "./pagination-controls";
+import { ServicePreviewFrame, previewViewportScale, previewViewportWidth } from "./service-preview-frame";
+
+test("desktop previews keep desktop breakpoints even in narrow comparison columns", () => {
+  assert.equal(previewViewportWidth(false), 1440);
+  assert.equal(previewViewportWidth(true), 390);
+  assert.equal(previewViewportScale(480, false), 1 / 3);
+  assert.equal(previewViewportScale(480, true), 1);
+  assert.equal(previewViewportScale(320, true), 320 / 390);
+  assert.equal(previewViewportScale(2000, false), 1);
+  for (const mobile of [false, true]) {
+    const html = renderToStaticMarkup(<ServicePreviewFrame mobile={mobile} src="/admin/preview/current/servico?version=1" title="Antes" />);
+    assert.ok(html.includes(`width="${mobile ? 390 : 1440}"`));
+    assert.ok(html.includes(`data-preview-device="${mobile ? "mobile" : "desktop"}"`));
+    assert.ok(html.includes('/admin/preview/current/servico?version=1'));
+  }
+});
 
 test("direct editing keeps production pagination for long reports and history", () => {
   const changes = Array.from({ length: 21 }, (_, index) => ({ serviceId: `id-${index}`, serviceTitle: `Serviço ${index}`, kind: "updated" as const, column: "Descrição detalhada", before: "Antes", after: "Depois" }));

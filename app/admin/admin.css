@@ -105,6 +105,8 @@
 .admin-preview-pages p{font-size:.9rem;overflow-wrap:anywhere}
 .admin-preview-compare{grid-template-columns:repeat(2,minmax(0,1fr))}
 .admin-service-frame{display:block;flex:1 0 auto;width:100%;height:760px;min-height:760px;border:1px solid #9ab5a7;background:#fff;margin:0 auto}
+.admin-service-viewport{--admin-preview-height:760px;position:relative;flex:1 0 auto;width:100%;max-width:var(--admin-preview-width);height:var(--admin-preview-height);margin:0 auto;overflow:hidden;border:1px solid #9ab5a7;background:#fff}
+.admin-service-viewport>.admin-service-frame{position:absolute;top:0;left:0;width:var(--admin-preview-width);max-width:none;height:calc(var(--admin-preview-height) / var(--admin-preview-scale));min-height:0;margin:0;border:0;transform:scale(var(--admin-preview-scale));transform-origin:top left}
 .admin-frame-mobile{max-width:390px}
 .admin-preview-banner{padding:.7rem 1rem;background:#fff4e4;border-bottom:2px solid #bc6800;color:#573305;font:600 16px "Segoe UI",sans-serif;text-align:center}
 .admin-preview-banner-current{background:#e6f5eb;border-bottom-color:#0c7540;color:#145c36}
@@ -183,6 +185,7 @@
 @keyframes admin-ai-token-in{from{transform:scaleX(0)}to{transform:scaleX(1)}}
 @media(prefers-reduced-motion:reduce){.admin-ai-results,.admin-ai-cards article,.admin-ai-bar-column>div,.admin-ai-ranking li,.admin-ai-token-bar span{animation:none}}
 @media(max-width:720px){.admin-preview-compare{grid-template-columns:minmax(0,1fr)}.admin-service-frame{height:640px;min-height:640px}.admin-workbook-frame{height:480px}}
+@media(max-width:720px){.admin-service-viewport{--admin-preview-height:640px}}
 @media(max-width:720px){.admin-import-options,.admin-login-layout,.admin-ai-grid{grid-template-columns:1fr}.admin-ai-cards,.admin-ai-alert-list{grid-template-columns:repeat(2,minmax(0,1fr))}.admin-ai-heading,.admin-ai-chart-heading,.admin-ai-pagination,.admin-pagination{display:block}.admin-ai-refresh{margin-top:1rem}.admin-ai-chart-controls{justify-content:flex-start;margin-top:.8rem}.admin-ai-pagination>div,.admin-pagination>div{margin-top:.7rem}.admin-login-layout{padding:2.5rem 0}.admin-topbar{gap:1rem;flex-wrap:wrap}.admin-topbar nav{width:100%;justify-content:flex-start}.admin-topbar span{font-size:.8rem}.admin-upload-form p{min-height:0}.admin-history-toggle{display:block}.admin-history-toggle span,.admin-history-toggle small{display:block;margin-top:.3rem}}
 @media(max-width:440px){.admin-ai-cards,.admin-ai-alert-list{grid-template-columns:1fr}}
 
@@ -197,5 +200,5 @@
   .admin-content:has(.admin-editor-workspace-parallel){width:min(1840px,calc(100% - 2rem))}
   .admin-editor-workspace-parallel{display:grid;grid-template-columns:minmax(0,.42fr) minmax(0,.58fr);gap:1.4rem;align-items:start}
   .admin-editor-workspace-parallel>.admin-section{min-width:0;margin:0;max-height:calc(100dvh - 6rem);overflow:auto;overscroll-behavior:contain;scrollbar-gutter:stable}
-  .admin-editor-workspace-parallel .admin-service-frame{height:clamp(360px,calc(100dvh - 320px),760px);min-height:360px}
+  .admin-editor-workspace-parallel .admin-service-viewport{--admin-preview-height:clamp(360px,calc(100dvh - 320px),760px)}
 }
