@@ -14,7 +14,9 @@ Pesquise por nome, URL ou ID na caixa de seleção e clique em **Editar serviço
 
 Alterar qualquer campo depois de comparar exige uma nova comparação. Se outro administrador salvar uma versão nesse intervalo, o servidor impede sobrescrevê-la com uma edição antiga: recarregue o serviço e compare novamente. Trocar de serviço ou sair com alterações pendentes pede confirmação de descarte.
 
-O editor segue os 34 campos e os seis grupos da Carta de Serviço SEI nº 1/2026; o [mapeamento completo](campos-carta-servico.md) registra a equivalência de cada campo. Os textos e o formato dos botões, o destino da ajuda, URLs internas das páginas, plataforma, IDs e estrutura visual são fixos. “SITE / LINK DE ACESSO” permite alterar o link mostrado na página e o destino de início, com validação HTTP/HTTPS no servidor. O link BA.GOV tem campo próprio.
+O editor segue os 34 campos e os seis grupos da Carta de Serviço SEI nº 1/2026, com Plataforma e sete campos adicionais de atendimento, totalizando 42 campos; o [mapeamento completo](campos-carta-servico.md) registra a equivalência de cada campo. Os textos e o formato dos botões, o destino da ajuda, URLs internas das páginas e IDs são fixos. Plataforma é um texto editável. “SITE / LINK DE ACESSO” permite alterar o destino de início, com validação HTTP/HTTPS no servidor. O link BA.GOV tem campo próprio.
+
+Em Canais de acesso, escolha onde o atendimento é realizado. “Na própria unidade responsável” reúne os dados em um cartão. “Em outra unidade” disponibiliza Local de atendimento e Unidade responsável, com endereços e contatos independentes. Os dois conjuntos permanecem armazenados ao alternar. Compare antes de salvar; a escolha, os campos e suas diferenças entram no histórico e podem ser restaurados. Abrir um serviço mantém a apresentação histórica até uma edição de atendimento ser comparada e salva.
 
 “STATUS DO SERVIÇO” oculta a página quando Inativo e mantém a página disponível quando Ativo ou Em manutenção. O registro inativo continua aparecendo na busca do admin e pode ser reativado, com os mesmos IDs, URLs e espelhos. O fluxo edita registros existentes, sem criar nem apagar páginas do código.
 

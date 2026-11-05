@@ -4,6 +4,8 @@ export const serviceEditGroups = [
   "3. Canais de acesso, contato e acompanhamento", "4. Requisitos, documentos e etapas do serviço",
   "5. Base legal, prioridades e manifestações", "6. Controle da atualização",
 ] as const;
+export const sameAttendanceUnit = "Na própria unidade responsável";
+export const otherAttendanceUnit = "Em outra unidade";
 export const serviceEditFields = [
   { key: "title", label: "Nome do serviço", group: 0, column: "Nome do serviço consolidado", rows: 2 },
   { key: "popularNames", label: "Nome(s) popular(es)", group: 0, rows: 2 },
@@ -19,6 +21,13 @@ export const serviceEditFields = [
   { key: "duration", label: "Prazo máximo para conclusão", group: 1, column: "Prazo", rows: 2 },
   { key: "cost", label: "Custo / taxa", group: 1, column: "Custo", rows: 2 },
   { key: "attendanceModes", label: "Modalidades de atendimento", group: 1, multiple: ["Presencial", "Site ou sistema", "E-mail", "WhatsApp", "Telefone"], rows: 2 },
+  { key: "attendanceUnitMode", label: "Onde o atendimento é realizado?", group: 2, options: [sameAttendanceUnit, otherAttendanceUnit], rows: 2 },
+  { key: "attendanceUnit", label: "Unidade de atendimento", group: 2, rows: 2 },
+  { key: "attendancePhone", label: "Telefone do atendimento", group: 2, rows: 2 },
+  { key: "attendanceWhatsapp", label: "WhatsApp do atendimento", group: 2, rows: 2 },
+  { key: "attendanceEmail", label: "E-mail do atendimento", group: 2, rows: 2 },
+  { key: "responsibleAddress", label: "Endereço da unidade responsável", group: 2, rows: 3 },
+  { key: "responsibleHours", label: "Horário da unidade responsável", group: 2, rows: 3 },
   { key: "address", label: "Endereço presencial", group: 2, rows: 3 },
   { key: "hours", label: "Horário de atendimento", group: 2, rows: 3 },
   { key: "phone", label: "Telefone / WhatsApp", group: 2, column: "Telefone", rows: 2 },

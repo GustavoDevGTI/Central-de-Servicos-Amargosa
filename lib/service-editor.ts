@@ -10,6 +10,7 @@ import workbook from "../app/workbook-service-data.json";
 import { isBaGovUrl, serviceRequestNoticeText } from "../app/service-request-system";
 import { serviceWhereWhenParts } from "../app/workbook-where-when";
 import { audienceSelection } from "../app/service-audiences";
+import { attendanceFieldKeys } from "../app/service-attendance";
 
 export class ServiceEditorError extends Error {
   constructor(message: string, readonly status = 400) { super(message); }
@@ -70,6 +71,13 @@ export function editService(snapshot: CatalogSnapshot, serviceId: string, input:
     affectedIds.push(service.id);
     const base = servicePageCopy(service);
     const editedFields = { ...base.directEdit?.fields, ...Object.fromEntries(changed.map((key) => [key, patch[key]])) };
+    // Freeze both sets on the first attendance edit so switching the choice never
+    // recomputes or drops the other unit's original contact information.
+    if (changed.some((key) => (attendanceFieldKeys as readonly string[]).includes(key))) {
+      const defaults = before;
+      for (const key of attendanceFieldKeys) if (editedFields[key] === undefined) editedFields[key] = defaults[key];
+      editedFields.additional ??= defaults.additional;
+    }
     editedFields.attendanceModes ??= serviceEditValues(base).attendanceModes;
     editedFields.baGovUrl ??= serviceEditValues(base).baGovUrl;
     if (base.directEdit && base.directEdit.schema !== "carta-1-2026") {
@@ -131,7 +139,7 @@ export function restoreServiceContent(current: CatalogSnapshot, target: CatalogS
         const original = targetById.get(entry.id);
         const fields = { ...entry.directEdit.fields };
         for (const field of serviceEditFields) {
-          if (!("column" in field) && !["status", "additional", "attendanceModes"].includes(field.key) && original?.directEdit?.fields[field.key] === undefined) delete fields[field.key];
+          if (!("column" in field) && !["status", "additional", "attendanceModes", "attendanceUnit", "attendancePhone", "attendanceWhatsapp", "attendanceEmail", "responsibleAddress", "responsibleHours"].includes(field.key) && original?.directEdit?.fields[field.key] === undefined) delete fields[field.key];
         }
         if (!entry.workbookCells && original && original.directEdit?.fields.platform === undefined) {
           delete fields.platform;

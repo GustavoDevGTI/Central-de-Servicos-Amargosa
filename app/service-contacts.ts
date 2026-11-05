@@ -248,7 +248,7 @@ export function contactForService(service: ServiceContactSource): ServiceContact
       name: cells["Setor/Unidade responsável no SEI"] || "",
       officeName: cells["Secretaria responsável"] || undefined,
       phone: cells["Telefone"] || "",
-      address: service.directEdit?.fields.address ?? "",
+        address: service.directEdit?.fields.attendanceUnitMode !== undefined ? service.directEdit.fields.responsibleAddress ?? "" : service.directEdit?.fields.address ?? "",
       email: cells["E-mail do setor/unidade"] || undefined,
       emailLabel: "E-mail do setor/unidade",
       officialUrl: "",
@@ -280,7 +280,9 @@ export function contactForService(service: ServiceContactSource): ServiceContact
       ? directPhone ? `${directPhone}${directExtension ? `, ramal ${directExtension}` : ""}` : ""
       : extension ? `${basePhone}, ramal ${extension}` : basePhone,
     extensionLabel: extension ? (source?.extension || channelExtension ? "ramal do setor" : name === office.name ? "ramal" : "ramal da secretaria") : undefined,
-    address: service.directEdit?.fields.address ?? office.address,
+    address: service.directEdit?.fields.attendanceUnitMode !== undefined
+      ? service.directEdit.fields.responsibleAddress ?? office.address
+      : service.directEdit?.fields.address ?? office.address,
     email: service.directEdit?.fields.email ?? (source?.email || channelEmail || office.email),
     emailLabel: source?.email || channelEmail || name === office.name ? "E-mail" : "E-mail da secretaria",
     officialUrl: office.officialUrl,

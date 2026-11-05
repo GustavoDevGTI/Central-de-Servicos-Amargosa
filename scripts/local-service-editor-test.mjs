@@ -50,6 +50,7 @@ try {
   for (const version of ["0", "-1", "invalida", "9007199254740992"]) await request(`/api/admin/services/${mirrors[0].id}?preview=1&version=${version}`, undefined, owner, 400);
   const edit = (fields, baseVersion = selected.version) => ({ serviceId: mirrors[0].id, baseVersion, fields });
   await request("/api/admin/services", edit({ url: "https://invalid.example" }), owner, 400);
+  await request("/api/admin/services", edit({ attendanceUnitMode: "Automático" }), owner, 400);
   for (const audience of ["Público inventado", "Cidadãos, Cidadãos", ["cidadao"]]) await request("/api/admin/services", edit({ audience }), owner, 400);
   await request("/api/admin/services", edit({ summary: "Mudança recusada" }), { ...owner, Origin: "https://invalid.example" }, 403);
   const oversized = await fetch(base + "/api/admin/services", { method: "POST", headers: { ...owner, "Content-Type": "application/json" }, body: JSON.stringify(edit({ summary: "x".repeat(140000) })) });
@@ -107,13 +108,14 @@ try {
   assert.equal((await request("/api/admin/history")).versions.length, 3);
   const privateValues = { filledBy: "Responsável interno da QA", responsibleContact: "reservado-qa@example.invalid", simpNotes: "Nota interna exclusiva para a SIMP", updatedDate: "31/12/2099" };
   const currentPdf = await request(`/api/admin/services/${mirrors[0].id}`);
-  assert.equal(Object.keys(currentPdf.service.fields).length, 35);
+  assert.equal(Object.keys(currentPdf.service.fields).length, 42);
   assert.equal(currentPdf.service.fields.platform, mirrors[0].destination);
   const accessUrl = "https://example.invalid/solicitar-servico";
   const requiredDocuments = "Identificação; CPF\nProcuração (se necessário).";
   const platform = "Canal digital revisado na QA";
   const audience = "Cidadãos, Empresas, Órgãos Públicos e ONGs";
-  const pdfDraft = await request("/api/admin/services", edit({ ...privateValues, accessUrl, platform, audience, requiredDocuments, stage2Description: "Analisar e informar o resultado.", stage2Documents: "Documento complementar da análise.; Comprovante." }, currentPdf.version));
+  const attendance = { attendanceUnitMode: "Em outra unidade", attendanceUnit: "Balcão municipal de conferência", attendancePhone: "(75) 3000-1111", attendanceWhatsapp: "(75) 99999-1111", attendanceEmail: "atendimento-qa@example.invalid", responsibleAddress: "Endereço da unidade de análise", responsibleHours: "13h às 17h" };
+  const pdfDraft = await request("/api/admin/services", edit({ ...privateValues, ...attendance, accessUrl, platform, audience, requiredDocuments, stage2Description: "Analisar e informar o resultado.", stage2Documents: "Documento complementar da análise.; Comprovante." }, currentPdf.version));
   assert.ok(pdfDraft.report.changes.some((change) => change.column === "Plataforma" && change.after === platform));
   assert.ok((await request("/api/catalog", undefined, {})).services.filter((s) => s.sourceRow === 22).every((s) => s.destination === mirrors[0].destination), "Comparar a plataforma não publica");
   assert.equal((await request(`/api/admin/drafts/${pdfDraft.draftId}`)).services.find((s) => s.id === mirrors[0].id).url, accessUrl);
@@ -173,6 +175,22 @@ try {
   await request("/api/admin/publish", { draftId: maintenanceDraft.draftId });
   assert.equal((await request("/api/catalog", undefined, {})).services.filter((s) => s.sourceRow === 22).length, 3);
   assert.equal((await fetch(`${base}/servicos/${mirrors[0].slug}`)).status, 200);
+  for (const mode of ["Na própria unidade responsável", "Em outra unidade"]) {
+    const current = await request(`/api/admin/services/${mirrors[0].id}`);
+    const beforeChoice = await request("/api/catalog", undefined, {});
+    const draft = await request("/api/admin/services", edit({ attendanceUnitMode: mode }, current.version));
+    assert.ok(draft.report.changes.some((change) => change.column === "Onde o atendimento é realizado?" && change.after === mode));
+    const preview = await request(`/api/admin/drafts/${draft.draftId}`);
+    assert.ok(preview.services.filter((s) => s.sourceRow === 22).every((s) => s.directEdit.fields.attendanceUnitMode === mode));
+    assert.deepEqual(await request("/api/catalog", undefined, {}), beforeChoice);
+    await request("/api/admin/publish", { draftId: draft.draftId });
+    const refreshed = await request(`/api/admin/services/${mirrors[0].id}`);
+    assert.equal(refreshed.service.fields.attendanceUnitMode, mode);
+    for (const [key, value] of Object.entries(attendance).filter(([key]) => key !== "attendanceUnitMode")) assert.equal(refreshed.service.fields[key], value);
+    const html = await (await fetch(`${base}/servicos/${mirrors[0].slug}`)).text();
+    assert.equal(html.includes('class="service-contact-section"'), mode === "Em outra unidade");
+    assert.equal((html.match(/<h2>Canais de acesso, contato e acompanhamento<\/h2>/g) || []).length, 1);
+  }
   for (let i = 0; i < 20; i++) {
     const current = await request(`/api/admin/services/${mirrors[0].id}`);
     const draft = await request("/api/admin/services", edit({ summary: `Edição local de retenção ${i}.` }, current.version));
@@ -186,5 +204,5 @@ try {
   assert.equal((await pool.query("SELECT count(*)::int AS n FROM catalog_publications WHERE id=$1", [first.version])).rows[0].n, 0);
   const active = (await pool.query("SELECT p.snapshot FROM catalog_publications p JOIN catalog_active a ON a.publication_id=p.id")).rows[0].snapshot;
   assert.deepEqual(active.rows["22"].cells, mirrors[0].workbookCells);
-  console.log(JSON.stringify({ authenticatedDirectEditing: true, privateComparison: true, mirrors: 3, protectedActions: true, staleComparisonRejected: true, catalogAdminAllowed: true, draftOwnership: true, authorship: true, restored: true, meaningfulHistoryOnly: true, retained: 20, sourcePreserved: true, pdfFields: 34, editableFields: 35, platformEditable: true, linkEditable: true, internalControlsPrivate: true, inactiveRoutesHidden: 3, maintenanceVisible: true }));
+  console.log(JSON.stringify({ authenticatedDirectEditing: true, privateComparison: true, mirrors: 3, protectedActions: true, staleComparisonRejected: true, catalogAdminAllowed: true, draftOwnership: true, authorship: true, restored: true, meaningfulHistoryOnly: true, retained: 20, sourcePreserved: true, pdfFields: 34, editableFields: 42, platformEditable: true, linkEditable: true, internalControlsPrivate: true, inactiveRoutesHidden: 3, maintenanceVisible: true }));
 } finally { await pool.end(); }

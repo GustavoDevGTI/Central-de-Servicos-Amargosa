@@ -146,9 +146,9 @@ export function ServiceEditor({ onSaved, onDirtyChange }: { onSaved: () => Promi
         <p className="admin-editor-fixed">Os textos e o formato dos botões são fixos.</p>
         <fieldset disabled={busy} className="admin-editor-fields">
           <legend className="sr-only">Campos do serviço</legend>
-          {editorFieldGroups(fieldOrder, { workbookSource: loaded.service.sourceRow !== undefined, mainLegislation: Boolean(loaded.service.fields.legislation) }).map((group) => <details className="admin-editor-group" key={group.key} open>
+          {editorFieldGroups(fieldOrder, { workbookSource: loaded.service.sourceRow !== undefined, mainLegislation: Boolean(loaded.service.fields.legislation), attendanceMode: fields.attendanceUnitMode }).map((group) => <details className="admin-editor-group" key={group.key} open>
             <summary>{group.label}</summary>
-            {group.blocks.map((block) => {
+            {group.blocks.filter((block) => !block.hidden).map((block) => {
               const controls = block.fields.map((key) => fieldControl(serviceEditFields.find((field) => field.key === key)!));
               return block.legend ? <fieldset className="admin-editor-stage" key={block.key}><legend>{block.legend}</legend>{controls}</fieldset> : <Fragment key={block.key}>{controls}</Fragment>;
             })}

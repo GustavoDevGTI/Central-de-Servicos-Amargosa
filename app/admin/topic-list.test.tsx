@@ -15,6 +15,20 @@ import { audiences } from "../internal-portal";
 import { ChangesTable } from "./change-table";
 import { PaginationControls } from "./pagination-controls";
 import { ServicePreviewFrame } from "./service-preview-frame";
+import { sameAttendanceUnit, otherAttendanceUnit } from "../service-edit-fields";
+
+test("both editor arrangements group attendance separately and hide alternate values without clearing them", () => {
+  for (const order of ["central", "bagov"] as const) for (const attendanceMode of [sameAttendanceUnit, otherAttendanceUnit]) {
+    const groups = editorFieldGroups(order, { attendanceMode });
+    const blocks = groups.flatMap((group) => group.blocks);
+    const visible = blocks.filter((block) => !block.hidden);
+    assert.equal(blocks.flatMap((block) => block.fields).filter((key) => key === "attendanceUnitMode").length, 1);
+    assert.equal(visible.some((block) => block.legend === "Unidade responsável"), attendanceMode === otherAttendanceUnit);
+    assert.ok(visible.some((block) => block.legend === (attendanceMode === sameAttendanceUnit ? "Atendimento e unidade responsável" : "Local de atendimento")));
+    const all = blocks.flatMap((block) => block.fields);
+    assert.equal(new Set(all).size, serviceEditFields.length);
+  }
+});
 
 test("previews use the panel width without fixed desktop width or automatic scaling", () => {
   for (const mobile of [false, true]) {
@@ -96,15 +110,15 @@ test("both arrangements expose the Carta fields and platform exactly once", () =
   for (const order of ["central", "bagov"] as const) for (const workbookSource of [true, false]) for (const mainLegislation of [true, false]) {
     const groups = editorFieldGroups(order, { workbookSource, mainLegislation });
     const keys = groups.flatMap((group) => group.blocks.flatMap((block) => block.fields));
-    assert.equal(keys.length, 35);
-    assert.equal(new Set(keys).size, 35);
+    assert.equal(keys.length, serviceEditFields.length);
+    assert.equal(new Set(keys).size, serviceEditFields.length);
     assert.deepEqual([...keys].sort(), allowed);
     for (const group of groups) assert.equal(new Set(group.blocks.map((block) => block.key)).size, group.blocks.length);
     if (order === "central") {
       assert.deepEqual(groups.find((group) => group.key === "central-controls")!.blocks.flatMap((block) => block.fields), privateServiceEditFields);
       assert.ok(groups.find((group) => group.key === "central-more")!.blocks[0].fields.includes("popularNames"));
-      assert.ok(groups.find((group) => group.key === (workbookSource ? "central-more" : "central-channels"))!.blocks[0].fields.includes("address"));
-      assert.ok(groups.find((group) => group.key === "central-channels")!.blocks[0].fields.includes("platform"));
+      assert.ok(groups.find((group) => group.key === "central-channels")!.blocks.flatMap((block) => block.fields).includes("address"));
+      assert.ok(groups.find((group) => group.key === "central-channels")!.blocks.flatMap((block) => block.fields).includes("platform"));
       assert.deepEqual(groups[0].blocks[0].fields, ["title", "audience", "summary", "accessUrl", "eligibility"]);
     }
   }
@@ -138,7 +152,7 @@ test("Central follows the page while BA.GOV keeps the Carta order with popular n
   assert.deepEqual(bagov.map((group) => group.label), [...serviceEditGroups]);
   assert.deepEqual(bagov[0].blocks[0].fields.slice(0, 2), ["title", "popularNames"]);
   assert.deepEqual(bagov[3].blocks.find((block) => block.key === "stage-1")!.fields, ["steps", "requiredDocuments"]);
-  const contacts = bagov[2].blocks[0].fields;
+  const contacts = bagov[2].blocks.flatMap((block) => block.fields);
   assert.equal(contacts.indexOf("platform"), contacts.indexOf("email") + 1);
 });
 

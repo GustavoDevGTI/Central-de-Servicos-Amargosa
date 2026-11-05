@@ -33,7 +33,8 @@ import { trackServiceClick, trackServiceStart } from "./analytics";
 import { contactForService, organizationForService } from "./service-contacts";
 import { extractEmailAddresses, sameInPersonServiceOffice, serviceWhereWhen } from "./service-where-when";
 import { isBaGovUrl, serviceRequestNoticeText } from "./service-request-system";
-import { serviceFieldLabel, serviceEditGroups } from "./service-edit-fields";
+import { serviceFieldLabel, serviceEditGroups, sameAttendanceUnit } from "./service-edit-fields";
+import { serviceEditValues } from "./direct-service-content";
 import { servicePageCopy } from "./service-page-copy";
 import { isPendingServiceValue, serviceDisplayValue, serviceSectionLabels } from "./service-presentation";
 import { serviceValue } from "./service-value";
@@ -1189,7 +1190,9 @@ function ServiceContactSection({ service, showHeading = true }: { service: Servi
   if (service.workbookCells) {
     const cells = service.workbookCells;
     const phone = cells["Telefone"];
-    const phoneHref = /\d/.test(phone) ? `tel:+55${phone.replace(/\D/g, "")}` : undefined;
+    const phoneNumber = phone.match(/\(\d{2}\)\s*\d{4,5}-\d{4}/)?.[0];
+    const extension = phone.match(/ramal\s*(\d+)/i)?.[1];
+    const phoneHref = phoneNumber ? `tel:+55${phoneNumber.replace(/\D/g, "")}${extension ? `;ext=${extension}` : ""}` : /\d/.test(phone) ? `tel:+55${phone.replace(/\D/g, "")}` : undefined;
     const email = cells["E-mail do setor/unidade"];
     const validEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
     return (
@@ -1223,6 +1226,8 @@ function ServiceContactSection({ service, showHeading = true }: { service: Servi
               </div>
             </div>
             <div className="service-contact-column">
+              {service.directEdit?.fields.responsibleAddress !== undefined && <div><span>{serviceFieldLabel("responsibleAddress")}</span><address>{serviceValue(service.directEdit.fields.responsibleAddress)}</address></div>}
+              {service.directEdit?.fields.responsibleHours && <div><span>{serviceFieldLabel("responsibleHours")}</span><strong>{serviceValue(service.directEdit.fields.responsibleHours)}</strong></div>}
               <div>
                 <span>Plataforma</span>
                 <strong {...workbookFieldProps(service, "Plataforma")}>{serviceValue(cells["Plataforma"], "Plataforma")}</strong>
@@ -1297,6 +1302,7 @@ function ServiceContactSection({ service, showHeading = true }: { service: Servi
           </div>
           <div className="service-contact-column">
             {service.directEdit?.fields.platform !== undefined && <div><span>{serviceFieldLabel("platform")}</span><strong>{serviceValue(service.destination)}</strong></div>}
+            {service.directEdit?.fields.responsibleHours && <div><span>{serviceFieldLabel("responsibleHours")}</span><strong>{serviceValue(service.directEdit.fields.responsibleHours)}</strong></div>}
             <div>
               <span>{serviceFieldLabel("address")}</span>
               <address>{serviceValue(contact.address)}</address>
@@ -1366,6 +1372,42 @@ function ServiceManualNotice({
       <b aria-hidden="true">→</b>
     </Link>
   );
+}
+
+function EditorialAttendanceSection({ service }: { service: Service }) {
+  const values = serviceEditValues(service);
+  const same = values.attendanceUnitMode === sameAttendanceUnit;
+  const value = (label: string, text: string, kind?: "phone" | "email" | "whatsapp") => {
+    const phone = text.match(/\(\d{2}\)\s*\d{4,5}-\d{4}/)?.[0];
+    const extension = text.match(/ramal\s*(\d+)/i)?.[1];
+    const href = kind === "email" && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(text) ? `mailto:${text}` : kind === "whatsapp" ? whatsappHref(text) : kind === "phone" && phone ? `tel:+55${phone.replace(/\D/g, "")}${extension ? `;ext=${extension}` : ""}` : undefined;
+    return <div><dt>{label}</dt><dd style={{ whiteSpace: "pre-wrap", overflowWrap: "anywhere" }}>{href ? <a href={href}>{text}</a> : serviceValue(text)}</dd></div>;
+  };
+  return <>
+    <section id={service.id === "1doc-limpeza-publica" ? "canais" : "onde-quando"} className="service-where-when">
+      <h2>{serviceEditGroups[2].slice(3)}</h2>
+      {service.directEdit?.layout.whereWhen && service.directEdit.layout.digital && /^https?:\/\//i.test(service.url) && <div className="service-request-digital"><h3>Atendimento digital</h3><ServiceRequestNotice service={service} repeated /></div>}
+      <div className="service-request-presencial">
+        <h3>Atendimento presencial</h3>
+        <div id={same && service.id !== "1doc-limpeza-publica" ? "canais" : undefined} className="service-request-option"><dl>
+          {value(same ? serviceFieldLabel("department") : "Local", same ? values.department : values.attendanceUnit)}
+          {same && value(serviceFieldLabel("secretariat"), values.secretariat)}
+          {value(serviceFieldLabel("address"), values.address)}
+          {value(serviceFieldLabel("hours"), values.hours)}
+          {value(serviceFieldLabel("phone"), same ? values.phone : values.attendancePhone, "phone")}
+          {values.attendanceWhatsapp && value("WhatsApp", values.attendanceWhatsapp, "whatsapp")}
+          {value(serviceFieldLabel("email"), same ? values.email : values.attendanceEmail, "email")}
+          {same && value(serviceFieldLabel("platform"), values.platform)}
+        </dl></div>
+      </div>
+      {!!service.whereWhenItems?.length && !(service.directEdit?.layout.digital && service.directEdit.layout.presencial) && <div className="service-schedule-grid">
+        {service.whereWhenItems.map((item, index) => <article className={`service-schedule-item${item.wide ? " service-schedule-item-wide" : ""}`} key={index}>
+          <div className="service-schedule-heading"><strong>{item.label}</strong>{item.schedule && <span>{item.schedule}</span>}</div><p>{item.description}</p>
+        </article>)}
+      </div>}
+    </section>
+    {!same && <ServiceContactSection service={service} showHeading={false} />}
+  </>;
 }
 
 function ServiceWhereWhenSection({ service, mergeContact = false }: { service: Service; mergeContact?: boolean }) {
@@ -1612,10 +1654,11 @@ function RichServiceDetail({ service }: { service: Service }) {
             <a href="#como-solicitar">{serviceSectionLabels.steps}</a>
             {hasServiceSecondStage(service) && <a href="#etapa-2">{secondStageTitle}</a>}
             <a href="#informacoes">Prazos e custos</a>
-            {hasWhereWhen && (
+            {(hasWhereWhen || service.directEdit?.fields.attendanceUnitMode !== undefined) && (
               <a href="#onde-quando">{service.id === "1doc-limpeza-publica" ? "Dias e horários da coleta" : serviceEditGroups[2].slice(3)}</a>
             )}
-            {!mergeContact && (!hasWhereWhen || service.id === "1doc-limpeza-publica") && <a href="#canais">{serviceEditGroups[2].slice(3)}</a>}
+            {!service.directEdit?.fields.attendanceUnitMode && !mergeContact && (!hasWhereWhen || service.id === "1doc-limpeza-publica") && <a href="#canais">{serviceEditGroups[2].slice(3)}</a>}
+            {service.directEdit?.fields.attendanceUnitMode && service.id === "1doc-limpeza-publica" && <a href="#canais">{serviceEditGroups[2].slice(3)}</a>}
             {(service.legislation?.length || service.legislationNotice) && (
               <a href="#legislacao">{serviceFieldLabel("legislation")}</a>
             )}
@@ -1673,10 +1716,13 @@ function RichServiceDetail({ service }: { service: Service }) {
                 <strong {...workbookFieldProps(service, "Prazo")} className={service.duration?.startsWith("*") || !service.duration ? "service-pending-information" : undefined}>{serviceValue(service.duration, "Prazo")}</strong>
               </div>
             </section>
-            {service.id === "1doc-limpeza-publica"
+            {service.directEdit?.fields.attendanceUnitMode !== undefined ? <>
+              {service.id === "1doc-limpeza-publica" && <CollectionScheduleSection service={service} />}
+              <EditorialAttendanceSection service={service} />
+            </> : <>{service.id === "1doc-limpeza-publica"
               ? <CollectionScheduleSection service={service} />
               : hasWhereWhen && <ServiceWhereWhenSection service={service} mergeContact={mergeContact} />}
-            {!mergeContact && <ServiceContactSection service={service} showHeading={!hasWhereWhen || service.id === "1doc-limpeza-publica"} />}
+            {!mergeContact && <ServiceContactSection service={service} showHeading={!hasWhereWhen || service.id === "1doc-limpeza-publica"} />}</>}
             {(service.legislation?.length || service.legislationNotice) && (
               <section id="legislacao">
                 <h2>{serviceFieldLabel("legislation")}</h2>
@@ -1811,7 +1857,7 @@ export function ServiceDetail({ slug, initialService }: { slug: string; initialS
             </a>
             {hasServiceSecondStage(service) && <a href="#etapa-2">{secondStageTitle}</a>}
             <a href="#informacoes">Prazos e custos</a>
-            <a href="#canais">{serviceEditGroups[2].slice(3)}</a>
+            <a href={service.directEdit?.fields.attendanceUnitMode !== undefined ? "#onde-quando" : "#canais"}>{serviceEditGroups[2].slice(3)}</a>
             <a href="#quer-saber-mais">Quer saber mais?</a>
           </nav>
           <div className="service-detail-content">
@@ -1876,7 +1922,7 @@ export function ServiceDetail({ slug, initialService }: { slug: string; initialS
                 </strong>
               </div>
             </section>
-            <ServiceContactSection service={service} />
+            {service.directEdit?.fields.attendanceUnitMode !== undefined ? <EditorialAttendanceSection service={service} /> : <ServiceContactSection service={service} />}
             <ServiceMoreInformation service={service} hasManifestationSection={!serviceAudiences(service).includes("ouvidoria")} />
             <ServiceManifestationNotice service={service} />
             {service.updatedAt && (

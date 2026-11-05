@@ -4,7 +4,7 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { editService, initialEditorSnapshot, validateServicePatch, compareServiceContent, restoreServiceContent } from "./service-editor";
 import { snapshotServices } from "./catalog-preview";
 import { serviceEditValues, publicServiceContent } from "../app/direct-service-content";
-import { serviceEditFields, serviceEditGroups } from "../app/service-edit-fields";
+import { serviceEditFields, serviceEditGroups, sameAttendanceUnit, otherAttendanceUnit } from "../app/service-edit-fields";
 import { ServiceDetail } from "../app/internal-portal";
 import { CatalogPreviewProvider } from "../app/catalog-provider";
 import type { CatalogSnapshot } from "./catalog-db";
@@ -15,6 +15,39 @@ function page(snapshot: CatalogSnapshot, id: string) {
   return renderToStaticMarkup(<CatalogPreviewProvider services={services}><ServiceDetail slug={service.slug!} initialService={service} /></CatalogPreviewProvider>);
 }
 const actions = (html: string) => [...html.matchAll(/<a\b[^>]*class="service-(?:reference-notice|sei-guide)[^"]*"[\s\S]*?<\/a>/g)].map((m) => m[0]);
+
+test("explicit attendance choice separates contacts, retains both sets on switches and restores every mirror", () => {
+  const initial = initialEditorSnapshot();
+  for (const original of [initial.services.find((s) => s.sourceRow === 22)!, initial.services.find((s) => s.slug === "isencao-de-iptu")!]) {
+    const defaults = serviceEditValues(original);
+    const before = structuredClone(initial);
+    assert.equal(editService(initial, original.id, defaults).report.changes.length, 0);
+    const patch = { attendanceUnitMode: otherAttendanceUnit, attendanceUnit: "  Balcão de atendimento\nMunicipal  ", address: "Rua do atendimento, 10", hours: "8h às 12h", attendancePhone: "(75) 3000-1111", attendanceWhatsapp: "(75) 99999-1111", attendanceEmail: "atendimento@example.invalid", department: "Unidade que analisa o pedido", phone: "(75) 3000-2222", email: "analise@example.invalid", responsibleAddress: "Rua da análise, 20", responsibleHours: "13h às 17h" };
+    const separate = editService(initial, original.id, patch);
+    for (const id of separate.affectedIds) {
+      const html = page(separate.snapshot, id);
+      for (const text of [patch.attendanceUnit, patch.address, patch.attendancePhone, patch.attendanceEmail, patch.department, patch.phone, patch.email, patch.responsibleAddress]) assert.ok(html.includes(text), `${id}: ${text}`);
+      assert.equal((html.match(/<h2>Canais de acesso, contato e acompanhamento<\/h2>/g) || []).length, 1);
+      assert.ok(html.includes('id="canais"'));
+    }
+    const merged = editService(separate.snapshot, original.id, { attendanceUnitMode: sameAttendanceUnit });
+    const mergedHtml = page(merged.snapshot, original.id);
+    assert.ok(!mergedHtml.includes('class="service-contact-section"'));
+    assert.ok(mergedHtml.includes(patch.department));
+    assert.ok(mergedHtml.includes(patch.phone));
+    assert.ok(!mergedHtml.includes(patch.attendanceEmail));
+    assert.ok(mergedHtml.includes('id="canais"'));
+    const switchedBack = editService(merged.snapshot, original.id, { attendanceUnitMode: otherAttendanceUnit });
+    const result = serviceEditValues(snapshotServices(switchedBack.snapshot).find((s) => s.id === original.id)!);
+    for (const [key, value] of Object.entries(patch)) assert.equal(result[key as keyof typeof result], value, key);
+    const restored = restoreServiceContent(switchedBack.snapshot, initial);
+    assert.deepEqual(serviceEditValues(snapshotServices(restored).find((s) => s.id === original.id)!), defaults);
+    assert.deepEqual(initial, before);
+    assert.deepEqual(separate.snapshot.rows, initial.rows);
+    assert.deepEqual(actions(page(initial, original.id)), actions(mergedHtml));
+  }
+  for (const value of ["Automático", "", "mesma", true]) assert.throws(() => validateServicePatch({ attendanceUnitMode: value }));
+});
 
 test("access link changes only the main start destinations, without an extra URL row or help changes", () => {
   const snapshot = initialEditorSnapshot();
@@ -134,10 +167,11 @@ test("documents of stage two do not replace or duplicate existing stage-one docu
 
 test("the editor mirrors all 34 PDF fields plus platform in six groups, with scoped stage labels", () => {
   const expected = ["NOME DO SERVIÇO", "NOME(S) POPULAR(ES)", "ÓRGÃO / SECRETARIA / SETOR", "CATEGORIA(S)", "PÚBLICO-ALVO / USUÁRIO", "CANAL DE PRESTAÇÃO", "STATUS DO SERVIÇO", "ÁREA RESPONSÁVEL", "RESPONSÁVEL PELO PREENCHIMENTO", "DESCRIÇÃO DETALHADA", "PREVISÃO DE ESPERA PARA ATENDIMENTO", "PRAZO MÁXIMO PARA CONCLUSÃO", "CUSTO / TAXA", "MODALIDADES DE ATENDIMENTO", "ENDEREÇO PRESENCIAL", "HORÁRIO DE ATENDIMENTO", "TELEFONE / WHATSAPP", "E-MAIL OFICIAL", "SITE / LINK DE ACESSO", "MECANISMOS DE CONSULTA E ACOMPANHAMENTO", "LINK ATUAL DO SERVIÇO NO BA.GOV", "REQUISITOS PARA SOLICITAR O SERVIÇO", "DESCRIÇÃO DA ETAPA", "DOCUMENTOS NECESSÁRIOS", "DESCRIÇÃO DA ETAPA", "DOCUMENTOS NECESSÁRIOS", "OUTRAS ETAPAS / INFORMAÇÕES ADICIONAIS", "BASE LEGAL", "PRIORIDADES DE ATENDIMENTO", "CANAL DA OUVIDORIA", "PROCEDIMENTOS PARA REGISTRO DE MANIFESTAÇÕES", "DATA DO PREENCHIMENTO / ATUALIZAÇÃO", "CONTATO DO RESPONSÁVEL", "OBSERVAÇÕES PARA A SIMP"];
-  assert.deepEqual(serviceEditFields.filter((field) => field.key !== "platform").map((field) => field.label.toLocaleUpperCase("pt-BR")), expected);
+  const additional = ["platform", "attendanceUnitMode", "attendanceUnit", "attendancePhone", "attendanceWhatsapp", "attendanceEmail", "responsibleAddress", "responsibleHours"];
+  assert.deepEqual(serviceEditFields.filter((field) => !additional.includes(field.key)).map((field) => field.label.toLocaleUpperCase("pt-BR")), expected);
   assert.equal(serviceEditFields.find((field) => field.key === "platform")!.label, "Plataforma");
   assert.equal(serviceEditGroups.length, 6);
-  assert.equal(new Set(serviceEditFields.map((field) => field.key)).size, expected.length + 1);
+  assert.equal(new Set(serviceEditFields.map((field) => field.key)).size, expected.length + additional.length);
   for (const field of ["whereWhen", "extension", "optionalDocuments", "communication", "maximumTime", "contactMeans"]) assert.throws(() => validateServicePatch({ [field]: "novo valor" }));
 });
 

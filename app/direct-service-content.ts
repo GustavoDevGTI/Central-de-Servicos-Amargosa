@@ -8,6 +8,7 @@ import { serviceWhereWhenParts } from "./workbook-where-when";
 import { isBaGovUrl } from "./service-request-system";
 import { isPendingServiceValue } from "./service-presentation";
 import { audienceSelection } from "./service-audiences";
+import { initialAttendanceUnitMode } from "./service-attendance";
 
 /** Only explicit workbook links identify mirrors; inherited legacy numbers do not. */
 export function serviceRecordSourceRow(service: Service) { return service.workbookCells || service.publishedFromWorkbook ? service.sourceRow : undefined; }
@@ -26,7 +27,6 @@ export function serviceEditValues(original: Service): ServiceEditValues {
   const ownPhone = [phone, extension && !isPendingServiceValue(extension) ? `ramal ${extension}` : ""].filter(Boolean).join(", ");
   const fullPhone = [...new Set([ownPhone, location.phone && location.phone !== phone ? location.phone : "", location.whatsapp && location.whatsapp !== phone ? `WhatsApp: ${location.whatsapp}` : ""].filter(Boolean))].join("\n");
   const ownEmail = cells?.["E-mail do setor/unidade"] ?? contact.email ?? "";
-  const emails = [...new Set([ownEmail, ...location.emails].filter((value) => !isPendingServiceValue(value)))].join("\n") || ownEmail;
   const digital = layout?.digital ?? location.digital, presencial = layout?.presencial ?? location.presencial;
   const intro = cells ? serviceWhereWhenParts(service).filter((p) => p.placement === "intro").map((p) => cells["Onde e quando solicitar2"].slice(p.start, p.end)).join("") : service.whereWhen;
   const base: ServiceEditValues = {
@@ -35,9 +35,12 @@ export function serviceEditValues(original: Service): ServiceEditValues {
     steps: cells?.["Como solicitar - etapas"] ?? (service.steps || []).join("\n"),
     cost: service.cost || "", duration: service.duration || "",
     department: cells?.["Setor/Unidade responsável no SEI"] ?? contact.name,
-    secretariat: cells?.["Secretaria responsável"] ?? contact.officeName ?? "", phone: fullPhone,
-    email: emails, category: service.category, platform: cells?.Plataforma ?? service.destination,
-    address: cells ? location.address : contact.address, hours: rawHours || "",
+    secretariat: cells?.["Secretaria responsável"] ?? contact.officeName ?? "", phone: ownPhone,
+    email: ownEmail, category: service.category, platform: cells?.Plataforma ?? service.destination,
+    address: location.address, hours: rawHours || "",
+    attendanceUnitMode: initialAttendanceUnitMode(service, location, contact.name),
+    attendanceUnit: location.local, attendancePhone: location.phone || "", attendanceWhatsapp: location.whatsapp || "", attendanceEmail: location.emails.join("\n"),
+    responsibleAddress: contact.address, responsibleHours: "",
     accessUrl: service.url, baGovUrl: isBaGovUrl(service.url) ? service.url : "",
     consultation: "", waitingTime: "", stage2Description: "", stage2Documents: "",
     deliveryChannel: digital && presencial ? "Híbrido" : digital ? "Digital" : presencial ? "Presencial" : "",
@@ -53,7 +56,7 @@ export function serviceEditValues(original: Service): ServiceEditValues {
   if (service.directEdit?.schema !== "carta-1-2026") {
     base.additional = [...new Set([base.additional, fields?.additional !== undefined && !isPendingServiceValue(intro) ? intro : "", fields?.communication, fields?.contactMeans,
       fields?.maximumTime !== base.duration ? fields?.maximumTime : ""].filter((text): text is string => Boolean(text)))].join("\n");
-    base.phone = fullPhone;
+    base.phone = fields ? fullPhone : ownPhone;
   }
   if (service.directEdit?.schema !== "carta-1-2026" && fields && (fields.requiredDocuments !== undefined || fields.optionalDocuments !== undefined)) {
     base.requiredDocuments = cells ? workbookDocumentColumns(cells).map((column) => cells[column]).join("\n") : [fields.requiredDocuments, fields.optionalDocuments].filter(Boolean).join("\n");
