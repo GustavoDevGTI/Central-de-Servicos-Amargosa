@@ -12,6 +12,20 @@ import { readTopics, documentTopicParts } from "./service-topics";
 import { editService, initialEditorSnapshot, restoreServiceContent } from "../lib/service-editor";
 import { snapshotServices } from "../lib/catalog-preview";
 
+test("both service templates put contacts before costs, matching Central editor groups", () => {
+  const original = services.find((service) => !service.workbookCells && service.slug)!;
+  for (const detailLayout of ["rich", "standard"] as const) {
+    const service = { ...original, detailLayout };
+    const untouched = structuredClone(service);
+    const html = renderToStaticMarkup(<CatalogPreviewProvider services={[service]}><ServiceDetail slug={service.slug!} initialService={service} /></CatalogPreviewProvider>);
+    const contacts = html.indexOf('id="canais"');
+    const costs = html.indexOf('id="informacoes"');
+    assert.ok(contacts > 0 && costs > contacts, detailLayout);
+    assert.ok(html.indexOf('href="#canais"') < html.indexOf('href="#informacoes"'), `${detailLayout}: navigation`);
+    assert.deepEqual(service, untouched);
+  }
+});
+
 function documentItems(html: string) {
   const section = html.match(/<section id="documentos">([\s\S]*?)<\/section>/)![1];
   return [...section.matchAll(/<li\b[^>]*>([\s\S]*?)<\/li>/g)].map((match) => match[1]);

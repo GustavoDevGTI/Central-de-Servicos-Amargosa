@@ -35,6 +35,9 @@ for (const service of services) {
   if (service.inactive) continue;
   const html = renderToStaticMarkup(<CatalogPreviewProvider services={publicServices}><ServiceDetail slug={route} initialService={publicService} /></CatalogPreviewProvider>);
   for (const label of Object.values(serviceSectionLabels)) assert.ok(html.includes(label), `${service.id}: ${label}`);
+  const contacts = [...html.matchAll(/<section id="(?:canais|onde-quando)"/g)].map((match) => match.index!);
+  const costs = html.indexOf('<section id="informacoes"');
+  assert.ok(contacts.length && contacts.every((index) => index < costs), `${service.id}: canais e contatos devem preceder prazos e custos`);
   assert.ok(html.includes('<summary>Quer saber mais?</summary>'), `${service.id}: gaveta ausente`);
   assert.equal(html.includes('id="etapa-2"'), hasServiceSecondStage(service), `${service.id}: etapa 2 condicional`);
   for (const key of privateServiceEditFields) assert.ok(!html.includes(serviceEditFields.find((field) => field.key === key)!.label), `${service.id}: rótulo interno exposto`);
