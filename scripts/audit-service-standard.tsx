@@ -37,7 +37,9 @@ for (const service of services) {
   for (const label of Object.values(serviceSectionLabels)) assert.ok(html.includes(label), `${service.id}: ${label}`);
   const contacts = [...html.matchAll(/<section id="(?:canais|onde-quando)"/g)].map((match) => match.index!);
   const costs = html.indexOf('<section id="informacoes"');
-  assert.ok(contacts.length && contacts.every((index) => index < costs), `${service.id}: canais e contatos devem preceder prazos e custos`);
+  assert.ok(costs > 0 && contacts.length && contacts.every((index) => index > costs), `${service.id}: prazos e custos devem preceder canais e contatos`);
+  assert.equal((html.match(/<h2>Canais de acesso, contato e acompanhamento<\/h2>/g) || []).length, 1, `${service.id}: título de canais duplicado`);
+  assert.equal((html.match(/<a href="#(?:canais|onde-quando)">Canais de acesso, contato e acompanhamento<\/a>/g) || []).length, 1, `${service.id}: navegação de canais duplicada`);
   assert.ok(html.includes('<summary>Quer saber mais?</summary>'), `${service.id}: gaveta ausente`);
   assert.equal(html.includes('id="etapa-2"'), hasServiceSecondStage(service), `${service.id}: etapa 2 condicional`);
   for (const key of privateServiceEditFields) assert.ok(!html.includes(serviceEditFields.find((field) => field.key === key)!.label), `${service.id}: rótulo interno exposto`);

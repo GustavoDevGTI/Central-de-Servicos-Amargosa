@@ -105,8 +105,9 @@
 .admin-preview-pages p{font-size:.9rem;overflow-wrap:anywhere}
 .admin-preview-compare{grid-template-columns:repeat(2,minmax(0,1fr))}
 .admin-service-frame{display:block;flex:1 0 auto;width:100%;height:760px;min-height:760px;border:1px solid #9ab5a7;background:#fff;margin:0 auto}
-.admin-service-viewport{--admin-preview-height:760px;position:relative;flex:1 0 auto;width:100%;max-width:var(--admin-preview-width);height:var(--admin-preview-height);margin:0 auto;overflow:hidden;border:1px solid #9ab5a7;background:#fff}
-.admin-service-viewport>.admin-service-frame{position:absolute;top:0;left:0;width:var(--admin-preview-width);max-width:none;height:calc(var(--admin-preview-height) / var(--admin-preview-scale));min-height:0;margin:0;border:0;transform:scale(var(--admin-preview-scale));transform-origin:top left}
+.admin-service-viewport{--admin-preview-height:760px;position:relative;flex:1 0 auto;width:100%;height:var(--admin-preview-height);margin:0 auto;overflow:hidden;border:1px solid #9ab5a7;background:#fff}
+.admin-service-viewport-mobile{max-width:390px}
+.admin-service-viewport>.admin-service-frame{width:100%;height:100%;min-height:0;margin:0;border:0}
 .admin-frame-mobile{max-width:390px}
 .admin-preview-banner{padding:.7rem 1rem;background:#fff4e4;border-bottom:2px solid #bc6800;color:#573305;font:600 16px "Segoe UI",sans-serif;text-align:center}
 .admin-preview-banner-current{background:#e6f5eb;border-bottom-color:#0c7540;color:#145c36}

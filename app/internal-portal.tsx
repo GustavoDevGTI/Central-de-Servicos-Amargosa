@@ -1185,7 +1185,7 @@ function ServiceStartCta() {
   );
 }
 
-function ServiceContactSection({ service }: { service: Service }) {
+function ServiceContactSection({ service, showHeading = true }: { service: Service; showHeading?: boolean }) {
   if (service.workbookCells) {
     const cells = service.workbookCells;
     const phone = cells["Telefone"];
@@ -1194,7 +1194,7 @@ function ServiceContactSection({ service }: { service: Service }) {
     const validEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
     return (
       <section id="canais" className="service-contact-section">
-        <h2>{serviceEditGroups[2].slice(3)}</h2>
+        {showHeading && <h2>{serviceEditGroups[2].slice(3)}</h2>}
         <div className="service-channel-list">
           <div className="service-contact-office">
             <span>{serviceFieldLabel("department")}</span>
@@ -1247,7 +1247,7 @@ function ServiceContactSection({ service }: { service: Service }) {
 
   return (
     <section id="canais" className="service-contact-section">
-      <h2>{serviceEditGroups[2].slice(3)}</h2>
+      {showHeading && <h2>{serviceEditGroups[2].slice(3)}</h2>}
       <div className="service-channel-list">
         <div className="service-contact-office">
           <span>{serviceFieldLabel("department")}</span>
@@ -1611,11 +1611,11 @@ function RichServiceDetail({ service }: { service: Service }) {
             <a href="#documentos">{serviceSectionLabels.documents}</a>
             <a href="#como-solicitar">{serviceSectionLabels.steps}</a>
             {hasServiceSecondStage(service) && <a href="#etapa-2">{secondStageTitle}</a>}
+            <a href="#informacoes">Prazos e custos</a>
             {hasWhereWhen && (
               <a href="#onde-quando">{service.id === "1doc-limpeza-publica" ? "Dias e horários da coleta" : serviceEditGroups[2].slice(3)}</a>
             )}
-            {!mergeContact && <a href="#canais">{serviceEditGroups[2].slice(3)}</a>}
-            <a href="#informacoes">Prazos e custos</a>
+            {!mergeContact && (!hasWhereWhen || service.id === "1doc-limpeza-publica") && <a href="#canais">{serviceEditGroups[2].slice(3)}</a>}
             {(service.legislation?.length || service.legislationNotice) && (
               <a href="#legislacao">{serviceFieldLabel("legislation")}</a>
             )}
@@ -1663,10 +1663,6 @@ function RichServiceDetail({ service }: { service: Service }) {
               ) : <p className="service-pending-information">{serviceValue(PENDING_SERVICE_INFORMATION)}</p>}
             </section>
             <ServiceSecondStage service={service} />
-            {service.id === "1doc-limpeza-publica"
-              ? <CollectionScheduleSection service={service} />
-              : hasWhereWhen && <ServiceWhereWhenSection service={service} mergeContact={mergeContact} />}
-            {!mergeContact && <ServiceContactSection service={service} />}
             <section id="informacoes" className="service-facts">
               <div>
                 <span>{serviceSectionLabels.cost}</span>
@@ -1677,6 +1673,10 @@ function RichServiceDetail({ service }: { service: Service }) {
                 <strong {...workbookFieldProps(service, "Prazo")} className={service.duration?.startsWith("*") || !service.duration ? "service-pending-information" : undefined}>{serviceValue(service.duration, "Prazo")}</strong>
               </div>
             </section>
+            {service.id === "1doc-limpeza-publica"
+              ? <CollectionScheduleSection service={service} />
+              : hasWhereWhen && <ServiceWhereWhenSection service={service} mergeContact={mergeContact} />}
+            {!mergeContact && <ServiceContactSection service={service} showHeading={!hasWhereWhen || service.id === "1doc-limpeza-publica"} />}
             {(service.legislation?.length || service.legislationNotice) && (
               <section id="legislacao">
                 <h2>{serviceFieldLabel("legislation")}</h2>
@@ -1810,8 +1810,8 @@ export function ServiceDetail({ slug, initialService }: { slug: string; initialS
               {serviceSectionLabels.steps}
             </a>
             {hasServiceSecondStage(service) && <a href="#etapa-2">{secondStageTitle}</a>}
-            <a href="#canais">{serviceEditGroups[2].slice(3)}</a>
             <a href="#informacoes">Prazos e custos</a>
+            <a href="#canais">{serviceEditGroups[2].slice(3)}</a>
             <a href="#quer-saber-mais">Quer saber mais?</a>
           </nav>
           <div className="service-detail-content">
@@ -1858,7 +1858,6 @@ export function ServiceDetail({ slug, initialService }: { slug: string; initialS
               )}
             </section>
             <ServiceSecondStage service={service} />
-            <ServiceContactSection service={service} />
             <section id="informacoes" className="service-facts">
               <div>
                 <span>
@@ -1877,6 +1876,7 @@ export function ServiceDetail({ slug, initialService }: { slug: string; initialS
                 </strong>
               </div>
             </section>
+            <ServiceContactSection service={service} />
             <ServiceMoreInformation service={service} hasManifestationSection={!serviceAudiences(service).includes("ouvidoria")} />
             <ServiceManifestationNotice service={service} />
             {service.updatedAt && (

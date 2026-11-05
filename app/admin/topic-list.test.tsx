@@ -14,18 +14,14 @@ import { audienceSelection, audienceSelectionValue, serviceAudienceOptions } fro
 import { audiences } from "../internal-portal";
 import { ChangesTable } from "./change-table";
 import { PaginationControls } from "./pagination-controls";
-import { ServicePreviewFrame, previewViewportScale, previewViewportWidth } from "./service-preview-frame";
+import { ServicePreviewFrame } from "./service-preview-frame";
 
-test("desktop previews keep desktop breakpoints even in narrow comparison columns", () => {
-  assert.equal(previewViewportWidth(false), 1440);
-  assert.equal(previewViewportWidth(true), 390);
-  assert.equal(previewViewportScale(480, false), 1 / 3);
-  assert.equal(previewViewportScale(480, true), 1);
-  assert.equal(previewViewportScale(320, true), 320 / 390);
-  assert.equal(previewViewportScale(2000, false), 1);
+test("previews use the panel width without fixed desktop width or automatic scaling", () => {
   for (const mobile of [false, true]) {
     const html = renderToStaticMarkup(<ServicePreviewFrame mobile={mobile} src="/admin/preview/current/servico?version=1" title="Antes" />);
-    assert.ok(html.includes(`width="${mobile ? 390 : 1440}"`));
+    assert.ok(!html.includes('width="1440"'));
+    assert.ok(!html.includes('style='));
+    assert.equal(html.includes('admin-service-viewport-mobile'), mobile);
     assert.ok(html.includes(`data-preview-device="${mobile ? "mobile" : "desktop"}"`));
     assert.ok(html.includes('/admin/preview/current/servico?version=1'));
   }
@@ -136,7 +132,7 @@ test("audience checkboxes use the same options as the Central and preserve histo
 
 test("Central follows the page while BA.GOV keeps the Carta order with popular names immediately after the title", () => {
   const central = editorFieldGroups("central");
-  assert.deepEqual(central.slice(0, 4).map((group) => group.key), ["central-main", "central-stages", "central-channels", "central-time-cost"]);
+  assert.deepEqual(central.slice(0, 4).map((group) => group.key), ["central-main", "central-stages", "central-time-cost", "central-channels"]);
   assert.deepEqual(central[1].blocks[0].fields, ["requiredDocuments", "steps"]);
   const bagov = editorFieldGroups("bagov");
   assert.deepEqual(bagov.map((group) => group.label), [...serviceEditGroups]);

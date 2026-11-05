@@ -20,8 +20,8 @@ export function editorFieldGroups(order: ServiceFieldOrder, { workbookSource = t
   const groups: EditorFieldGroup[] = [
     { key: "central-main", label: "Informações principais", blocks: [fieldBlock(["title", "audience", "summary", "accessUrl", "eligibility"])] },
     { key: "central-stages", label: "Documentos e etapas", blocks: [stageBlock(1, ["requiredDocuments", "steps"]), stageBlock(2, ["stage2Description", "stage2Documents"])] },
-    { key: "central-channels", label: "Canais de acesso, contato e acompanhamento", blocks: [fieldBlock(["department", ...(!workbookSource ? ["address"] as const : []), "hours", "secretariat", "phone", "email", "platform"])] },
     { key: "central-time-cost", label: "Prazos e custos", blocks: [fieldBlock(["cost", "duration"])] },
+    { key: "central-channels", label: "Canais de acesso, contato e acompanhamento", blocks: [fieldBlock(["department", ...(!workbookSource ? ["address"] as const : []), "hours", "secretariat", "phone", "email", "platform"])] },
     ...(mainLegislation ? [{ key: "central-law", label: "Base legal", blocks: [fieldBlock(["legislation"])] }] : []),
     { key: "central-more", label: "Quer saber mais?", blocks: [fieldBlock(["popularNames", "category", "deliveryChannel", "status", "waitingTime", "attendanceModes", ...(workbookSource ? ["address"] as const : []), "consultation", "baGovUrl", ...(!mainLegislation ? ["legislation"] as const : []), "priorities", "procedures", "additional"])] },
     { key: "central-ombudsman", label: "Canal da ouvidoria", blocks: [fieldBlock(["ombudsman"])] },

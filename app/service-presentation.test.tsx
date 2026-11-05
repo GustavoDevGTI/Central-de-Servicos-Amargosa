@@ -12,7 +12,7 @@ import { readTopics, documentTopicParts } from "./service-topics";
 import { editService, initialEditorSnapshot, restoreServiceContent } from "../lib/service-editor";
 import { snapshotServices } from "../lib/catalog-preview";
 
-test("both service templates put contacts before costs, matching Central editor groups", () => {
+test("both service templates put costs before contacts, matching Central editor groups", () => {
   const original = services.find((service) => !service.workbookCells && service.slug)!;
   for (const detailLayout of ["rich", "standard"] as const) {
     const service = { ...original, detailLayout };
@@ -20,8 +20,12 @@ test("both service templates put contacts before costs, matching Central editor 
     const html = renderToStaticMarkup(<CatalogPreviewProvider services={[service]}><ServiceDetail slug={service.slug!} initialService={service} /></CatalogPreviewProvider>);
     const contacts = html.indexOf('id="canais"');
     const costs = html.indexOf('id="informacoes"');
-    assert.ok(contacts > 0 && costs > contacts, detailLayout);
-    assert.ok(html.indexOf('href="#canais"') < html.indexOf('href="#informacoes"'), `${detailLayout}: navigation`);
+    assert.ok(costs > 0 && contacts > costs, detailLayout);
+    const navigation = html.match(/<nav aria-label="Nesta página">([\s\S]*?)<\/nav>/)![1];
+    const accessLink = navigation.search(/href="#(?:canais|onde-quando)"/);
+    assert.ok(accessLink > navigation.indexOf('href="#informacoes"'), `${detailLayout}: navigation`);
+    assert.equal((navigation.match(/>Canais de acesso, contato e acompanhamento<\/a>/g) || []).length, 1);
+    assert.equal((html.match(/<h2>Canais de acesso, contato e acompanhamento<\/h2>/g) || []).length, 1);
     assert.deepEqual(service, untouched);
   }
 });
