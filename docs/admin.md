@@ -10,9 +10,9 @@ O **Administrador geral** gerencia catálogo, diagnóstico e usuários. O **Admi
 
 ## Editar um serviço
 
-Pesquise por nome, URL ou ID na caixa de seleção e clique em **Editar serviço selecionado**. Altere as informações nos campos e clique em **Comparar antes e depois**. A comparação apresenta duas páginas lado a lado e as diferenças por campo. Até esse momento o catálogo público continua igual. Clique em **Salvar alterações** para aplicar o conteúdo à Central.
+Pesquise por nome, URL ou ID na caixa de seleção e clique em **Editar serviço selecionado**. A comparação e as diferenças por campo são atualizadas automaticamente enquanto você edita. Confira a prévia e clique em **Salvar alterações**, no final da edição ou no início da comparação, para aplicar o conteúdo à Central. Atualizar a prévia não publica nada.
 
-Alterar qualquer campo depois de comparar exige uma nova comparação. Se outro administrador salvar uma versão nesse intervalo, o servidor impede sobrescrevê-la com uma edição antiga: recarregue o serviço e compare novamente. Trocar de serviço ou sair com alterações pendentes pede confirmação de descarte.
+Alterar qualquer campo atualiza novamente a prévia. Os dois botões de salvar gravam os mesmos campos atuais, inclusive quando a atualização da prévia ainda está em andamento. Se outro administrador salvar uma versão nesse intervalo, o servidor impede sobrescrevê-la com uma edição antiga: recarregue o serviço antes de salvar. Trocar de serviço ou sair com alterações pendentes pede confirmação de descarte.
 
 O editor segue os 34 campos e os seis grupos da Carta de Serviço SEI nº 1/2026, com Plataforma e sete campos adicionais de atendimento, totalizando 42 campos; o [mapeamento completo](campos-carta-servico.md) registra a equivalência de cada campo. Os textos e o formato dos botões, o destino da ajuda, URLs internas das páginas e IDs são fixos. Plataforma é um texto editável. “SITE / LINK DE ACESSO” permite alterar o destino de início, com validação HTTP/HTTPS no servidor. O link BA.GOV tem campo próprio.
 

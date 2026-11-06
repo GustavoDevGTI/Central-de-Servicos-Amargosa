@@ -22,6 +22,10 @@ async function request(path, body, headers = owner, expected = 200) {
   assert.equal(response.status, expected, `${path}: ${JSON.stringify(result).slice(0, 240)}`);
   return result;
 }
+async function discardPreview(id, headers = owner, expected = 200) {
+  const response = await fetch(`${base}/api/admin/drafts/${id}`, { method: "DELETE", headers });
+  assert.equal(response.status, expected, "Limpeza autenticada da prévia");
+}
 const fixed = (s) => ({ id: s.id, slug: s.slug, url: s.url, requestSystem: s.requestSystem, requestLabel: s.requestLabel, noticeAction: s.noticeAction, inactive: Boolean(s.inactive) });
 try {
   owner = await login(process.env.LOCAL_ADMIN_USERNAME, process.env.LOCAL_ADMIN_PASSWORD);
@@ -79,6 +83,16 @@ try {
   await request(currentPreviewUrl(mirrors[0].id, selected.version), undefined, catalogUser);
   await request(`/api/admin/drafts/${draft.draftId}`, undefined, catalogUser, 404);
   await request("/api/admin/publish", { draftId: draft.draftId }, catalogUser, 400);
+  await discardPreview(draft.draftId, { Origin: base }, 401);
+  await discardPreview(draft.draftId, { ...owner, Origin: "https://invalid.example" }, 403);
+  await discardPreview("invalida", owner, 400);
+  await discardPreview(draft.draftId, catalogUser);
+  await request(`/api/admin/drafts/${draft.draftId}`); // Another account cannot retire this preview.
+  const temporary = await request("/api/admin/services", edit({ cost: "Prévia automática descartável" }));
+  await discardPreview(temporary.draftId);
+  await discardPreview(temporary.draftId); // Cleanup remains safe after publication or an earlier cleanup.
+  await request(`/api/admin/drafts/${temporary.draftId}`, undefined, owner, 404);
+  assert.equal((await request("/api/admin/history")).versions.length, 0, "Atualizar e limpar prévias não cria publicações");
   const stale = await request("/api/admin/services", edit({ cost: "Comparação concorrente" }), catalogUser);
   const first = await request("/api/admin/publish", { draftId: draft.draftId });
   await request(currentPreviewUrl(mirrors[0].id, selected.version), undefined, owner, 409);
@@ -204,5 +218,5 @@ try {
   assert.equal((await pool.query("SELECT count(*)::int AS n FROM catalog_publications WHERE id=$1", [first.version])).rows[0].n, 0);
   const active = (await pool.query("SELECT p.snapshot FROM catalog_publications p JOIN catalog_active a ON a.publication_id=p.id")).rows[0].snapshot;
   assert.deepEqual(active.rows["22"].cells, mirrors[0].workbookCells);
-  console.log(JSON.stringify({ authenticatedDirectEditing: true, privateComparison: true, mirrors: 3, protectedActions: true, staleComparisonRejected: true, catalogAdminAllowed: true, draftOwnership: true, authorship: true, restored: true, meaningfulHistoryOnly: true, retained: 20, sourcePreserved: true, pdfFields: 34, editableFields: 42, platformEditable: true, linkEditable: true, internalControlsPrivate: true, inactiveRoutesHidden: 3, maintenanceVisible: true }));
+  console.log(JSON.stringify({ authenticatedDirectEditing: true, privateComparison: true, previewCleanup: true, mirrors: 3, protectedActions: true, staleComparisonRejected: true, catalogAdminAllowed: true, draftOwnership: true, authorship: true, restored: true, meaningfulHistoryOnly: true, retained: 20, sourcePreserved: true, pdfFields: 34, editableFields: 42, platformEditable: true, linkEditable: true, internalControlsPrivate: true, inactiveRoutesHidden: 3, maintenanceVisible: true }));
 } finally { await pool.end(); }

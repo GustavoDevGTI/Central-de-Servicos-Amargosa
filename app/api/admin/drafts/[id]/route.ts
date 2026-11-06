@@ -1,9 +1,23 @@
-import { adminResponse, adminSession } from "../../../../../lib/admin-session";
+import { adminResponse, adminSession, sameOrigin } from "../../../../../lib/admin-session";
 import { catalogPool, initializeCatalogDatabase, type CatalogSnapshot } from "../../../../../lib/catalog-db";
 import { snapshotServices } from "../../../../../lib/catalog-preview";
 import { initialEditorSnapshot } from "../../../../../lib/service-editor";
 
 export const dynamic = "force-dynamic";
+
+/** Automatic previews are temporary; only their author can retire them. */
+export async function DELETE(request: Request, { params }: { params: Promise<{ id: string }> }) {
+  try {
+    if (!sameOrigin(request)) return adminResponse({ error: "Origem inválida." }, 403);
+    const session = await adminSession(request);
+    if (!session) return adminResponse({ error: "Acesso negado." }, 401);
+    const { id } = await params;
+    if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id)) return adminResponse({ error: "Prévia inválida." }, 400);
+    await initializeCatalogDatabase();
+    await catalogPool().query("DELETE FROM catalog_drafts WHERE id=$1 AND created_by=$2 AND snapshot->>'mode'='direct'", [id, session.user.id]);
+    return adminResponse({ discarded: true });
+  } catch { return adminResponse({ error: "Não foi possível descartar a prévia." }, 503); }
+}
 
 export async function GET(request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {

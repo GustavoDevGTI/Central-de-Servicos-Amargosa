@@ -1,5 +1,5 @@
 "use client";
-import { Fragment, useEffect, useRef, useState } from "react";
+import { Fragment, useEffect, useMemo, useRef, useState } from "react";
 import { ServicePicker, useServiceSelection } from "./service-picker";
 import type { PreviewService } from "./draft-browser";
 import { serviceEditFields, type ServiceEditValues, type ServiceEditField } from "../service-edit-fields";
@@ -10,13 +10,18 @@ import { AudienceSelector } from "./audience-selector";
 import { ServicePreviewFrame } from "./service-preview-frame";
 import { editorFieldGroups, type ServiceFieldOrder } from "./service-field-order";
 import type { TopicList } from "../service-topics";
+import { ServicePreviewSession } from "./service-preview-session";
 
 type Loaded = { version: number | null; service: { id: string; slug: string; title: string; sourceRow?: number; fields: ServiceEditValues } };
 type Comparison = { draftId?: string; identical?: boolean; report: CatalogReport; affectedIds?: string[] };
+type PreviewInput = { key: string; body: string };
 async function json<T>(response: Response): Promise<T> {
   const body = await response.json() as T & { error?: string };
   if (!response.ok) throw new Error(body.error || "Não foi possível concluir a operação.");
   return body as T;
+}
+async function preparePreview(input: PreviewInput) {
+  return json<Comparison>(await fetch("/api/admin/services", { method: "POST", headers: { "Content-Type": "application/json" }, body: input.body }));
 }
 
 export function ServiceEditor({ onSaved, onDirtyChange }: { onSaved: () => Promise<void>; onDirtyChange: (dirty: boolean) => void }) {
@@ -24,8 +29,14 @@ export function ServiceEditor({ onSaved, onDirtyChange }: { onSaved: () => Promi
   const selection = useServiceSelection(services);
   const [loaded, setLoaded] = useState<Loaded | null>(null);
   const [fields, setFields] = useState<ServiceEditValues | null>(null);
-  const [comparison, setComparison] = useState<Comparison | null>(null);
+  const [preparedComparison, setComparison] = useState<(Comparison & { key: string }) | null>(null);
+  const [previewSession] = useState(() => new ServicePreviewSession<Comparison>(async (id) => {
+    const response = await fetch(`/api/admin/drafts/${encodeURIComponent(id)}`, { method: "DELETE", keepalive: true });
+    if (!response.ok) throw new Error("Prévia não descartada.");
+  }));
   const [busy, setBusy] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const saveInFlight = useRef(false);
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
   const [mobile, setMobile] = useState(false);
@@ -42,8 +53,15 @@ export function ServiceEditor({ onSaved, onDirtyChange }: { onSaved: () => Promi
   const [previewView, setPreviewView] = useState<"before" | "after" | "both">("both");
   const workspaceRef = useRef<HTMLDivElement>(null);
   const compareRef = useRef<HTMLElement>(null);
-  const dirtyKeys = fields && loaded ? serviceEditFields.filter((f) => fields[f.key] !== loaded.service.fields[f.key]).map((f) => f.key) : [];
-  const dirty = dirtyKeys.length > 0;
+  const previewInput = useMemo(() => {
+    if (!fields || !loaded) return null;
+    const changed = serviceEditFields.filter((field) => fields[field.key] !== loaded.service.fields[field.key]);
+    if (!changed.length) return null;
+    const body = JSON.stringify({ serviceId: loaded.service.id, baseVersion: loaded.version, fields: Object.fromEntries(changed.map(({ key }) => [key, fields[key]])) });
+    return { key: body, body };
+  }, [fields, loaded]);
+  const dirty = Boolean(previewInput);
+  const comparison = preparedComparison?.key === previewInput?.key ? preparedComparison : null;
   function chooseFieldOrder(order: ServiceFieldOrder) {
     setFieldOrder(order);
     try { window.localStorage.setItem("admin-service-editor-field-order", order); } catch { /* Keep the selection for this session. */ }
@@ -53,6 +71,19 @@ export function ServiceEditor({ onSaved, onDirtyChange }: { onSaved: () => Promi
     try { window.localStorage.setItem("admin-service-editor-layout", parallel ? "parallel" : "stacked"); } catch { /* The layout can still be switched for this session. */ }
   }
   useEffect(() => { onDirtyChange(dirty); return () => onDirtyChange(false); }, [dirty, onDirtyChange]);
+  useEffect(() => () => previewSession.clear(), [previewSession]);
+  useEffect(() => {
+    if (!previewInput) { previewSession.clear(); return; }
+    if (busy) return;
+    let active = true;
+    // Wait for a short typing pause, without disabling fields or moving the page.
+    const timer = window.setTimeout(() => {
+      void previewSession.read(previewInput.key, () => preparePreview(previewInput)).then((result) => {
+        if (active) setComparison({ ...result, key: previewInput.key });
+      }).catch((reason) => { if (active) setError(reason instanceof Error ? reason.message : "Não foi possível atualizar a prévia."); });
+    }, 650);
+    return () => { active = false; window.clearTimeout(timer); };
+  }, [previewInput, busy, previewSession]);
   useEffect(() => {
     if (!dirty) return;
     const prevent = (event: BeforeUnloadEvent) => { event.preventDefault(); event.returnValue = ""; };
@@ -66,6 +97,7 @@ export function ServiceEditor({ onSaved, onDirtyChange }: { onSaved: () => Promi
   }, []);
   async function openService() {
     if (!selection.selected || (dirty && !window.confirm("Descartar as alterações não salvas deste serviço?"))) return;
+    previewSession.clear();
     setBusy(true); setError(""); setMessage("");
     try {
       const data = await json<Loaded>(await fetch(`/api/admin/services/${encodeURIComponent(selection.selected.id)}`, { cache: "no-store" }));
@@ -76,34 +108,27 @@ export function ServiceEditor({ onSaved, onDirtyChange }: { onSaved: () => Promi
     } catch (reason) { setError(reason instanceof Error ? reason.message : "Serviço indisponível."); }
     finally { setBusy(false); }
   }
-  function change(key: ServiceEditField, value: string) { setFields((old) => old && ({ ...old, [key]: value })); setComparison(null); setMessage(""); }
-  async function compare() {
-    if (!loaded || !fields || !dirty) return;
-    setBusy(true); setError(""); setMessage("");
-    try {
-      const result = await json<Comparison>(await fetch("/api/admin/services", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ serviceId: loaded.service.id, baseVersion: loaded.version, fields: Object.fromEntries(dirtyKeys.map((key) => [key, fields[key]])) }) }));
-      setComparison(result);
-      if (result.identical) setMessage("Nenhuma alteração para salvar.");
-      requestAnimationFrame(() => {
-        compareRef.current?.scrollTo({ top: 0 });
-        compareRef.current?.scrollIntoView({ block: "start" });
-      });
-    } catch (reason) { setError(reason instanceof Error ? reason.message : "Falha na comparação."); }
-    finally { setBusy(false); }
-  }
+  function change(key: ServiceEditField, value: string) { if (saveInFlight.current) return; setFields((old) => old && ({ ...old, [key]: value })); setError(""); setMessage(""); }
   async function save() {
-    if (!loaded || !comparison?.draftId || !dirty) return;
-    setBusy(true); setError("");
+    if (saveInFlight.current || !loaded || !previewInput) return;
+    saveInFlight.current = true;
+    setBusy(true); setSaving(true); setError(""); setMessage("");
     try {
-      await json(await fetch("/api/admin/publish", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ draftId: comparison.draftId }) }));
+      const latest = await previewSession.read(previewInput.key, () => preparePreview(previewInput));
+      if (!latest.draftId) { setMessage("Nenhuma alteração para salvar."); return; }
+      await json(await fetch("/api/admin/publish", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ draftId: latest.draftId }) }));
+      previewSession.clear();
       const data = await json<Loaded>(await fetch(`/api/admin/services/${encodeURIComponent(loaded.service.id)}`, { cache: "no-store" }));
       setLoaded(data); setFields(data.service.fields); setEditorRevision((revision) => revision + 1); setComparison(null); setMessage("Alterações salvas na Central.");
       setTopicModels({});
-      const affected = new Set(comparison.affectedIds || [data.service.id]);
+      const affected = new Set(latest.affectedIds || [data.service.id]);
       setServices((old) => old.map((s) => affected.has(s.id) ? { ...s, title: data.service.title, inactive: data.service.fields.status === "Inativo" } : s));
       await onSaved();
-    } catch (reason) { setError(reason instanceof Error ? reason.message : "Falha ao salvar."); }
-    finally { setBusy(false); }
+    } catch (reason) { previewSession.clear(); setComparison(null); setError(reason instanceof Error ? reason.message : "Falha ao salvar."); }
+    finally {
+      saveInFlight.current = false; setBusy(false); setSaving(false);
+      requestAnimationFrame(() => { compareRef.current?.scrollTo({ top: 0 }); compareRef.current?.scrollIntoView({ block: "start" }); });
+    }
   }
   function fieldControl(field: typeof serviceEditFields[number]) {
     if (!fields) return null;
@@ -118,13 +143,14 @@ export function ServiceEditor({ onSaved, onDirtyChange }: { onSaved: () => Promi
         : <textarea id={id} aria-label={name} value={fields[field.key]} rows={field.rows} maxLength={field.key === "title" ? 300 : 20000} required={field.key === "title"} onChange={(event) => change(field.key, event.target.value)} />}</label>;
   }
   const currentPreviewUrl = loaded ? `/admin/preview/current/${encodeURIComponent(loaded.service.id)}?version=${loaded.version ?? "initial"}` : "";
-  const beforeUrl = comparison?.draftId && loaded ? `/admin/preview/${comparison.draftId}/${encodeURIComponent(loaded.service.slug)}/before` : currentPreviewUrl;
-  const afterUrl = comparison?.draftId && loaded ? `/admin/preview/${comparison.draftId}/${encodeURIComponent(loaded.service.slug)}` : currentPreviewUrl;
+  const beforeUrl = currentPreviewUrl;
+  const afterUrl = dirty && preparedComparison?.draftId && loaded ? `/admin/preview/${preparedComparison.draftId}/${encodeURIComponent(loaded.service.slug)}` : currentPreviewUrl;
+  const saveStatus = message || (!dirty ? "Nenhuma alteração pendente." : saving ? "Salvando alterações…" : error ? "Alterações não salvas. Verifique o aviso e tente salvar novamente." : comparison?.identical ? "Nenhuma alteração para salvar." : comparison?.draftId ? "Prévia atualizada. Alterações ainda não salvas." : "Atualizando prévia…");
   const actions = <div className="admin-editor-actions">
-    <p id="editor-save-status" role="status">{!dirty ? "Nenhuma alteração pendente." : comparison?.draftId ? "Comparação pronta. Salve no início do painel de comparação." : "Há alterações não salvas. Compare antes de salvar."}</p>
+    <p id="editor-save-status" role="status">{saveStatus}</p>
     <div className="admin-preview-actions">
-    <button type="button" aria-describedby="editor-save-status" disabled={busy || !dirty} onClick={() => void compare()}>{busy ? "Aguarde…" : "Comparar antes e depois"}</button>
-    <button type="button" disabled={busy || !dirty} onClick={() => { if (!loaded) return; setFields(loaded.service.fields); setTopicModels({}); setEditorRevision((revision) => revision + 1); setComparison(null); setError(""); setMessage(""); }}>Descartar edição</button>
+    <button className="admin-primary-action" type="button" aria-describedby="editor-save-status" disabled={busy || !dirty} onClick={() => void save()}>{saving ? "Salvando…" : "Salvar alterações"}</button>
+    <button type="button" disabled={busy || !dirty} onClick={() => { if (!loaded) return; previewSession.clear(); setFields(loaded.service.fields); setTopicModels({}); setEditorRevision((revision) => revision + 1); setComparison(null); setError(""); setMessage(""); }}>Descartar edição</button>
     </div>
   </div>;
   return <>
@@ -162,8 +188,8 @@ export function ServiceEditor({ onSaved, onDirtyChange }: { onSaved: () => Promi
     {loaded && <section ref={compareRef} className="admin-section" aria-labelledby="editor-compare-title">
       <h2 id="editor-compare-title">Comparação antes de salvar</h2>
       {error && <p className="admin-error" role="alert">{error}</p>}
-      <p id="editor-comparison-status" className={message ? "admin-success" : undefined} role="status">{message || (comparison?.draftId && dirty ? "Comparação pronta. Confira a prévia e salve as alterações." : dirty ? "Compare antes e depois para habilitar o salvamento." : "Nenhuma alteração pendente.")}</p>
-      <div className="admin-preview-actions admin-editor-publish-actions"><button className="admin-primary-action" type="button" aria-describedby="editor-comparison-status" disabled={busy || !dirty || !comparison?.draftId} onClick={() => void save()}>Salvar alterações</button></div>
+      <p id="editor-comparison-status" className={message ? "admin-success" : undefined} role="status">{saveStatus}</p>
+      <div className="admin-preview-actions admin-editor-publish-actions"><button className="admin-primary-action" type="button" aria-describedby="editor-comparison-status" disabled={busy || !dirty} onClick={() => void save()}>{saving ? "Salvando…" : "Salvar alterações"}</button></div>
       {(comparison?.affectedIds?.length || 0) > 1 && <p>Esta edição atualiza {comparison!.affectedIds!.length} páginas vinculadas ao mesmo serviço.</p>}
       <div className="admin-preview-actions"><button type="button" aria-pressed={!mobile} onClick={() => setMobile(false)}>Computador</button><button type="button" aria-pressed={mobile} onClick={() => setMobile(true)}>Celular</button></div>
       {sideBySide && <div className="admin-preview-actions" role="group" aria-label="Visualização da comparação">
@@ -171,7 +197,7 @@ export function ServiceEditor({ onSaved, onDirtyChange }: { onSaved: () => Promi
         <button type="button" aria-pressed={previewView === "after"} onClick={() => setPreviewView("after")}>Depois</button>
         <button type="button" aria-pressed={previewView === "both"} onClick={() => setPreviewView("both")}>Antes e depois</button>
       </div>}
-      <div className={`admin-preview-pages admin-preview-compare${sideBySide && previewView !== "both" ? " admin-preview-pages-single" : ""}`}>
+      <div aria-busy={dirty && !comparison && !error} className={`admin-preview-pages admin-preview-compare${sideBySide && previewView !== "both" ? " admin-preview-pages-single" : ""}`}>
         {(!sideBySide || previewView !== "after") && <div><h3>Antes</h3><ServicePreviewFrame mobile={mobile} src={beforeUrl} title={`Antes: ${loaded.service.title}`} /></div>}
         {(!sideBySide || previewView !== "before") && <div><h3>Depois</h3><ServicePreviewFrame mobile={mobile} src={afterUrl} title={`Depois: ${loaded.service.title}`} /></div>}
       </div>
