@@ -130,6 +130,13 @@ export function ServiceEditor({ onSaved, onDirtyChange }: { onSaved: () => Promi
       requestAnimationFrame(() => { compareRef.current?.scrollTo({ top: 0 }); compareRef.current?.scrollIntoView({ block: "start" }); });
     }
   }
+  function undo() {
+    if (busy || saveInFlight.current || !loaded) return;
+    previewSession.clear();
+    setFields(loaded.service.fields); setTopicModels({});
+    setEditorRevision((revision) => revision + 1); setComparison(null);
+    setError(""); setMessage("Alterações desfeitas.");
+  }
   function fieldControl(field: typeof serviceEditFields[number]) {
     if (!fields) return null;
     const id = `edit-${field.key}`;
@@ -146,11 +153,12 @@ export function ServiceEditor({ onSaved, onDirtyChange }: { onSaved: () => Promi
   const beforeUrl = currentPreviewUrl;
   const afterUrl = dirty && preparedComparison?.draftId && loaded ? `/admin/preview/${preparedComparison.draftId}/${encodeURIComponent(loaded.service.slug)}` : currentPreviewUrl;
   const saveStatus = message || (!dirty ? "Nenhuma alteração pendente." : saving ? "Salvando alterações…" : error ? "Alterações não salvas. Verifique o aviso e tente salvar novamente." : comparison?.identical ? "Nenhuma alteração para salvar." : comparison?.draftId ? "Prévia atualizada. Alterações ainda não salvas." : "Atualizando prévia…");
+  const undoAction = <button type="button" disabled={busy || !dirty} onClick={undo}>Desfazer alterações</button>;
   const actions = <div className="admin-editor-actions">
     <p id="editor-save-status" role="status">{saveStatus}</p>
     <div className="admin-preview-actions">
     <button className="admin-primary-action" type="button" aria-describedby="editor-save-status" disabled={busy || !dirty} onClick={() => void save()}>{saving ? "Salvando…" : "Salvar alterações"}</button>
-    <button type="button" disabled={busy || !dirty} onClick={() => { if (!loaded) return; previewSession.clear(); setFields(loaded.service.fields); setTopicModels({}); setEditorRevision((revision) => revision + 1); setComparison(null); setError(""); setMessage(""); }}>Descartar edição</button>
+    {undoAction}
     </div>
   </div>;
   return <>
@@ -189,7 +197,7 @@ export function ServiceEditor({ onSaved, onDirtyChange }: { onSaved: () => Promi
       <h2 id="editor-compare-title">Comparação antes de salvar</h2>
       {error && <p className="admin-error" role="alert">{error}</p>}
       <p id="editor-comparison-status" className={message ? "admin-success" : undefined} role="status">{saveStatus}</p>
-      <div className="admin-preview-actions admin-editor-publish-actions"><button className="admin-primary-action" type="button" aria-describedby="editor-comparison-status" disabled={busy || !dirty} onClick={() => void save()}>{saving ? "Salvando…" : "Salvar alterações"}</button></div>
+      <div className="admin-preview-actions admin-editor-publish-actions"><button className="admin-primary-action" type="button" aria-describedby="editor-comparison-status" disabled={busy || !dirty} onClick={() => void save()}>{saving ? "Salvando…" : "Salvar alterações"}</button>{undoAction}</div>
       {(comparison?.affectedIds?.length || 0) > 1 && <p>Esta edição atualiza {comparison!.affectedIds!.length} páginas vinculadas ao mesmo serviço.</p>}
       <div className="admin-preview-actions"><button type="button" aria-pressed={!mobile} onClick={() => setMobile(false)}>Computador</button><button type="button" aria-pressed={mobile} onClick={() => setMobile(true)}>Celular</button></div>
       {sideBySide && <div className="admin-preview-actions" role="group" aria-label="Visualização da comparação">
