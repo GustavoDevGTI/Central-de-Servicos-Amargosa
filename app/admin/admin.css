@@ -197,6 +197,7 @@
 
 /* Optional editor arrangement; switching to the previous format removes this scope. */
 .admin-editor-layout-switch{justify-content:flex-end;position:sticky;top:0;z-index:3;background:#f5f8f5;padding:.4rem 0}.admin-editor-workspace{scroll-margin-top:4rem}.admin-preview-pages-single{grid-template-columns:minmax(0,1fr)}
+.admin-editor-workspace>section[aria-labelledby="editor-compare-title"]{scroll-margin-top:4rem}
 @media(min-width:1200px){
   .admin-content:has(.admin-editor-workspace-parallel){width:min(1840px,calc(100% - 2rem))}
   .admin-editor-workspace-parallel{display:grid;grid-template-columns:minmax(0,.42fr) minmax(0,.58fr);gap:1.4rem;align-items:start}

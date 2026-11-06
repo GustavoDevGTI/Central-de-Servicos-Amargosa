@@ -85,8 +85,8 @@ export function ServiceEditor({ onSaved, onDirtyChange }: { onSaved: () => Promi
       setComparison(result);
       if (result.identical) setMessage("Nenhuma alteração para salvar.");
       requestAnimationFrame(() => {
-        if (sideBySide && window.matchMedia("(min-width: 1200px)").matches) compareRef.current?.scrollTo({ top: 0 });
-        else compareRef.current?.scrollIntoView({ block: "start" });
+        compareRef.current?.scrollTo({ top: 0 });
+        compareRef.current?.scrollIntoView({ block: "start" });
       });
     } catch (reason) { setError(reason instanceof Error ? reason.message : "Falha na comparação."); }
     finally { setBusy(false); }
@@ -120,9 +120,12 @@ export function ServiceEditor({ onSaved, onDirtyChange }: { onSaved: () => Promi
   const currentPreviewUrl = loaded ? `/admin/preview/current/${encodeURIComponent(loaded.service.id)}?version=${loaded.version ?? "initial"}` : "";
   const beforeUrl = comparison?.draftId && loaded ? `/admin/preview/${comparison.draftId}/${encodeURIComponent(loaded.service.slug)}/before` : currentPreviewUrl;
   const afterUrl = comparison?.draftId && loaded ? `/admin/preview/${comparison.draftId}/${encodeURIComponent(loaded.service.slug)}` : currentPreviewUrl;
-  const actions = <div className="admin-preview-actions admin-editor-actions">
-    <button type="button" disabled={busy || !dirty} onClick={() => void compare()}>{busy ? "Aguarde…" : "Comparar antes e depois"}</button>
-    <button type="button" disabled={busy || !dirty} onClick={() => { if (!loaded) return; setFields(loaded.service.fields); setTopicModels({}); setEditorRevision((revision) => revision + 1); setComparison(null); setError(""); }}>Descartar edição</button>
+  const actions = <div className="admin-editor-actions">
+    <p id="editor-save-status" role="status">{!dirty ? "Nenhuma alteração pendente." : comparison?.draftId ? "Comparação pronta. Salve no início do painel de comparação." : "Há alterações não salvas. Compare antes de salvar."}</p>
+    <div className="admin-preview-actions">
+    <button type="button" aria-describedby="editor-save-status" disabled={busy || !dirty} onClick={() => void compare()}>{busy ? "Aguarde…" : "Comparar antes e depois"}</button>
+    <button type="button" disabled={busy || !dirty} onClick={() => { if (!loaded) return; setFields(loaded.service.fields); setTopicModels({}); setEditorRevision((revision) => revision + 1); setComparison(null); setError(""); setMessage(""); }}>Descartar edição</button>
+    </div>
   </div>;
   return <>
     <div className="admin-preview-actions admin-editor-layout-switch" role="group" aria-label="Organização do editor">
@@ -134,8 +137,7 @@ export function ServiceEditor({ onSaved, onDirtyChange }: { onSaved: () => Promi
       <h2 id="edit-service-title">Editar serviço</h2>
       <ServicePicker id="admin-edit-service" selection={selection} totalCount={services.length} />
       <div className="admin-preview-actions"><button type="button" disabled={busy || !selection.selected} onClick={() => void openService()}>Editar serviço selecionado</button></div>
-      {error && <p className="admin-error" role="alert">{error}</p>}
-      {message && <p className="admin-success" role="status">{message}</p>}
+      {!loaded && error && <p className="admin-error" role="alert">{error}</p>}
       {loaded && fields && <div className="admin-service-editor">
         <h3>{loaded.service.title}</h3>
         <div className="admin-preview-actions admin-editor-field-order" role="group" aria-label="Ordem dos campos">
@@ -159,7 +161,9 @@ export function ServiceEditor({ onSaved, onDirtyChange }: { onSaved: () => Promi
     </section>
     {loaded && <section ref={compareRef} className="admin-section" aria-labelledby="editor-compare-title">
       <h2 id="editor-compare-title">Comparação antes de salvar</h2>
-      {!comparison?.draftId && dirty && <p role="status">Alterações ainda não comparadas.</p>}
+      {error && <p className="admin-error" role="alert">{error}</p>}
+      <p id="editor-comparison-status" className={message ? "admin-success" : undefined} role="status">{message || (comparison?.draftId && dirty ? "Comparação pronta. Confira a prévia e salve as alterações." : dirty ? "Compare antes e depois para habilitar o salvamento." : "Nenhuma alteração pendente.")}</p>
+      <div className="admin-preview-actions admin-editor-publish-actions"><button className="admin-primary-action" type="button" aria-describedby="editor-comparison-status" disabled={busy || !dirty || !comparison?.draftId} onClick={() => void save()}>Salvar alterações</button></div>
       {(comparison?.affectedIds?.length || 0) > 1 && <p>Esta edição atualiza {comparison!.affectedIds!.length} páginas vinculadas ao mesmo serviço.</p>}
       <div className="admin-preview-actions"><button type="button" aria-pressed={!mobile} onClick={() => setMobile(false)}>Computador</button><button type="button" aria-pressed={mobile} onClick={() => setMobile(true)}>Celular</button></div>
       {sideBySide && <div className="admin-preview-actions" role="group" aria-label="Visualização da comparação">
@@ -172,7 +176,6 @@ export function ServiceEditor({ onSaved, onDirtyChange }: { onSaved: () => Promi
         {(!sideBySide || previewView !== "before") && <div><h3>Depois</h3><ServicePreviewFrame mobile={mobile} src={afterUrl} title={`Depois: ${loaded.service.title}`} /></div>}
       </div>
       {comparison?.draftId && <details className="admin-change-details" open><summary>Ver diferenças por campo ({comparison.report.changes.length})</summary><ChangesTable changes={comparison.report.changes} /></details>}
-      <div className="admin-preview-actions admin-editor-publish-actions"><button type="button" disabled={busy || !dirty || !comparison?.draftId} onClick={() => void save()}>Salvar alterações</button></div>
     </section>}
     </div>
   </>;
