@@ -3,6 +3,7 @@ import { activeCatalog, catalogPool } from "./catalog-db";
 import { snapshotServices } from "./catalog-preview";
 import { editService, initialEditorSnapshot, ServiceEditorError } from "./service-editor";
 import { publicServiceContent, serviceEditValues, serviceRecordSourceRow } from "../app/direct-service-content";
+import { hasCollectionSchedule } from "../app/collection-schedule-data";
 
 export async function serviceEditorCatalog() {
   const active = await activeCatalog();
@@ -13,7 +14,7 @@ export async function readServiceForEditing(serviceId: string) {
   const catalog = await serviceEditorCatalog();
   const service = snapshotServices(catalog.snapshot).find((s) => s.id === serviceId);
   if (!service) throw new ServiceEditorError("Serviço não encontrado.", 404);
-  return { version: catalog.version, service: { id: service.id, title: service.title, slug: service.slug || service.id, sourceRow: serviceRecordSourceRow(service), fields: serviceEditValues(service) } };
+  return { version: catalog.version, service: { id: service.id, title: service.title, slug: service.slug || service.id, sourceRow: serviceRecordSourceRow(service), specialEditor: hasCollectionSchedule(service) ? "collection" : undefined, fields: serviceEditValues(service) } };
 }
 
 /** Read-only preview of the exact version opened by the editor, including inactive records. */
@@ -46,7 +47,7 @@ export async function draftServiceEdit(body: unknown, userId: string) {
 }
 
 export async function readEditorBody(request: Request) {
-  const max = 128 * 1024;
+  const max = 256 * 1024;
   if (Number(request.headers.get("content-length")) > max) throw new ServiceEditorError("Edição acima do limite permitido.", 413);
   const reader = request.body?.getReader();
   if (!reader) throw new ServiceEditorError("Edição inválida.");

@@ -57,7 +57,7 @@ try {
   await request("/api/admin/services", edit({ attendanceUnitMode: "Automático" }), owner, 400);
   for (const audience of ["Público inventado", "Cidadãos, Cidadãos", ["cidadao"]]) await request("/api/admin/services", edit({ audience }), owner, 400);
   await request("/api/admin/services", edit({ summary: "Mudança recusada" }), { ...owner, Origin: "https://invalid.example" }, 403);
-  const oversized = await fetch(base + "/api/admin/services", { method: "POST", headers: { ...owner, "Content-Type": "application/json" }, body: JSON.stringify(edit({ summary: "x".repeat(140000) })) });
+  const oversized = await fetch(base + "/api/admin/services", { method: "POST", headers: { ...owner, "Content-Type": "application/json" }, body: JSON.stringify(edit({ summary: "x".repeat(270000) })) });
   assert.equal(oversized.status, 413);
   for (const path of ["upload", "import-link"]) await request(`/api/admin/${path}`, {}, owner, 410);
   await request("/api/admin/source", undefined, owner, 410);
@@ -122,7 +122,7 @@ try {
   assert.equal((await request("/api/admin/history")).versions.length, 3);
   const privateValues = { filledBy: "Responsável interno da QA", responsibleContact: "reservado-qa@example.invalid", simpNotes: "Nota interna exclusiva para a SIMP", updatedDate: "31/12/2099" };
   const currentPdf = await request(`/api/admin/services/${mirrors[0].id}`);
-  assert.equal(Object.keys(currentPdf.service.fields).length, 42);
+  assert.equal(Object.keys(currentPdf.service.fields).length, 44);
   assert.equal(currentPdf.service.fields.platform, mirrors[0].destination);
   const accessUrl = "https://example.invalid/solicitar-servico";
   const requiredDocuments = "Identificação; CPF\nProcuração (se necessário).";
@@ -210,6 +210,30 @@ try {
     const draft = await request("/api/admin/services", edit({ summary: `Edição local de retenção ${i}.` }, current.version));
     await request("/api/admin/publish", { draftId: draft.draftId });
   }
+  const special = await request("/api/admin/services/1doc-limpeza-publica");
+  assert.equal(special.service.specialEditor, "collection");
+  assert.equal((await request(`/api/admin/services/${mirrors[0].id}`)).service.specialEditor, undefined);
+  const schedule = JSON.parse(special.service.fields.collectionSchedule);
+  assert.equal(schedule[0].places[0].name, "Alto da Bela Vista");
+  const originalSpecialCatalog = await request("/api/catalog", undefined, {});
+  schedule[0].places[0].routes[0].name = "Rota especial da conferência local";
+  schedule[0].places[0].routes[0].slots[0] = { day: "Domingo", time: "08:25" };
+  const specialFields = { collectionSchedule: JSON.stringify(schedule), collectionIntroduction: "Orientação especial da conferência local." };
+  await request("/api/admin/services", { serviceId: mirrors[0].id, baseVersion: special.version, fields: specialFields }, owner, 400);
+  await request("/api/admin/services", { serviceId: special.service.id, baseVersion: special.version, fields: { collectionSchedule: "{}" } }, owner, 400);
+  const specialDraft = await request("/api/admin/services", { serviceId: special.service.id, baseVersion: special.version, fields: specialFields });
+  assert.ok(specialDraft.report.changes.some((change) => change.column.includes("Cronograma de coleta ·")));
+  assert.deepEqual(await request("/api/catalog", undefined, {}), originalSpecialCatalog, "A prévia especial não publica");
+  const specialHtml = await (await fetch(`${base}/admin/preview/${specialDraft.draftId}/${special.service.slug}`, { headers: owner })).text();
+  assert.ok(specialHtml.includes("Prévia privada · conteúdo ainda não publicado"));
+  const specialPreview = (await request(`/api/admin/drafts/${specialDraft.draftId}`)).services.find((entry) => entry.id === special.service.id);
+  assert.equal(specialPreview.directEdit.fields.collectionSchedule, specialFields.collectionSchedule);
+  await request("/api/admin/publish", { draftId: specialDraft.draftId });
+  assert.equal((await request("/api/admin/services/1doc-limpeza-publica")).service.fields.collectionSchedule, specialFields.collectionSchedule);
+  assert.ok((await (await fetch(`${base}/servicos/${special.service.slug}`)).text()).includes("Rota especial da conferência local"));
+  assert.ok((await request("/api/admin/history")).versions[0].report.changes.some((change) => change.column.startsWith("Cronograma de coleta")));
+  await request("/api/admin/restore", { versionId: special.version });
+  assert.deepEqual((await request("/api/admin/services/1doc-limpeza-publica")).service.fields, special.service.fields);
   history = await request("/api/admin/history");
   assert.equal(history.versions.length, 20);
   assert.equal(history.versions.filter((v) => v.active).length, 1);
@@ -218,5 +242,5 @@ try {
   assert.equal((await pool.query("SELECT count(*)::int AS n FROM catalog_publications WHERE id=$1", [first.version])).rows[0].n, 0);
   const active = (await pool.query("SELECT p.snapshot FROM catalog_publications p JOIN catalog_active a ON a.publication_id=p.id")).rows[0].snapshot;
   assert.deepEqual(active.rows["22"].cells, mirrors[0].workbookCells);
-  console.log(JSON.stringify({ authenticatedDirectEditing: true, privateComparison: true, previewCleanup: true, mirrors: 3, protectedActions: true, staleComparisonRejected: true, catalogAdminAllowed: true, draftOwnership: true, authorship: true, restored: true, meaningfulHistoryOnly: true, retained: 20, sourcePreserved: true, pdfFields: 34, editableFields: 42, platformEditable: true, linkEditable: true, internalControlsPrivate: true, inactiveRoutesHidden: 3, maintenanceVisible: true }));
+  console.log(JSON.stringify({ authenticatedDirectEditing: true, privateComparison: true, previewCleanup: true, specialCollectionEditor: true, specialCollectionRestored: true, mirrors: 3, protectedActions: true, staleComparisonRejected: true, catalogAdminAllowed: true, draftOwnership: true, authorship: true, restored: true, meaningfulHistoryOnly: true, retained: 20, sourcePreserved: true, pdfFields: 34, editableFields: 44, platformEditable: true, linkEditable: true, internalControlsPrivate: true, inactiveRoutesHidden: 3, maintenanceVisible: true }));
 } finally { await pool.end(); }

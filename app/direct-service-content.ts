@@ -9,6 +9,7 @@ import { isBaGovUrl } from "./service-request-system";
 import { isPendingServiceValue } from "./service-presentation";
 import { audienceSelection } from "./service-audiences";
 import { initialAttendanceUnitMode } from "./service-attendance";
+import { collectionScheduleForService, collectionIntroduction, hasCollectionSchedule } from "./collection-schedule-data";
 
 /** Only explicit workbook links identify mirrors; inherited legacy numbers do not. */
 export function serviceRecordSourceRow(service: Service) { return service.workbookCells || service.publishedFromWorkbook ? service.sourceRow : undefined; }
@@ -49,6 +50,8 @@ export function serviceEditValues(original: Service): ServiceEditValues {
     legislation: service.legislation?.map((law) => `${law.label}\n${law.url}`).join("\n") || service.legislationNotice || "",
     priorities: "", additional: [service.notice, !isPendingServiceValue(intro) ? intro : ""].filter(Boolean).join("\n"), ombudsman: "https://falabr.cgu.gov.br/web/home",
     procedures: "", filledBy: "", updatedDate: service.updatedAt || "", responsibleContact: "", simpNotes: "",
+    collectionIntroduction: hasCollectionSchedule(service) ? (cells ? intro || "" : collectionIntroduction) : "",
+    collectionSchedule: hasCollectionSchedule(service) ? JSON.stringify(collectionScheduleForService(service)) : "",
   };
   for (const field of serviceEditFields) {
     if (fields?.[field.key] !== undefined) base[field.key] = fields[field.key]!;

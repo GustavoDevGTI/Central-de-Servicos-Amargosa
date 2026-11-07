@@ -8,6 +8,77 @@ import { serviceEditFields, serviceEditGroups, sameAttendanceUnit, otherAttendan
 import { ServiceDetail } from "../app/internal-portal";
 import { CatalogPreviewProvider } from "../app/catalog-provider";
 import type { CatalogSnapshot } from "./catalog-db";
+import { collectionScheduleForService, readCollectionSchedule, hasCollectionSchedule } from "../app/collection-schedule-data";
+import { editorFieldGroups } from "../app/admin/service-field-order";
+import { CollectionScheduleEditor } from "../app/admin/collection-schedule-editor";
+import { CollectionScheduleSection } from "../app/coleta-cronograma";
+
+test("collection-specific fields preserve all archived groups and only appear for the collection page", () => {
+  const snapshot = initialEditorSnapshot();
+  const service = snapshot.services.find(hasCollectionSchedule)!;
+  const untouched = structuredClone(snapshot);
+  const values = serviceEditValues(service);
+  assert.deepEqual(readCollectionSchedule(values.collectionSchedule), collectionScheduleForService());
+  assert.equal(editService(snapshot, service.id, values).report.changes.length, 0);
+  for (const order of ["central", "bagov"] as const) {
+    const common = editorFieldGroups(order).flatMap((group) => group.blocks.flatMap((block) => block.fields));
+    assert.ok(!common.includes("collectionSchedule"));
+    const special = editorFieldGroups(order, { collectionSchedule: true }).flatMap((group) => group.blocks.flatMap((block) => block.fields));
+    assert.equal(special.filter((key) => key === "collectionSchedule").length, 1);
+    assert.equal(special.filter((key) => key === "collectionIntroduction").length, 1);
+    assert.equal(new Set(special).size, serviceEditFields.length);
+  }
+  const controls = renderToStaticMarkup(<CollectionScheduleEditor value={values.collectionSchedule} onChange={() => {}} />);
+  assert.ok(controls.includes("Alto da Bela Vista"));
+  assert.ok(controls.includes("Adicionar rota"));
+  assert.ok(controls.includes("Adicionar dia e horário"));
+  assert.ok(!controls.includes("sourceUrl"));
+  assert.equal(renderToStaticMarkup(<CollectionScheduleSection service={service} />), renderToStaticMarkup(<CollectionScheduleSection service={servicePage(snapshot, service.id)} />));
+  for (const other of snapshot.services.filter((entry) => !hasCollectionSchedule(entry))) {
+    assert.equal(serviceEditValues(other).collectionSchedule, "");
+    assert.throws(() => editService(snapshot, other.id, { collectionSchedule: values.collectionSchedule }), /não pertence/);
+    assert.throws(() => editService(snapshot, other.id, { collectionIntroduction: "Injetado" }), /não pertence/);
+  }
+  assert.deepEqual(snapshot, untouched);
+});
+function servicePage(snapshot: CatalogSnapshot, id: string) { return snapshotServices(snapshot).find((entry) => entry.id === id)!; }
+
+test("collection routes, slots, instructions and ordering render in preview, survive edits and restore literally", () => {
+  const initial = initialEditorSnapshot();
+  const service = initial.services.find(hasCollectionSchedule)!;
+  const before = serviceEditValues(service);
+  const groups = readCollectionSchedule(before.collectionSchedule);
+  groups[0].title = "Bairros revisados";
+  groups[0].places[0].name = "  Bairro com espaços  ";
+  groups[0].places[0].routes[0].name = "Rua revisada\nTrecho complementar";
+  groups[0].places[0].routes[0].slots[0] = { day: "Segunda e terça", time: "às 08h" };
+  groups[0].places[0].routes.push({ name: "Nova rota", slots: [{ day: "Sábado", time: "12:30" }] });
+  groups[0].places.reverse();
+  const text = JSON.stringify(groups);
+  const result = editService(initial, service.id, { collectionSchedule: text, collectionIntroduction: "  Orientação específica\nNão publicar ao editar.  " });
+  assert.ok(result.report.changes.some((change) => change.column?.includes("Cronograma de coleta · Grupo 1")));
+  assert.ok(!result.report.changes.some((change) => change.after?.startsWith("[{")));
+  const html = page(result.snapshot, service.id);
+  for (const text of ["Bairros revisados", "Nova rota", "Segunda e terça", "às 08h", "  Orientação específica\nNão publicar ao editar.  "]) assert.ok(html.includes(text), text);
+  assert.ok(html.includes("collection-schedule-place"));
+  assert.deepEqual(result.snapshot.rows, initial.rows);
+  assert.deepEqual(actions(html), actions(page(initial, service.id)));
+  assert.deepEqual(initial.services.find(hasCollectionSchedule)!.directEdit, undefined);
+  const again = editService(result.snapshot, service.id, { summary: "Outro conteúdo" });
+  assert.equal(serviceEditValues(servicePage(again.snapshot, service.id)).collectionSchedule, text);
+  const restored = restoreServiceContent(again.snapshot, initial);
+  assert.deepEqual(serviceEditValues(servicePage(restored, service.id)), before);
+  assert.deepEqual(collectionScheduleForService(servicePage(restored, service.id)), collectionScheduleForService());
+  const empty = editService(initial, service.id, { collectionSchedule: "[]", collectionIntroduction: "" });
+  assert.ok(!page(empty.snapshot, service.id).includes('class="collection-schedule-group"'));
+  assert.ok(compareServiceContent(empty.snapshot, initial).changes.some((change) => change.column?.startsWith("Cronograma de coleta")));
+});
+
+test("special schedule validation rejects arbitrary properties, malformed collections and overlong content", () => {
+  const initial = initialEditorSnapshot();
+  const service = initial.services.find(hasCollectionSchedule)!;
+  for (const value of ["", "{}", "null", '[{"id":"x","title":"Grupo","places":[],"html":"<script>"}]', '[{"id":"x","title":"Grupo","places":[{"name":"Bairro","routes":[{"name":"Rua","slots":[{"day":2,"time":"10:00"}]}]}]}]', JSON.stringify(Array.from({ length: 13 }, (_, i) => ({ id: `g-${i}`, title: "Grupo", places: [] }))), JSON.stringify([{ id: "x", title: "Grupo", places: [] }, { id: "x", title: "Outro", places: [] }])]) assert.throws(() => editService(initial, service.id, { collectionSchedule: value }));
+});
 
 function page(snapshot: CatalogSnapshot, id: string) {
   const services = snapshotServices(snapshot);
@@ -167,7 +238,7 @@ test("documents of stage two do not replace or duplicate existing stage-one docu
 
 test("the editor mirrors all 34 PDF fields plus platform in six groups, with scoped stage labels", () => {
   const expected = ["NOME DO SERVIÇO", "NOME(S) POPULAR(ES)", "ÓRGÃO / SECRETARIA / SETOR", "CATEGORIA(S)", "PÚBLICO-ALVO / USUÁRIO", "CANAL DE PRESTAÇÃO", "STATUS DO SERVIÇO", "ÁREA RESPONSÁVEL", "RESPONSÁVEL PELO PREENCHIMENTO", "DESCRIÇÃO DETALHADA", "PREVISÃO DE ESPERA PARA ATENDIMENTO", "PRAZO MÁXIMO PARA CONCLUSÃO", "CUSTO / TAXA", "MODALIDADES DE ATENDIMENTO", "ENDEREÇO PRESENCIAL", "HORÁRIO DE ATENDIMENTO", "TELEFONE / WHATSAPP", "E-MAIL OFICIAL", "SITE / LINK DE ACESSO", "MECANISMOS DE CONSULTA E ACOMPANHAMENTO", "LINK ATUAL DO SERVIÇO NO BA.GOV", "REQUISITOS PARA SOLICITAR O SERVIÇO", "DESCRIÇÃO DA ETAPA", "DOCUMENTOS NECESSÁRIOS", "DESCRIÇÃO DA ETAPA", "DOCUMENTOS NECESSÁRIOS", "OUTRAS ETAPAS / INFORMAÇÕES ADICIONAIS", "BASE LEGAL", "PRIORIDADES DE ATENDIMENTO", "CANAL DA OUVIDORIA", "PROCEDIMENTOS PARA REGISTRO DE MANIFESTAÇÕES", "DATA DO PREENCHIMENTO / ATUALIZAÇÃO", "CONTATO DO RESPONSÁVEL", "OBSERVAÇÕES PARA A SIMP"];
-  const additional = ["platform", "attendanceUnitMode", "attendanceUnit", "attendancePhone", "attendanceWhatsapp", "attendanceEmail", "responsibleAddress", "responsibleHours"];
+  const additional = ["platform", "attendanceUnitMode", "attendanceUnit", "attendancePhone", "attendanceWhatsapp", "attendanceEmail", "responsibleAddress", "responsibleHours", "collectionIntroduction", "collectionSchedule"];
   assert.deepEqual(serviceEditFields.filter((field) => !additional.includes(field.key)).map((field) => field.label.toLocaleUpperCase("pt-BR")), expected);
   assert.equal(serviceEditFields.find((field) => field.key === "platform")!.label, "Plataforma");
   assert.equal(serviceEditGroups.length, 6);

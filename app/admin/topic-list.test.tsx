@@ -26,7 +26,7 @@ test("both editor arrangements group attendance separately and hide alternate va
     assert.equal(visible.some((block) => block.legend === "Unidade responsável"), attendanceMode === otherAttendanceUnit);
     assert.ok(visible.some((block) => block.legend === (attendanceMode === sameAttendanceUnit ? "Atendimento e unidade responsável" : "Local de atendimento")));
     const all = blocks.flatMap((block) => block.fields);
-    assert.equal(new Set(all).size, serviceEditFields.length);
+    assert.equal(new Set(all).size, serviceEditFields.filter((field) => !("special" in field)).length);
   }
 });
 
@@ -106,12 +106,12 @@ test("admin topic controls expose separate accessible items and ordering actions
 });
 
 test("both arrangements expose the Carta fields and platform exactly once", () => {
-  const allowed = serviceEditFields.map((field) => field.key).sort();
+  const allowed = serviceEditFields.filter((field) => !("special" in field)).map((field) => field.key).sort();
   for (const order of ["central", "bagov"] as const) for (const workbookSource of [true, false]) for (const mainLegislation of [true, false]) {
     const groups = editorFieldGroups(order, { workbookSource, mainLegislation });
     const keys = groups.flatMap((group) => group.blocks.flatMap((block) => block.fields));
-    assert.equal(keys.length, serviceEditFields.length);
-    assert.equal(new Set(keys).size, serviceEditFields.length);
+    assert.equal(keys.length, allowed.length);
+    assert.equal(new Set(keys).size, allowed.length);
     assert.deepEqual([...keys].sort(), allowed);
     for (const group of groups) assert.equal(new Set(group.blocks.map((block) => block.key)).size, group.blocks.length);
     if (order === "central") {
@@ -160,7 +160,7 @@ test("changing arrangement preserves canonical text and topic models and does no
   const snapshot = initialEditorSnapshot();
   const service = snapshot.services.find((entry) => entry.slug === "parcelamento-de-debito-do-iptu")!;
   const values = serviceEditValues(service);
-  const source = structuredClone(values);
+  const source = Object.fromEntries(serviceEditFields.filter((field) => !("special" in field)).map((field) => [field.key, values[field.key]]));
   for (const order of ["central", "bagov", "central"] as ServiceFieldOrder[]) {
     const reordered = Object.fromEntries(editorFieldGroups(order).flatMap((group) => group.blocks.flatMap((block) => block.fields.map((key) => [key, values[key]]))));
     assert.deepEqual(reordered, source);

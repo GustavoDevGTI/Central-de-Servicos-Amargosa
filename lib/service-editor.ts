@@ -11,6 +11,7 @@ import { isBaGovUrl, serviceRequestNoticeText } from "../app/service-request-sys
 import { serviceWhereWhenParts } from "../app/workbook-where-when";
 import { audienceSelection } from "../app/service-audiences";
 import { attendanceFieldKeys } from "../app/service-attendance";
+import { collectionScheduleLimit, hasCollectionSchedule, readCollectionSchedule, collectionScheduleDifferences } from "../app/collection-schedule-data";
 
 export class ServiceEditorError extends Error {
   constructor(message: string, readonly status = 400) { super(message); }
@@ -31,7 +32,10 @@ export function validateServicePatch(input: unknown): Partial<ServiceEditValues>
   if (entries.length > allowed.size) throw new ServiceEditorError("Campos inválidos.");
   for (const [key, value] of entries) {
     if (!allowed.has(key)) throw new ServiceEditorError("Este campo é fixo ou não pode ser editado.");
-    if (typeof value !== "string" || value.length > (key === "title" ? 300 : 20000) || value.includes("\0")) throw new ServiceEditorError("Texto inválido ou acima do limite permitido.");
+    if (typeof value !== "string" || value.length > (key === "title" ? 300 : key === "collectionSchedule" ? collectionScheduleLimit : 20000) || value.includes("\0")) throw new ServiceEditorError("Texto inválido ou acima do limite permitido.");
+    if (key === "collectionSchedule" && value) {
+      try { readCollectionSchedule(value); } catch (reason) { throw new ServiceEditorError(reason instanceof Error ? reason.message : "Cronograma inválido."); }
+    }
     if (key === "title" && !value.trim()) throw new ServiceEditorError("Informe o nome do serviço.");
     if (key === "audience" && !audienceSelection(value).valid) throw new ServiceEditorError("Selecione apenas os públicos disponíveis na Central, sem repetições.");
     const field = serviceEditFields.find((item) => item.key === key)!;
@@ -51,6 +55,9 @@ function reportFor(changes: CatalogChange[]): CatalogReport {
   const count = (kind: CatalogChange["kind"]) => new Set(changes.filter((c) => c.kind === kind).map((c) => c.sourceRow ? `row-${c.sourceRow}` : c.serviceId)).size;
   return { created: 0, updated: count("updated"), deactivated: count("deactivated"), reactivated: count("reactivated"), columnsAdded: [], blockers: [], changes };
 }
+function fieldChanges(key: ServiceEditField, before: string, after: string) {
+  return key === "collectionSchedule" ? collectionScheduleDifferences(before, after) : [{ column: serviceFieldReportLabel(key), before, after }];
+}
 
 export function editService(snapshot: CatalogSnapshot, serviceId: string, input: unknown) {
   const patch = validateServicePatch(input);
@@ -58,9 +65,14 @@ export function editService(snapshot: CatalogSnapshot, serviceId: string, input:
   const selected = current.find((s) => s.id === serviceId);
   if (!selected) throw new ServiceEditorError("Serviço não encontrado.", 404);
   const before = serviceEditValues(selected);
+  for (const key of Object.keys(patch)) {
+    const field = serviceEditFields.find((item) => item.key === key)!;
+    if ("special" in field && !hasCollectionSchedule(selected) && patch[field.key] !== before[field.key]) throw new ServiceEditorError("Este campo especial não pertence a este serviço.");
+    if (key === "collectionSchedule" && hasCollectionSchedule(selected) && !patch.collectionSchedule) throw new ServiceEditorError("Cronograma inválido. Use uma lista vazia para remover os locais.");
+  }
   const selectedRow = serviceRecordSourceRow(selected);
   const changed = (Object.keys(patch) as ServiceEditField[]).filter((key) => patch[key] !== before[key]);
-  const changes: CatalogChange[] = changed.map((key) => ({ serviceId, serviceTitle: patch.title ?? selected.title, kind: key === "status" && patch.status === "Inativo" ? "deactivated" : key === "status" && before.status === "Inativo" ? "reactivated" : "updated", column: serviceFieldReportLabel(key), before: before[key], after: patch[key], sourceRow: selectedRow }));
+  const changes: CatalogChange[] = changed.flatMap((key) => fieldChanges(key, before[key], patch[key]!).map((change) => ({ serviceId, serviceTitle: patch.title ?? selected.title, kind: key === "status" && patch.status === "Inativo" ? "deactivated" as const : key === "status" && before.status === "Inativo" ? "reactivated" as const : "updated" as const, ...change, sourceRow: selectedRow })));
   const next = structuredClone(snapshot);
   if (!changes.length) return { snapshot: next, report: reportFor([]), affectedIds: [] as string[] };
   next.mode = "direct";
@@ -113,7 +125,7 @@ export function compareServiceContent(previous: CatalogSnapshot, next: CatalogSn
     if (!old || (sourceRow && seenRows.has(sourceRow))) continue;
     if (sourceRow) seenRows.add(sourceRow);
     const oldFields = serviceEditValues(old), fields = serviceEditValues(service);
-    for (const field of serviceEditFields) if (oldFields[field.key] !== fields[field.key]) changes.push({ serviceId: service.id, serviceTitle: service.title, kind: field.key === "status" && fields.status === "Inativo" ? "deactivated" : field.key === "status" && oldFields.status === "Inativo" ? "reactivated" : "updated", column: serviceFieldReportLabel(field.key), before: oldFields[field.key], after: fields[field.key], sourceRow });
+    for (const field of serviceEditFields) if (oldFields[field.key] !== fields[field.key]) for (const change of fieldChanges(field.key, oldFields[field.key], fields[field.key])) changes.push({ serviceId: service.id, serviceTitle: service.title, kind: field.key === "status" && fields.status === "Inativo" ? "deactivated" : field.key === "status" && oldFields.status === "Inativo" ? "reactivated" : "updated", ...change, sourceRow });
   }
   return reportFor(changes);
 }
@@ -130,7 +142,7 @@ export function restoreServiceContent(current: CatalogSnapshot, target: CatalogS
     const wanted = targetById.get(service.id);
     if (wanted) {
       const before = serviceEditValues(service), after = serviceEditValues(wanted);
-      const patch = Object.fromEntries(serviceEditFields.filter((f) => before[f.key] !== after[f.key]).map((f) => [f.key, after[f.key]]));
+      const patch = Object.fromEntries(serviceEditFields.filter((f) => (!("special" in f) || hasCollectionSchedule(service)) && before[f.key] !== after[f.key]).map((f) => [f.key, after[f.key]]));
       result = editService(result, service.id, patch).snapshot;
       // Restore the original fallback presentation when an extra information
       // field had no editorial override in the chosen historical version.

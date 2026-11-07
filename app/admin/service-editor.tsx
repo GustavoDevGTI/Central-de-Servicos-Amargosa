@@ -11,8 +11,9 @@ import { ServicePreviewFrame } from "./service-preview-frame";
 import { editorFieldGroups, type ServiceFieldOrder } from "./service-field-order";
 import type { TopicList } from "../service-topics";
 import { ServicePreviewSession } from "./service-preview-session";
+import { CollectionScheduleEditor } from "./collection-schedule-editor";
 
-type Loaded = { version: number | null; service: { id: string; slug: string; title: string; sourceRow?: number; fields: ServiceEditValues } };
+type Loaded = { version: number | null; service: { id: string; slug: string; title: string; sourceRow?: number; specialEditor?: "collection"; fields: ServiceEditValues } };
 type Comparison = { draftId?: string; identical?: boolean; report: CatalogReport; affectedIds?: string[] };
 type PreviewInput = { key: string; body: string };
 async function json<T>(response: Response): Promise<T> {
@@ -141,6 +142,7 @@ export function ServiceEditor({ onSaved, onDirtyChange }: { onSaved: () => Promi
     if (!fields) return null;
     const id = `edit-${field.key}`;
     const name = "stage" in field ? `${field.stage} · ${field.label}` : field.label;
+    if (field.key === "collectionSchedule") return <CollectionScheduleEditor key={`${editorRevision}:${field.key}`} value={fields.collectionSchedule} onChange={(value) => change("collectionSchedule", value)} />;
     if (field.key === "audience") return <AudienceSelector key={field.key} value={fields.audience} onChange={(value) => change("audience", value)} />;
     if ("list" in field) return <TopicEditor key={`${editorRevision}:${field.key}`} id={id} label={field.label} name={name} value={fields[field.key]} mode={field.list} model={topicModels[field.key]} onModelChange={(model) => setTopicModels((old) => ({ ...old, [field.key]: model }))} onChange={(value) => change(field.key, value)} />;
     if ("multiple" in field) return <fieldset className="admin-editor-modalities" key={field.key}><legend>{field.label}</legend>{field.multiple.map((option) => <label key={option}><input type="checkbox" checked={fields[field.key].split("\n").includes(option)} onChange={(event) => { const selected = new Set(fields[field.key].split("\n").filter(Boolean)); if (event.target.checked) selected.add(option); else selected.delete(option); change(field.key, field.multiple.filter((value) => selected.has(value)).join("\n")); }} />{option}</label>)}</fieldset>;
@@ -182,7 +184,7 @@ export function ServiceEditor({ onSaved, onDirtyChange }: { onSaved: () => Promi
         <p className="admin-editor-fixed">Os textos e o formato dos botões são fixos.</p>
         <fieldset disabled={busy} className="admin-editor-fields">
           <legend className="sr-only">Campos do serviço</legend>
-          {editorFieldGroups(fieldOrder, { workbookSource: loaded.service.sourceRow !== undefined, mainLegislation: Boolean(loaded.service.fields.legislation), attendanceMode: fields.attendanceUnitMode }).map((group) => <details className="admin-editor-group" key={group.key} open>
+          {editorFieldGroups(fieldOrder, { workbookSource: loaded.service.sourceRow !== undefined, mainLegislation: Boolean(loaded.service.fields.legislation), attendanceMode: fields.attendanceUnitMode, collectionSchedule: loaded.service.specialEditor === "collection" }).map((group) => <details className="admin-editor-group" key={group.key} open>
             <summary>{group.label}</summary>
             {group.blocks.filter((block) => !block.hidden).map((block) => {
               const controls = block.fields.map((key) => fieldControl(serviceEditFields.find((field) => field.key === key)!));

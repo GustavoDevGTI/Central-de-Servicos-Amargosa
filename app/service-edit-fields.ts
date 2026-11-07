@@ -1,4 +1,4 @@
-/** Carta de Serviço SEI nº 1/2026 fields plus the editable platform label. */
+/** Carta fields, editorial additions and explicitly scoped service-specific content. */
 export const serviceEditGroups = [
   "1. Informações gerais do serviço", "2. Prazos, custos e atendimento",
   "3. Canais de acesso, contato e acompanhamento", "4. Requisitos, documentos e etapas do serviço",
@@ -49,6 +49,8 @@ export const serviceEditFields = [
   { key: "updatedDate", label: "Data do preenchimento / atualização", group: 5, private: true, rows: 2 },
   { key: "responsibleContact", label: "Contato do responsável", group: 5, private: true, rows: 3 },
   { key: "simpNotes", label: "Observações para a SIMP", group: 5, private: true, rows: 4 },
+  { key: "collectionIntroduction", label: "Orientações do cronograma de coleta", group: 2, special: "collection", rows: 3 },
+  { key: "collectionSchedule", label: "Cronograma de coleta", group: 2, special: "collection", structure: "collection", rows: 4 },
 ] as const;
 
 export type ServiceEditField = typeof serviceEditFields[number]["key"];
