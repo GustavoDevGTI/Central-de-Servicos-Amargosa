@@ -2,7 +2,7 @@
 import { useState } from "react";
 import type { CatalogChange } from "../../lib/catalog-db";
 import { PaginationControls, CATALOG_PAGE_SIZE } from "./pagination-controls";
-const kinds: Record<string, string> = { created: "Criado", updated: "Alterado", deactivated: "Excluído (página oculta)", reactivated: "Reativado", column: "Campo novo" };
+const kinds: Record<string, string> = { created: "Criado", updated: "Alterado", deactivated: "Excluído (página oculta)", reactivated: "Reativado", cancelled: "Criação cancelada", column: "Campo novo" };
 export function ChangesTable({ changes }: { changes: CatalogChange[] }) {
   const [page, setPage] = useState(1);
   if (!changes.length) return <p>Nenhuma alteração identificada.</p>;

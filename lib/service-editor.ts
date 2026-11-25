@@ -1,4 +1,5 @@
 import { services as builtInServices } from "../app/service-catalog";
+import { randomUUID } from "node:crypto";
 import { serviceEditFields, serviceFieldReportLabel, sameAttendanceUnit, type ServiceEditValues, type ServiceEditField } from "../app/service-edit-fields";
 import { serviceEditValues, serviceRecordSourceRow } from "../app/direct-service-content";
 import { servicePageCopy } from "../app/service-page-copy";
@@ -60,9 +61,10 @@ function fieldChanges(key: ServiceEditField, before: string, after: string) {
 }
 
 /** Call under the publication lock so concurrent creations receive distinct IDs. */
-export function createEmptyService(snapshot: CatalogSnapshot) {
+export function createEmptyService(snapshot: CatalogSnapshot, userId?: string) {
   const numbers = [...Object.keys(snapshot.rows).map(Number), ...snapshot.services.flatMap((service) => [service.sourceRow || 0, /^\d+$/.test(service.id) ? Number(service.id) : 0])];
-  let number = numbers.reduce((highest, value) => Number.isSafeInteger(value) ? Math.max(highest, value) : highest, 0) + 1;
+  const available = (snapshot.availableServiceIds || []).map(Number).filter((value) => Number.isSafeInteger(value) && value > 0 && !snapshot.services.some((service) => service.id === String(value) || (service.slug || service.id) === `servico-${value}`)).sort((a, b) => a - b);
+  let number = available[0] ?? numbers.reduce((highest, value) => Number.isSafeInteger(value) ? Math.max(highest, value) : highest, 0) + 1;
   while (snapshot.services.some((service) => service.id === String(number) || (service.slug || service.id) === `servico-${number}`)) number++;
   if (!Number.isSafeInteger(number)) throw new ServiceEditorError("O limite de IDs do catálogo foi atingido.");
   const id = String(number);
@@ -70,7 +72,9 @@ export function createEmptyService(snapshot: CatalogSnapshot) {
   Object.assign(fields, { status: "Inativo", seiLink: "Não", attendanceUnitMode: sameAttendanceUnit });
   const next = structuredClone(snapshot);
   next.mode = "direct";
+  if (next.availableServiceIds) next.availableServiceIds = next.availableServiceIds.filter((value) => value !== id);
   next.services.push({
+    registrationId: randomUUID(), pendingCreationBy: userId,
     id, slug: `servico-${id}`, title: "", category: "", department: "", destination: "", url: "", inactive: true, detailLayout: "rich", requestSystem: "other",
     directEdit: {
       schema: "carta-1-2026", fields,
@@ -79,6 +83,18 @@ export function createEmptyService(snapshot: CatalogSnapshot) {
   });
   const report = reportFor([{ serviceId: id, serviceTitle: "", kind: "created", column: "Serviço", before: null, after: `ID ${id}` }]);
   return { snapshot: next, report, serviceId: id };
+}
+
+export function cancelServiceCreation(snapshot: CatalogSnapshot, serviceId: string, userId: string, legacyAllowed = false) {
+  const service = snapshot.services.find((entry) => entry.id === serviceId);
+  if (!service) throw new ServiceEditorError("Criação não encontrada.", 404);
+  if ((!service.pendingCreationBy || service.pendingCreationBy !== userId) && !legacyAllowed) throw new ServiceEditorError("Somente uma criação pendente da sua conta pode ser cancelada.", 409);
+  if (!service.inactive || service.workbookCells || !/^\d+$/.test(service.id)) throw new ServiceEditorError("Este serviço já foi salvo e pode ser inativado pelo botão Excluir serviço.", 409);
+  const next = structuredClone(snapshot);
+  next.mode = "direct";
+  next.services = next.services.filter((entry) => entry.id !== serviceId);
+  next.availableServiceIds = [...new Set([...(next.availableServiceIds || []), serviceId])];
+  return { snapshot: next, report: reportFor([{ serviceId, serviceTitle: "", kind: "cancelled", column: "Criação do serviço", before: `ID ${serviceId}`, after: null }]) };
 }
 
 export function editService(snapshot: CatalogSnapshot, serviceId: string, input: unknown) {
@@ -126,6 +142,7 @@ export function editService(snapshot: CatalogSnapshot, serviceId: string, input:
     const mergeContact = Boolean(base.whereWhen) && location.presencial && (!base.whereWhenItems?.length || location.digital) && sameInPersonServiceOffice(location.local, contact.name) && !(base.workbookCells && base.id === "1doc-limpeza-publica");
     return {
       ...base,
+      pendingCreationBy: undefined,
       detailLayout: base.detailLayout ?? (base.id.startsWith("planilha-") || (base.notice && base.documents?.length && base.steps?.length) ? "rich" : "standard"),
       directEdit: {
         schema: "carta-1-2026",
@@ -145,7 +162,7 @@ export function compareServiceContent(previous: CatalogSnapshot, next: CatalogSn
   for (const service of snapshotServices(next)) {
     const old = before.get(service.id);
     const sourceRow = serviceRecordSourceRow(service);
-    if (!old) {
+    if (!old || old.registrationId !== service.registrationId) {
       changes.push({ serviceId: service.id, serviceTitle: service.title, kind: "created", column: "Serviço", before: null, after: `ID ${service.id}`, sourceRow });
       continue;
     }
@@ -167,7 +184,7 @@ export function restoreServiceContent(current: CatalogSnapshot, target: CatalogS
     if (sourceRow && seen.has(sourceRow)) continue;
     if (sourceRow) seen.add(sourceRow);
     const wanted = targetById.get(service.id);
-    if (!wanted) {
+    if (!wanted || wanted.registrationId !== service.registrationId) {
       // Restoring an older version hides later registrations while retaining
       // their content and IDs for reactivation and future ID allocation.
       result = editService(result, service.id, { status: "Inativo" }).snapshot;

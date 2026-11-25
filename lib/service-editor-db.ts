@@ -1,10 +1,32 @@
 import { createHash, randomUUID } from "node:crypto";
 import { activeCatalog, catalogPool, initializeCatalogDatabase, withCatalogTransaction, type CatalogSnapshot } from "./catalog-db";
 import { snapshotServices } from "./catalog-preview";
-import { createEmptyService, editService, initialEditorSnapshot, ServiceEditorError } from "./service-editor";
+import { cancelServiceCreation, createEmptyService, editService, initialEditorSnapshot, ServiceEditorError } from "./service-editor";
 import { publishCatalogSnapshot } from "./catalog-publication";
 import { publicServiceContent, serviceEditValues, serviceRecordSourceRow } from "../app/direct-service-content";
 import { hasCollectionSchedule } from "../app/collection-schedule-data";
+import type { PoolClient } from "pg";
+import type { Service } from "../app/service-catalog";
+import { sameAttendanceUnit, serviceEditFields } from "../app/service-edit-fields";
+
+async function creationKeyForService(service: Service, userId: string, db: Pick<PoolClient, "query"> = catalogPool()): Promise<string | undefined> {
+  if (service.pendingCreationBy) return service.pendingCreationBy === userId ? service.registrationId : undefined;
+  // Earlier versions created an empty inactive publication immediately. Only a
+  // registration whose complete retained history proves it was never saved is eligible.
+  if (service.registrationId || service.workbookCells || !service.inactive || !/^\d+$/.test(service.id) || service.slug !== `servico-${service.id}`) return;
+  const values = serviceEditValues(service);
+  const defaults: Record<string, string> = { status: "Inativo", seiLink: "Não", attendanceUnitMode: sameAttendanceUnit };
+  if (serviceEditFields.some((field) => values[field.key] !== (defaults[field.key] ?? ""))) return;
+  const publications = await db.query<{ id: string; published_by: string; report: import("./catalog-db").CatalogReport }>(
+    `SELECT id, published_by, report FROM catalog_publications
+     WHERE report->'changes' @> $1::jsonb ORDER BY id`,
+    [JSON.stringify([{ serviceId: service.id }])],
+  );
+  const creation = publications.rows.findLast((entry) => entry.report.changes.some((change) => change.serviceId === service.id && change.kind === "created"));
+  if (!creation || creation.published_by !== userId) return;
+  if (publications.rows.some((entry) => Number(entry.id) >= Number(creation.id) && entry.report.changes.some((change) => change.serviceId === service.id && change.kind !== "created"))) return;
+  return `legacy-${creation.id}`;
+}
 
 export async function serviceEditorCatalog() {
   const active = await activeCatalog();
@@ -19,18 +41,41 @@ export async function createServiceForEditing(userId: string) {
       `SELECT p.snapshot FROM catalog_active a
        JOIN catalog_publications p ON p.id = a.publication_id WHERE a.singleton = true FOR UPDATE`,
     );
-    const created = createEmptyService(active.rows[0]?.snapshot ?? initialEditorSnapshot());
+    const created = createEmptyService(active.rows[0]?.snapshot ?? initialEditorSnapshot(), userId);
     const version = await publishCatalogSnapshot(db, created.snapshot, created.report, userId, `Criação de serviço · ID ${created.serviceId}`);
     const service = snapshotServices(created.snapshot).find((entry) => entry.id === created.serviceId)!;
-    return { version, service: { id: service.id, slug: service.slug!, title: service.title, fields: serviceEditValues(service) } };
+    return { version, service: { id: service.id, slug: service.slug!, title: service.title, creationKey: service.registrationId, fields: serviceEditValues(service) } };
   });
 }
 
-export async function readServiceForEditing(serviceId: string) {
+export async function readServiceForEditing(serviceId: string, userId: string) {
   const catalog = await serviceEditorCatalog();
   const service = snapshotServices(catalog.snapshot).find((s) => s.id === serviceId);
   if (!service) throw new ServiceEditorError("Serviço não encontrado.", 404);
-  return { version: catalog.version, service: { id: service.id, title: service.title, slug: service.slug || service.id, sourceRow: serviceRecordSourceRow(service), specialEditor: hasCollectionSchedule(service) ? "collection" : undefined, fields: serviceEditValues(service) } };
+  return { version: catalog.version, service: { id: service.id, title: service.title, slug: service.slug || service.id, sourceRow: serviceRecordSourceRow(service), specialEditor: hasCollectionSchedule(service) ? "collection" : undefined, creationKey: await creationKeyForService(service, userId), fields: serviceEditValues(service) } };
+}
+
+export async function cancelCreationForEditing(body: unknown, userId: string) {
+  if (!body || typeof body !== "object" || Array.isArray(body)) throw new ServiceEditorError("Cancelamento inválido.");
+  const data = body as Record<string, unknown>;
+  if (Object.keys(data).some((key) => !["serviceId", "creationKey"].includes(key)) || typeof data.serviceId !== "string" || !/^\d{1,16}$/.test(data.serviceId) || typeof data.creationKey !== "string" || data.creationKey.length > 80) throw new ServiceEditorError("Cancelamento inválido.");
+  await initializeCatalogDatabase();
+  return withCatalogTransaction(async (db) => {
+    await db.query("SELECT pg_advisory_xact_lock(41730521)");
+    const active = await db.query<{ snapshot: CatalogSnapshot }>(
+      `SELECT p.snapshot FROM catalog_active a JOIN catalog_publications p
+       ON p.id = a.publication_id WHERE a.singleton = true FOR UPDATE`,
+    );
+    const snapshot = active.rows[0]?.snapshot;
+    const service = snapshot?.services.find((entry) => entry.id === data.serviceId);
+    if (!snapshot || !service) return { cancelled: true };
+    const key = await creationKeyForService(service, userId, db);
+    if (!key || key !== data.creationKey) throw new ServiceEditorError("Esta criação já foi salva, cancelada ou pertence a outra conta. Recarregue o serviço.", 409);
+    const cancelled = cancelServiceCreation(snapshot, service.id, userId, key.startsWith("legacy-"));
+    const version = await publishCatalogSnapshot(db, cancelled.snapshot, cancelled.report, userId, `Cancelamento de criação · ID ${service.id}`);
+    await db.query("DELETE FROM catalog_drafts WHERE created_by = $1 AND snapshot->>'mode' = 'direct' AND report->'changes' @> $2::jsonb", [userId, JSON.stringify([{ serviceId: service.id }])]);
+    return { cancelled: true, version };
+  });
 }
 
 /** Read-only preview of the exact version opened by the editor, including inactive records. */

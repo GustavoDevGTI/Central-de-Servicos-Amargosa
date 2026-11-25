@@ -20,6 +20,8 @@ import {
 } from "./service-request-system";
 
 export type Service = {
+  registrationId?: string;
+  pendingCreationBy?: string;
   directEdit?: import("./service-edit-fields").DirectServiceEdit;
   id: string;
   type?: string;

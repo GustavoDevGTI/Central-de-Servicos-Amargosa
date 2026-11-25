@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { renderToStaticMarkup } from "react-dom/server";
-import { createEmptyService, editService, initialEditorSnapshot, validateServicePatch, compareServiceContent, restoreServiceContent } from "./service-editor";
+import { cancelServiceCreation, createEmptyService, editService, initialEditorSnapshot, validateServicePatch, compareServiceContent, restoreServiceContent } from "./service-editor";
 import { snapshotServices } from "./catalog-preview";
 import { serviceEditValues, publicServiceContent } from "../app/direct-service-content";
 import { serviceEditFields, serviceEditGroups, sameAttendanceUnit, otherAttendanceUnit } from "../app/service-edit-fields";
@@ -60,6 +60,33 @@ test("deactivation and restoration retain newly registered services, content, ro
   assert.equal(servicePage(older, created.serviceId).inactive, true);
   assert.equal(servicePage(older, created.serviceId).title, "Serviço preservado");
   assert.equal(Number(createEmptyService(older).serviceId), Number(created.serviceId) + 1);
+});
+
+test("cancelling an unsaved creation releases its ID and a reused ID keeps its own content during restoration", () => {
+  const first = createEmptyService(initialEditorSnapshot(), "owner");
+  const second = createEmptyService(first.snapshot, "other-owner");
+  const untouched = structuredClone(second.snapshot);
+  assert.throws(() => cancelServiceCreation(second.snapshot, first.serviceId, "other-owner"), /sua conta/);
+  const cancelled = cancelServiceCreation(second.snapshot, first.serviceId, "owner");
+  assert.ok(!cancelled.snapshot.services.some((service) => service.id === first.serviceId));
+  assert.ok(cancelled.snapshot.services.some((service) => service.id === second.serviceId));
+  assert.deepEqual(cancelled.snapshot.availableServiceIds, [first.serviceId]);
+  assert.equal(cancelled.report.changes[0].kind, "cancelled");
+  const replacement = createEmptyService(cancelled.snapshot, "owner");
+  assert.equal(replacement.serviceId, first.serviceId);
+  assert.notEqual(servicePage(replacement.snapshot, replacement.serviceId).registrationId, servicePage(first.snapshot, first.serviceId).registrationId);
+  const saved = editService(replacement.snapshot, replacement.serviceId, { title: "Novo conteúdo", summary: "Conteúdo exclusivo do novo cadastro", status: "Ativo" });
+  assert.equal(servicePage(saved.snapshot, replacement.serviceId).pendingCreationBy, undefined);
+  assert.throws(() => cancelServiceCreation(saved.snapshot, replacement.serviceId, "owner"), /sua conta/);
+  const restored = restoreServiceContent(saved.snapshot, first.snapshot);
+  const record = servicePage(restored, replacement.serviceId);
+  assert.equal(record.title, "Novo conteúdo");
+  assert.equal(record.summary, "Conteúdo exclusivo do novo cadastro");
+  assert.equal(record.inactive, true);
+  const visible = publicServiceContent(servicePage(first.snapshot, first.serviceId));
+  assert.equal(visible.pendingCreationBy, undefined);
+  assert.equal(visible.registrationId, undefined);
+  assert.deepEqual(second.snapshot, untouched);
 });
 
 test("collection-specific fields preserve all archived groups and only appear for the collection page", () => {

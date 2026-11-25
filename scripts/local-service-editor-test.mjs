@@ -26,6 +26,12 @@ async function discardPreview(id, headers = owner, expected = 200) {
   const response = await fetch(`${base}/api/admin/drafts/${id}`, { method: "DELETE", headers });
   assert.equal(response.status, expected, "Limpeza autenticada da prévia");
 }
+async function cancelCreation(service, headers = owner, expected = 200) {
+  const response = await fetch(base + "/api/admin/services/create", { method: "DELETE", headers: { ...headers, "Content-Type": "application/json" }, body: JSON.stringify({ serviceId: service.id, creationKey: service.creationKey }) });
+  const body = await response.json();
+  assert.equal(response.status, expected, `Cancelar criação: ${JSON.stringify(body)}`);
+  return body;
+}
 const fixed = (s) => ({ id: s.id, slug: s.slug, url: s.url, requestSystem: s.requestSystem, requestLabel: s.requestLabel, noticeAction: s.noticeAction, inactive: Boolean(s.inactive) });
 try {
   owner = await login(process.env.LOCAL_ADMIN_USERNAME, process.env.LOCAL_ADMIN_PASSWORD);
@@ -301,5 +307,36 @@ try {
   const creationHistory = await request("/api/admin/history");
   assert.equal(creationHistory.versions.length, 20);
   assert.ok(creationHistory.versions[0].report.created === 1 && creationHistory.versions[0].author_username);
-  console.log(JSON.stringify({ authenticatedDirectEditing: true, privateComparison: true, previewCleanup: true, specialCollectionEditor: true, specialCollectionRestored: true, mirrors: 3, protectedActions: true, staleComparisonRejected: true, catalogAdminAllowed: true, draftOwnership: true, authorship: true, restored: true, meaningfulHistoryOnly: true, retained: 20, sourcePreserved: true, pdfFields: 34, editableFields: 45, platformEditable: true, linkEditable: true, seiLinkEditable: true, internalControlsPrivate: true, inactiveRoutesHidden: 3, maintenanceVisible: true }));
+  assert.equal((await request(`/api/admin/services/${nextCreated.service.id}`)).service.creationKey, nextCreated.service.creationKey);
+  await cancelCreation(nextCreated.service, { Origin: base }, 401);
+  await cancelCreation(nextCreated.service, { ...owner, Origin: "https://invalid.example" }, 403);
+  await cancelCreation(nextCreated.service, catalogUser, 409);
+  await cancelCreation(creations[0].service, owner, 409); // A saved registration is managed through its status.
+  const cancellableDraft = await request("/api/admin/services", { serviceId: nextCreated.service.id, baseVersion: nextCreated.version, fields: { summary: "Texto ainda não salvo" } });
+  await cancelCreation(nextCreated.service);
+  await cancelCreation(nextCreated.service); // A repeated cancellation is safe.
+  assert.equal((await request("/api/admin/services")).services.some((service) => service.id === nextCreated.service.id), false);
+  await request(`/api/admin/services/${nextCreated.service.id}`, undefined, owner, 404);
+  await request(`/api/admin/drafts/${cancellableDraft.draftId}`, undefined, owner, 404);
+  await request("/api/admin/publish", { draftId: cancellableDraft.draftId }, owner, 400);
+  const reused = await request("/api/admin/services/create", {});
+  assert.equal(reused.service.id, nextCreated.service.id);
+  assert.notEqual(reused.service.creationKey, nextCreated.service.creationKey);
+  await cancelCreation(nextCreated.service, owner, 409); // An old request cannot cancel a new use of the same ID.
+  await Promise.all([cancelCreation(reused.service), cancelCreation(reused.service)]);
+  const legacy = await request("/api/admin/services/create", {});
+  const legacySnapshot = (await pool.query("SELECT snapshot FROM catalog_publications WHERE id=$1", [legacy.version])).rows[0].snapshot;
+  const legacyEntry = legacySnapshot.services.find((service) => service.id === legacy.service.id);
+  delete legacyEntry.registrationId;
+  delete legacyEntry.pendingCreationBy;
+  await pool.query("UPDATE catalog_publications SET snapshot=$1 WHERE id=$2", [JSON.stringify(legacySnapshot), legacy.version]);
+  const legacyOpened = await request(`/api/admin/services/${legacy.service.id}`);
+  assert.equal(legacyOpened.service.creationKey, `legacy-${legacy.version}`);
+  await cancelCreation(legacyOpened.service);
+  assert.equal((await request("/api/admin/services")).services.some((service) => service.id === legacy.service.id), false);
+  const reusedLegacyId = await request("/api/admin/services/create", {});
+  assert.equal(reusedLegacyId.service.id, legacy.service.id);
+  await cancelCreation(legacyOpened.service, owner, 409);
+  await cancelCreation(reusedLegacyId.service);
+  console.log(JSON.stringify({ authenticatedDirectEditing: true, privateComparison: true, previewCleanup: true, specialCollectionEditor: true, specialCollectionRestored: true, creationCancellation: true, creationOwnership: true, cancelledIdReuse: true, legacyEmptyCancellation: true, mirrors: 3, protectedActions: true, staleComparisonRejected: true, catalogAdminAllowed: true, draftOwnership: true, authorship: true, restored: true, meaningfulHistoryOnly: true, retained: 20, sourcePreserved: true, pdfFields: 34, editableFields: 45, platformEditable: true, linkEditable: true, seiLinkEditable: true, internalControlsPrivate: true, inactiveRoutesHidden: 3, maintenanceVisible: true }));
 } finally { await pool.end(); }

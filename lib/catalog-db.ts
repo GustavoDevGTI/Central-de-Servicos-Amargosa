@@ -77,6 +77,7 @@ export function initializeCatalogDatabase(): Promise<void> {
 
 export type CatalogSnapshot = {
   mode?: "direct";
+  availableServiceIds?: string[];
   services: import("../app/service-catalog").Service[];
   rows: Record<string, { excelRow: number; cells: Record<string, string>; excluded: boolean; removed?: boolean; markedRed?: boolean }>;
   headers: string[];
@@ -85,7 +86,7 @@ export type CatalogSnapshot = {
 export type CatalogChange = {
   serviceId: string;
   serviceTitle: string;
-  kind: "created" | "updated" | "deactivated" | "reactivated" | "column";
+  kind: "created" | "updated" | "deactivated" | "reactivated" | "cancelled" | "column";
   column?: string;
   before?: string | null;
   after?: string | null;

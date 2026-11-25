@@ -119,8 +119,11 @@ export function applyDirectServiceContent(service: Service): Service {
 
 /** Called before public serialization, including SSR, search and AI tools. */
 export function publicServiceContent(service: Service): Service {
-  if (!service.directEdit) return service;
+  const visible = { ...service };
+  delete visible.pendingCreationBy;
+  delete visible.registrationId;
+  if (!service.directEdit) return visible;
   const fields = { ...service.directEdit.fields };
   for (const key of privateServiceEditFields) delete fields[key];
-  return { ...service, directEdit: { ...service.directEdit, fields } };
+  return { ...visible, directEdit: { ...service.directEdit, fields } };
 }

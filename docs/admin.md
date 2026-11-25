@@ -10,7 +10,7 @@ O **Administrador geral** gerencia catálogo, diagnóstico e usuários. O **Admi
 
 ## Editar um serviço
 
-Ao lado de **Editar serviço selecionado**, **Novo serviço** cria e abre um cadastro sem nome, inativo, com os campos comuns vazios e um ID automático maior que os IDs existentes, incluindo os inativos. Preencha o nome e as informações, selecione **Ativo** em **Status do serviço**, confira a prévia e salve para publicar. O endereço interno é gerado pelo ID e permanece estável.
+Ao lado de **Editar serviço selecionado**, **Novo serviço** cria e abre um cadastro sem nome, inativo, com os campos comuns vazios e um ID automático. **Status do serviço** aparece ao lado dos dois botões **Salvar alterações**, ao final da edição e no início da prévia. Os dois seletores mostram a mesma escolha. Preencha o nome e as informações, selecione **Ativo**, confira a prévia lateral e salve para publicar. **Cancelar criação**, ao final dos campos e no início da prévia, remove o cadastro ainda não salvo e libera o ID para reutilização. A criação pendente pode ser reaberta e cancelada pela conta que a iniciou. O endereço interno é gerado pelo ID e permanece estável após o salvamento.
 
 **Excluir serviço** inativa o serviço selecionado e seus espelhos após a confirmação. O registro, seus campos, ID e endereço ficam disponíveis no admin. Para reativar, edite o serviço oculto, selecione **Ativo** e salve. As ações registram autoria no histórico. Restaurar uma versão anterior à criação mantém os cadastros posteriores inativos, com seus dados preservados.
 
