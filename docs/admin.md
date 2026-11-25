@@ -10,6 +10,10 @@ O **Administrador geral** gerencia catálogo, diagnóstico e usuários. O **Admi
 
 ## Editar um serviço
 
+Ao lado de **Editar serviço selecionado**, **Novo serviço** cria e abre um cadastro sem nome, inativo, com os campos comuns vazios e um ID automático maior que os IDs existentes, incluindo os inativos. Preencha o nome e as informações, selecione **Ativo** em **Status do serviço**, confira a prévia e salve para publicar. O endereço interno é gerado pelo ID e permanece estável.
+
+**Excluir serviço** inativa o serviço selecionado e seus espelhos após a confirmação. O registro, seus campos, ID e endereço ficam disponíveis no admin. Para reativar, edite o serviço oculto, selecione **Ativo** e salve. As ações registram autoria no histórico. Restaurar uma versão anterior à criação mantém os cadastros posteriores inativos, com seus dados preservados.
+
 Pesquise por nome, URL ou ID na caixa de seleção e clique em **Editar serviço selecionado**. A comparação e as diferenças por campo são atualizadas automaticamente enquanto você edita. Confira a prévia e clique em **Salvar alterações**, no final da edição ou no início da comparação, para aplicar o conteúdo à Central. Atualizar a prévia não publica nada.
 
 Alterar qualquer campo atualiza novamente a prévia. Os dois botões de salvar gravam os mesmos campos atuais, inclusive quando a atualização da prévia ainda está em andamento. Se outro administrador salvar uma versão nesse intervalo, o servidor impede sobrescrevê-la com uma edição antiga: recarregue o serviço antes de salvar. Trocar de serviço ou sair com alterações pendentes pede confirmação de descarte.
@@ -22,7 +26,7 @@ O editor segue os 34 campos e os seis grupos da Carta de Serviço SEI nº 1/2026
 
 Em Canais de acesso, escolha onde o atendimento é realizado. “Na própria unidade responsável” reúne os dados em um cartão. “Em outra unidade” disponibiliza Local de atendimento e Unidade responsável, com endereços e contatos independentes. Os dois conjuntos permanecem armazenados ao alternar. Compare antes de salvar; a escolha, os campos e suas diferenças entram no histórico e podem ser restaurados. Abrir um serviço mantém a apresentação histórica até uma edição de atendimento ser comparada e salva.
 
-“STATUS DO SERVIÇO” oculta a página quando Inativo e mantém a página disponível quando Ativo ou Em manutenção. O registro inativo continua aparecendo na busca do admin e pode ser reativado, com os mesmos IDs, URLs e espelhos. O fluxo edita registros existentes, sem criar nem apagar páginas do código.
+“STATUS DO SERVIÇO” oculta a página quando Inativo e mantém a página disponível quando Ativo ou Em manutenção. O registro inativo continua aparecendo na busca do admin e pode ser reativado, com os mesmos IDs, URLs e espelhos. A criação e a edição usam o mesmo modelo de página dos demais serviços.
 
 Responsável pelo preenchimento, contato do responsável, data do preenchimento/atualização e observações para a SIMP ficam somente no admin e no histórico autenticado. Não são enviados ao catálogo público, SSR ou ferramentas da Amanda. Esses campos não substituem o registro automático da conta que salvou a alteração.
 

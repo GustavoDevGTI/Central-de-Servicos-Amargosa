@@ -1,5 +1,5 @@
 import { services as builtInServices } from "../app/service-catalog";
-import { serviceEditFields, serviceFieldReportLabel, type ServiceEditValues, type ServiceEditField } from "../app/service-edit-fields";
+import { serviceEditFields, serviceFieldReportLabel, sameAttendanceUnit, type ServiceEditValues, type ServiceEditField } from "../app/service-edit-fields";
 import { serviceEditValues, serviceRecordSourceRow } from "../app/direct-service-content";
 import { servicePageCopy } from "../app/service-page-copy";
 import { contactForService } from "../app/service-contacts";
@@ -36,7 +36,7 @@ export function validateServicePatch(input: unknown): Partial<ServiceEditValues>
     if (key === "collectionSchedule" && value) {
       try { readCollectionSchedule(value); } catch (reason) { throw new ServiceEditorError(reason instanceof Error ? reason.message : "Cronograma inválido."); }
     }
-    if (key === "title" && !value.trim()) throw new ServiceEditorError("Informe o nome do serviço.");
+    if (key === "title" && value && !value.trim()) throw new ServiceEditorError("Informe o nome do serviço.");
     if (key === "audience" && !audienceSelection(value).valid) throw new ServiceEditorError("Selecione apenas os públicos disponíveis na Central, sem repetições.");
     const field = serviceEditFields.find((item) => item.key === key)!;
     if ("options" in field && !(field.options as readonly string[]).includes(value)) throw new ServiceEditorError(`Selecione uma opção válida para ${field.label}.`);
@@ -53,10 +53,32 @@ export function validateServicePatch(input: unknown): Partial<ServiceEditValues>
 
 function reportFor(changes: CatalogChange[]): CatalogReport {
   const count = (kind: CatalogChange["kind"]) => new Set(changes.filter((c) => c.kind === kind).map((c) => c.sourceRow ? `row-${c.sourceRow}` : c.serviceId)).size;
-  return { created: 0, updated: count("updated"), deactivated: count("deactivated"), reactivated: count("reactivated"), columnsAdded: [], blockers: [], changes };
+  return { created: count("created"), updated: count("updated"), deactivated: count("deactivated"), reactivated: count("reactivated"), columnsAdded: [], blockers: [], changes };
 }
 function fieldChanges(key: ServiceEditField, before: string, after: string) {
   return key === "collectionSchedule" ? collectionScheduleDifferences(before, after) : [{ column: serviceFieldReportLabel(key), before, after }];
+}
+
+/** Call under the publication lock so concurrent creations receive distinct IDs. */
+export function createEmptyService(snapshot: CatalogSnapshot) {
+  const numbers = [...Object.keys(snapshot.rows).map(Number), ...snapshot.services.flatMap((service) => [service.sourceRow || 0, /^\d+$/.test(service.id) ? Number(service.id) : 0])];
+  let number = numbers.reduce((highest, value) => Number.isSafeInteger(value) ? Math.max(highest, value) : highest, 0) + 1;
+  while (snapshot.services.some((service) => service.id === String(number) || (service.slug || service.id) === `servico-${number}`)) number++;
+  if (!Number.isSafeInteger(number)) throw new ServiceEditorError("O limite de IDs do catálogo foi atingido.");
+  const id = String(number);
+  const fields = Object.fromEntries(serviceEditFields.filter((field) => !("special" in field)).map((field) => [field.key, ""]));
+  Object.assign(fields, { status: "Inativo", seiLink: "Não", attendanceUnitMode: sameAttendanceUnit });
+  const next = structuredClone(snapshot);
+  next.mode = "direct";
+  next.services.push({
+    id, slug: `servico-${id}`, title: "", category: "", department: "", destination: "", url: "", inactive: true, detailLayout: "rich", requestSystem: "other",
+    directEdit: {
+      schema: "carta-1-2026", fields,
+      layout: { mergeContact: true, whereWhen: true, digital: true, presencial: true, manualHref: "/manual-sei", showManual: false },
+    },
+  });
+  const report = reportFor([{ serviceId: id, serviceTitle: "", kind: "created", column: "Serviço", before: null, after: `ID ${id}` }]);
+  return { snapshot: next, report, serviceId: id };
 }
 
 export function editService(snapshot: CatalogSnapshot, serviceId: string, input: unknown) {
@@ -65,6 +87,7 @@ export function editService(snapshot: CatalogSnapshot, serviceId: string, input:
   const selected = current.find((s) => s.id === serviceId);
   if (!selected) throw new ServiceEditorError("Serviço não encontrado.", 404);
   const before = serviceEditValues(selected);
+  if ((patch.status ?? before.status) !== "Inativo" && !(patch.title ?? before.title).trim()) throw new ServiceEditorError("Informe o nome do serviço antes de ativá-lo.");
   for (const key of Object.keys(patch)) {
     const field = serviceEditFields.find((item) => item.key === key)!;
     if ("special" in field && !hasCollectionSchedule(selected) && patch[field.key] !== before[field.key]) throw new ServiceEditorError("Este campo especial não pertence a este serviço.");
@@ -122,7 +145,11 @@ export function compareServiceContent(previous: CatalogSnapshot, next: CatalogSn
   for (const service of snapshotServices(next)) {
     const old = before.get(service.id);
     const sourceRow = serviceRecordSourceRow(service);
-    if (!old || (sourceRow && seenRows.has(sourceRow))) continue;
+    if (!old) {
+      changes.push({ serviceId: service.id, serviceTitle: service.title, kind: "created", column: "Serviço", before: null, after: `ID ${service.id}`, sourceRow });
+      continue;
+    }
+    if (sourceRow && seenRows.has(sourceRow)) continue;
     if (sourceRow) seenRows.add(sourceRow);
     const oldFields = serviceEditValues(old), fields = serviceEditValues(service);
     for (const field of serviceEditFields) if (oldFields[field.key] !== fields[field.key]) for (const change of fieldChanges(field.key, oldFields[field.key], fields[field.key])) changes.push({ serviceId: service.id, serviceTitle: service.title, kind: field.key === "status" && fields.status === "Inativo" ? "deactivated" : field.key === "status" && oldFields.status === "Inativo" ? "reactivated" : "updated", ...change, sourceRow });
@@ -140,7 +167,11 @@ export function restoreServiceContent(current: CatalogSnapshot, target: CatalogS
     if (sourceRow && seen.has(sourceRow)) continue;
     if (sourceRow) seen.add(sourceRow);
     const wanted = targetById.get(service.id);
-    if (wanted) {
+    if (!wanted) {
+      // Restoring an older version hides later registrations while retaining
+      // their content and IDs for reactivation and future ID allocation.
+      result = editService(result, service.id, { status: "Inativo" }).snapshot;
+    } else {
       const before = serviceEditValues(service), after = serviceEditValues(wanted);
       const patch = Object.fromEntries(serviceEditFields.filter((f) => (!("special" in f) || hasCollectionSchedule(service)) && before[f.key] !== after[f.key]).map((f) => [f.key, after[f.key]]));
       result = editService(result, service.id, patch).snapshot;

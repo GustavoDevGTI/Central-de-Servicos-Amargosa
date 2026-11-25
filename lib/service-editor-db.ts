@@ -1,13 +1,29 @@
 import { createHash, randomUUID } from "node:crypto";
-import { activeCatalog, catalogPool } from "./catalog-db";
+import { activeCatalog, catalogPool, initializeCatalogDatabase, withCatalogTransaction, type CatalogSnapshot } from "./catalog-db";
 import { snapshotServices } from "./catalog-preview";
-import { editService, initialEditorSnapshot, ServiceEditorError } from "./service-editor";
+import { createEmptyService, editService, initialEditorSnapshot, ServiceEditorError } from "./service-editor";
+import { publishCatalogSnapshot } from "./catalog-publication";
 import { publicServiceContent, serviceEditValues, serviceRecordSourceRow } from "../app/direct-service-content";
 import { hasCollectionSchedule } from "../app/collection-schedule-data";
 
 export async function serviceEditorCatalog() {
   const active = await activeCatalog();
   return { version: active?.id ?? null, snapshot: active?.snapshot ?? initialEditorSnapshot() };
+}
+
+export async function createServiceForEditing(userId: string) {
+  await initializeCatalogDatabase();
+  return withCatalogTransaction(async (db) => {
+    await db.query("SELECT pg_advisory_xact_lock(41730521)");
+    const active = await db.query<{ snapshot: CatalogSnapshot }>(
+      `SELECT p.snapshot FROM catalog_active a
+       JOIN catalog_publications p ON p.id = a.publication_id WHERE a.singleton = true FOR UPDATE`,
+    );
+    const created = createEmptyService(active.rows[0]?.snapshot ?? initialEditorSnapshot());
+    const version = await publishCatalogSnapshot(db, created.snapshot, created.report, userId, `Criação de serviço · ID ${created.serviceId}`);
+    const service = snapshotServices(created.snapshot).find((entry) => entry.id === created.serviceId)!;
+    return { version, service: { id: service.id, slug: service.slug!, title: service.title, fields: serviceEditValues(service) } };
+  });
 }
 
 export async function readServiceForEditing(serviceId: string) {

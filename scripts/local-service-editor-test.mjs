@@ -122,23 +122,29 @@ try {
   assert.equal((await request("/api/admin/history")).versions.length, 3);
   const privateValues = { filledBy: "Responsável interno da QA", responsibleContact: "reservado-qa@example.invalid", simpNotes: "Nota interna exclusiva para a SIMP", updatedDate: "31/12/2099" };
   const currentPdf = await request(`/api/admin/services/${mirrors[0].id}`);
-  assert.equal(Object.keys(currentPdf.service.fields).length, 44);
+  assert.equal(Object.keys(currentPdf.service.fields).length, 45);
+  assert.equal(currentPdf.service.fields.seiLink, "Sim");
   assert.equal(currentPdf.service.fields.platform, mirrors[0].destination);
   const accessUrl = "https://example.invalid/solicitar-servico";
   const requiredDocuments = "Identificação; CPF\nProcuração (se necessário).";
   const platform = "Canal digital revisado na QA";
   const audience = "Cidadãos, Empresas, Órgãos Públicos e ONGs";
   const attendance = { attendanceUnitMode: "Em outra unidade", attendanceUnit: "Balcão municipal de conferência", attendancePhone: "(75) 3000-1111", attendanceWhatsapp: "(75) 99999-1111", attendanceEmail: "atendimento-qa@example.invalid", responsibleAddress: "Endereço da unidade de análise", responsibleHours: "13h às 17h" };
-  const pdfDraft = await request("/api/admin/services", edit({ ...privateValues, ...attendance, accessUrl, platform, audience, requiredDocuments, stage2Description: "Analisar e informar o resultado.", stage2Documents: "Documento complementar da análise.; Comprovante." }, currentPdf.version));
+  const pdfDraft = await request("/api/admin/services", edit({ ...privateValues, ...attendance, accessUrl, seiLink: "Não", platform, audience, requiredDocuments, stage2Description: "Analisar e informar o resultado.", stage2Documents: "Documento complementar da análise.; Comprovante." }, currentPdf.version));
   assert.ok(pdfDraft.report.changes.some((change) => change.column === "Plataforma" && change.after === platform));
+  assert.ok(pdfDraft.report.changes.some((change) => change.column === "O link é do SEI?" && change.before === "Sim" && change.after === "Não"));
   assert.ok((await request("/api/catalog", undefined, {})).services.filter((s) => s.sourceRow === 22).every((s) => s.destination === mirrors[0].destination), "Comparar a plataforma não publica");
   assert.equal((await request(`/api/admin/drafts/${pdfDraft.draftId}`)).services.find((s) => s.id === mirrors[0].id).url, accessUrl);
   const privateStageResponse = await fetch(`${base}/admin/preview/${pdfDraft.draftId}/${mirrors[0].slug}`, { headers: owner });
   assert.equal(privateStageResponse.status, 200);
-  assert.ok((await privateStageResponse.text()).includes("Prévia privada · conteúdo ainda não publicado"));
+  const privateStagePage = await privateStageResponse.text();
+  assert.ok(privateStagePage.includes("Prévia privada · conteúdo ainda não publicado"));
+  assert.doesNotMatch(privateStagePage, /class="service-sei-guide"/);
   const privateStageService = (await request(`/api/admin/drafts/${pdfDraft.draftId}`)).services.find((s) => s.id === mirrors[0].id);
   assert.equal(privateStageService.directEdit.fields.stage2Description, "Analisar e informar o resultado.");
-  assert.ok(!(await (await fetch(`${base}/servicos/${mirrors[0].slug}`)).text()).includes('<section id="etapa-2">'), "Comparar não deve publicar a segunda etapa");
+  const beforePdfPublication = await (await fetch(`${base}/servicos/${mirrors[0].slug}`)).text();
+  assert.ok(!beforePdfPublication.includes('<section id="etapa-2">'), "Comparar não deve publicar a segunda etapa");
+  assert.match(beforePdfPublication, /class="service-sei-guide"/);
   const pdfPublication = await request("/api/admin/publish", { draftId: pdfDraft.draftId });
   const publicPdf = await request("/api/catalog", undefined, {});
   const currentWithPrivateControls = await request(`/api/admin/services/${mirrors[0].id}`);
@@ -168,9 +174,14 @@ try {
     assert.deepEqual(mirror.audienceIds, ["cidadao", "empresa", "orgaos-publicos-ongs"]);
   }
   assert.ok(publicPage.includes(`<small>${audience}</small>`));
-  for (const mirror of mirrors) assert.ok((await (await fetch(`${base}/servicos/${mirror.slug}`)).text()).includes(platform));
+  for (const mirror of mirrors) {
+    const html = await (await fetch(`${base}/servicos/${mirror.slug}`)).text();
+    assert.ok(html.includes(platform));
+    assert.doesNotMatch(html, /class="service-sei-guide"/);
+  }
   await request("/api/admin/restore", { versionId: first.version });
   assert.equal((await request(`/api/admin/services/${mirrors[0].id}`)).service.fields.platform, mirrors[0].destination, "Restaurar recupera a plataforma anterior");
+  assert.match(await (await fetch(`${base}/servicos/${mirrors[0].slug}`)).text(), /class="service-sei-guide"/);
   await request("/api/admin/restore", { versionId: pdfPublication.version });
   assert.equal((await request(`/api/admin/services/${mirrors[0].id}`)).service.fields.platform, platform, "Restaurar recupera a plataforma editada");
   const currentHide = await request(`/api/admin/services/${mirrors[0].id}`);
@@ -242,5 +253,53 @@ try {
   assert.equal((await pool.query("SELECT count(*)::int AS n FROM catalog_publications WHERE id=$1", [first.version])).rows[0].n, 0);
   const active = (await pool.query("SELECT p.snapshot FROM catalog_publications p JOIN catalog_active a ON a.publication_id=p.id")).rows[0].snapshot;
   assert.deepEqual(active.rows["22"].cells, mirrors[0].workbookCells);
-  console.log(JSON.stringify({ authenticatedDirectEditing: true, privateComparison: true, previewCleanup: true, specialCollectionEditor: true, specialCollectionRestored: true, mirrors: 3, protectedActions: true, staleComparisonRejected: true, catalogAdminAllowed: true, draftOwnership: true, authorship: true, restored: true, meaningfulHistoryOnly: true, retained: 20, sourcePreserved: true, pdfFields: 34, editableFields: 44, platformEditable: true, linkEditable: true, internalControlsPrivate: true, inactiveRoutesHidden: 3, maintenanceVisible: true }));
+  await request("/api/admin/services/create", {}, {}, 403);
+  await request("/api/admin/services/create", {}, { Origin: base }, 401);
+  await request("/api/admin/services/create", { title: "Nome imposto" }, owner, 400);
+  const beforeCreation = await request("/api/admin/services");
+  const creations = await Promise.all([
+    request("/api/admin/services/create", {}),
+    request("/api/admin/services/create", {}, catalogUser),
+  ]);
+  const ids = creations.map((entry) => Number(entry.service.id)).sort((a, b) => a - b);
+  const highestExisting = Math.max(...Object.keys(active.rows).map(Number), ...beforeCreation.services.map((service) => service.sourceRow || (/^\d+$/.test(service.id) ? Number(service.id) : 0)));
+  assert.deepEqual(ids, [highestExisting + 1, highestExisting + 2], "Cadastros concorrentes recebem IDs sequenciais distintos");
+  for (const created of creations) {
+    assert.equal(created.service.title, "");
+    assert.equal(created.service.fields.status, "Inativo");
+    assert.equal(created.service.fields.seiLink, "Não");
+    assert.equal(Object.keys(created.service.fields).length, 45);
+    assert.equal((await fetch(`${base}/servicos/${created.service.slug}`)).status, 404);
+  }
+  const newService = await request(`/api/admin/services/${creations[0].service.id}`);
+  const newEdit = (fields, version = newService.version) => ({ serviceId: newService.service.id, baseVersion: version, fields });
+  await request("/api/admin/services", newEdit({ status: "Ativo" }), owner, 400);
+  const newFields = { title: "Serviço novo da conferência", summary: "Orientação preenchida no editor", audience: "Cidadãos, Empresas", category: "Taxas e Impostos", accessUrl: "https://example.invalid/servico-novo", requiredDocuments: "RG\nCPF", status: "Ativo" };
+  const newDraft = await request("/api/admin/services", newEdit(newFields));
+  assert.equal((await request("/api/catalog", undefined, {})).services.some((service) => service.id === newService.service.id), false);
+  const newHtml = await (await fetch(`${base}/admin/preview/${newDraft.draftId}/${newService.service.slug}`, { headers: owner })).text();
+  assert.ok(newHtml.includes("Prévia privada · conteúdo ainda não publicado"));
+  assert.equal((await request(`/api/admin/drafts/${newDraft.draftId}`)).services.find((service) => service.id === newService.service.id).title, newFields.title);
+  const newPublication = await request("/api/admin/publish", { draftId: newDraft.draftId });
+  const publicNew = (await request("/api/catalog", undefined, {})).services.find((service) => service.id === newService.service.id);
+  assert.equal(publicNew.title, newFields.title);
+  assert.deepEqual(publicNew.audienceIds, ["cidadao", "empresa"]);
+  assert.equal((await fetch(`${base}/servicos/${newService.service.slug}`)).status, 200);
+  const deleteDraft = await request("/api/admin/services", newEdit({ status: "Inativo" }, newPublication.version));
+  await request("/api/admin/publish", { draftId: deleteDraft.draftId });
+  assert.equal((await fetch(`${base}/servicos/${newService.service.slug}`)).status, 404);
+  assert.equal((await request(`/api/admin/services/${newService.service.id}`)).service.fields.title, newFields.title);
+  assert.equal((await request("/api/admin/services")).services.find((service) => service.id === newService.service.id).inactive, true);
+  await request("/api/admin/restore", { versionId: newPublication.version });
+  assert.equal((await fetch(`${base}/servicos/${newService.service.slug}`)).status, 200);
+  await request("/api/admin/restore", { versionId: beforeCreation.version });
+  const preserved = (await request("/api/admin/services")).services.find((service) => service.id === newService.service.id);
+  assert.equal(preserved.inactive, true);
+  assert.equal(preserved.title, newFields.title);
+  const nextCreated = await request("/api/admin/services/create", {});
+  assert.equal(Number(nextCreated.service.id), ids[1] + 1, "Restauração e inativação preservam a sequência dos IDs");
+  const creationHistory = await request("/api/admin/history");
+  assert.equal(creationHistory.versions.length, 20);
+  assert.ok(creationHistory.versions[0].report.created === 1 && creationHistory.versions[0].author_username);
+  console.log(JSON.stringify({ authenticatedDirectEditing: true, privateComparison: true, previewCleanup: true, specialCollectionEditor: true, specialCollectionRestored: true, mirrors: 3, protectedActions: true, staleComparisonRejected: true, catalogAdminAllowed: true, draftOwnership: true, authorship: true, restored: true, meaningfulHistoryOnly: true, retained: 20, sourcePreserved: true, pdfFields: 34, editableFields: 45, platformEditable: true, linkEditable: true, seiLinkEditable: true, internalControlsPrivate: true, inactiveRoutesHidden: 3, maintenanceVisible: true }));
 } finally { await pool.end(); }

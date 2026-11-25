@@ -29,7 +29,7 @@ export function ServicePicker({ id, selection, totalCount }: { id: string; selec
   const listRef = useRef<HTMLUListElement>(null);
   const highlightedIndex = Math.min(highlight, Math.max(0, choices.length - 1));
   const highlightedId = choices.length ? `${id}-option-${highlightedIndex}` : undefined;
-  const serviceLabel = (service: PreviewService) => `${service.inactive ? "Oculto · " : ""}${service.title} · ${service.slug}${service.sourceRow ? ` · ID ${service.sourceRow}` : ""}`;
+  const serviceLabel = (service: PreviewService) => `${service.inactive ? "Oculto · " : ""}${service.title ? `${service.title} · ${service.slug}` : `ID ${service.id}`}${service.sourceRow ? ` · ID ${service.sourceRow}` : service.title && /^\d+$/.test(service.id) ? ` · ID ${service.id}` : ""}`;
 
   useEffect(() => {
     if (open) listRef.current?.querySelector<HTMLElement>('[aria-selected="true"]')?.scrollIntoView({ block: "nearest" });

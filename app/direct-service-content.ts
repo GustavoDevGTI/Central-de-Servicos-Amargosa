@@ -14,6 +14,13 @@ import { collectionScheduleForService, collectionIntroduction, hasCollectionSche
 /** Only explicit workbook links identify mirrors; inherited legacy numbers do not. */
 export function serviceRecordSourceRow(service: Service) { return service.workbookCells || service.publishedFromWorkbook ? service.sourceRow : undefined; }
 
+export function seiLinkChoice(service: Service) {
+  const choice = service.directEdit?.fields.seiLink;
+  if (choice === "Sim" || choice === "Não") return choice;
+  const showManual = service.directEdit?.layout.showManual ?? Boolean(service.url && !isBaGovUrl(service.url));
+  return showManual ? "Sim" : "Não";
+}
+
 /** Canonical editorial values. Legacy source data is never reclassified into a second stage. */
 export function serviceEditValues(original: Service): ServiceEditValues {
   const service = servicePageCopy(applyDirectServiceContent(original));
@@ -42,7 +49,7 @@ export function serviceEditValues(original: Service): ServiceEditValues {
     attendanceUnitMode: initialAttendanceUnitMode(service, location, contact.name),
     attendanceUnit: location.local, attendancePhone: location.phone || "", attendanceWhatsapp: location.whatsapp || "", attendanceEmail: location.emails.join("\n"),
     responsibleAddress: contact.address, responsibleHours: "",
-    accessUrl: service.url, baGovUrl: isBaGovUrl(service.url) ? service.url : "",
+    accessUrl: service.url, seiLink: seiLinkChoice(service), baGovUrl: isBaGovUrl(service.url) ? service.url : "",
     consultation: "", waitingTime: "", stage2Description: "", stage2Documents: "",
     deliveryChannel: digital && presencial ? "Híbrido" : digital ? "Digital" : presencial ? "Presencial" : "",
     status: service.inactive ? "Inativo" : "Ativo",

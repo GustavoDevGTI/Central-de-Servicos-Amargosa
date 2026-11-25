@@ -34,6 +34,7 @@ export const serviceEditFields = [
   { key: "email", label: "E-mail oficial", group: 2, column: "E-mail do setor/unidade", rows: 2 },
   { key: "platform", label: "Plataforma", group: 2, column: "Plataforma", rows: 2 },
   { key: "accessUrl", label: "Site / link de acesso", group: 2, column: "Link de acesso", url: true, rows: 2 },
+  { key: "seiLink", label: "O link é do SEI?", group: 2, options: ["Sim", "Não"], rows: 2 },
   { key: "consultation", label: "Mecanismos de consulta e acompanhamento", group: 2, rows: 4 },
   { key: "baGovUrl", label: "Link atual do serviço no BA.GOV", group: 2, url: true, rows: 2 },
   { key: "eligibility", label: "Requisitos para solicitar o serviço", group: 3, column: "Quem pode solicitar2", rows: 4 },

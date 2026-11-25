@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { renderToStaticMarkup } from "react-dom/server";
-import { editService, initialEditorSnapshot, validateServicePatch, compareServiceContent, restoreServiceContent } from "./service-editor";
+import { createEmptyService, editService, initialEditorSnapshot, validateServicePatch, compareServiceContent, restoreServiceContent } from "./service-editor";
 import { snapshotServices } from "./catalog-preview";
 import { serviceEditValues, publicServiceContent } from "../app/direct-service-content";
 import { serviceEditFields, serviceEditGroups, sameAttendanceUnit, otherAttendanceUnit } from "../app/service-edit-fields";
@@ -12,6 +12,55 @@ import { collectionScheduleForService, readCollectionSchedule, hasCollectionSche
 import { editorFieldGroups } from "../app/admin/service-field-order";
 import { CollectionScheduleEditor } from "../app/admin/collection-schedule-editor";
 import { CollectionScheduleSection } from "../app/coleta-cronograma";
+
+test("new services start unnamed and inactive with all common fields, unique ascending IDs and the shared template", () => {
+  const initial = initialEditorSnapshot();
+  const untouched = structuredClone(initial);
+  const first = createEmptyService(initial);
+  const second = createEmptyService(first.snapshot);
+  assert.equal(Number(second.serviceId), Number(first.serviceId) + 1);
+  assert.ok(Number(first.serviceId) > Math.max(...Object.keys(initial.rows).map(Number), ...initial.services.map((service) => service.sourceRow || 0)));
+  const service = servicePage(first.snapshot, first.serviceId);
+  assert.equal(service.title, "");
+  assert.equal(service.inactive, true);
+  assert.equal(service.slug, `servico-${first.serviceId}`);
+  assert.equal(service.detailLayout, "rich");
+  assert.equal(service.sourceRow, undefined);
+  const defaults = { status: "Inativo", seiLink: "Não", attendanceUnitMode: sameAttendanceUnit };
+  for (const [key, value] of Object.entries(serviceEditValues(service))) assert.equal(value, defaults[key as keyof typeof defaults] ?? "", key);
+  assert.equal(first.report.created, 1);
+  assert.equal(compareServiceContent(initial, first.snapshot).created, 1);
+  assert.equal(editService(first.snapshot, first.serviceId, serviceEditValues(service)).report.changes.length, 0);
+  assert.throws(() => editService(first.snapshot, first.serviceId, { status: "Ativo" }), /nome do serviço/);
+  assert.throws(() => editService(first.snapshot, first.serviceId, { title: "  ", status: "Em manutenção" }), /nome do serviço/);
+  const prepared = editService(first.snapshot, first.serviceId, { summary: "Descrição em preenchimento" });
+  assert.equal(servicePage(prepared.snapshot, first.serviceId).title, "");
+  const activated = editService(prepared.snapshot, first.serviceId, { title: "Atendimento novo", audience: "Cidadãos", category: "Taxas e Impostos", accessUrl: "https://example.invalid/iniciar", status: "Ativo", requiredDocuments: "RG\nCPF" });
+  const html = page(activated.snapshot, first.serviceId);
+  assert.ok(html.includes("Atendimento novo"));
+  assert.ok(html.includes('href="https://example.invalid/iniciar"'));
+  assert.match(html, /<li[^>]*>RG<\/li><li[^>]*>CPF<\/li>/);
+  assert.equal(servicePage(activated.snapshot, first.serviceId).inactive, false);
+  assert.deepEqual(servicePage(activated.snapshot, first.serviceId).audienceIds, ["cidadao"]);
+  assert.deepEqual(initial, untouched);
+  assert.deepEqual(activated.snapshot.rows, initial.rows);
+});
+
+test("deactivation and restoration retain newly registered services, content, routes and ascending IDs", () => {
+  const created = createEmptyService(initialEditorSnapshot());
+  const enabled = editService(created.snapshot, created.serviceId, { title: "Serviço preservado", summary: "Descrição original", status: "Ativo" });
+  const before = serviceEditValues(servicePage(enabled.snapshot, created.serviceId));
+  const hidden = editService(enabled.snapshot, created.serviceId, { status: "Inativo" });
+  assert.equal(hidden.report.deactivated, 1);
+  assert.equal(hidden.snapshot.services.length, enabled.snapshot.services.length);
+  assert.equal(servicePage(hidden.snapshot, created.serviceId).slug, servicePage(enabled.snapshot, created.serviceId).slug);
+  const restored = restoreServiceContent(hidden.snapshot, enabled.snapshot);
+  assert.deepEqual(serviceEditValues(servicePage(restored, created.serviceId)), before);
+  const older = restoreServiceContent(restored, initialEditorSnapshot());
+  assert.equal(servicePage(older, created.serviceId).inactive, true);
+  assert.equal(servicePage(older, created.serviceId).title, "Serviço preservado");
+  assert.equal(Number(createEmptyService(older).serviceId), Number(created.serviceId) + 1);
+});
 
 test("collection-specific fields preserve all archived groups and only appear for the collection page", () => {
   const snapshot = initialEditorSnapshot();
@@ -138,6 +187,38 @@ test("access link changes only the main start destinations, without an extra URL
   }
 });
 
+test("SEI choice controls process help in both templates and restores the original choice for all mirrors", () => {
+  const initial = initialEditorSnapshot();
+  const selected = [
+    { service: initial.services.find((s) => s.sourceRow === 22)!, defaultChoice: "Sim" },
+    { service: initial.services.find((s) => s.slug === "isencao-de-iptu")!, defaultChoice: "Sim" },
+    { service: initial.services.find((s) => s.id === "ba-gov-transferencia-de-corpos")!, defaultChoice: "Não" },
+  ];
+  const help = (html: string) => actions(html).find((action) => action.includes('class="service-sei-guide"'));
+  const start = (html: string) => actions(html).filter((action) => action.includes('class="service-reference-notice'));
+  for (const { service, defaultChoice } of selected) {
+    const choice = defaultChoice === "Sim" ? "Não" : "Sim";
+    assert.equal(serviceEditValues(service).seiLink, defaultChoice);
+    const result = editService(initial, service.id, { seiLink: choice });
+    const [difference] = result.report.changes;
+    assert.deepEqual([difference.column, difference.before, difference.after], ["O link é do SEI?", defaultChoice, choice]);
+    const restored = restoreServiceContent(result.snapshot, initial);
+    const replayed = restoreServiceContent(restored, result.snapshot);
+    assert.equal(result.affectedIds.length, service.sourceRow === 22 ? 3 : 1);
+    for (const id of result.affectedIds) {
+      const before = page(initial, id), after = page(result.snapshot, id);
+      assert.equal(Boolean(help(before)), defaultChoice === "Sim");
+      assert.equal(Boolean(help(after)), choice === "Sim");
+      assert.equal(help(page(restored, id)), help(before));
+      assert.equal(help(page(replayed, id)), help(after));
+      assert.deepEqual(start(after), start(before));
+      assert.equal(serviceEditValues(servicePage(result.snapshot, id)).seiLink, choice);
+    }
+  }
+  for (const value of ["", "Outros"]) assert.throws(() => validateServicePatch({ seiLink: value }), /opção válida/);
+  assert.throws(() => validateServicePatch({ seiLink: true }), /Texto inválido/);
+});
+
 test("direct edits update every mirror, preserve archived cells and URLs and render the exact edited text", () => {
   const before = initialEditorSnapshot();
   const original = structuredClone(before);
@@ -238,7 +319,7 @@ test("documents of stage two do not replace or duplicate existing stage-one docu
 
 test("the editor mirrors all 34 PDF fields plus platform in six groups, with scoped stage labels", () => {
   const expected = ["NOME DO SERVIÇO", "NOME(S) POPULAR(ES)", "ÓRGÃO / SECRETARIA / SETOR", "CATEGORIA(S)", "PÚBLICO-ALVO / USUÁRIO", "CANAL DE PRESTAÇÃO", "STATUS DO SERVIÇO", "ÁREA RESPONSÁVEL", "RESPONSÁVEL PELO PREENCHIMENTO", "DESCRIÇÃO DETALHADA", "PREVISÃO DE ESPERA PARA ATENDIMENTO", "PRAZO MÁXIMO PARA CONCLUSÃO", "CUSTO / TAXA", "MODALIDADES DE ATENDIMENTO", "ENDEREÇO PRESENCIAL", "HORÁRIO DE ATENDIMENTO", "TELEFONE / WHATSAPP", "E-MAIL OFICIAL", "SITE / LINK DE ACESSO", "MECANISMOS DE CONSULTA E ACOMPANHAMENTO", "LINK ATUAL DO SERVIÇO NO BA.GOV", "REQUISITOS PARA SOLICITAR O SERVIÇO", "DESCRIÇÃO DA ETAPA", "DOCUMENTOS NECESSÁRIOS", "DESCRIÇÃO DA ETAPA", "DOCUMENTOS NECESSÁRIOS", "OUTRAS ETAPAS / INFORMAÇÕES ADICIONAIS", "BASE LEGAL", "PRIORIDADES DE ATENDIMENTO", "CANAL DA OUVIDORIA", "PROCEDIMENTOS PARA REGISTRO DE MANIFESTAÇÕES", "DATA DO PREENCHIMENTO / ATUALIZAÇÃO", "CONTATO DO RESPONSÁVEL", "OBSERVAÇÕES PARA A SIMP"];
-  const additional = ["platform", "attendanceUnitMode", "attendanceUnit", "attendancePhone", "attendanceWhatsapp", "attendanceEmail", "responsibleAddress", "responsibleHours", "collectionIntroduction", "collectionSchedule"];
+  const additional = ["platform", "seiLink", "attendanceUnitMode", "attendanceUnit", "attendancePhone", "attendanceWhatsapp", "attendanceEmail", "responsibleAddress", "responsibleHours", "collectionIntroduction", "collectionSchedule"];
   assert.deepEqual(serviceEditFields.filter((field) => !additional.includes(field.key)).map((field) => field.label.toLocaleUpperCase("pt-BR")), expected);
   assert.equal(serviceEditFields.find((field) => field.key === "platform")!.label, "Plataforma");
   assert.equal(serviceEditGroups.length, 6);

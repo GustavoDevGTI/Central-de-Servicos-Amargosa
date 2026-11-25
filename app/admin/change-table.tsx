@@ -11,7 +11,7 @@ export function ChangesTable({ changes }: { changes: CatalogChange[] }) {
   return <><div className="admin-table-scroll"><table className="admin-changes-table">
     <thead><tr><th>Serviço</th><th>Tipo</th><th>Campo</th><th>Antes</th><th>Depois</th></tr></thead>
     <tbody>{visibleChanges.map((change, index) => <tr key={`${change.serviceId}-${change.column}-${index}`}>
-      <td><strong>{change.serviceTitle}</strong></td><td>{kinds[change.kind] || change.kind}</td><td>{change.column || "—"}</td>
+      <td><strong>{change.serviceTitle || `ID ${change.serviceId}`}</strong></td><td>{kinds[change.kind] || change.kind}</td><td>{change.column || "—"}</td>
       <td className="admin-value">{change.before ?? "—"}</td><td className="admin-value">{change.after ?? "—"}</td>
     </tr>)}</tbody>
   </table></div><PaginationControls page={currentPage} totalItems={changes.length} itemName="alterações" onPageChange={setPage} /></>;

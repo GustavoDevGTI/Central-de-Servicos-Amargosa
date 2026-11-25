@@ -32,9 +32,9 @@ import {
 import { trackServiceClick, trackServiceStart } from "./analytics";
 import { contactForService, organizationForService } from "./service-contacts";
 import { extractEmailAddresses, sameInPersonServiceOffice, serviceWhereWhen } from "./service-where-when";
-import { isBaGovUrl, serviceRequestNoticeText } from "./service-request-system";
+import { serviceRequestNoticeText } from "./service-request-system";
 import { serviceFieldLabel, serviceEditGroups, sameAttendanceUnit } from "./service-edit-fields";
-import { serviceEditValues } from "./direct-service-content";
+import { seiLinkChoice, serviceEditValues } from "./direct-service-content";
 import { servicePageCopy } from "./service-page-copy";
 import { isPendingServiceValue, serviceDisplayValue, serviceSectionLabels } from "./service-presentation";
 import { serviceValue } from "./service-value";
@@ -173,9 +173,6 @@ const serviceAudienceLabel = (service: Service) =>
     .join(" · ");
 const falabrManifestationUrl =
   "https://falabr.cgu.gov.br/web/home";
-const serviceCreationOrder = new Map(
-  builtInServices.map((service, index) => [service.id, index]),
-);
 const serviceHref = (service: Service) =>
   service.slug ? `/servicos/${service.slug}` : service.url;
 const serviceLinkProps = (service: Service) =>
@@ -556,6 +553,7 @@ export function ServiceDirectory({
   initialCategory?: string;
 }) {
   const services = useCatalogServices();
+  const serviceCreationOrder = useMemo(() => new Map(services.map((service, index) => [service.id, index])), [services]);
   const introSegment = internalSegment(directoryPage, "internalHero");
   const searchSegment = internalSegment(directoryPage, "contextualSearch");
   const catalogSegment = internalSegment(directoryPage, "internalCatalog");
@@ -740,7 +738,7 @@ export function ServiceDirectory({
       const alphabetical = a.title.localeCompare(b.title, "pt-BR");
       return sortMode === "nameDesc" ? -alphabetical : alphabetical;
     });
-  }, [explicitlyFiltered, query, searchMatches, sortMode]);
+  }, [explicitlyFiltered, query, searchMatches, sortMode, serviceCreationOrder]);
   const carouselTotalColumns = Math.ceil(scoped.length / carouselLayout.rows);
   const carouselMaxColumn = Math.max(
     0,
@@ -1351,7 +1349,7 @@ function ServiceManualNotice({
   service: Service;
   contactHref?: string;
 }) {
-  if (!(service.directEdit?.layout.showManual ?? Boolean(service.url && !isBaGovUrl(service.url)))) return null;
+  if (seiLinkChoice(service) !== "Sim") return null;
 
   const isSei = service.requestSystem === "sei";
 

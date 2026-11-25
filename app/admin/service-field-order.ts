@@ -28,7 +28,7 @@ export function editorFieldGroups(order: ServiceFieldOrder, { mainLegislation = 
   }));
 
   const groups: EditorFieldGroup[] = [
-    { key: "central-main", label: "Informações principais", blocks: [fieldBlock(["title", "audience", "summary", "accessUrl", "eligibility"])] },
+    { key: "central-main", label: "Informações principais", blocks: [fieldBlock(["title", "audience", "summary", "accessUrl", "seiLink", "eligibility"])] },
     { key: "central-stages", label: "Documentos e etapas", blocks: [stageBlock(1, ["requiredDocuments", "steps"]), stageBlock(2, ["stage2Description", "stage2Documents"])] },
     { key: "central-time-cost", label: "Prazos e custos", blocks: [fieldBlock(["cost", "duration"])] },
     { key: "central-channels", label: "Canais de acesso, contato e acompanhamento", blocks: channelBlocks },

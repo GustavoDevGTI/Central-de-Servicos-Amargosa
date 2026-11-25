@@ -29,6 +29,7 @@ export function ServiceEditor({ onSaved, onDirtyChange }: { onSaved: () => Promi
   const [services, setServices] = useState<PreviewService[]>([]);
   const selection = useServiceSelection(services);
   const [loaded, setLoaded] = useState<Loaded | null>(null);
+  const [creating, setCreating] = useState(false);
   const [fields, setFields] = useState<ServiceEditValues | null>(null);
   const [preparedComparison, setComparison] = useState<(Comparison & { key: string }) | null>(null);
   const [previewSession] = useState(() => new ServicePreviewSession<Comparison>(async (id) => {
@@ -103,11 +104,56 @@ export function ServiceEditor({ onSaved, onDirtyChange }: { onSaved: () => Promi
     try {
       const data = await json<Loaded>(await fetch(`/api/admin/services/${encodeURIComponent(selection.selected.id)}`, { cache: "no-store" }));
       setLoaded(data); setFields(data.service.fields); setEditorRevision((revision) => revision + 1); setComparison(null);
+      setCreating(false);
       setTopicModels({});
       setPreviewView("both");
       if (sideBySide) requestAnimationFrame(() => workspaceRef.current?.scrollIntoView({ block: "start" }));
     } catch (reason) { setError(reason instanceof Error ? reason.message : "Serviço indisponível."); }
     finally { setBusy(false); }
+  }
+  async function createService() {
+    if (saveInFlight.current || (dirty && !window.confirm("Descartar as alterações não salvas e criar um serviço?"))) return;
+    saveInFlight.current = true;
+    previewSession.clear();
+    setBusy(true); setError(""); setMessage("");
+    try {
+      const data = await json<Loaded>(await fetch("/api/admin/services/create", { method: "POST", headers: { "Content-Type": "application/json" }, body: "{}" }));
+      setLoaded(data); setFields(data.service.fields); setTopicModels({}); setComparison(null);
+      setCreating(true); setSideBySide(true);
+      setEditorRevision((revision) => revision + 1); setPreviewView("both");
+      selection.setQuery(""); selection.setSelectedId(data.service.id);
+      const list = await json<{ services: PreviewService[] }>(await fetch("/api/admin/services", { cache: "no-store" }));
+      setServices(list.services);
+      setMessage(`Serviço ID ${data.service.id} criado como inativo. Preencha o nome e os campos, selecione Ativo e salve para publicar.`);
+      await onSaved();
+    } catch (reason) { setError(reason instanceof Error ? reason.message : "Não foi possível criar o serviço."); }
+    finally { saveInFlight.current = false; setBusy(false); }
+  }
+  async function deleteService() {
+    const selected = selection.selected;
+    if (!selected || selected.inactive || saveInFlight.current) return;
+    if (!window.confirm(`Excluir ${selected.title || `o serviço ID ${selected.id}`}? O serviço ficará inativo e poderá ser reativado no admin.${dirty ? " As alterações não salvas serão descartadas." : ""}`)) return;
+    saveInFlight.current = true;
+    previewSession.clear();
+    setBusy(true); setError(""); setMessage("");
+    try {
+      const current = await json<Loaded>(await fetch(`/api/admin/services/${encodeURIComponent(selected.id)}`, { cache: "no-store" }));
+      const draft = await json<Comparison>(await fetch("/api/admin/services", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ serviceId: selected.id, baseVersion: current.version, fields: { status: "Inativo" } }) }));
+      if (draft.draftId) {
+        try {
+          await json(await fetch("/api/admin/publish", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ draftId: draft.draftId }) }));
+        } finally { await fetch(`/api/admin/drafts/${encodeURIComponent(draft.draftId)}`, { method: "DELETE" }); }
+      }
+      const data = await json<Loaded>(await fetch(`/api/admin/services/${encodeURIComponent(selected.id)}`, { cache: "no-store" }));
+      setLoaded(data); setFields(data.service.fields); setTopicModels({}); setComparison(null);
+      setCreating(false);
+      setEditorRevision((revision) => revision + 1); setPreviewView("both");
+      const list = await json<{ services: PreviewService[] }>(await fetch("/api/admin/services", { cache: "no-store" }));
+      setServices(list.services);
+      setMessage("Serviço inativado. Para reativar, selecione Ativo em Status do serviço e salve as alterações.");
+      await onSaved();
+    } catch (reason) { setError(reason instanceof Error ? reason.message : "Não foi possível excluir o serviço."); }
+    finally { saveInFlight.current = false; setBusy(false); }
   }
   function change(key: ServiceEditField, value: string) { if (saveInFlight.current) return; setFields((old) => old && ({ ...old, [key]: value })); setError(""); setMessage(""); }
   async function save() {
@@ -121,6 +167,7 @@ export function ServiceEditor({ onSaved, onDirtyChange }: { onSaved: () => Promi
       previewSession.clear();
       const data = await json<Loaded>(await fetch(`/api/admin/services/${encodeURIComponent(loaded.service.id)}`, { cache: "no-store" }));
       setLoaded(data); setFields(data.service.fields); setEditorRevision((revision) => revision + 1); setComparison(null); setMessage("Alterações salvas na Central.");
+      setCreating(false);
       setTopicModels({});
       const affected = new Set(latest.affectedIds || [data.service.id]);
       setServices((old) => old.map((s) => affected.has(s.id) ? { ...s, title: data.service.title, inactive: data.service.fields.status === "Inativo" } : s));
@@ -149,7 +196,7 @@ export function ServiceEditor({ onSaved, onDirtyChange }: { onSaved: () => Promi
     return <label key={field.key} htmlFor={id}><span>{field.label}</span>{"options" in field
       ? <select id={id} aria-label={name} value={fields[field.key]} onChange={(event) => change(field.key, event.target.value)}>{field.options.map((option) => <option key={option} value={option}>{option || "Não informado."}</option>)}</select>
       : "url" in field ? <input id={id} aria-label={name} type="url" value={fields[field.key]} maxLength={2048} onChange={(event) => change(field.key, event.target.value)} />
-        : <textarea id={id} aria-label={name} value={fields[field.key]} rows={field.rows} maxLength={field.key === "title" ? 300 : 20000} required={field.key === "title"} onChange={(event) => change(field.key, event.target.value)} />}</label>;
+        : <textarea id={id} aria-label={name} value={fields[field.key]} rows={field.rows} maxLength={field.key === "title" ? 300 : 20000} required={field.key === "title" && fields.status !== "Inativo"} onChange={(event) => change(field.key, event.target.value)} />}</label>;
   }
   const currentPreviewUrl = loaded ? `/admin/preview/current/${encodeURIComponent(loaded.service.id)}?version=${loaded.version ?? "initial"}` : "";
   const beforeUrl = currentPreviewUrl;
@@ -172,10 +219,14 @@ export function ServiceEditor({ onSaved, onDirtyChange }: { onSaved: () => Promi
     <section className="admin-section" aria-labelledby="edit-service-title">
       <h2 id="edit-service-title">Editar serviço</h2>
       <ServicePicker id="admin-edit-service" selection={selection} totalCount={services.length} />
-      <div className="admin-preview-actions"><button type="button" disabled={busy || !selection.selected} onClick={() => void openService()}>Editar serviço selecionado</button></div>
+      <div className="admin-preview-actions">
+        <button type="button" disabled={busy || !selection.selected} onClick={() => void openService()}>Editar serviço selecionado</button>
+        <button type="button" disabled={busy} onClick={() => void createService()}>Novo serviço</button>
+        <button type="button" disabled={busy || !selection.selected || selection.selected.inactive} onClick={() => void deleteService()}>Excluir serviço</button>
+      </div>
       {!loaded && error && <p className="admin-error" role="alert">{error}</p>}
       {loaded && fields && <div className="admin-service-editor">
-        <h3>{loaded.service.title}</h3>
+        <h3>{loaded.service.title || `ID ${loaded.service.id}`}</h3>
         <div className="admin-preview-actions admin-editor-field-order" role="group" aria-label="Ordem dos campos">
           <span>Ordem dos campos</span>
           <button type="button" aria-pressed={fieldOrder === "central"} onClick={() => chooseFieldOrder("central")}>Central</button>
@@ -196,22 +247,22 @@ export function ServiceEditor({ onSaved, onDirtyChange }: { onSaved: () => Promi
       </div>}
     </section>
     {loaded && <section ref={compareRef} className="admin-section" aria-labelledby="editor-compare-title">
-      <h2 id="editor-compare-title">Comparação antes de salvar</h2>
+      <h2 id="editor-compare-title">{creating ? "Prévia do novo serviço" : "Comparação antes de salvar"}</h2>
       {error && <p className="admin-error" role="alert">{error}</p>}
       <p id="editor-comparison-status" className={message ? "admin-success" : undefined} role="status">{saveStatus}</p>
       <div className="admin-preview-actions admin-editor-publish-actions"><button className="admin-primary-action" type="button" aria-describedby="editor-comparison-status" disabled={busy || !dirty} onClick={() => void save()}>{saving ? "Salvando…" : "Salvar alterações"}</button>{undoAction}</div>
       {(comparison?.affectedIds?.length || 0) > 1 && <p>Esta edição atualiza {comparison!.affectedIds!.length} páginas vinculadas ao mesmo serviço.</p>}
       <div className="admin-preview-actions"><button type="button" aria-pressed={!mobile} onClick={() => setMobile(false)}>Computador</button><button type="button" aria-pressed={mobile} onClick={() => setMobile(true)}>Celular</button></div>
-      {sideBySide && <div className="admin-preview-actions" role="group" aria-label="Visualização da comparação">
+      {!creating && sideBySide && <div className="admin-preview-actions" role="group" aria-label="Visualização da comparação">
         <button type="button" aria-pressed={previewView === "before"} onClick={() => setPreviewView("before")}>Antes</button>
         <button type="button" aria-pressed={previewView === "after"} onClick={() => setPreviewView("after")}>Depois</button>
         <button type="button" aria-pressed={previewView === "both"} onClick={() => setPreviewView("both")}>Antes e depois</button>
       </div>}
-      <div aria-busy={dirty && !comparison && !error} className={`admin-preview-pages admin-preview-compare${sideBySide && previewView !== "both" ? " admin-preview-pages-single" : ""}`}>
-        {(!sideBySide || previewView !== "after") && <div><h3>Antes</h3><ServicePreviewFrame mobile={mobile} src={beforeUrl} title={`Antes: ${loaded.service.title}`} /></div>}
-        {(!sideBySide || previewView !== "before") && <div><h3>Depois</h3><ServicePreviewFrame mobile={mobile} src={afterUrl} title={`Depois: ${loaded.service.title}`} /></div>}
+      <div aria-busy={dirty && !comparison && !error} className={`admin-preview-pages admin-preview-compare${creating || (sideBySide && previewView !== "both") ? " admin-preview-pages-single" : ""}`}>
+        {!creating && (!sideBySide || previewView !== "after") && <div><h3>Antes</h3><ServicePreviewFrame mobile={mobile} src={beforeUrl} title={`Antes: ${loaded.service.title}`} /></div>}
+        {(creating || !sideBySide || previewView !== "before") && <div>{!creating && <h3>Depois</h3>}<ServicePreviewFrame mobile={mobile} src={afterUrl} title={creating ? `Prévia do novo serviço: ${fields?.title || `ID ${loaded.service.id}`}` : `Depois: ${loaded.service.title}`} /></div>}
       </div>
-      {comparison?.draftId && <details className="admin-change-details" open><summary>Ver diferenças por campo ({comparison.report.changes.length})</summary><ChangesTable changes={comparison.report.changes} /></details>}
+      {!creating && comparison?.draftId && <details className="admin-change-details" open><summary>Ver diferenças por campo ({comparison.report.changes.length})</summary><ChangesTable changes={comparison.report.changes} /></details>}
     </section>}
     </div>
   </>;

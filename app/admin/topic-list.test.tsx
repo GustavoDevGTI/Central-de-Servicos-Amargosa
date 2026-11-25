@@ -113,13 +113,14 @@ test("both arrangements expose the Carta fields and platform exactly once", () =
     assert.equal(keys.length, allowed.length);
     assert.equal(new Set(keys).size, allowed.length);
     assert.deepEqual([...keys].sort(), allowed);
+    assert.equal(keys.indexOf("seiLink"), keys.indexOf("accessUrl") + 1);
     for (const group of groups) assert.equal(new Set(group.blocks.map((block) => block.key)).size, group.blocks.length);
     if (order === "central") {
       assert.deepEqual(groups.find((group) => group.key === "central-controls")!.blocks.flatMap((block) => block.fields), privateServiceEditFields);
       assert.ok(groups.find((group) => group.key === "central-more")!.blocks[0].fields.includes("popularNames"));
       assert.ok(groups.find((group) => group.key === "central-channels")!.blocks.flatMap((block) => block.fields).includes("address"));
       assert.ok(groups.find((group) => group.key === "central-channels")!.blocks.flatMap((block) => block.fields).includes("platform"));
-      assert.deepEqual(groups[0].blocks[0].fields, ["title", "audience", "summary", "accessUrl", "eligibility"]);
+      assert.deepEqual(groups[0].blocks[0].fields, ["title", "audience", "summary", "accessUrl", "seiLink", "eligibility"]);
     }
   }
 });

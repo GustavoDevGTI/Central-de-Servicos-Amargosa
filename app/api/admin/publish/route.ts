@@ -1,6 +1,6 @@
 import { adminResponse, adminSession, sameOrigin } from "../../../../lib/admin-session";
 import { initializeCatalogDatabase, withCatalogTransaction, type CatalogReport, type CatalogSnapshot } from "../../../../lib/catalog-db";
-import { pruneCatalogHistory } from "../../../../lib/catalog-history";
+import { publishCatalogSnapshot } from "../../../../lib/catalog-publication";
 
 export const dynamic = "force-dynamic";
 
@@ -27,28 +27,8 @@ export async function POST(request: Request) {
       }
       if (item.report.blockers.length) throw new Error("Resolva as pendências indicadas antes de publicar.");
       if (!item.report.changes.length) throw new Error("Nenhuma alteração para publicar.");
-      const result = await db.query<{ id: string }>(
-        `INSERT INTO catalog_publications
-          (source_sha256, source_file, source_filename, snapshot, report, published_by)
-         VALUES ($1,$2,$3,$4,$5,$6) RETURNING id`,
-        [item.source_sha256, item.source_file, item.source_filename,
-          JSON.stringify(item.snapshot), JSON.stringify(item.report), session.user.id],
-      );
-      const id = Number(result.rows[0].id);
-      for (const change of item.report.changes) {
-        await db.query(
-          `INSERT INTO catalog_changes (publication_id, service_id, service_title, kind,
-            column_name, before_value, after_value, source_row)
-           VALUES ($1,$2,$3,$4,$5,$6,$7,$8)`,
-          [id, change.serviceId, change.serviceTitle, change.kind, change.column || null,
-            change.before === undefined ? null : JSON.stringify(change.before),
-            change.after === undefined ? null : JSON.stringify(change.after), change.sourceRow || null],
-        );
-      }
-      await db.query(`INSERT INTO catalog_active (singleton, publication_id) VALUES (true,$1)
-        ON CONFLICT (singleton) DO UPDATE SET publication_id = EXCLUDED.publication_id`, [id]);
+      const id = await publishCatalogSnapshot(db, item.snapshot, item.report, session.user.id, item.source_filename);
       await db.query("DELETE FROM catalog_drafts WHERE id = $1", [body.draftId]);
-      await pruneCatalogHistory(db);
       return id;
     });
     return adminResponse({ published: true, version: published });
