@@ -119,8 +119,7 @@
 .manuals-breadcrumb { display: flex; gap: .5rem; align-items: baseline; flex-wrap: wrap; font-size: .875rem; }
 .manuals-breadcrumb a { color: var(--green); text-decoration: underline; text-underline-offset: .18em; }
 .municipal-manuals-heading { margin: 18px 0 26px; }
-.municipal-manuals-heading h1 { margin: 0 0 8px; color: var(--ink); font-family: var(--site-heading-font); font-size: clamp(2rem, 5vw, 3rem); line-height: 1.12; }
-.municipal-manuals-heading p { margin: 0; color: #344f44; }
+.municipal-manuals-heading h1 { margin: 0; color: var(--ink); font-family: var(--site-heading-font); font-size: clamp(2rem, 5vw, 3rem); line-height: 1.12; }
 .municipal-manuals-list { display: grid; gap: 12px; margin: 0; padding: 0; list-style: none; }
 
 .municipal-manual-card {
@@ -167,7 +166,7 @@ html[data-high-contrast="true"] .header-municipal-manuals > summary { background
 html[data-high-contrast="true"] .header-municipal-manuals[open] > summary { background: #000; color: #fff; }
 html[data-high-contrast="true"] .header-municipal-manuals :is(summary, a):hover,
 html[data-high-contrast="true"] .header-manuals-list a { background: #000; }
-html[data-high-contrast="true"] .municipal-manuals-heading :is(h1, p),
+html[data-high-contrast="true"] .municipal-manuals-heading h1,
 html[data-high-contrast="true"] .municipal-manual-copy > span { color: #fff; }
 html[data-high-contrast="true"] .municipal-manual-arrow { color: #ffea00; }
 html[data-high-contrast="true"] .municipal-manual-card:hover { border-color: #ffea00; }

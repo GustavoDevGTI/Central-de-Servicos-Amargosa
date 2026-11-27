@@ -22,7 +22,6 @@ export default function MunicipalManualsPage() {
         </nav>
         <header className="municipal-manuals-heading">
           <h1>Manuais Municipais</h1>
-          <p>Guias para usar os sistemas e solicitar serviços da Prefeitura.</p>
         </header>
         <ul className="municipal-manuals-list">
           {municipalManuals.map((manual) => (

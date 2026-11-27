@@ -126,7 +126,7 @@ export default function PortalFooter() {
           <div className="portal-footer-location">
             <div className="portal-footer-contact-group">
               <p><strong>Endereço:</strong> Avenida Luis Sande, 96, (Valle Shopping).<br className="portal-footer-desktop-break" />{" "}SAC Municipal</p>
-              <p><strong>Atendimento:</strong> de segunda a sexta-feira, das 8h às<br className="portal-footer-desktop-break" />{" "}18h</p>
+              <p><strong>Atendimento:</strong> de segunda a sexta-feira, das <span className="portal-footer-hours">8h às 18h</span></p>
             </div>
             <img
               className="portal-footer-sac-logo"
