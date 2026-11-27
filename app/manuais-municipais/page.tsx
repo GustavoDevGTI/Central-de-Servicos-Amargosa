@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 
 export default function MunicipalManualsPage() {
   return (
-    <main className="site-root internal-site manual-sei-page">
+    <main className="site-root internal-site manual-sei-page municipal-manuals-page">
       <a className="skip" href="#conteudo-manuais">Ir para o conteúdo</a>
       <PortalHeader />
       <article id="conteudo-manuais" className="municipal-manuals-shell">
@@ -27,9 +27,10 @@ export default function MunicipalManualsPage() {
         <ul className="municipal-manuals-list">
           {municipalManuals.map((manual) => (
             <li key={manual.href}>
-              <a href={manual.href} className="municipal-manual-card">
+              <a href={manual.href + (manual.cardFragment ?? "")} className="municipal-manual-card">
                 <span className="municipal-manual-icon" aria-hidden="true">
-                  <svg viewBox="0 0 24 24" focusable="false"><path d={manual.icon} /></svg>
+                  {/* eslint-disable-next-line @next/next/no-img-element -- Ícone local com dimensões definidas. */}
+                  <img src={manual.iconSrc} width={48} height={48} alt="" />
                 </span>
                 <span className="municipal-manual-copy">
                   <strong>{manual.label}</strong>

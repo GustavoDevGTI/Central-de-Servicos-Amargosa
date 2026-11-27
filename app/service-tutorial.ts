@@ -1,6 +1,7 @@
 import type { Service } from "./service-catalog";
 
 export const vacationServiceId = "1doc-ferias-marcacao-e-alteracao";
+export const tutorialSectionId = "tutorial";
 export const originalTutorialVideo = "original";
 export const tutorialVideoLimit = 25 * 1024 * 1024;
 

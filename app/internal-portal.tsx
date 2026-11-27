@@ -45,7 +45,7 @@ import { ServiceSecondStage, hasServiceSecondStage, secondStageTitle } from "./s
 import { WorkbookWhereWhenIntro, WorkbookWhereWhenHours, workbookHasHours, workbookWhereWhenPresentationProps } from "./workbook-where-when";
 import { CollectionScheduleSection } from "./coleta-cronograma";
 import ShareServiceButton from "./share-service-button";
-import { originalTutorialVideo, tutorialVideoForService, tutorialVideoSrc } from "./service-tutorial";
+import { originalTutorialVideo, tutorialSectionId, tutorialVideoForService, tutorialVideoSrc } from "./service-tutorial";
 
 // O roteador cliente do Vinext pode cancelar a navegação ao preparar o RSC.
 // Links internos simples preservam a URL e funcionam também sem JavaScript.
@@ -1605,7 +1605,7 @@ function ServiceTutorial({ video }: { video: string }) {
   const src = tutorialVideoSrc(video);
   if (!src) return null;
   return (
-    <section id="tutorial">
+    <section id={tutorialSectionId}>
       <h2 id="service-tutorial-title">Tutorial</h2>
       <video className="service-tutorial-video" src={src} controls playsInline preload="metadata" aria-labelledby="service-tutorial-title" {...(video === originalTutorialVideo ? { width: 480, height: 848 } : {})}>
         Seu navegador não oferece reprodução de vídeo.
@@ -1662,7 +1662,7 @@ function RichServiceDetail({ service }: { service: Service }) {
           <nav aria-label="Nesta página">
             <strong>Nesta página</strong>
             <a href="#o-que-e">{serviceSectionLabels.about}</a>
-            {tutorial && <a href="#tutorial">Tutorial</a>}
+            {tutorial && <a href={`#${tutorialSectionId}`}>Tutorial</a>}
             <a href="#quem-pode">{serviceSectionLabels.audience}</a>
             <a href="#documentos">{serviceSectionLabels.documents}</a>
             <a href="#como-solicitar">{serviceSectionLabels.steps}</a>
@@ -1862,7 +1862,7 @@ export function ServiceDetail({ slug, initialService }: { slug: string; initialS
             <a href="#o-que-e">
               {serviceSectionLabels.about}
             </a>
-            {tutorial && <a href="#tutorial">Tutorial</a>}
+            {tutorial && <a href={`#${tutorialSectionId}`}>Tutorial</a>}
             <a href="#quem-pode">
               {serviceSectionLabels.audience}
             </a>
