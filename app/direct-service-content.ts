@@ -10,6 +10,7 @@ import { isPendingServiceValue } from "./service-presentation";
 import { audienceSelection } from "./service-audiences";
 import { initialAttendanceUnitMode } from "./service-attendance";
 import { collectionScheduleForService, collectionIntroduction, hasCollectionSchedule } from "./collection-schedule-data";
+import { tutorialVideoForService } from "./service-tutorial";
 
 /** Only explicit workbook links identify mirrors; inherited legacy numbers do not. */
 export function serviceRecordSourceRow(service: Service) { return service.workbookCells || service.publishedFromWorkbook ? service.sourceRow : undefined; }
@@ -59,6 +60,7 @@ export function serviceEditValues(original: Service): ServiceEditValues {
     procedures: "", filledBy: "", updatedDate: service.updatedAt || "", responsibleContact: "", simpNotes: "",
     collectionIntroduction: hasCollectionSchedule(service) ? (cells ? intro || "" : collectionIntroduction) : "",
     collectionSchedule: hasCollectionSchedule(service) ? JSON.stringify(collectionScheduleForService(service)) : "",
+    tutorialVideo: tutorialVideoForService(service),
   };
   for (const field of serviceEditFields) {
     if (fields?.[field.key] !== undefined) base[field.key] = fields[field.key]!;

@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 
 const helpItems = [
-  { label: "Dúvidas com a plataforma", href: "/manual-sei" },
+  { label: "Dúvidas com a plataforma", href: "/manuais-municipais" },
   { label: "Dúvidas sobre a Ouvidoria", href: "/servicos/ouvidoria-geral" },
   {
     label: "Reportar um bug ou problema",

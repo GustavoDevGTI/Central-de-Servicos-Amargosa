@@ -55,6 +55,13 @@ async function createCatalogTables(): Promise<void> {
       after_value JSONB,
       source_row INTEGER
     );
+    CREATE TABLE IF NOT EXISTS catalog_tutorial_videos (
+      id UUID PRIMARY KEY,
+      mime TEXT NOT NULL CHECK (mime IN ('video/mp4', 'video/webm')),
+      content BYTEA NOT NULL,
+      created_by TEXT NOT NULL,
+      created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+    );
     CREATE INDEX IF NOT EXISTS idx_catalog_changes_service ON catalog_changes(service_id);
     CREATE INDEX IF NOT EXISTS idx_catalog_changes_publication ON catalog_changes(publication_id);
     ALTER TABLE catalog_publications DROP CONSTRAINT IF EXISTS catalog_publications_reverted_from_fkey;

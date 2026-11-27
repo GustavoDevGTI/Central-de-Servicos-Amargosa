@@ -3,6 +3,7 @@ import { draftServiceEdit, readEditorBody, serviceEditorCatalog } from "../../..
 import { ServiceEditorError } from "../../../../lib/service-editor";
 import { snapshotServices } from "../../../../lib/catalog-preview";
 import { serviceRecordSourceRow } from "../../../../app/direct-service-content";
+import { TutorialVideoError } from "../../../../lib/tutorial-video-data";
 
 export const dynamic = "force-dynamic";
 export async function GET(request: Request) {
@@ -18,5 +19,9 @@ export async function POST(request: Request) {
     const session = await adminSession(request);
     if (!session) return adminResponse({ error: "Acesso negado." }, 401);
     return adminResponse(await draftServiceEdit(await readEditorBody(request), session.user.id));
-  } catch (error) { return adminResponse({ error: error instanceof ServiceEditorError ? error.message : "Não foi possível comparar a edição." }, error instanceof ServiceEditorError ? error.status : 503); }
+  } catch (error) {
+    return error instanceof ServiceEditorError || error instanceof TutorialVideoError
+      ? adminResponse({ error: error.message }, error.status)
+      : adminResponse({ error: "Não foi possível comparar a edição." }, 503);
+  }
 }

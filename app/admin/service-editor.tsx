@@ -12,8 +12,10 @@ import { editorFieldGroups, type ServiceFieldOrder } from "./service-field-order
 import type { TopicList } from "../service-topics";
 import { ServicePreviewSession } from "./service-preview-session";
 import { CollectionScheduleEditor } from "./collection-schedule-editor";
+import { TutorialVideoEditor } from "./tutorial-video-editor";
+import { tutorialVideoLimit } from "../service-tutorial";
 
-type Loaded = { version: number | null; service: { id: string; slug: string; title: string; sourceRow?: number; specialEditor?: "collection"; creationKey?: string; fields: ServiceEditValues } };
+type Loaded = { version: number | null; service: { id: string; slug: string; title: string; sourceRow?: number; specialEditor?: "collection" | "tutorial"; creationKey?: string; fields: ServiceEditValues } };
 type Comparison = { draftId?: string; identical?: boolean; report: CatalogReport; affectedIds?: string[] };
 type PreviewInput = { key: string; body: string };
 async function json<T>(response: Response): Promise<T> {
@@ -38,6 +40,7 @@ export function ServiceEditor({ onSaved, onDirtyChange }: { onSaved: () => Promi
   }));
   const [busy, setBusy] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [uploadingTutorial, setUploadingTutorial] = useState(false);
   const saveInFlight = useRef(false);
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
@@ -174,6 +177,26 @@ export function ServiceEditor({ onSaved, onDirtyChange }: { onSaved: () => Promi
     finally { saveInFlight.current = false; setBusy(false); }
   }
   function change(key: ServiceEditField, value: string) { if (saveInFlight.current) return; setFields((old) => old && ({ ...old, [key]: value })); setError(""); setMessage(""); }
+  async function uploadTutorial(files: FileList) {
+    if (busy || saveInFlight.current || loaded?.service.specialEditor !== "tutorial") return;
+    const file = files[0];
+    if (files.length !== 1 || !file.size || file.size > tutorialVideoLimit) {
+      setError("Selecione um vídeo em MP4 ou WebM de até 25 MB.");
+      return;
+    }
+    saveInFlight.current = true;
+    setBusy(true); setUploadingTutorial(true); setError(""); setMessage("");
+    try {
+      const response = await fetch("/api/admin/tutorial-video", { method: "POST", headers: { "Content-Type": "application/octet-stream" }, body: file });
+      if (response.status === 413) throw new Error("O vídeo excede o limite de envio do servidor.");
+      const { id } = await json<{ id: string }>(response);
+      setFields((old) => old && ({ ...old, tutorialVideo: id }));
+    } catch (reason) {
+      setError(reason instanceof Error && !(reason instanceof SyntaxError) ? reason.message : "Não foi possível enviar o vídeo.");
+    } finally {
+      saveInFlight.current = false; setBusy(false); setUploadingTutorial(false);
+    }
+  }
   async function save() {
     if (saveInFlight.current || !loaded || !previewInput) return;
     saveInFlight.current = true;
@@ -208,6 +231,7 @@ export function ServiceEditor({ onSaved, onDirtyChange }: { onSaved: () => Promi
     const id = `edit-${field.key}`;
     const name = "stage" in field ? `${field.stage} · ${field.label}` : field.label;
     if (field.key === "collectionSchedule") return <CollectionScheduleEditor key={`${editorRevision}:${field.key}`} value={fields.collectionSchedule} onChange={(value) => change("collectionSchedule", value)} />;
+    if (field.key === "tutorialVideo") return <TutorialVideoEditor key={`${editorRevision}:${field.key}`} value={fields.tutorialVideo} disabled={busy} uploading={uploadingTutorial} onUpload={(files) => void uploadTutorial(files)} onRemove={() => change("tutorialVideo", "")} />;
     if (field.key === "audience") return <AudienceSelector key={field.key} value={fields.audience} onChange={(value) => change("audience", value)} />;
     if ("list" in field) return <TopicEditor key={`${editorRevision}:${field.key}`} id={id} label={field.label} name={name} value={fields[field.key]} mode={field.list} model={topicModels[field.key]} onModelChange={(model) => setTopicModels((old) => ({ ...old, [field.key]: model }))} onChange={(value) => change(field.key, value)} />;
     if ("multiple" in field) return <fieldset className="admin-editor-modalities" key={field.key}><legend>{field.label}</legend>{field.multiple.map((option) => <label key={option}><input type="checkbox" checked={fields[field.key].split("\n").includes(option)} onChange={(event) => { const selected = new Set(fields[field.key].split("\n").filter(Boolean)); if (event.target.checked) selected.add(option); else selected.delete(option); change(field.key, field.multiple.filter((value) => selected.has(value)).join("\n")); }} />{option}</label>)}</fieldset>;
@@ -266,7 +290,7 @@ export function ServiceEditor({ onSaved, onDirtyChange }: { onSaved: () => Promi
         <p className="admin-editor-fixed">Os textos e o formato dos botões são fixos.</p>
         <fieldset disabled={busy} className="admin-editor-fields">
           <legend className="sr-only">Campos do serviço</legend>
-          {editorFieldGroups(fieldOrder, { workbookSource: loaded.service.sourceRow !== undefined, mainLegislation: Boolean(loaded.service.fields.legislation), attendanceMode: fields.attendanceUnitMode, collectionSchedule: loaded.service.specialEditor === "collection" }).map((group) => <details className="admin-editor-group" key={group.key} open>
+          {editorFieldGroups(fieldOrder, { workbookSource: loaded.service.sourceRow !== undefined, mainLegislation: Boolean(loaded.service.fields.legislation), attendanceMode: fields.attendanceUnitMode, collectionSchedule: loaded.service.specialEditor === "collection", tutorial: loaded.service.specialEditor === "tutorial" }).map((group) => <details className="admin-editor-group" key={group.key} open>
             <summary>{group.label}</summary>
             {group.blocks.filter((block) => !block.hidden).map((block) => {
               const controls = block.fields.filter((key) => key !== "status").map((key) => fieldControl(serviceEditFields.find((field) => field.key === key)!));

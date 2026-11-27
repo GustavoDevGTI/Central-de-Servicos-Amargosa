@@ -8,6 +8,8 @@ import { hasCollectionSchedule } from "../app/collection-schedule-data";
 import type { PoolClient } from "pg";
 import type { Service } from "../app/service-catalog";
 import { sameAttendanceUnit, serviceEditFields } from "../app/service-edit-fields";
+import { hasVacationTutorial, isUploadedTutorialVideo } from "../app/service-tutorial";
+import { checkTutorialUpload } from "./tutorial-video-db";
 
 async function creationKeyForService(service: Service, userId: string, db: Pick<PoolClient, "query"> = catalogPool()): Promise<string | undefined> {
   if (service.pendingCreationBy) return service.pendingCreationBy === userId ? service.registrationId : undefined;
@@ -52,7 +54,7 @@ export async function readServiceForEditing(serviceId: string, userId: string) {
   const catalog = await serviceEditorCatalog();
   const service = snapshotServices(catalog.snapshot).find((s) => s.id === serviceId);
   if (!service) throw new ServiceEditorError("Serviço não encontrado.", 404);
-  return { version: catalog.version, service: { id: service.id, title: service.title, slug: service.slug || service.id, sourceRow: serviceRecordSourceRow(service), specialEditor: hasCollectionSchedule(service) ? "collection" : undefined, creationKey: await creationKeyForService(service, userId), fields: serviceEditValues(service) } };
+  return { version: catalog.version, service: { id: service.id, title: service.title, slug: service.slug || service.id, sourceRow: serviceRecordSourceRow(service), specialEditor: hasCollectionSchedule(service) ? "collection" : hasVacationTutorial(service) ? "tutorial" : undefined, creationKey: await creationKeyForService(service, userId), fields: serviceEditValues(service) } };
 }
 
 export async function cancelCreationForEditing(body: unknown, userId: string) {
@@ -103,7 +105,15 @@ export async function draftServiceEdit(body: unknown, userId: string) {
   const bytes = Buffer.from(JSON.stringify(result.snapshot));
   const hash = createHash("sha256").update(bytes).digest("hex");
   const service = result.snapshot.services.find((s) => s.id === data.serviceId)!;
-  await catalogPool().query(`INSERT INTO catalog_drafts (id, base_publication_id, source_sha256, source_file, source_filename, snapshot, report, created_by) VALUES ($1,$2,$3,$4,$5,$6,$7,$8)`, [draftId, current.version, hash, bytes, `Edição direta · ${service.directEdit?.fields.title ?? service.title}`, JSON.stringify(result.snapshot), JSON.stringify(result.report), userId]);
+  const insertDraft = (db: Pick<PoolClient, "query">) => db.query(`INSERT INTO catalog_drafts (id, base_publication_id, source_sha256, source_file, source_filename, snapshot, report, created_by) VALUES ($1,$2,$3,$4,$5,$6,$7,$8)`, [draftId, current.version, hash, bytes, `Edição direta · ${service.directEdit?.fields.title ?? service.title}`, bytes.toString("utf8"), JSON.stringify(result.report), userId]);
+  const video = service.directEdit?.fields.tutorialVideo;
+  if (hasVacationTutorial(service) && isUploadedTutorialVideo(video)) {
+    await withCatalogTransaction(async (db) => {
+      await db.query("SELECT pg_advisory_xact_lock(41730521)");
+      await checkTutorialUpload(db, video, userId);
+      await insertDraft(db);
+    });
+  } else await insertDraft(catalogPool());
   return { draftId, report: result.report, affectedIds: result.affectedIds };
 }
 

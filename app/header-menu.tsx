@@ -1,11 +1,12 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { municipalManuals } from "./municipal-manuals";
 
 const menuItems = [
   { label: "Página inicial", href: "/" },
   { label: "Serviços públicos", href: "/servicos" },
-  { label: "Manual do SEI", href: "/manual-sei" },
+  { label: "Manuais Municipais", href: "/manuais-municipais" },
   { label: "Sobre", href: "/sobre" },
   {
     label: "Transparência",
@@ -32,13 +33,22 @@ const external = (href: string) =>
 export default function HeaderMenu() {
   const [open, setOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     const closeOutside = (event: PointerEvent) => {
       if (!menuRef.current?.contains(event.target as Node)) setOpen(false);
     };
     const closeOnEscape = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setOpen(false);
+      if (event.key !== "Escape") return;
+      const manuals = document.activeElement?.closest<HTMLDetailsElement>(".header-municipal-manuals[open]");
+      if (manuals && menuRef.current?.contains(manuals)) {
+        manuals.open = false;
+        manuals.querySelector("summary")?.focus();
+        return;
+      }
+      if (menuRef.current?.contains(document.activeElement)) menuButtonRef.current?.focus();
+      setOpen(false);
     };
     document.addEventListener("pointerdown", closeOutside);
     document.addEventListener("keydown", closeOnEscape);
@@ -51,6 +61,7 @@ export default function HeaderMenu() {
   return (
     <div ref={menuRef} className={`header-menu${open ? " is-open" : ""}`}>
       <button
+        ref={menuButtonRef}
         type="button"
         className="menu"
         aria-expanded={open}
@@ -76,7 +87,26 @@ export default function HeaderMenu() {
       </button>
       {open && (
         <nav id="header-menu-panel" className="header-menu-panel" aria-label="Menu principal">
-          {menuItems.map((item) => (
+          {menuItems.map((item) => item.href === "/manuais-municipais" ? (
+            <details key={item.href} className="header-municipal-manuals">
+              <summary>
+                {item.label}
+                <svg className="header-manuals-chevron" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+                  <path d="m4 6 4 4 4-4" />
+                </svg>
+              </summary>
+              <ul className="header-manuals-list" role="list">
+                {[...municipalManuals, { href: item.href, label: "Ver todos os manuais" }].map((manual) => (
+                  <li key={manual.href}>
+                    <a href={manual.href} onClick={() => setOpen(false)}>
+                      <span>{manual.label}</span>
+                      <b aria-hidden="true">→</b>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </details>
+          ) : (
             <a
               key={item.label}
               href={item.href}

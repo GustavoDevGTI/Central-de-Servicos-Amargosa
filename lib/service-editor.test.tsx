@@ -12,6 +12,9 @@ import { collectionScheduleForService, readCollectionSchedule, hasCollectionSche
 import { editorFieldGroups } from "../app/admin/service-field-order";
 import { CollectionScheduleEditor } from "../app/admin/collection-schedule-editor";
 import { CollectionScheduleSection } from "../app/coleta-cronograma";
+import { hasVacationTutorial, vacationServiceId, originalTutorialVideo } from "../app/service-tutorial";
+import { tutorialByteRange, tutorialContentType } from "./tutorial-video-data";
+import { readFileSync } from "node:fs";
 
 test("new services start unnamed and inactive with all common fields, unique ascending IDs and the shared template", () => {
   const initial = initialEditorSnapshot();
@@ -102,7 +105,7 @@ test("collection-specific fields preserve all archived groups and only appear fo
     const special = editorFieldGroups(order, { collectionSchedule: true }).flatMap((group) => group.blocks.flatMap((block) => block.fields));
     assert.equal(special.filter((key) => key === "collectionSchedule").length, 1);
     assert.equal(special.filter((key) => key === "collectionIntroduction").length, 1);
-    assert.equal(new Set(special).size, serviceEditFields.length);
+    assert.equal(new Set(special).size, serviceEditFields.filter((field) => !("special" in field) || field.special === "collection").length);
   }
   const controls = renderToStaticMarkup(<CollectionScheduleEditor value={values.collectionSchedule} onChange={() => {}} />);
   assert.ok(controls.includes("Alto da Bela Vista"));
@@ -118,6 +121,45 @@ test("collection-specific fields preserve all archived groups and only appear fo
   assert.deepEqual(snapshot, untouched);
 });
 function servicePage(snapshot: CatalogSnapshot, id: string) { return snapshotServices(snapshot).find((entry) => entry.id === id)!; }
+
+test("the vacation tutorial has its own editor and is restored with the service publication", () => {
+  const initial = initialEditorSnapshot();
+  const vacation = servicePage(initial, vacationServiceId);
+  assert.equal(hasVacationTutorial(vacation), true);
+  assert.equal(serviceEditValues(vacation).tutorialVideo, originalTutorialVideo);
+  for (const order of ["central", "bagov"] as const) {
+    const fields = (tutorial: boolean) => editorFieldGroups(order, { tutorial }).flatMap((group) => group.blocks.flatMap((block) => block.fields));
+    assert.equal(fields(true).filter((key) => key === "tutorialVideo").length, 1);
+    assert.ok(!fields(false).includes("tutorialVideo"));
+  }
+  const other = initial.services.find((service) => service.id !== vacationServiceId && !service.inactive)!;
+  assert.throws(() => editService(initial, other.id, { tutorialVideo: originalTutorialVideo }), /não pertence/);
+  assert.throws(() => editService(initial, vacation.id, { tutorialVideo: "https://example.invalid/video.mp4" }), /arquivo de vídeo/);
+  const html = page(initial, vacation.id);
+  assert.match(html, /id="o-que-e"[\s\S]+id="tutorial"[\s\S]+id="quem-pode"/);
+  assert.match(html, /<video[^>]*src="\/api\/service-tutorial\/original"[^>]*controls/);
+  assert.doesNotMatch(page(initial, other.id), /id="tutorial"/);
+  const uploaded = "f0d45883-c34d-4aa6-9538-c19f7ef09af9";
+  const withVideo = editService(initial, vacation.id, { tutorialVideo: uploaded });
+  assert.deepEqual(withVideo.affectedIds, [vacation.id]);
+  assert.match(page(withVideo.snapshot, vacation.id), new RegExp(`/api/service-tutorial/${uploaded}`));
+  const removed = editService(withVideo.snapshot, vacation.id, { tutorialVideo: "" });
+  assert.doesNotMatch(page(removed.snapshot, vacation.id), /id="tutorial"|href="#tutorial"/);
+  assert.equal(serviceEditValues(servicePage(restoreServiceContent(removed.snapshot, withVideo.snapshot), vacation.id)).tutorialVideo, uploaded);
+  assert.equal(serviceEditValues(servicePage(restoreServiceContent(removed.snapshot, initial), vacation.id)).tutorialVideo, originalTutorialVideo);
+  assert.equal(compareServiceContent(initial, withVideo.snapshot).changes.find((change) => change.column === "Tutorial")?.serviceId, vacation.id);
+});
+
+test("tutorial media accepts the supplied MP4 and supports seeking by byte ranges", () => {
+  const bytes = readFileSync("public/tutoriais/ferias.mp4");
+  assert.equal(tutorialContentType(bytes), "video/mp4");
+  assert.equal(tutorialContentType(Buffer.from("<html><body>not a video</body></html>")), undefined);
+  assert.deepEqual(tutorialByteRange("bytes=20-", 100), { start: 20, end: 99, partial: true });
+  assert.deepEqual(tutorialByteRange("bytes=-10", 100), { start: 90, end: 99, partial: true });
+  assert.deepEqual(tutorialByteRange("bytes=40-300", 100), { start: 40, end: 99, partial: true });
+  assert.equal(tutorialByteRange("bytes=100-", 100), null);
+  assert.equal(tutorialByteRange("bytes=-0", 100), null);
+});
 
 test("collection routes, slots, instructions and ordering render in preview, survive edits and restore literally", () => {
   const initial = initialEditorSnapshot();
@@ -346,7 +388,7 @@ test("documents of stage two do not replace or duplicate existing stage-one docu
 
 test("the editor mirrors all 34 PDF fields plus platform in six groups, with scoped stage labels", () => {
   const expected = ["NOME DO SERVIÇO", "NOME(S) POPULAR(ES)", "ÓRGÃO / SECRETARIA / SETOR", "CATEGORIA(S)", "PÚBLICO-ALVO / USUÁRIO", "CANAL DE PRESTAÇÃO", "STATUS DO SERVIÇO", "ÁREA RESPONSÁVEL", "RESPONSÁVEL PELO PREENCHIMENTO", "DESCRIÇÃO DETALHADA", "PREVISÃO DE ESPERA PARA ATENDIMENTO", "PRAZO MÁXIMO PARA CONCLUSÃO", "CUSTO / TAXA", "MODALIDADES DE ATENDIMENTO", "ENDEREÇO PRESENCIAL", "HORÁRIO DE ATENDIMENTO", "TELEFONE / WHATSAPP", "E-MAIL OFICIAL", "SITE / LINK DE ACESSO", "MECANISMOS DE CONSULTA E ACOMPANHAMENTO", "LINK ATUAL DO SERVIÇO NO BA.GOV", "REQUISITOS PARA SOLICITAR O SERVIÇO", "DESCRIÇÃO DA ETAPA", "DOCUMENTOS NECESSÁRIOS", "DESCRIÇÃO DA ETAPA", "DOCUMENTOS NECESSÁRIOS", "OUTRAS ETAPAS / INFORMAÇÕES ADICIONAIS", "BASE LEGAL", "PRIORIDADES DE ATENDIMENTO", "CANAL DA OUVIDORIA", "PROCEDIMENTOS PARA REGISTRO DE MANIFESTAÇÕES", "DATA DO PREENCHIMENTO / ATUALIZAÇÃO", "CONTATO DO RESPONSÁVEL", "OBSERVAÇÕES PARA A SIMP"];
-  const additional = ["platform", "seiLink", "attendanceUnitMode", "attendanceUnit", "attendancePhone", "attendanceWhatsapp", "attendanceEmail", "responsibleAddress", "responsibleHours", "collectionIntroduction", "collectionSchedule"];
+  const additional = ["platform", "seiLink", "attendanceUnitMode", "attendanceUnit", "attendancePhone", "attendanceWhatsapp", "attendanceEmail", "responsibleAddress", "responsibleHours", "collectionIntroduction", "collectionSchedule", "tutorialVideo"];
   assert.deepEqual(serviceEditFields.filter((field) => !additional.includes(field.key)).map((field) => field.label.toLocaleUpperCase("pt-BR")), expected);
   assert.equal(serviceEditFields.find((field) => field.key === "platform")!.label, "Plataforma");
   assert.equal(serviceEditGroups.length, 6);

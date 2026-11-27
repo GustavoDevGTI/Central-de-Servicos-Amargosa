@@ -9,8 +9,10 @@ type ManualSection = {
 
 export default function ManualSeiIndex({
   sections,
+  title = "Nesta página",
 }: {
   sections: readonly ManualSection[];
+  title?: string;
 }) {
   const [activeId, setActiveId] = useState(sections[0]?.id ?? "");
 
@@ -63,7 +65,7 @@ export default function ManualSeiIndex({
 
   return (
     <nav className="manual-sei-index" aria-label="Etapas do manual">
-      <strong>Nesta página</strong>
+      <strong>{title}</strong>
       {sections.map((section) => {
         const isActive = activeId === section.id;
 

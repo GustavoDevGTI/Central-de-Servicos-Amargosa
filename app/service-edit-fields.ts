@@ -52,6 +52,7 @@ export const serviceEditFields = [
   { key: "simpNotes", label: "Observações para a SIMP", group: 5, private: true, rows: 4 },
   { key: "collectionIntroduction", label: "Orientações do cronograma de coleta", group: 2, special: "collection", rows: 3 },
   { key: "collectionSchedule", label: "Cronograma de coleta", group: 2, special: "collection", structure: "collection", rows: 4 },
+  { key: "tutorialVideo", label: "Tutorial", group: 0, special: "tutorial", rows: 2 },
 ] as const;
 
 export type ServiceEditField = typeof serviceEditFields[number]["key"];

@@ -7,7 +7,7 @@ const fieldBlock = (fields: ServiceEditField[]): EditorFieldBlock => ({ key: "fi
 const stageBlock = (stage: 1 | 2, fields: ServiceEditField[]): EditorFieldBlock => ({ key: `stage-${stage}`, legend: stage === 1 ? "Etapa 1 - solicitação" : "Etapa 2 - análise e conclusão", fields });
 
 /** Presentation only. Both arrangements contain the same canonical editorial fields. */
-export function editorFieldGroups(order: ServiceFieldOrder, { mainLegislation = false, attendanceMode = "", workbookSource = true, collectionSchedule = false } = {}): EditorFieldGroup[] {
+export function editorFieldGroups(order: ServiceFieldOrder, { mainLegislation = false, attendanceMode = "", workbookSource = true, collectionSchedule = false, tutorial = false } = {}): EditorFieldGroup[] {
   void workbookSource;
   const sharedUnit = attendanceMode === sameAttendanceUnit;
   const channelBlocks: EditorFieldBlock[] = [
@@ -25,10 +25,11 @@ export function editorFieldGroups(order: ServiceFieldOrder, { mainLegislation = 
       ...([1, 2] as const).map((stage) => stageBlock(stage, serviceEditFields.filter((field) => field.group === group && "stage" in field && field.stage.startsWith(`Etapa ${stage} `)).map((field) => field.key))).filter((block) => block.fields.length),
       ...(serviceEditFields.some((field) => field.group === group && field.key === "additional") ? [{ key: "additional", fields: ["additional"] as ServiceEditField[] }] : []),
     ].filter((block) => block.fields.length),
-  }));
+  })).flatMap((group, index) => tutorial && index === 0 ? [group, { key: "tutorial", label: "Tutorial", blocks: [fieldBlock(["tutorialVideo"])] }] : [group]);
 
   const groups: EditorFieldGroup[] = [
     { key: "central-main", label: "Informações principais", blocks: [fieldBlock(["title", "audience", "summary", "accessUrl", "seiLink", "eligibility"])] },
+    ...(tutorial ? [{ key: "tutorial", label: "Tutorial", blocks: [fieldBlock(["tutorialVideo"])] }] : []),
     { key: "central-stages", label: "Documentos e etapas", blocks: [stageBlock(1, ["requiredDocuments", "steps"]), stageBlock(2, ["stage2Description", "stage2Documents"])] },
     { key: "central-time-cost", label: "Prazos e custos", blocks: [fieldBlock(["cost", "duration"])] },
     { key: "central-channels", label: "Canais de acesso, contato e acompanhamento", blocks: channelBlocks },

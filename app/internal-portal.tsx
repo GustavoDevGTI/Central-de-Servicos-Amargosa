@@ -45,6 +45,7 @@ import { ServiceSecondStage, hasServiceSecondStage, secondStageTitle } from "./s
 import { WorkbookWhereWhenIntro, WorkbookWhereWhenHours, workbookHasHours, workbookWhereWhenPresentationProps } from "./workbook-where-when";
 import { CollectionScheduleSection } from "./coleta-cronograma";
 import ShareServiceButton from "./share-service-button";
+import { originalTutorialVideo, tutorialVideoForService, tutorialVideoSrc } from "./service-tutorial";
 
 // O roteador cliente do Vinext pode cancelar a navegação ao preparar o RSC.
 // Links internos simples preservam a URL e funcionam também sem JavaScript.
@@ -1600,6 +1601,19 @@ function ServiceFadePosition({ anchorId = "canais" }: { anchorId?: string }) {
   return null;
 }
 
+function ServiceTutorial({ video }: { video: string }) {
+  const src = tutorialVideoSrc(video);
+  if (!src) return null;
+  return (
+    <section id="tutorial">
+      <h2 id="service-tutorial-title">Tutorial</h2>
+      <video className="service-tutorial-video" src={src} controls playsInline preload="metadata" aria-labelledby="service-tutorial-title" {...(video === originalTutorialVideo ? { width: 480, height: 848 } : {})}>
+        Seu navegador não oferece reprodução de vídeo.
+      </video>
+    </section>
+  );
+}
+
 function RichServiceDetail({ service }: { service: Service }) {
   const services = useCatalogServices();
   const heroSegment = internalSegment(detailPage, "serviceHero");
@@ -1615,6 +1629,7 @@ function RichServiceDetail({ service }: { service: Service }) {
   const mergeContact = service.directEdit?.layout.mergeContact ?? (hasInPersonCard && sameInPersonServiceOffice(location.local, contact.name) &&
     !(service.workbookCells && service.id === "1doc-limpeza-publica"));
   const hasWhereWhen = service.directEdit?.layout.whereWhen ?? Boolean(service.whereWhen);
+  const tutorial = tutorialVideoForService(service);
 
   return (
     <main {...rootProps("service-detail-page")}>
@@ -1647,6 +1662,7 @@ function RichServiceDetail({ service }: { service: Service }) {
           <nav aria-label="Nesta página">
             <strong>Nesta página</strong>
             <a href="#o-que-e">{serviceSectionLabels.about}</a>
+            {tutorial && <a href="#tutorial">Tutorial</a>}
             <a href="#quem-pode">{serviceSectionLabels.audience}</a>
             <a href="#documentos">{serviceSectionLabels.documents}</a>
             <a href="#como-solicitar">{serviceSectionLabels.steps}</a>
@@ -1671,6 +1687,7 @@ function RichServiceDetail({ service }: { service: Service }) {
               <h2>{serviceSectionLabels.about}</h2>
               <p {...workbookFieldProps(service, "O que é")} className={!service.summary || service.summary.startsWith("*") ? "service-pending-information" : undefined}>{serviceValue(service.summary)}</p>
             </section>
+            <ServiceTutorial video={tutorial} />
             <section id="quem-pode">
               <h2>{serviceSectionLabels.audience}</h2>
               <p {...workbookFieldProps(service, "Quem pode solicitar2")} className={service.eligibility?.startsWith("*") || !service.eligibility ? "service-pending-information" : undefined}>{serviceValue(service.eligibility)}</p>
@@ -1796,6 +1813,7 @@ export function ServiceDetail({ slug, initialService }: { slug: string; initialS
   if (service.detailLayout === "rich" || (!service.detailLayout && (service.id.startsWith("planilha-") || (service.notice && service.documents?.length && service.steps?.length))))
     return <RichServiceDetail service={service} />;
   const requestSteps = availableRequestSteps(service);
+  const tutorial = tutorialVideoForService(service);
   return (
     <main {...rootProps("service-detail-page")}>
       <ServiceFadePosition key={service.id} />
@@ -1844,6 +1862,7 @@ export function ServiceDetail({ slug, initialService }: { slug: string; initialS
             <a href="#o-que-e">
               {serviceSectionLabels.about}
             </a>
+            {tutorial && <a href="#tutorial">Tutorial</a>}
             <a href="#quem-pode">
               {serviceSectionLabels.audience}
             </a>
@@ -1865,6 +1884,7 @@ export function ServiceDetail({ slug, initialService }: { slug: string; initialS
                 {serviceValue(service.summary)}
               </p>
             </section>
+            <ServiceTutorial video={tutorial} />
             <section id="quem-pode">
               <h2>
                 {serviceSectionLabels.audience}

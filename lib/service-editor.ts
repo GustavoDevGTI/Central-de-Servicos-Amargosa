@@ -1,4 +1,4 @@
-import { services as builtInServices } from "../app/service-catalog";
+import { services as builtInServices, type Service } from "../app/service-catalog";
 import { randomUUID } from "node:crypto";
 import { serviceEditFields, serviceFieldReportLabel, sameAttendanceUnit, type ServiceEditValues, type ServiceEditField } from "../app/service-edit-fields";
 import { serviceEditValues, serviceRecordSourceRow } from "../app/direct-service-content";
@@ -13,6 +13,7 @@ import { serviceWhereWhenParts } from "../app/workbook-where-when";
 import { audienceSelection } from "../app/service-audiences";
 import { attendanceFieldKeys } from "../app/service-attendance";
 import { collectionScheduleLimit, hasCollectionSchedule, readCollectionSchedule, collectionScheduleDifferences } from "../app/collection-schedule-data";
+import { hasVacationTutorial, isUploadedTutorialVideo, originalTutorialVideo, tutorialVideoLabel } from "../app/service-tutorial";
 
 export class ServiceEditorError extends Error {
   constructor(message: string, readonly status = 400) { super(message); }
@@ -37,6 +38,7 @@ export function validateServicePatch(input: unknown): Partial<ServiceEditValues>
     if (key === "collectionSchedule" && value) {
       try { readCollectionSchedule(value); } catch (reason) { throw new ServiceEditorError(reason instanceof Error ? reason.message : "Cronograma inválido."); }
     }
+    if (key === "tutorialVideo" && value && value !== originalTutorialVideo && !isUploadedTutorialVideo(value)) throw new ServiceEditorError("Selecione um arquivo de vídeo para o tutorial.");
     if (key === "title" && value && !value.trim()) throw new ServiceEditorError("Informe o nome do serviço.");
     if (key === "audience" && !audienceSelection(value).valid) throw new ServiceEditorError("Selecione apenas os públicos disponíveis na Central, sem repetições.");
     const field = serviceEditFields.find((item) => item.key === key)!;
@@ -57,7 +59,13 @@ function reportFor(changes: CatalogChange[]): CatalogReport {
   return { created: count("created"), updated: count("updated"), deactivated: count("deactivated"), reactivated: count("reactivated"), columnsAdded: [], blockers: [], changes };
 }
 function fieldChanges(key: ServiceEditField, before: string, after: string) {
+  if (key === "tutorialVideo") return [{ column: serviceFieldReportLabel(key), before: tutorialVideoLabel(before), after: tutorialVideoLabel(after) }];
   return key === "collectionSchedule" ? collectionScheduleDifferences(before, after) : [{ column: serviceFieldReportLabel(key), before, after }];
+}
+
+function canEditServiceField(service: Service, field: typeof serviceEditFields[number]) {
+  if (!("special" in field)) return true;
+  return field.special === "collection" ? hasCollectionSchedule(service) : hasVacationTutorial(service);
 }
 
 /** Call under the publication lock so concurrent creations receive distinct IDs. */
@@ -106,7 +114,7 @@ export function editService(snapshot: CatalogSnapshot, serviceId: string, input:
   if ((patch.status ?? before.status) !== "Inativo" && !(patch.title ?? before.title).trim()) throw new ServiceEditorError("Informe o nome do serviço antes de ativá-lo.");
   for (const key of Object.keys(patch)) {
     const field = serviceEditFields.find((item) => item.key === key)!;
-    if ("special" in field && !hasCollectionSchedule(selected) && patch[field.key] !== before[field.key]) throw new ServiceEditorError("Este campo especial não pertence a este serviço.");
+    if (!canEditServiceField(selected, field) && patch[field.key] !== before[field.key]) throw new ServiceEditorError("Este campo especial não pertence a este serviço.");
     if (key === "collectionSchedule" && hasCollectionSchedule(selected) && !patch.collectionSchedule) throw new ServiceEditorError("Cronograma inválido. Use uma lista vazia para remover os locais.");
   }
   const selectedRow = serviceRecordSourceRow(selected);
@@ -119,9 +127,11 @@ export function editService(snapshot: CatalogSnapshot, serviceId: string, input:
   next.services = current.map((service) => {
     const sameRecord = selectedRow !== undefined ? serviceRecordSourceRow(service) === selectedRow : service.id === serviceId;
     if (!sameRecord) return service;
+    const pageFields = changed.filter((key) => key !== "tutorialVideo" || hasVacationTutorial(service));
+    if (!pageFields.length) return service;
     affectedIds.push(service.id);
     const base = servicePageCopy(service);
-    const editedFields = { ...base.directEdit?.fields, ...Object.fromEntries(changed.map((key) => [key, patch[key]])) };
+    const editedFields = { ...base.directEdit?.fields, ...Object.fromEntries(pageFields.map((key) => [key, patch[key]])) };
     // Freeze both sets on the first attendance edit so switching the choice never
     // recomputes or drops the other unit's original contact information.
     if (changed.some((key) => (attendanceFieldKeys as readonly string[]).includes(key))) {
@@ -166,10 +176,11 @@ export function compareServiceContent(previous: CatalogSnapshot, next: CatalogSn
       changes.push({ serviceId: service.id, serviceTitle: service.title, kind: "created", column: "Serviço", before: null, after: `ID ${service.id}`, sourceRow });
       continue;
     }
-    if (sourceRow && seenRows.has(sourceRow)) continue;
+    const seenSource = sourceRow !== undefined && seenRows.has(sourceRow);
     if (sourceRow) seenRows.add(sourceRow);
+    if (seenSource && !hasVacationTutorial(service)) continue;
     const oldFields = serviceEditValues(old), fields = serviceEditValues(service);
-    for (const field of serviceEditFields) if (oldFields[field.key] !== fields[field.key]) for (const change of fieldChanges(field.key, oldFields[field.key], fields[field.key])) changes.push({ serviceId: service.id, serviceTitle: service.title, kind: field.key === "status" && fields.status === "Inativo" ? "deactivated" : field.key === "status" && oldFields.status === "Inativo" ? "reactivated" : "updated", ...change, sourceRow });
+    for (const field of serviceEditFields) if ((!seenSource || field.key === "tutorialVideo") && oldFields[field.key] !== fields[field.key]) for (const change of fieldChanges(field.key, oldFields[field.key], fields[field.key])) changes.push({ serviceId: service.id, serviceTitle: service.title, kind: field.key === "status" && fields.status === "Inativo" ? "deactivated" : field.key === "status" && oldFields.status === "Inativo" ? "reactivated" : "updated", ...change, sourceRow });
   }
   return reportFor(changes);
 }
@@ -181,7 +192,8 @@ export function restoreServiceContent(current: CatalogSnapshot, target: CatalogS
   const seen = new Set<number>();
   for (const service of snapshotServices(current)) {
     const sourceRow = serviceRecordSourceRow(service);
-    if (sourceRow && seen.has(sourceRow)) continue;
+    const seenSource = sourceRow !== undefined && seen.has(sourceRow);
+    if (seenSource && !hasVacationTutorial(service)) continue;
     if (sourceRow) seen.add(sourceRow);
     const wanted = targetById.get(service.id);
     if (!wanted || wanted.registrationId !== service.registrationId) {
@@ -190,18 +202,20 @@ export function restoreServiceContent(current: CatalogSnapshot, target: CatalogS
       result = editService(result, service.id, { status: "Inativo" }).snapshot;
     } else {
       const before = serviceEditValues(service), after = serviceEditValues(wanted);
-      const patch = Object.fromEntries(serviceEditFields.filter((f) => (!("special" in f) || hasCollectionSchedule(service)) && before[f.key] !== after[f.key]).map((f) => [f.key, after[f.key]]));
+      const patch = Object.fromEntries(serviceEditFields.filter((f) => (!seenSource || f.key === "tutorialVideo") && canEditServiceField(service, f) && before[f.key] !== after[f.key]).map((f) => [f.key, after[f.key]]));
       result = editService(result, service.id, patch).snapshot;
       // Restore the original fallback presentation when an extra information
       // field had no editorial override in the chosen historical version.
       result.services = result.services.map((entry) => {
         if (!entry.directEdit || !(sourceRow !== undefined ? serviceRecordSourceRow(entry) === sourceRow : entry.id === service.id)) return entry;
+        if (seenSource && entry.id !== service.id) return entry;
         const original = targetById.get(entry.id);
         const fields = { ...entry.directEdit.fields };
         for (const field of serviceEditFields) {
+          if (seenSource && field.key !== "tutorialVideo") continue;
           if (!("column" in field) && !["status", "additional", "attendanceModes", "attendanceUnit", "attendancePhone", "attendanceWhatsapp", "attendanceEmail", "responsibleAddress", "responsibleHours"].includes(field.key) && original?.directEdit?.fields[field.key] === undefined) delete fields[field.key];
         }
-        if (!entry.workbookCells && original && original.directEdit?.fields.platform === undefined) {
+        if (!seenSource && !entry.workbookCells && original && original.directEdit?.fields.platform === undefined) {
           delete fields.platform;
           return { ...entry, destination: original.destination, directEdit: { ...entry.directEdit, fields } };
         }
